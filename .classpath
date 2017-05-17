@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="cosmetics"/>
+	<classpathentry kind="src" path="anticheat"/>
+	<classpathentry kind="src" path="parkour"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/mysql-connector-java-5.1.33-bin.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/Essentials-2.x-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/AuthMe.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/PermissionsEx-1.23.3.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/WarpPortals-5.6.5-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/Residence.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/worldedit-bukkit-6.1.1-SNAPSHOT-dist.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/HolographicDisplays.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/TabListAPI_v1.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/spigot-1.11.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/D:/Backups/realcraft_server/source/spigot-api-1.11-R0.1-20161122.092403-51-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/citizens-2.0.21-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/LightAPI.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/ProtocolLib.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/NickNamer_v2.4.3.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/nuvotifier-universal-2.3.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

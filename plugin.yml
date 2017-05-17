@@ -1,0 +1,67 @@
+name: RealCraft
+version: 1.0
+main: com.realcraft.RealCraft
+author: RealCraft.cz
+
+commands:
+  realcraft:
+    description: realcraft
+    usage: realcraft
+  mod:
+    description: moderator format color
+    usage: realcraft
+  ban:
+    description: ban player
+    usage: ban
+  mute:
+    description: mute player
+    usage: mute
+  unmute:
+    description: unmute player
+    usage: unmute
+  restart:
+    description: restart server
+    usage: restart
+  msg:
+    description: private messages
+    usage: msg
+    aliases: [pm,w,m,t,tell,etell,emsg,epm,whisper,ewhisper]
+  reply:
+    description: quick reply private messages
+    usage: reply
+    aliases: [r,er,ereply]
+  report:
+    description: report hacker
+    usage: report
+  ac:
+    description: admin chat
+    usage: ac
+  spec:
+    description: spectate
+    usage: spec
+  specoff:
+    description: spectate disable
+    usage: specoff
+  rpos:
+    description: rpos
+    usage: rpos
+  chunk:
+    description: chunk
+    usage: chunk
+  glow:
+    description: glow
+    usage: glow
+  test:
+    usage: test
+  schema:
+    usage: schema
+  saveloc:
+    description: saveloc
+  trade:
+    description: trade
+  join:
+    description: join
+  sound:
+    description: sound
+  coinstest:
+    description: coinstest

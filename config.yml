@@ -1,0 +1,73 @@
+database:
+   enabled: false
+   hostname: localhost
+   port: 3306
+   database: database
+   username: username
+   password: password
+
+banmanazer:
+   enabled: true
+   banKickResult: '&rNa tomto serveru jsi zabanovan za &6%reason%&r. Konec banu: &6%expire%'
+   banMessage: '&7Hrac &6%victim%&7 byl zabanovan adminem &6%admin%&7. Duvod: &6%reason%'
+   tempBanMessage: '&7Hrac &6%victim%&7 byl zabanovan adminem &6%admin%&7 na &6%time%&7. Duvod: &6%reason%'
+   permWarnMessage: '&cNemas povoleni na tento prikaz.'
+
+mute:
+   enabled: true
+   muteMessage: '&7Hrac &6%victim%&7 byl umlcen adminem &6%admin%&7 na &6%time%&7. Duvod: &6%reason%'
+   unmuteMessage: '&7Hrac &6%victim%&7 byl odmlcen adminem &6%admin%&7.'
+   muteWarnMessage: '&cNemuzes mluvit, jsi umlceny!'
+   permWarnMessage: '&cNemas povoleni na tento prikaz.'
+
+antispam:
+   enabled: true
+   timeLimit: 1000
+   maxSameChars: 5
+   spamHistory: 2
+   spamProbability: 0.6
+   spamMessage: '&cNespamuj, prosim!'
+
+modchat:
+   enabled: true
+   message: '&6Moderatorske zvyrazneni v chatu: %status%'
+
+chatnotice:
+   enabled: true
+
+commandspy:
+   enabled: true
+   message: '&7%player%: &b%command%'
+   blockedCommands:
+   - login
+   - register
+
+eventcmds:
+   enabled: true
+   eventWarnMessage: '&cTento prikaz nelze pouzit.'
+   blockedCommands: []
+   
+lobby:
+   enabled: true
+   jump:
+      enabled: true
+      velocityMultiply: 1.6
+      velocityHeight: 1.0
+   menu:
+      enabled: true
+   
+gamesplayerscount:
+   enabled: true
+   worlds:
+      world:
+         x: 0
+         y: 0
+         z: 0
+         r: 0
+
+restart:
+   enabled: true
+   restartHour: 4
+   restartTimeout: 3
+   restartMessageCountdown: '&c[Server]&r Za &6%timeout%&r probehne &6restart serveru&r.'
+   restartMessage: '&c[Server]&r Probiha restart serveru! Pripojte se znovu, prosim.'
