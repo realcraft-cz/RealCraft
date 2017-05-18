@@ -51,7 +51,7 @@ public class Quiz implements Listener, Runnable {
 	public Quiz(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,10*20,10*20);
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,60*20,60*20);
 		this.loadQuestions();
 	}
 
@@ -60,7 +60,7 @@ public class Quiz implements Listener, Runnable {
 
 	@Override
 	public void run(){
-		this.runRandomQuestion();
+		//this.runRandomQuestion();
 	}
 
 	public void loadQuestions(){
