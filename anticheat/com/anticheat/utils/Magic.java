@@ -1,7 +1,7 @@
 package com.anticheat.utils;
 
 public class Magic {
-	public static int TELEPORT_MIN = 400;
+	public static int TELEPORT_MIN = 100;
 	public static double FLIGHT_BLOCK_LIMIT = 15.0;
 	public static int FLIGHT_LIMIT = 150;
 	public static int Y_MAXVIOLATIONS = 1;

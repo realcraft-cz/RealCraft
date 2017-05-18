@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,6 +15,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
@@ -116,6 +118,94 @@ public class Utils {
 		double sqrt = Math.sqrt(xSqr + zSqr);
 		toReturn = Math.abs(sqrt);
 		return toReturn;
+	}
+
+    public static boolean cantStandAboveWater(Block block){
+		return (
+			!Utils.canStand(block.getRelative(BlockFace.NORTH)) &&
+			!Utils.canStand(block.getRelative(BlockFace.EAST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.SOUTH)) &&
+			!Utils.canStand(block.getRelative(BlockFace.WEST)) &&
+
+			!Utils.canStand(block.getRelative(BlockFace.NORTH_WEST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.NORTH_EAST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.SOUTH_WEST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.SOUTH_EAST)) &&
+
+			!Utils.canStand(block.getRelative(BlockFace.EAST_NORTH_EAST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.EAST_SOUTH_EAST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.NORTH_NORTH_EAST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.NORTH_NORTH_WEST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.SOUTH_SOUTH_EAST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.SOUTH_SOUTH_WEST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.WEST_NORTH_WEST)) &&
+			!Utils.canStand(block.getRelative(BlockFace.WEST_SOUTH_WEST))
+		);
+	}
+
+    public static boolean isAboveIce(Block block){
+		if(
+			Utils.isIce(block.getRelative(BlockFace.NORTH)) ||
+			Utils.isIce(block.getRelative(BlockFace.EAST)) ||
+			Utils.isIce(block.getRelative(BlockFace.SOUTH)) ||
+			Utils.isIce(block.getRelative(BlockFace.WEST)) ||
+			Utils.isIce(block.getRelative(BlockFace.NORTH_WEST)) ||
+			Utils.isIce(block.getRelative(BlockFace.NORTH_EAST)) ||
+			Utils.isIce(block.getRelative(BlockFace.SOUTH_WEST)) ||
+			Utils.isIce(block.getRelative(BlockFace.SOUTH_EAST))
+		) return true;
+		block = block.getRelative(BlockFace.DOWN);
+		if(
+			Utils.isIce(block.getRelative(BlockFace.NORTH)) ||
+			Utils.isIce(block.getRelative(BlockFace.EAST)) ||
+			Utils.isIce(block.getRelative(BlockFace.SOUTH)) ||
+			Utils.isIce(block.getRelative(BlockFace.WEST)) ||
+			Utils.isIce(block.getRelative(BlockFace.NORTH_WEST)) ||
+			Utils.isIce(block.getRelative(BlockFace.NORTH_EAST)) ||
+			Utils.isIce(block.getRelative(BlockFace.SOUTH_WEST)) ||
+			Utils.isIce(block.getRelative(BlockFace.SOUTH_EAST))
+		) return true;
+		return false;
+	}
+
+    public static boolean isIce(Block block){
+    	return (block.getType() == Material.ICE || block.getType() == Material.FROSTED_ICE || block.getType() == Material.PACKED_ICE);
+    }
+
+	public static boolean isPlayerAboveSlimeBlocks(Player player){
+		Block block = player.getLocation().getBlock();
+		return (
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.NORTH)) ||
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.EAST)) ||
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.SOUTH)) ||
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.WEST)) ||
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.NORTH_WEST)) ||
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.NORTH_EAST)) ||
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.SOUTH_WEST)) ||
+			Utils.isBlockAboveSlimeBlock(block.getRelative(BlockFace.SOUTH_EAST))
+		);
+	}
+
+	public static boolean isBlockAboveSlimeBlock(Block block){
+		int x = block.getX();
+		int z = block.getZ();
+		if(block.getY() > 0){
+			for(int y=block.getY();y>=0;y--){
+				if(block.getWorld().getBlockAt(x,y,z).getType() == Material.SLIME_BLOCK){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean canPlayerFly(Player player){
+		return (player.getGameMode() == GameMode.CREATIVE ||
+				player.getGameMode() == GameMode.SPECTATOR ||
+				player.hasPotionEffect(PotionEffectType.LEVITATION) ||
+				player.isFlying() ||
+				player.isInsideVehicle() ||
+				player.isGliding());
 	}
 
     /**

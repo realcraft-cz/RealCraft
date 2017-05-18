@@ -2,7 +2,7 @@ package com.anticheat.events;
 
 import org.bukkit.entity.Player;
 
-import com.anticheat.checks.CheckType;
+import com.anticheat.checks.Check.CheckType;
 
 public class AntiCheatDetectEvent extends AntiCheatBaseEvent {
 

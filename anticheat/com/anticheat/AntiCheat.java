@@ -23,9 +23,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import com.anticheat.checks.EnchantmentCheck;
+import com.anticheat.checks.CheckEnchant;
+import com.anticheat.checks.CheckFlyHack;
+import com.anticheat.checks.CheckSpeedHack;
 import com.anticheat.checks.FightCheck;
-import com.anticheat.checks.MovementCheck;
 import com.anticheat.events.AntiCheatDetectEvent;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -36,6 +37,7 @@ import com.realcraft.utils.Title;
 
 //https://github.com/m1enkrafftman/AntiCheatPlus/blob/master/src/main/resources/magic.yml
 //https://github.com/m1enkrafftman/AntiCheatPlus/blob/master/src/main/java/net/dynamicdev/anticheat/check/checks/MovementCheck.java
+//https://github.com/RedEpicness/SocketMessenger
 
 public class AntiCheat implements Listener, PluginMessageListener, Runnable, CommandExecutor, TabCompleter {
 	RealCraft plugin;
@@ -47,10 +49,9 @@ public class AntiCheat implements Listener, PluginMessageListener, Runnable, Com
 	static final String CHANNEL_SPECT = "ACSpec";
 	static final String CHANNEL_PLAYERLIST = "PlayerList";
 	static final String REPORTS = "anticheat_reports";
+	static final int REPORT_TIMEOUT = 5000;
 
-	MovementCheck movementCheck;
 	FightCheck fightCheck;
-	EnchantmentCheck enchantmentCheck;
 
 	static HashMap<String,Long> exemptTime = new HashMap<String,Long>();
 	HashMap<String,Long> lastDetected = new HashMap<String,Long>();
@@ -58,13 +59,20 @@ public class AntiCheat implements Listener, PluginMessageListener, Runnable, Com
 	private HashMap<String,String> playerList = new HashMap<String,String>();
 	static HashMap<String,AntiCheatSpec> playerSpec = new HashMap<String,AntiCheatSpec>();
 
+	private static HashMap<Player,AntiCheatPlayer> players = new HashMap<Player,AntiCheatPlayer>();
+
 	public AntiCheat(RealCraft realcraft){
 		plugin = realcraft;
 		if(plugin.config.getBoolean("anticheat.enabled")){
 			enabled = true;
-			movementCheck = new MovementCheck(this);
+			new CheckFlyHack();
+			new CheckSpeedHack();
+			new CheckEnchant(); //TODO: remove
+			if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
+				new CheckEnchant();
+			}
+
 			fightCheck = new FightCheck(this);
-			if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")) enchantmentCheck = new EnchantmentCheck(this);
 
 			plugin.getServer().getPluginManager().registerEvents(this,plugin);
 			plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin,"BungeeCord");
@@ -84,6 +92,15 @@ public class AntiCheat implements Listener, PluginMessageListener, Runnable, Com
 	@Override
 	public void run(){
 		this.sendUpdatePlayers();
+	}
+
+	public static AntiCheatPlayer getPlayer(Player player){
+		if(!players.containsKey(player)) players.put(player,new AntiCheatPlayer(player));
+		return players.get(player);
+	}
+
+	public static void removePlayer(Player player){
+		players.remove(player);
 	}
 
 	@EventHandler(priority=EventPriority.HIGHEST)
@@ -111,6 +128,7 @@ public class AntiCheat implements Listener, PluginMessageListener, Runnable, Com
 				spec.cancel();
 			}
 		}
+		removePlayer(event.getPlayer());
 	}
 
 	@EventHandler
@@ -126,7 +144,7 @@ public class AntiCheat implements Listener, PluginMessageListener, Runnable, Com
 	public void AntiCheatCheckEvent(AntiCheatDetectEvent event){
 		Player player = event.getPlayer();
 		this.sendReport(player,event.getType().toString());
-		AntiCheat.DEBUG(player.getName()+" | "+event.getType().toString());
+		//AntiCheat.DEBUG(player.getName()+" | "+event.getType().toString());
 		RealCraft.getInstance().db.update("INSERT INTO "+REPORTS+" (user_id,report_type,report_created) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+event.getType().getId()+"','"+(System.currentTimeMillis()/1000)+"')");
 	}
 
@@ -158,13 +176,13 @@ public class AntiCheat implements Listener, PluginMessageListener, Runnable, Com
 		for(Player player : plugin.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin")){
 				player.sendMessage(reportMessage);
-				player.playSound(player.getLocation(),plugin.playermanazer.getPlayerInfo(player).getNoticeSound(),1,1);
+				player.playSound(player.getLocation(),PlayerManazer.getPlayerInfo(player).getNoticeSound(),1,1);
 			}
 		}
 	}
 
 	private void sendReport(Player player,String reason){
-		if(!lastDetected.containsKey(player.getName()) || lastDetected.get(player.getName())+10000 < System.currentTimeMillis()){
+		if(!lastDetected.containsKey(player.getName()) || lastDetected.get(player.getName())+REPORT_TIMEOUT < System.currentTimeMillis()){
 			printReport(plugin.serverName,player.getDisplayName(),reason);
 			lastDetected.put(player.getName(),System.currentTimeMillis());
 

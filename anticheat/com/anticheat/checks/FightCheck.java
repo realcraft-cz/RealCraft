@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.util.Vector;
 
 import com.anticheat.AntiCheat;
+import com.anticheat.checks.Check.CheckType;
 import com.anticheat.events.AntiCheatDetectEvent;
 import com.anticheat.utils.CollisionUtil;
 import com.anticheat.utils.FightData;
