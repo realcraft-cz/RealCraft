@@ -14,7 +14,7 @@ public abstract class Check implements Listener, Runnable {
 	public Check(CheckType type){
 		this.type = type;
 		Bukkit.getServer().getPluginManager().registerEvents(this,RealCraft.getInstance());
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),this,this.getType().getRunSpeed(),this.getType().getRunSpeed());
+		if(this.getType().getRunSpeed() > 0) Bukkit.getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),this,this.getType().getRunSpeed(),this.getType().getRunSpeed());
 	}
 
 	public CheckType getType(){

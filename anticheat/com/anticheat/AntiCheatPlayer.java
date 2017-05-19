@@ -10,9 +10,9 @@ public class AntiCheatPlayer {
 
 	public double blocksOverFlight = 0;
 	public int flightChecks = 0;
-	private long lastAboveSlimeBlocks = 0;
+	public long lastAboveSlimeBlocks = 0;
+
 	public int speedChecks = 0;
-	public int speedChecksWurst = 0;
 
 	public AntiCheatPlayer(Player player){
 		this.player = player;
@@ -32,5 +32,6 @@ public class AntiCheatPlayer {
 		blocksOverFlight = 0;
 		flightChecks = 0;
 		lastAboveSlimeBlocks = 0;
+		speedChecks = 0;
 	}
 }

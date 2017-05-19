@@ -50,6 +50,7 @@ import com.realcraft.residences.ResidenceSigns;
 import com.realcraft.restart.Restart;
 import com.realcraft.schema.Schema;
 import com.realcraft.skins.Skins;
+import com.realcraft.sockets.SocketManager;
 import com.realcraft.teleport.TeleportRequests;
 import com.realcraft.test.Test;
 import com.realcraft.trading.Trading;
@@ -59,6 +60,7 @@ import com.realcraft.votes.Votes;
 
 public class RealCraft extends JavaPlugin implements Listener {
 	private static RealCraft instance;
+	private static boolean TESTSERVER;
 
 	public Config config;
 	public MySQL db;
@@ -97,6 +99,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 	public Skins skins;
 	private CosmeticHeads cosmeticheads;
 	private Quiz quiz;
+	private SocketManager socketmanager;
 
 	public String serverName;
 
@@ -106,11 +109,16 @@ public class RealCraft extends JavaPlugin implements Listener {
 		return instance;
 	}
 
+	public static boolean isTestServer(){
+		return TESTSERVER;
+	}
+
 	public void onEnable(){
 		instance = this;
 		serverName = getServer().getServerName();
 		essentials = (Essentials) this.getServer().getPluginManager().getPlugin("Essentials");
 		config = new Config(this);
+		TESTSERVER = config.getBoolean("testserver");
 		db = new MySQL(this);
 		playermanazer = new PlayerManazer(this);
 		banmanazer = new BanManazer(this);
@@ -130,10 +138,10 @@ public class RealCraft extends JavaPlugin implements Listener {
 		report = new Report(this);
 		skins = new Skins(this);
 		gamesreminder = new GamesReminder(this);
+		quiz = new Quiz(this);
 		if(serverName.equalsIgnoreCase("lobby")){
 			auth = new Auth(this);
 			eventcmds = new EventCmds(this);
-			quiz = new Quiz(this);
 			cancelgrow = new CancelGrow(this);
 			new Test();
 		}
@@ -169,6 +177,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			parkour = new Parkour(this);
 			eventcmds = new EventCmds(this);
 		}
+		socketmanager = new SocketManager();
 		new TabList();
 		this.getServer().getPluginManager().registerEvents(this,this);
 	}
@@ -177,6 +186,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		config.onDisable();
 		db.onDisable();
 		if(lobby != null) lobby.onDisable();
+		socketmanager.onDisable();
 	}
 
 	public static String getServerName(String server){
@@ -189,9 +199,22 @@ public class RealCraft extends JavaPlugin implements Listener {
 		else if(server.equalsIgnoreCase("ragemode")) return "RageMode";
 		else if(server.equalsIgnoreCase("paintball")) return "Paintball";
 		else if(server.equalsIgnoreCase("dominate")) return "Dominate";
-		else if(server.equalsIgnoreCase("uhc")) return "UHC";
 		else if(server.equalsIgnoreCase("parkour")) return "Parkour";
 		return "unknown";
+	}
+
+	public static int getServerPortOrder(String server){
+		if(server.equalsIgnoreCase("lobby")) return 0;
+		else if(server.equalsIgnoreCase("survival")) return 1;
+		else if(server.equalsIgnoreCase("creative")) return 2;
+		else if(server.equalsIgnoreCase("bedwars")) return 3;
+		else if(server.equalsIgnoreCase("hidenseek")) return 4;
+		else if(server.equalsIgnoreCase("blockparty")) return 5;
+		else if(server.equalsIgnoreCase("ragemode")) return 6;
+		else if(server.equalsIgnoreCase("paintball")) return 7;
+		else if(server.equalsIgnoreCase("dominate")) return 10;
+		else if(server.equalsIgnoreCase("parkour")) return 9;
+		return 0;
 	}
 
 	@Override

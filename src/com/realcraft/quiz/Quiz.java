@@ -21,6 +21,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.realcraft.RealCraft;
 import com.realcraft.playermanazer.PlayerManazer;
+import com.realcraft.sockets.SocketData;
+import com.realcraft.sockets.SocketDataEvent;
+import com.realcraft.sockets.SocketManager;
 import com.realcraft.utils.RandomUtil;
 import com.realcraft.utils.StringUtil;
 
@@ -32,6 +35,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Quiz implements Listener, Runnable {
 
 	RealCraft plugin;
+	private boolean master = false;
+	private static final String CHANNEL_QUESTION = "quizQuestion";
+	private static final String CHANNEL_ANSWER = "quizAnswer";
 	private static final String QUIZ_QUESTIONS = "quiz_questions";
 	private static final int REWARD = 100;
 	private static final String CHAR = "\u2588";
@@ -49,9 +55,10 @@ public class Quiz implements Listener, Runnable {
 	private ArrayList<QuizQuestion> questions = new ArrayList<QuizQuestion>();
 
 	public Quiz(RealCraft realcraft){
+		if(RealCraft.getInstance().serverName.equalsIgnoreCase("lobby")) master = true;
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,60*20,60*20);
+		if(master) plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,60*20,60*20);
 		this.loadQuestions();
 	}
 
@@ -60,13 +67,14 @@ public class Quiz implements Listener, Runnable {
 
 	@Override
 	public void run(){
-		//this.runRandomQuestion();
+		if(master) this.runRandomQuestion();
 	}
 
 	public void loadQuestions(){
 		if(plugin.db.connected){
-			ResultSet rs = RealCraft.getInstance().db.query("SELECT quiz_id,quiz_question,quiz_answers FROM "+QUIZ_QUESTIONS+"");
+			ResultSet rs = RealCraft.getInstance().db.query("SELECT quiz_id,quiz_question,quiz_answers FROM "+QUIZ_QUESTIONS);
 			try {
+				questions = new ArrayList<QuizQuestion>();
 				while(rs.next()){
 					int id = rs.getInt("quiz_id");
 					String question = rs.getString("quiz_question");
@@ -82,6 +90,9 @@ public class Quiz implements Listener, Runnable {
 	public void runRandomQuestion(){
 		QuizQuestion question = questions.get(RandomUtil.getRandomInteger(0,questions.size()-1));
 		question.run();
+		SocketData data = new SocketData(CHANNEL_QUESTION);
+		data.setInt("id",question.getId());
+		SocketManager.sendToAll(data);
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
@@ -101,7 +112,27 @@ public class Quiz implements Listener, Runnable {
 					}
 					event.setCancelled(true);
 				} catch (Exception e){
+				}
+			}
+		}
+	}
 
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		SocketData data = event.getData();
+		if(data.getChannel().equalsIgnoreCase(CHANNEL_QUESTION)){
+			for(QuizQuestion question : questions){
+				if(question.getId() == data.getInt("id")){
+					question.run();
+					break;
+				}
+			}
+		}
+		else if(data.getChannel().equalsIgnoreCase(CHANNEL_ANSWER)){
+			for(QuizQuestion question : questions){
+				if(question.getId() == data.getInt("id")){
+					question.setAnswered(data.getString("name"),data.getInt("reward"));
+					break;
 				}
 			}
 		}
@@ -176,10 +207,10 @@ public class Quiz implements Listener, Runnable {
 			for(QuizAnswer answer : this.getAnswers()){
 				if(answer.getId().equalsIgnoreCase(id)){
 					if(answer.isCorrect()){
-						this.answered = true;
 						int reward = PlayerManazer.getPlayerInfo(player).giveCoins(REWARD);
 						player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-						Bukkit.broadcastMessage("§3[Quiz] §6"+player.getName()+"§f odpovedel nejrychleji a ziskava §a+"+reward+" coins");
+						this.setAnswered(player.getName(),reward);
+						this.sendAnswered(player.getName(),reward);
 						Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 							public void run(){
 								PlayerManazer.getPlayerInfo(player).runCoinsEffect("§3Quiz",reward);
@@ -190,6 +221,19 @@ public class Quiz implements Listener, Runnable {
 					}
 				}
 			}
+		}
+
+		public void setAnswered(String name,int reward){
+			this.answered = true;
+			Bukkit.broadcastMessage("§3[Quiz] §6"+name+"§f odpovedel nejrychleji a ziskava §a+"+reward+" coins");
+		}
+
+		private void sendAnswered(String name,int reward){
+			SocketData data = new SocketData(CHANNEL_ANSWER);
+			data.setInt("id",this.getId());
+			data.setString("name",name);
+			data.setInt("reward",reward);
+			SocketManager.sendToAll(data);
 		}
 
 		private void sendToPlayer(Player player,TextComponent[] lines){

@@ -67,7 +67,7 @@ public class AntiCheat implements Listener, PluginMessageListener, Runnable, Com
 			enabled = true;
 			new CheckFlyHack();
 			new CheckSpeedHack();
-			new CheckEnchant(); //TODO: remove
+			//new CheckEnchant(); //TODO: remove
 			if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
 				new CheckEnchant();
 			}
