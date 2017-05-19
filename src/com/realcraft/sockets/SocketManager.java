@@ -26,21 +26,26 @@ public class SocketManager implements Listener {
 					while(!serverSocket.isClosed()){
 						try {
 							Socket socket = serverSocket.accept();
-							try {
-								ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
-								while(!socket.isClosed()){
+							Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
+								@Override
+								public void run(){
 									try {
-										if(inStream.available() <= 0) continue;
-										String server = inStream.readUTF();
-										SocketData data = ((SocketData) inStream.readObject());
-										Bukkit.getPluginManager().callEvent(new SocketDataEvent(SocketServer.getByName(server),data));
-									} catch (IOException | ClassNotFoundException e){
+										ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
+										while(!socket.isClosed()){
+											try {
+												if(inStream.available() <= 0) continue;
+												String server = inStream.readUTF();
+												SocketData data = ((SocketData) inStream.readObject());
+												Bukkit.getPluginManager().callEvent(new SocketDataEvent(SocketServer.getByName(server),data));
+											} catch (IOException | ClassNotFoundException e){
+												e.printStackTrace();
+											}
+										}
+									} catch (IOException e){
 										e.printStackTrace();
 									}
 								}
-							} catch (IOException e){
-								e.printStackTrace();
-							}
+							});
 						} catch (IOException e){
 							e.printStackTrace();
 						}
