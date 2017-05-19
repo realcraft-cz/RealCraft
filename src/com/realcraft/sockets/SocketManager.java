@@ -32,16 +32,12 @@ public class SocketManager implements Listener {
 									try {
 										ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
 										while(!socket.isClosed()){
-											try {
-												if(inStream.available() <= 0) continue;
-												String server = inStream.readUTF();
-												SocketData data = ((SocketData) inStream.readObject());
-												Bukkit.getPluginManager().callEvent(new SocketDataEvent(SocketServer.getByName(server),data));
-											} catch (IOException | ClassNotFoundException e){
-												e.printStackTrace();
-											}
+											if(inStream.available() <= 0) continue;
+											String server = inStream.readUTF();
+											SocketData data = ((SocketData) inStream.readObject());
+											Bukkit.getPluginManager().callEvent(new SocketDataEvent(SocketServer.getByName(server),data));
 										}
-									} catch (IOException e){
+									} catch (IOException | ClassNotFoundException e){
 										e.printStackTrace();
 									}
 								}
