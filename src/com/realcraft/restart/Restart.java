@@ -167,7 +167,7 @@ public class Restart implements Runnable, CommandExecutor {
 		locationsConfig = new YamlConfiguration();
 		locationsConfig.set("spawns",locationList);
 		try {
-			File file = new File(RealCraft.getInstance().getDataFolder()+"locations.yml");
+			File file = new File(RealCraft.getInstance().getDataFolder()+"/locations.yml");
 			locationsConfig.save(file);
 		} catch (IOException e){
 			e.printStackTrace();

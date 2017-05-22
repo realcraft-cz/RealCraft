@@ -1,86 +1,54 @@
 package com.realcraft.minihry;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.realcraft.RealCraft;
+import com.realcraft.sockets.SocketData;
+import com.realcraft.sockets.SocketDataEvent;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class GamesReminder implements Listener, PluginMessageListener {
+public class GamesReminder implements Listener {
+
 	RealCraft plugin;
+	private static final String CHANNEL_REMINDER = "gamesReminder";
 
 	public GamesReminder(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin,"BungeeCord");
-		plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin,"BungeeCord",this);
 	}
 
 	public void onReload(){
 	}
 
 	public void printGameStartingMessage(String server,String game,String prefix,int seconds,int players){
-		TextComponent message = new TextComponent("§e[\u25ba] §bPrave zacina §e"+game+" §bs §e"+players+" hraci§b, klikni §lZDE§b a pripoj se taky.");
+		TextComponent message = new TextComponent("§e\u2726 §fPrave zacina hra §e"+game+" §fs §e"+players+" hraci §7[§a§lPRIPOJIT SE§7]");
 		message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/server "+server));
 		message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Klikni pro pripojeni do hry").create()));
 		for(Player player : Bukkit.getServer().getOnlinePlayers()){
-			if(player.getWorld().getName().equalsIgnoreCase("world") || player.getWorld().getName().equalsIgnoreCase("world_creative")){
+			if(player.getWorld().getName().equalsIgnoreCase("world") || player.getWorld().getName().equalsIgnoreCase("world_creative") || player.getWorld().getName().equalsIgnoreCase("world_parkour")){
 				player.spigot().sendMessage(message);
 			}
 		}
 	}
 
 	public static void sendGameStartingMessage(String game,String prefix,int seconds,int players){
-		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		out.writeUTF("Forward");
-		out.writeUTF("ONLINE");
-		out.writeUTF("GamesReminder");
-
-		String message = RealCraft.getInstance().serverName+";"+game+";"+prefix+";"+seconds+";"+players;
-		byte[] data = message.getBytes();
-        out.writeShort(data.length);
-        out.write(data);
-
-        for(Player player : Bukkit.getServer().getOnlinePlayers()){
-        	player.sendPluginMessage(RealCraft.getInstance(),"BungeeCord",out.toByteArray());
-        	break;
-        }
+		SocketData data = new SocketData(CHANNEL_REMINDER);
+		data.setString("game",game);
+		data.setInt("players",players);
 	}
 
-	@Override
-	public void onPluginMessageReceived(String channel,Player _player,byte[] message){
-		if(!channel.equals("BungeeCord")) return;
-		try {
-			DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
-			String subchannel = in.readUTF();
-			if(!subchannel.equals("GamesReminder")) return;
-
-			short len = in.readShort();
-			byte[] data = new byte[len];
-			in.readFully(data);
-
-			String [] messageData = new String(data).split(";");
-			String server = messageData[0];
-			String game = messageData[1];
-			String prefix = messageData[2];
-			int seconds = Integer.parseInt(messageData[3]);
-			int players = Integer.parseInt(messageData[4]);
-
-			this.printGameStartingMessage(server,game,prefix,seconds,players);
-		} catch (IOException e){
-			e.printStackTrace();
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		SocketData data = event.getData();
+		if(data.getChannel().equalsIgnoreCase(CHANNEL_REMINDER)){
+			this.printGameStartingMessage(event.getServer().toString().toLowerCase(),data.getString("game"),null,0,data.getInt("players"));
 		}
 	}
 }

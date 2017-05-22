@@ -67,7 +67,7 @@ public class Quiz implements Listener, Runnable {
 
 	@Override
 	public void run(){
-		if(master) this.runRandomQuestion();
+		//if(master) this.runRandomQuestion();
 	}
 
 	public void loadQuestions(){

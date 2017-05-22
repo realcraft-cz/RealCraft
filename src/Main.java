@@ -1,8 +1,5 @@
 public class Main {
 	public static void main(String[]args){
-		int[] bagr = new int[]{1,2};
-		test(bagr);
-		System.out.println(bagr[0]+" "+bagr[1]);
 	}
 
 	public static String getTimeFormat(int time){
@@ -24,10 +21,5 @@ public class Main {
 			text += ((coins/100.0)*percent)+", ";
 		}
 		System.out.println(text);
-	}
-
-	public static void test(int[] coords){
-		coords[0] = 5;
-		coords[1] = 7;
 	}
 }

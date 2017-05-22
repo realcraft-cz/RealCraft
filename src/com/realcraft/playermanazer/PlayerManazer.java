@@ -67,6 +67,7 @@ public class PlayerManazer implements Listener {
 		String avatar;
 		boolean coinsboost = true;
 		int lastLotteryTime = 0;
+		boolean activeVoter = false;
 
 		public PlayerInfo(Player player){
 			this.player = player;
@@ -75,6 +76,7 @@ public class PlayerManazer implements Listener {
 			getDatabaseNoticeWords();
 			getLobbyData();
 			loadLastLotteryTime();
+			loadActiveVoter();
 		}
 
 		public void reload(Player player){
@@ -83,6 +85,7 @@ public class PlayerManazer implements Listener {
 			getDatabaseNoticeWords();
 			getLobbyData();
 			loadLastLotteryTime();
+			loadActiveVoter();
 		}
 
 		private void getDatabaseData(){
@@ -307,6 +310,24 @@ public class PlayerManazer implements Listener {
 
 		public int getLastLotteryTime(){
 			return lastLotteryTime;
+		}
+
+		private void loadActiveVoter(){
+			if(RealCraft.getInstance().db.connected){
+				activeVoter = false;
+				ResultSet rs = RealCraft.getInstance().db.query("SELECT user_id FROM votes_GALVotes WHERE user_id = '"+this.getId()+"' AND vote_created > '"+(System.currentTimeMillis()/1000-(2*86400))+"'");
+				try {
+					if(rs.next()){
+						activeVoter = true;
+					}
+					rs.close();
+				} catch (SQLException e){
+				}
+			}
+		}
+
+		public boolean isActiveVoter(){
+			return activeVoter;
 		}
 	}
 }

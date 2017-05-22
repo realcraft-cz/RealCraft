@@ -118,7 +118,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		serverName = getServer().getServerName();
 		essentials = (Essentials) this.getServer().getPluginManager().getPlugin("Essentials");
 		config = new Config(this);
-		TESTSERVER = config.getBoolean("testserver");
+		TESTSERVER = config.getBoolean("testserver",false);
 		db = new MySQL(this);
 		playermanazer = new PlayerManazer(this);
 		banmanazer = new BanManazer(this);
