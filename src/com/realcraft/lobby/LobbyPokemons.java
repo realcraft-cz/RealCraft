@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -16,6 +17,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
@@ -31,6 +33,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import com.google.common.collect.Sets;
 import com.realcraft.RealCraft;
@@ -176,6 +179,8 @@ public class LobbyPokemons implements Listener {
 		private BukkitTask taskMove;
 		private BukkitTask taskEffect;
 		private LobbyPokemonState state = LobbyPokemonState.FOLLOW;
+		private int tick = 0;
+		private boolean warnSound = false;
 
 		public LobbyPokemon(Player player,LobbyPokemonType type){
 			this.player = player;
@@ -196,42 +201,104 @@ public class LobbyPokemons implements Listener {
 			this.create();
 		}
 
+		public Entity getEntity(){
+			return entity;
+		}
+
 		private void create(){
 			Location location = player.getLocation();
 			location.setPitch(0f);
 			entity = player.getWorld().spawnEntity(location,EntityType.ZOMBIE);
+			entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_VEX_CHARGE,1f,1f);
 			if(entity != null){
 				((Zombie)entity).setSilent(true);
 				((Zombie)entity).setBaby(true);
 				((Zombie)entity).getEquipment().setHelmet(type.getItemStack());
 				((Zombie)entity).addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,Integer.MAX_VALUE,1));
+				((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
+				this.clearPathfinders(entity);
 			}
 			else this.remove();
 		}
 
 		private void run(){
+			tick ++;
+			if(tick == 3) tick = 0;
 			if(state == LobbyPokemonState.FOLLOW){
-				Location targetLocation = player.getLocation();
-				try {
-					double speed = 1D;
-					int distance = (int) player.getLocation().distance(entity.getLocation());
-					if(distance > 2.0){
+				LobbyPokemon target = null;
+				double distance = Integer.MAX_VALUE;
+				double tmpDist = 0;
+				for(LobbyPokemon pokemon : pokemons.values()){
+					tmpDist = pokemon.getEntity().getLocation().distanceSquared(entity.getLocation());
+					if(pokemon != this && tmpDist <= 10*10 && tmpDist < distance){
+						target = pokemon;
+						distance = tmpDist;
+					}
+				}
+				if(target != null && this.getDistanceToOwner() < 10*10){
+					if(distance > 3*3 && warnSound == false && RandomUtil.getRandomBoolean()){
+						warnSound = true;
+						entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_GHAST_WARN,0.3f,1f);
+					}
+					if(tick%2 == 0 && distance <= 3*3) Particles.LAVA.display(0.2f,0f,0.2f,0f,2,entity.getLocation().add(0f,1f,0f),128);
+					Location targetLocation = target.getEntity().getLocation();
+					try {
+						double speed = (distance > 3*3 ? 1.0 : 0.5);
 						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 						PathEntity path;
 						path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
-						if(distance > 20 && player.isOnGround()){
-							((CraftEntity)entity).getHandle().setLocation(targetLocation.getBlockX(),targetLocation.getBlockY(),targetLocation.getBlockZ(),0,0);
-						}
-						if (path != null){
+						if(path != null){
 							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
 							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 						}
-					} else {
-						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
-						this.clearPathfinders(entity);
+					} catch (Exception exception){
 					}
-				} catch (Exception exception){
+					if(tick == 0 && distance <= 3*3){
+						if(entity.isOnGround()) entity.setVelocity(entity.getVelocity().add(new Vector(RandomUtil.getRandomDouble(-0.2,0.2),RandomUtil.getRandomDouble(0.3,0.6),RandomUtil.getRandomDouble(-0.2,0.2))));
+						if(RandomUtil.getRandomBoolean()) entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_GHAST_HURT,0.3f,1f);
+					}
+					else if(distance <= 3*3 && RandomUtil.getRandomBoolean()){
+						switch(RandomUtil.getRandomInteger(0,2)){
+							case 0: entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_PLAYER_ATTACK_SWEEP,0.3f,1f);
+							break;
+							case 1: entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK,0.3f,1f);
+							break;
+							case 2: entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_PLAYER_ATTACK_STRONG,0.3f,1f);
+							break;
+						}
+					}
+				} else {
+					warnSound = false;
+					this.followOwner();
 				}
+			}
+		}
+
+		private double getDistanceToOwner(){
+			return player.getLocation().distanceSquared(entity.getLocation());
+		}
+
+		private void followOwner(){
+			Location targetLocation = player.getLocation();
+			try {
+				double speed = 1D;
+				double distance = this.getDistanceToOwner();
+				if(distance > 2*2){
+					((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
+					PathEntity path;
+					path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
+					if(distance > 30*30 && player.isOnGround()){
+						((CraftEntity)entity).getHandle().setLocation(targetLocation.getBlockX(),targetLocation.getBlockY(),targetLocation.getBlockZ(),0,0);
+					}
+					if (path != null){
+						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
+						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
+					}
+				} else {
+					((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
+					this.clearPathfinders(entity);
+				}
+			} catch (Exception exception){
 			}
 		}
 
@@ -271,11 +338,20 @@ public class LobbyPokemons implements Listener {
 			}
 		}
 
+		@EventHandler
+		public void EntityDamageEvent(EntityDamageEvent event){
+			if(event.getEntity().equals(entity)){
+				event.setCancelled(true);
+			}
+		}
+
 		private void interactByEntity(Entity damager){
 			if(damager instanceof Player && damager.equals(player)){
 				if(state == LobbyPokemonState.FOLLOW){
 					state = LobbyPokemonState.SITTING;
 					entity.setGravity(false);
+					entity.setVelocity(new Vector(0,0,0));
+					entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_BAT_HURT,0.2f,1f);
 					Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
 						public void run(){
 							((CraftEntity)entity).getHandle().setLocation(entity.getLocation().getX(),entity.getLocation().getY()-0.7,entity.getLocation().getZ(),0,0);
@@ -284,9 +360,11 @@ public class LobbyPokemons implements Listener {
 				} else {
 					state = LobbyPokemonState.FOLLOW;
 					entity.setGravity(true);
+					entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_BAT_HURT,0.2f,1f);
 					Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
 						public void run(){
 							((CraftEntity)entity).getHandle().setLocation(entity.getLocation().getX(),entity.getLocation().getY()+1.0,entity.getLocation().getZ(),0,0);
+							entity.setVelocity(new Vector(0,0,0));
 						}
 					});
 				}
