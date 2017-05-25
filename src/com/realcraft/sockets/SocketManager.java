@@ -20,6 +20,7 @@ public class SocketManager implements Listener {
 	public SocketManager(){
 		try {
 			serverSocket = new ServerSocket(SocketManager.getServerSocketPort(Bukkit.getServer().getServerName()));
+			serverSocket.setSoTimeout(2000);
 			Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
 				@Override
 				public void run(){
@@ -36,20 +37,18 @@ public class SocketManager implements Listener {
 											String server = inStream.readUTF();
 											SocketData data = ((SocketData) inStream.readObject());
 											Bukkit.getPluginManager().callEvent(new SocketDataEvent(SocketServer.getByName(server),data));
+											socket.close();
 										}
-									} catch (IOException | ClassNotFoundException e){
-										e.printStackTrace();
+									} catch (Exception e){
 									}
 								}
 							});
-						} catch (IOException e){
-							e.printStackTrace();
+						} catch (Exception e){
 						}
 					}
 				}
 			});
-		} catch (IOException e){
-			e.printStackTrace();
+		} catch (Exception e){
 		}
 	}
 
@@ -67,6 +66,7 @@ public class SocketManager implements Listener {
 			public void run(){
 				try {
 					Socket socket = new Socket(Inet4Address.getLocalHost(),SocketManager.getServerSocketPort(server.toString()));
+					socket.setSoTimeout(2000);
 					ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
 					outStream.writeUTF(Bukkit.getServer().getServerName().toUpperCase());
 					outStream.writeObject(data);

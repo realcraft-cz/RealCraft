@@ -33,6 +33,7 @@ import com.realcraft.chat.ChatTips;
 import com.realcraft.config.Config;
 import com.realcraft.creative.CancelGrow;
 import com.realcraft.creative.DisableSpectator;
+import com.realcraft.creative.PlotSquaredWorldEdit;
 import com.realcraft.database.MySQL;
 import com.realcraft.heads.CosmeticHeads;
 import com.realcraft.lobby.Lobby;
@@ -144,6 +145,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 			eventcmds = new EventCmds(this);
 			cancelgrow = new CancelGrow(this);
 			new Test();
+			if(RealCraft.isTestServer()){
+				cosmeticheads = new CosmeticHeads(this);
+			}
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
 			checkresidences = new CheckResidences(this);
@@ -167,6 +171,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			cancelgrow = new CancelGrow(this);
 			cosmeticheads = new CosmeticHeads(this);
 			cancelgrow = new CancelGrow(this);
+			new PlotSquaredWorldEdit();
 		}
 		lobby = new Lobby(this);
 		restart = new Restart(this);

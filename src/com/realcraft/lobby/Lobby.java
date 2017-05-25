@@ -79,7 +79,7 @@ public class Lobby implements Listener {
 	public LobbyPlayerRider lobbyplayerrider = null;
 	public LobbySpawn lobbyspawn = null;
 	public LobbyLottery lobbylottery = null;
-	public LobbyLabyrinth lobbylabyrinth = null;
+	public LobbyPokemons lobbypokemons = null;
 
 	private boolean isLobby = false;
 	private boolean maintenance = false;
@@ -101,7 +101,10 @@ public class Lobby implements Listener {
 				if(plugin.config.getBoolean("lobby.autoparkour.enabled",false)) lobbyautoparkour = new LobbyAutoParkour(plugin);
 				if(plugin.config.getBoolean("lobby.playerrider.enabled",false)) lobbyplayerrider = new LobbyPlayerRider(plugin);
 				if(plugin.config.getBoolean("lobby.spawn.enabled",false)) lobbyspawn = new LobbySpawn(plugin);
-				//lobbylottery = new LobbyLottery(plugin);
+				if(RealCraft.isTestServer()){
+					new LobbyLottery(plugin);
+					lobbypokemons = new LobbyPokemons(plugin);
+				}
 			}
 			if(plugin.serverName.equalsIgnoreCase("parkour") && plugin.config.getBoolean("lobby.spawn.enabled",false)) lobbyspawn = new LobbySpawn(plugin);
 			//if(isLobby) lobbylabyrinth = new LobbyLabyrinth(plugin);
@@ -127,13 +130,12 @@ public class Lobby implements Listener {
 		if(lobbyautoparkour != null) lobbyautoparkour.onReload();
 		if(lobbyplayerrider != null) lobbyplayerrider.onReload();
 		if(lobbyspawn != null) lobbyspawn.onReload();
-		if(lobbylottery != null) lobbylottery.onReload();
-		if(lobbylabyrinth != null) lobbylabyrinth.onReload();
 	}
 
 	public void onDisable(){
 		if(lobbycosmetics != null) lobbycosmetics.onDisable();
 		if(lobbyautoparkour != null) lobbyautoparkour.onDisable();
+		if(lobbypokemons != null) lobbypokemons.onDisable();
 	}
 
 	@EventHandler(priority=EventPriority.NORMAL,ignoreCancelled = false)

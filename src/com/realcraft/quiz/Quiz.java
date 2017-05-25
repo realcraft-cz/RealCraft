@@ -67,6 +67,7 @@ public class Quiz implements Listener, Runnable {
 
 	@Override
 	public void run(){
+		if(!RealCraft.isTestServer()) return;
 		//if(master) this.runRandomQuestion();
 	}
 

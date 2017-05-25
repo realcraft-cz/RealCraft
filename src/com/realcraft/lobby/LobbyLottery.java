@@ -47,9 +47,6 @@ public class LobbyLottery implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 	}
 
-	public void onReload(){
-	}
-
 	public LobbyLotteryInventory getLottery(Player player){
 		if(!lotteries.containsKey(player)) lotteries.put(player,new LobbyLotteryInventory(player));
 		return lotteries.get(player);

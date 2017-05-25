@@ -1,5 +1,6 @@
 package com.pets;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,10 +16,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.cosmetics.Cosmetic;
 import com.cosmetics.Cosmetics;
+import com.google.common.collect.Sets;
 import com.realcraft.RealCraft;
 
 import net.minecraft.server.v1_11_R1.EntityInsentient;
 import net.minecraft.server.v1_11_R1.PathEntity;
+import net.minecraft.server.v1_11_R1.PathfinderGoalSelector;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -31,7 +34,7 @@ public abstract class Pet extends Cosmetic {
 	public Pet(PetType type){
 		super(type.toString(),CosmeticCategory.PET);
 		this.type = type;
-		BukkitRunnable runnable = new BukkitRunnable() {
+		BukkitRunnable runnable = new BukkitRunnable(){
             @Override
             public void run(){
             	for(Player player : Bukkit.getServer().getOnlinePlayers()){
@@ -42,7 +45,7 @@ public abstract class Pet extends Cosmetic {
             	}
             }
         };
-        runnable.runTaskTimerAsynchronously(RealCraft.getInstance(),0,3);
+        runnable.runTaskTimer(RealCraft.getInstance(),0,5);
 	}
 
 	public PetType getType(){
@@ -97,27 +100,48 @@ public abstract class Pet extends Cosmetic {
 		return this.getCategory().toString()+" > "+type.toString();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void follow(Player player){
         if(this.getEntity(player) == null) return;
 
         Entity petEntity = this.getEntity(player);
         Location targetLocation = player.getLocation();
         try {
-	        ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(2);
-	        PathEntity path;
-	        path = ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(targetLocation.getX() + 1, targetLocation.getY(), targetLocation.getZ() + 1);
-            int distance = (int) Bukkit.getPlayer(player.getName()).getLocation().distance(petEntity.getLocation());
-            if (distance > 20 && player.isOnGround()){
-                ((CraftEntity)petEntity).getHandle().setLocation(targetLocation.getBlockX(), targetLocation.getBlockY(), targetLocation.getBlockZ(), 0, 0);
-            }
-            if (path != null && distance > 3.3) {
-                double speed = 1.05d;
-                ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(path, speed);
-                ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(speed);
-            }
+        	double speed = this.getType().toSpeed();
+        	int distance = (int) player.getLocation().distance(petEntity.getLocation());
+        	if(distance > 2.0){
+		        ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(speed);
+		        PathEntity path;
+		        path = ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
+	            if (distance > 20 && player.isOnGround()){
+	                ((CraftEntity)petEntity).getHandle().setLocation(targetLocation.getBlockX(), targetLocation.getBlockY(), targetLocation.getBlockZ(), 0, 0);
+	            }
+	            if (path != null){
+	                ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(path, speed);
+	                ((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(speed);
+	            }
+        	} else {
+        		((EntityInsentient) ((CraftEntity)petEntity).getHandle()).getNavigation().a(0);
+        		this.clearPathfinders(petEntity);
+        	}
         } catch (Exception exception){
-        	((CraftEntity)petEntity).getHandle().setLocation(targetLocation.getBlockX(), targetLocation.getBlockY(), targetLocation.getBlockZ(), 0, 0);
+        	exception.printStackTrace();
+        	//((CraftEntity)petEntity).getHandle().setLocation(targetLocation.getBlockX(), targetLocation.getBlockY(), targetLocation.getBlockZ(), 0, 0);
+        }
+    }
+
+	public void clearPathfinders(org.bukkit.entity.Entity entity) {
+        net.minecraft.server.v1_11_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+        try {
+            Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
+            bField.setAccessible(true);
+            Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
+            cField.setAccessible(true);
+            bField.set(((EntityInsentient) nmsEntity).goalSelector, Sets.newLinkedHashSet());
+            bField.set(((EntityInsentient) nmsEntity).targetSelector, Sets.newLinkedHashSet());
+            cField.set(((EntityInsentient) nmsEntity).goalSelector, Sets.newLinkedHashSet());
+            cField.set(((EntityInsentient) nmsEntity).targetSelector, Sets.newLinkedHashSet());
+        } catch (Exception exc) {
+            exc.printStackTrace();
         }
     }
 
@@ -165,6 +189,10 @@ public abstract class Pet extends Cosmetic {
 				case CHICK: return (byte)0;
 			}
 			return (byte)0;
+		}
+
+		public double toSpeed(){
+			return 1.05D;
 		}
 
 		public EntityType toEntityType(){

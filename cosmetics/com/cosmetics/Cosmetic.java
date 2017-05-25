@@ -54,7 +54,7 @@ public abstract class Cosmetic implements Listener {
 	}
 
 	public enum CosmeticCategory {
-		HAT, SUIT, GADGET, PARTICLEEFFECT, PET, MOUNT;
+		HAT, SUIT, GADGET, PARTICLEEFFECT, PET, MOUNT, POKEMON;
 
 		public String toString(){
 			switch(this){
@@ -64,6 +64,7 @@ public abstract class Cosmetic implements Listener {
 				case PARTICLEEFFECT: return "§bEfekt§r";
 				case PET: return "§bMazlik§r";
 				case MOUNT: return "§bJezdecke zvire§r";
+				case POKEMON: return "§bPokemon§r";
 			}
 			return null;
 		}

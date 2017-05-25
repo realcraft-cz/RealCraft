@@ -20,39 +20,17 @@ import com.realcraft.utils.DateUtil;
 public class BanManazer implements Listener, CommandExecutor {
 	RealCraft plugin;
 
-	boolean enabled = false;
-	String banKickResult;
-	String banMessage;
-	String tempBanMessage;
-	String permWarnMessage;
-
 	public BanManazer(RealCraft realcraft){
 		plugin = realcraft;
-		if(plugin.config.getBoolean("banmanazer.enabled")){
-			enabled = true;
-			banKickResult = plugin.config.getString("banmanazer.banKickResult",null);
-			banMessage = plugin.config.getString("banmanazer.banMessage",null);
-			tempBanMessage = plugin.config.getString("banmanazer.tempBanMessage",null);
-			permWarnMessage = plugin.config.getString("banmanazer.permWarnMessage",null);
-			plugin.getServer().getPluginManager().registerEvents(this,plugin);
-			plugin.getCommand("ban").setExecutor(this);
-		}
+		plugin.getServer().getPluginManager().registerEvents(this,plugin);
+		plugin.getCommand("ban").setExecutor(this);
 	}
 
 	public void onReload(){
-		enabled = false;
-		if(plugin.config.getBoolean("banmanazer.enabled")){
-			enabled = true;
-			banKickResult = plugin.config.getString("banmanazer.banKickResult",null);
-			banMessage = plugin.config.getString("banmanazer.banMessage",null);
-			tempBanMessage = plugin.config.getString("banmanazer.tempBanMessage",null);
-			permWarnMessage = plugin.config.getString("banmanazer.permWarnMessage",null);
-		}
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
-		if(!enabled) return false;
 		Player player = (Player) sender;
 		if(command.getName().equalsIgnoreCase("ban")){
 			if(player.hasPermission("group.Admin")){
@@ -97,16 +75,16 @@ public class BanManazer implements Listener, CommandExecutor {
 				player.sendMessage("/ban <player> <time> <reason>");
 				return true;
 			}
-			else player.sendMessage(RealCraft.parseColors(permWarnMessage));
+			else player.sendMessage(RealCraft.parseColors("&cNemas povoleni na tento prikaz."));
 		}
 		return true;
 	}
 
 	@EventHandler(priority=EventPriority.HIGH,ignoreCancelled = true)
-	public void onPlayerLogin(PlayerLoginEvent e){
-		BanInfo ban = getBanInfo(e.getPlayer().getName(),BanUtils.getAddress(e.getAddress()));
+	public void PlayerLoginEvent(PlayerLoginEvent event){
+		BanInfo ban = getBanInfo(event.getPlayer().getName(),BanUtils.getAddress(event.getAddress()));
 		if(ban != null){
-			e.disallow(Result.KICK_BANNED,ban.getKickResult());
+			event.disallow(Result.KICK_BANNED,ban.getKickMessage());
 		}
 	}
 
@@ -114,7 +92,7 @@ public class BanManazer implements Listener, CommandExecutor {
 		BanInfo ban = new BanInfo(player.getName(),BanUtils.getAddress(player.getAddress().getAddress()),reason,expire,plugin.playermanazer.getPlayerInfo(admin).getId(),admin.getName(),BanUtils.getAddress(admin.getAddress().getAddress()));
 		ban.insertToDB();
 		player.kickPlayer(ban.getKickMessage());
-		plugin.getServer().broadcastMessage(ban.getKickMessage());
+		plugin.getServer().broadcastMessage("§7Hrac §6"+ban.getName()+"§7 byl zabanovan adminem §6"+admin.getName()+"§7"+(expire > 0 ? " na §6"+DateUtil.formatDateDiff((long)expire*1000)+"§7" : "")+". Duvod: §6"+reason);
 	}
 
 	public BanInfo getBanInfo(String name,String address){
@@ -196,19 +174,14 @@ public class BanManazer implements Listener, CommandExecutor {
 		}
 
 		public String getKickMessage(){
-			String result = (expire == 0 ? banMessage : tempBanMessage);
-			if(expire != 0) result = result.replaceAll("%time%",DateUtil.formatDateDiff((long)expire*1000));
-			result = result.replaceAll("%victim%",name);
-			result = result.replaceAll("%admin%",admin_name);
-			result = result.replaceAll("%reason%",reason);
-			return RealCraft.parseColors(result);
-		}
-
-		public String getKickResult(){
-			String result = banKickResult;
-			result = result.replaceAll("%expire%",""+(expire == 0 ? "Nikdy" : DateUtil.getDate(expire)));
-			result = result.replaceAll("%reason%",reason);
-			return RealCraft.parseColors(result);
+			return
+					"§r§c\u2716 §fByl jsi zabanovan §c\u2716\n"+
+					"§r\n"+
+					"§r§7Duvod: §f"+reason+"\n"+
+					(expire > 0 ? "§r§7Ban vyprsi §f"+DateUtil.lastTime(expire,true)+"§7\n" : "")+
+					"§r\n"+
+					"§r§7Zruseni banu muzes ziskat na §6www.realcraft.cz"
+			;
 		}
 	}
 }

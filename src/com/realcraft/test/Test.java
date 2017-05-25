@@ -6,8 +6,11 @@ public class Test {
 	public Test(){
 		//new BoatsTest();
 		new SoundsTest();
-		new CoinsTest();
-		if(RealCraft.isTestServer()) new SignTest();
+		if(RealCraft.isTestServer()){
+			new SignTest();
+			new CoinsTest();
+			//new KickTest();
+		}
 		//new PremiumTest();
 	}
 }

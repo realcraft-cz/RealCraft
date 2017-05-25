@@ -14,15 +14,16 @@
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/worldedit-bukkit-6.1.1-SNAPSHOT-dist.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/TabListAPI_v1.1.1.jar"/>
-	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/spigot-1.11.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/D:/Backups/realcraft_server/source/spigot-api-1.11-R0.1-20161122.092403-51-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/citizens-2.0.21-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/LightAPI.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/ProtocolLib.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/NickNamer_v2.4.3.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/nuvotifier-universal-2.3.3.jar"/>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/spigot-1.11.2.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/D:/Backups/realcraft_server/source/spigot-api-1.11-R0.1-20161122.092403-51-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/public/lobby/plugins/PlotSquared.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
