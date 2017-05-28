@@ -49,7 +49,7 @@ public class CheckEnchant extends Check {
 				}
 			}
 		}
-		if(detected) this.detect(player);
+		//if(detected) this.detect(player);
 		return detected;
 	}
 }
