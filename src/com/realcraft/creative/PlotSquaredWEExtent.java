@@ -12,11 +12,13 @@ import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.AbstractDelegateExtent;
 import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.util.Location;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.biome.BaseBiome;
 
 public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 
 	private final HashSet<RegionWrapper> mask;
+	private World world;
 
 	private static final int BLOCKS_LIMIT = 500000;
 	private static final int TILES_LIMIT = 4096;
@@ -26,13 +28,15 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 	private int tilesCount = 0;
 	private int entitiesCount = 0;
 
-	public PlotSquaredWEExtent(HashSet<RegionWrapper> mask,Extent extent){
+	public PlotSquaredWEExtent(HashSet<RegionWrapper> mask,World world,Extent extent){
 		super(extent);
 		this.mask = mask;
+		this.world = world;
 	}
 
 	@Override
 	public boolean setBlock(Vector location,BaseBlock block) throws WorldEditException {
+		if(!this.isBlockNeedChange(location,block)) return false;
 		int id = block.getType();
 		switch(id){
 			case 54:
@@ -108,7 +112,7 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 		return new BaseBlock(0,0);
 	}
 
-	public boolean maskContains(HashSet<RegionWrapper> mask,int x,int y,int z){
+	private boolean maskContains(HashSet<RegionWrapper> mask,int x,int y,int z){
 		for(RegionWrapper region : mask){
 			if(region.isIn(x,y,z)){
 				return true;
@@ -117,12 +121,18 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 		return false;
 	}
 
-	public boolean maskContains(HashSet<RegionWrapper> mask,int x,int z){
+	private boolean maskContains(HashSet<RegionWrapper> mask,int x,int z){
 		for(RegionWrapper region : mask){
 			if(region.isIn(x,z)){
 				return true;
 			}
 		}
+		return false;
+	}
+
+	private boolean isBlockNeedChange(Vector location,BaseBlock block){
+		BaseBlock current = world.getBlock(location);
+		if(current.getType() != block.getType() || current.getData() != block.getData()) return true;
 		return false;
 	}
 }

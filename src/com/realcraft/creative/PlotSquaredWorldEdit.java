@@ -71,7 +71,7 @@ public class PlotSquaredWorldEdit implements Listener {
 					event.setExtent(new NullExtent());
 					return;
 				}
-				event.setExtent(new PlotSquaredWEExtent(mask,event.getExtent()));
+				event.setExtent(new PlotSquaredWEExtent(mask,event.getWorld(),event.getExtent()));
 			}
 		}
 	}

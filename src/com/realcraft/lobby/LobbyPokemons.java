@@ -60,7 +60,7 @@ public class LobbyPokemons implements Listener {
 	private static final String POKEMONS = "pokemons";
 	private static final String POKEMONS_USERS = "pokemons_users";
 	private static final String invName = "Pokemon";
-	private static final String invBuyName = "Pokemon > Koupit pokemona";
+	private static final String invBuyName = "Pokemon > Koupit";
 	private static final int PRICE = 500;
 	private static ItemStack item = null;
 	private ArrayList<LobbyPokemonType> pokemonTypes = new ArrayList<LobbyPokemonType>();
@@ -205,6 +205,7 @@ public class LobbyPokemons implements Listener {
 										player.closeInventory();
 									} else {
 										this.openBuyMenu(player,type);
+										player.playSound(player.getLocation(),Sound.UI_BUTTON_CLICK,1f,1f);
 									}
 									break;
 								}
@@ -226,6 +227,7 @@ public class LobbyPokemons implements Listener {
 					}
 					else if(item.getType() == Material.REDSTONE_BLOCK){
 						this.openMenu(player,playerPage.get(player));
+						player.playSound(player.getLocation(),Sound.UI_BUTTON_CLICK,1f,1f);
 					}
 				}
 			}
