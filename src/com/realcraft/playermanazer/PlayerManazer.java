@@ -264,8 +264,16 @@ public class PlayerManazer implements Listener {
 			return coins;
 		}
 
+		public boolean hasCoinsBoost(){
+			return coinsboost;
+		}
+
 		public int giveCoins(int coins){
-			coins = (coinsboost && coins > 0 ? coins*2 : coins);
+			return this.giveCoins(coins,true);
+		}
+
+		public int giveCoins(int coins,boolean boost){
+			coins = (coinsboost && boost && coins > 0 ? coins*2 : coins);
 			this.coins += coins;
 			RealCraft.getInstance().db.update("UPDATE authme SET user_coins='"+this.coins+"' WHERE user_id = '"+id+"'");
 			return coins;
@@ -273,25 +281,30 @@ public class PlayerManazer implements Listener {
 
 		private static final int[] coinsPercentages = new int[]{0,10,20,30,40,50,60,68,75,81,86,90,93,95,96,97,98,99,100};
 		private static final int[] coinsTimings = new int[]{2,4,6,8,10,12,14,16,18,20,22,24,26,29,33,38,44,51,59};
+
 		public void runCoinsEffect(int coins){
-			this.runCoinsEffect(" ",coins);
+			this.runCoinsEffect(" ",coins,true);
 		}
 
 		public void runCoinsEffect(String title,int coins){
+			this.runCoinsEffect(" ",coins,true);
+		}
+
+		public void runCoinsEffect(String title,int coins,boolean boost){
 			int i = 0;
 			for(int percent : coinsPercentages){
 				Bukkit.getScheduler().scheduleSyncDelayedTask(RealCraft.getInstance(),new Runnable(){
 					@Override
 					public void run(){
-						showCoinsEffect(title,(int)Math.round((coins/100.0)*percent));
+						showCoinsEffect(title,(int)Math.round((coins/100.0)*percent),boost);
 					}
 				},coinsTimings[i++]);
 			}
 		}
 
-		private void showCoinsEffect(String title,int coins){
+		private void showCoinsEffect(String title,int coins,boolean boost){
 			Title.showTitle(player,title,0.0,2,0.5);
-			Title.showSubTitle(player,"§a+"+coins+" coins"+(coinsboost ? " §b(2x)" : ""),0.0,2,0.5);
+			Title.showSubTitle(player,"§a+"+coins+" coins"+(coinsboost && boost ? " §b(2x)" : ""),0.0,2,0.5);
 			player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
 		}
 

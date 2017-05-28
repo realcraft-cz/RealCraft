@@ -34,7 +34,7 @@ public class LobbyLottery implements Listener {
 
 	RealCraft plugin;
 	public static final String LOTTERIES = "lotteries";
-	private static final int REPEAT_LIMIT = 10;
+	private static final int REPEAT_LIMIT = 5;
 	private static final String invName = "Loterie";
 	private static final String arrowUp = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ4Yjc2OGM2MjM0MzJkZmIyNTlmYjNjMzk3OGU5OGRlYzExMWY3OWRiZDZjZDg4ZjIxMTU1Mzc0YjcwYjNjIn19fQ==";
 	private static final String arrowDown = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmRhZGQ3NTVkMDg1MzczNTJiZjdhOTNlM2JiN2RkNGQ3MzMxMjFkMzlmMmZiNjcwNzNjZDQ3MWY1NjExOTRkZCJ9fX0=";
@@ -230,7 +230,7 @@ public class LobbyLottery implements Listener {
 				meta.setDisplayName("§a§lLosovat");
 				lore = new ArrayList<String>();
 				lore.add("§7Klikni pro zakoupeni");
-				lore.add("§7a spusteni losovani.");
+				lore.add("§7a spusteni losovani");
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				inventory.setItem(52,item);
@@ -336,7 +336,7 @@ public class LobbyLottery implements Listener {
 			this.update();
 			this.reset();
 			if(wincoins > 0){
-				wincoins = PlayerManazer.getPlayerInfo(player).giveCoins(wincoins);
+				wincoins = PlayerManazer.getPlayerInfo(player).giveCoins(wincoins,false);
 				Bukkit.broadcastMessage("§d[Loterie] §6"+player.getName()+" §fuhodl "+winnumbers+" "+StringUtil.inflect(winnumbers,new String[]{"cislo","cisla","cisel"})+" a ziskava §a+"+wincoins+" coins");
 			}
 			final int givencoins = wincoins;
@@ -344,7 +344,7 @@ public class LobbyLottery implements Listener {
 			Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 				public void run(){
 					LobbyLotteryInventory.this.close();
-					if(givencoins > 0) PlayerManazer.getPlayerInfo(player).runCoinsEffect("§aVyhra v loterii",givencoins);
+					if(givencoins > 0) PlayerManazer.getPlayerInfo(player).runCoinsEffect("§aVyhra v loterii",givencoins,false);
 					else {
 						Title.showTitle(player,"§cBez vyhry",0.0,4,0.5);
 						Title.showSubTitle(player,"§fNic jsi nevyhral, zkus to priste.",0.0,4,0.5);

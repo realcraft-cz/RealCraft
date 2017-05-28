@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public class LocationUtil {
 
@@ -23,6 +25,16 @@ public class LocationUtil {
         while (angle > 180) angle -= 360;
         return angle;
     }
+
+	public static boolean isPlayerLookingAt(Player player,Location target){
+		return isPlayerLookingAt(player,target,0.9);
+	}
+
+	public static boolean isPlayerLookingAt(Player player,Location target,double range){
+		Location eyeLocation = player.getEyeLocation();
+		Vector toEntity = target.toVector().subtract(eyeLocation.toVector());
+		return (toEntity.normalize().dot(eyeLocation.getDirection()) > range);
+	}
 
 	public static BlockFace yawToFace (float yaw) {
         return yawToFace(yaw, true);
