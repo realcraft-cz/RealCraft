@@ -52,6 +52,7 @@ import com.realcraft.restart.Restart;
 import com.realcraft.schema.Schema;
 import com.realcraft.skins.Skins;
 import com.realcraft.sockets.SocketManager;
+import com.realcraft.spectator.Spectator;
 import com.realcraft.teleport.TeleportRequests;
 import com.realcraft.test.Test;
 import com.realcraft.trading.Trading;
@@ -123,6 +124,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		db = new MySQL(this);
 		playermanazer = new PlayerManazer(this);
 		banmanazer = new BanManazer(this);
+		new Spectator(this);
 		mute = new Mute(this);
 		antispam = new AntiSpam(this);
 		anticheat = new AntiCheat(this);
@@ -231,7 +233,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 				banmanazer.onReload();
 				mute.onReload();
 				antispam.onReload();
-				anticheat.onReload();
 				chatlog.onReload();
 				moderatorchat.onReload();
 				chatnotice.onReload();
@@ -281,7 +282,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			Bukkit.getServer().getPluginManager().callEvent(callevent);
 		}
 
-		if(!AntiCheat.isPlayerSpectating(player)){
+		if(!Spectator.isPlayerSpectating(player)){
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this,new Runnable(){
 				@Override
 				public void run(){

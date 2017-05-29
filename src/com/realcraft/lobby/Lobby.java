@@ -54,6 +54,7 @@ import com.google.common.collect.Sets;
 import com.realcraft.RealCraft;
 import com.realcraft.auth.AuthLoginEvent;
 import com.realcraft.playermanazer.PlayerManazer.PlayerInfo;
+import com.realcraft.spectator.Spectator;
 import com.realcraft.utils.Particles;
 import com.utils.CustomPathFinderGoalPanic;
 
@@ -162,7 +163,7 @@ public class Lobby implements Listener {
 	@EventHandler
 	public void AuthLoginEvent(AuthLoginEvent event){
 		final Player player = event.getPlayer();
-		if(!AntiCheat.isPlayerSpectating(player)){
+		if(!Spectator.isPlayerSpectating(player)){
 			player.setGameMode(GameMode.ADVENTURE);
 			player.setWalkSpeed(0.3f);
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
@@ -198,7 +199,7 @@ public class Lobby implements Listener {
 				@Override
 				public void run(){
 					event.getPlayer().setWalkSpeed(0.3f);
-					if(!AntiCheat.isPlayerSpectating(event.getPlayer())){
+					if(!Spectator.isPlayerSpectating(event.getPlayer())){
 						event.getPlayer().setGameMode(GameMode.ADVENTURE);
 						event.getPlayer().setAllowFlight(false);
 						event.getPlayer().setFlying(false);
