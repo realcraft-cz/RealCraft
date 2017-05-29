@@ -4,23 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.util.Vector;
 
 import com.anticheat.AntiCheat;
 import com.anticheat.checks.Check.CheckType;
 import com.anticheat.events.AntiCheatDetectEvent;
-import com.anticheat.utils.CollisionUtil;
 import com.anticheat.utils.FightData;
 import com.realcraft.RealCraft;
 
+@Deprecated
 public class FightCheck implements Listener, Runnable {
 	AntiCheat anticheat;
 
@@ -53,8 +50,6 @@ public class FightCheck implements Listener, Runnable {
 			if(!AntiCheat.isPlayerExempted(player)){
 				if(event.getCause() == DamageCause.ENTITY_ATTACK){
 					this.checkSpeedFight(player);
-					//this.checkDirectionFight(player,victim);
-					this.checkNoSwing(player);
 				}
 			}
 		}
@@ -100,7 +95,7 @@ public class FightCheck implements Listener, Runnable {
         if (max > 15) {
         	data.speedViolations ++;
         	if(data.speedViolations > 3){
-	        	AntiCheatDetectEvent callevent = new AntiCheatDetectEvent(player.getPlayer(),CheckType.KILLAURA_SPEED);
+	        	AntiCheatDetectEvent callevent = new AntiCheatDetectEvent(player.getPlayer(),CheckType.KILLAURA);
 				Bukkit.getServer().getPluginManager().callEvent(callevent);
 				data.speedViolations = 0;
         	}
@@ -109,7 +104,7 @@ public class FightCheck implements Listener, Runnable {
         }
 	}
 
-	public void checkDirectionFight(Player player,Player damaged){
+	/*public void checkDirectionFight(Player player,Player damaged){
 		Location loc = player.getLocation();
 		Location dLoc = damaged.getLocation();
 
@@ -127,9 +122,9 @@ public class FightCheck implements Listener, Runnable {
 				data.directionViolations = 0;
             }
 		}
-	}
+	}*/
 
-	public void checkNoSwing(Player player){
+	/*public void checkNoSwing(Player player){
 		FightData data = this.getPlayerFightData(player);
 		if(!data.noSwingArmSwung){
 			data.noSwingViolations ++;
@@ -141,5 +136,5 @@ public class FightCheck implements Listener, Runnable {
 		} else {
 			data.noSwingArmSwung = false;
 		}
-	}
+	}*/
 }

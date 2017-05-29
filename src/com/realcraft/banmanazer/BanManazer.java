@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import com.realcraft.RealCraft;
+import com.realcraft.playermanazer.PlayerManazer;
 import com.realcraft.utils.DateUtil;
 
 public class BanManazer implements Listener, CommandExecutor {
@@ -88,11 +90,14 @@ public class BanManazer implements Listener, CommandExecutor {
 		}
 	}
 
-	public void banPlayer(Player player,int expire,String reason,Player admin){
-		BanInfo ban = new BanInfo(player.getName(),BanUtils.getAddress(player.getAddress().getAddress()),reason,expire,plugin.playermanazer.getPlayerInfo(admin).getId(),admin.getName(),BanUtils.getAddress(admin.getAddress().getAddress()));
+	public static void banPlayer(Player player,int expire,String reason,Player admin){
+		BanInfo ban = null;
+		if(admin != null) ban = new BanInfo(player.getName(),BanUtils.getAddress(player.getAddress().getAddress()),reason,expire,PlayerManazer.getPlayerInfo(admin).getId(),admin.getName(),BanUtils.getAddress(admin.getAddress().getAddress()));
+		else ban = new BanInfo(player.getName(),BanUtils.getAddress(player.getAddress().getAddress()),reason,expire,0,"","");
 		ban.insertToDB();
 		player.kickPlayer(ban.getKickMessage());
-		plugin.getServer().broadcastMessage("§7Hrac §6"+ban.getName()+"§7 byl zabanovan adminem §6"+admin.getName()+"§7"+(expire > 0 ? " na §6"+DateUtil.formatDateDiff((long)expire*1000)+"§7" : "")+". Duvod: §6"+reason);
+		if(admin != null) Bukkit.getServer().broadcastMessage("§7Hrac §6"+ban.getName()+"§7 byl zabanovan adminem §6"+admin.getName()+"§7"+(expire > 0 ? " na §6"+DateUtil.formatDateDiff((long)expire*1000)+"§7" : "")+". Duvod: §6"+reason);
+		Bukkit.getServer().broadcastMessage("§7Hrac §6"+ban.getName()+"§7 byl zabanovan"+(expire > 0 ? " na §6"+DateUtil.formatDateDiff((long)expire*1000)+"§7" : "")+". Duvod: §6"+reason);
 	}
 
 	public BanInfo getBanInfo(String name,String address){
@@ -118,7 +123,7 @@ public class BanManazer implements Listener, CommandExecutor {
 		return null;
 	}
 
-	public class BanInfo {
+	public static class BanInfo {
 		String name;
 		String address;
 		String reason;
@@ -138,10 +143,10 @@ public class BanManazer implements Listener, CommandExecutor {
 		}
 
 		public void insertToDB(){
-			if(plugin.db.connected){
+			if(RealCraft.getInstance().db.connected){
 				PreparedStatement stmt;
 				try {
-					stmt = plugin.db.conn.prepareStatement("INSERT INTO bans (user_name,user_ip,ban_reason,ban_created,ban_expire,admin_id,admin_ip) VALUES(?,?,?,?,?,?,?)");
+					stmt = RealCraft.getInstance().db.conn.prepareStatement("INSERT INTO bans (user_name,user_ip,ban_reason,ban_created,ban_expire,admin_id,admin_ip) VALUES(?,?,?,?,?,?,?)");
 					stmt.setString(1,name.toLowerCase());
 					stmt.setString(2,address);
 					stmt.setString(3,reason);

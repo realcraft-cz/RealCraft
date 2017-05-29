@@ -27,17 +27,13 @@ public abstract class Check implements Listener, Runnable {
 	}
 
 	public enum CheckType {
-		FLYHACK, SPEEDHACK, NOFALL, WATERWALK, KILLAURA_SPEED, KILLAURA_DIR, KILLAURA_NOSWING, ENCHANT;
+		FLYHACK, SPEEDHACK, KILLAURA, ENCHANT;
 
 		public String toString(){
 			switch(this){
 				case FLYHACK: return "FlyHack";
 				case SPEEDHACK: return "SpeedHack";
-				case NOFALL: return "NoFall";
-				case WATERWALK: return "WaterWalk";
-				case KILLAURA_SPEED: return "KillAura (speed)";
-				case KILLAURA_DIR: return "KillAura (direction)";
-				case KILLAURA_NOSWING: return "KillAura (noswing)";
+				case KILLAURA: return "KillAura";
 				case ENCHANT: return "SuperEnchant";
 			}
 			return null;
@@ -47,11 +43,7 @@ public abstract class Check implements Listener, Runnable {
 			switch(this){
 				case FLYHACK: return 1;
 				case SPEEDHACK: return 8;
-				case NOFALL: return 2;
-				case WATERWALK: return 3;
-				case KILLAURA_SPEED: return 4;
-				case KILLAURA_DIR: return 5;
-				case KILLAURA_NOSWING: return 6;
+				case KILLAURA: return 4;
 				case ENCHANT: return 7;
 			}
 			return 0;
@@ -60,6 +52,27 @@ public abstract class Check implements Listener, Runnable {
 		public int getRunSpeed(){
 			switch(this){
 				case FLYHACK: return 20;
+				case KILLAURA: return 1;
+				default:break;
+			}
+			return 0;
+		}
+
+		public int getBanLimit(){
+			switch(this){
+				case FLYHACK: return 3;
+				case SPEEDHACK: return 3;
+				case KILLAURA: return 3;
+				default:break;
+			}
+			return 0;
+		}
+
+		public int getBanTimeRange(){
+			switch(this){
+				case FLYHACK: return 5000;
+				case SPEEDHACK: return 5000;
+				case KILLAURA: return 5000;
 				default:break;
 			}
 			return 0;
