@@ -96,7 +96,7 @@ public class SocketManager implements Listener {
 		LOBBY, SURVIVAL, CREATIVE, BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE, PARKOUR;
 
 		public static SocketServer getByName(String name){
-			return SocketServer.valueOf(name);
+			return SocketServer.valueOf(name.toUpperCase());
 		}
 	}
 }

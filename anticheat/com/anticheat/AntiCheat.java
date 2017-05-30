@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.anticheat.checks.Check.CheckType;
 import com.anticheat.checks.CheckEnchant;
 import com.anticheat.checks.CheckFlyHack;
 import com.anticheat.checks.CheckKillAura;
@@ -25,31 +26,24 @@ import com.realcraft.sockets.SocketManager;
 public class AntiCheat implements Listener {
 	RealCraft plugin;
 
-	boolean enabled = false;
-	String warnMessage;
+	private static final String CHANNEL_REPORT = "ACReport";
+	private static final String CHANNEL_BAN = "ACBan";
+	private static final String REPORTS = "anticheat_reports";
+	private static final int REPORT_TIMEOUT = 0;
 
-	static final String CHANNEL_REPORT = "ACReport";
-	static final String REPORTS = "anticheat_reports";
-	static final int REPORT_TIMEOUT = 0;
-
-	static HashMap<String,Long> exemptTime = new HashMap<String,Long>();
+	private static HashMap<String,Long> exemptTime = new HashMap<String,Long>();
 
 	private static HashMap<Player,AntiCheatPlayer> players = new HashMap<Player,AntiCheatPlayer>();
 
 	public AntiCheat(RealCraft realcraft){
 		plugin = realcraft;
-		if(plugin.config.getBoolean("anticheat.enabled")){
-			enabled = true;
-			new CheckFlyHack();
-			new CheckSpeedHack();
-			new CheckKillAura();
-			if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
-				new CheckEnchant();
-			}
-
-			plugin.getServer().getPluginManager().registerEvents(this,plugin);
-			warnMessage = plugin.config.getString("anticheat.warnMessage","&c[AntiCheat | &7%server%&c] &f%player% &7 | %reason%");
+		new CheckFlyHack();
+		new CheckSpeedHack();
+		new CheckKillAura();
+		if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
+			new CheckEnchant();
 		}
+		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 	}
 
 	public static AntiCheatPlayer getPlayer(Player player){
@@ -69,15 +63,16 @@ public class AntiCheat implements Listener {
 	@EventHandler
 	public void AntiCheatCheckEvent(AntiCheatDetectEvent event){
 		Player player = event.getPlayer();
-		this.sendReport(player,event.getType().toString());
+		if(event.getType().getBanLimit() != 0) AntiCheat.getPlayer(player).addTypeCheck(event.getType());
+		this.sendReport(player,event.getType().toString(),AntiCheat.getPlayer(player).getTypeChecks(event.getType()));
 		RealCraft.getInstance().db.update("INSERT INTO "+REPORTS+" (user_id,report_type,report_created) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+event.getType().getId()+"','"+(System.currentTimeMillis()/1000)+"')");
 		if(event.getType().getBanLimit() != 0){
-			AntiCheat.getPlayer(player).addTypeCheck(event.getType());
 			if(AntiCheat.getPlayer(player).getTypeChecks(event.getType()) >= event.getType().getBanLimit()){
 				AntiCheat.getPlayer(player).reset();
 				Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
 					@Override
 					public void run(){
+						AntiCheat.this.sendBanReport(player,event.getType());
 						BanManazer.banPlayer(player,(int)((System.currentTimeMillis()/1000)+30*86400),event.getType().toString(),null);
 					}
 				});
@@ -89,7 +84,10 @@ public class AntiCheat implements Listener {
 	public void SocketDataEvent(SocketDataEvent event){
 		SocketData data = event.getData();
 		if(data.getChannel().equalsIgnoreCase(CHANNEL_REPORT)){
-			printReport(RealCraft.getServerName(event.getServer().toString()),data.getString("player"),data.getString("reason"));
+			printReport(RealCraft.getServerName(event.getServer().toString()),data.getString("player"),data.getString("type"),data.getInt("checks"));
+		}
+		else if(data.getChannel().equalsIgnoreCase(CHANNEL_BAN)){
+			printBanReport(RealCraft.getServerName(event.getServer().toString()),data.getString("player"),data.getString("type"));
 		}
 	}
 
@@ -102,34 +100,41 @@ public class AntiCheat implements Listener {
 		return false;
 	}
 
-	public static void DEBUG(String message){
-		System.out.println("[AC] "+message);
-	}
-
-	private void printReport(String server,String name,String reason){
-		String reportMessage = warnMessage;
-		reportMessage = reportMessage.replaceAll("%server%",RealCraft.getServerName(server));
-		reportMessage = reportMessage.replaceAll("%player%",name);
-		reportMessage = reportMessage.replaceAll("%reason%",reason);
-		reportMessage = RealCraft.parseColors(reportMessage);
-
+	private void printReport(String server,String name,String _type,int checks){
 		for(Player player : plugin.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin")){
-				player.sendMessage(reportMessage);
+				CheckType type = CheckType.getByName(_type);
+				player.sendMessage("§c[AC | §7"+server+"§c] §f"+name+" §7| "+type.toString()+" [§f"+checks+"/"+type.getBanLimit()+"§7]");
 				player.playSound(player.getLocation(),PlayerManazer.getPlayerInfo(player).getNoticeSound(),1,1);
 			}
 		}
 	}
 
-	private void sendReport(Player player,String reason){
+	private void sendReport(Player player,String type,int checks){
 		if(AntiCheat.getPlayer(player).lastReported+REPORT_TIMEOUT < System.currentTimeMillis()){
-			printReport(plugin.serverName,player.getName(),reason);
+			printReport(RealCraft.getServerName(plugin.serverName),player.getName(),type,checks);
 			AntiCheat.getPlayer(player).lastReported = System.currentTimeMillis();
 
 			SocketData data = new SocketData(CHANNEL_REPORT);
 			data.setString("player",player.getName());
-			data.setString("reason",reason);
+			data.setString("type",type);
+			data.setInt("checks",checks);
 			SocketManager.sendToAll(data);
+		}
+	}
+
+	private void sendBanReport(Player player,CheckType type){
+		SocketData data = new SocketData(CHANNEL_BAN);
+		data.setString("player",player.getName());
+		data.setString("type",type.toString());
+		SocketManager.sendToAll(data);
+	}
+
+	private void printBanReport(String server,String name,String type){
+		for(Player player : plugin.getServer().getOnlinePlayers()){
+			if(player.hasPermission("group.Admin")){
+				player.sendMessage("§c[AC | §7"+server+"§c] §f"+name+" §6byl zabanovan za §7"+type);
+			}
 		}
 	}
 }

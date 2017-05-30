@@ -29,6 +29,10 @@ public abstract class Check implements Listener, Runnable {
 	public enum CheckType {
 		FLYHACK, SPEEDHACK, KILLAURA, ENCHANT;
 
+		public static CheckType getByName(String name){
+			return CheckType.valueOf(name.toUpperCase());
+		}
+
 		public String toString(){
 			switch(this){
 				case FLYHACK: return "FlyHack";
@@ -62,7 +66,7 @@ public abstract class Check implements Listener, Runnable {
 			switch(this){
 				case FLYHACK: return 3;
 				case SPEEDHACK: return 3;
-				case KILLAURA: return 3;
+				case KILLAURA: return 5;
 				default:break;
 			}
 			return 0;
@@ -70,9 +74,9 @@ public abstract class Check implements Listener, Runnable {
 
 		public int getBanTimeRange(){
 			switch(this){
-				case FLYHACK: return 5000;
-				case SPEEDHACK: return 5000;
-				case KILLAURA: return 5000;
+				case FLYHACK: return 10000;
+				case SPEEDHACK: return 10000;
+				case KILLAURA: return 30000;
 				default:break;
 			}
 			return 0;
