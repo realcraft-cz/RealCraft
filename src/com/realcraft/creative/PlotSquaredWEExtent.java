@@ -36,57 +36,18 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 
 	@Override
 	public boolean setBlock(Vector location,BaseBlock block) throws WorldEditException {
-		if(!this.isBlockNeedChange(location,block)) return false;
-		int id = block.getType();
-		switch(id){
-			case 54:
-			case 130:
-			case 142:
-			case 27:
-			case 137:
-			case 52:
-			case 154:
-			case 84:
-			case 25:
-			case 144:
-			case 138:
-			case 176:
-			case 177:
-			case 63:
-			case 68:
-			case 323:
-			case 117:
-			case 116:
-			case 28:
-			case 66:
-			case 157:
-			case 61:
-			case 62:
-			case 140:
-			case 146:
-			case 149:
-			case 150:
-			case 158:
-			case 23:
-			case 123:
-			case 124:
-			case 29:
-			case 33:
-			case 151:
-			case 178: {
-				if(this.tilesCount < TILES_LIMIT && this.blocksCount < BLOCKS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
-					this.tilesCount ++;
-					this.blocksCount ++;
-					return super.setBlock(location,block);
-				}
-				break;
+		if(this.isBlockEqual(world.getBlock(location),block)) return false;
+		if(this.isBlockForbidden(block)) return false;
+		if(this.isBlockTileEntity(block)){
+			if(this.tilesCount < TILES_LIMIT && this.blocksCount < BLOCKS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
+				this.tilesCount ++;
+				this.blocksCount ++;
+				return super.setBlock(location,block);
 			}
-			default: {
-				if(this.blocksCount < BLOCKS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
-					this.blocksCount ++;
-					return super.setBlock(location,block);
-				}
-				break;
+		} else {
+			if(this.blocksCount < BLOCKS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
+				this.blocksCount ++;
+				return super.setBlock(location,block);
 			}
 		}
 		return false;
@@ -130,9 +91,85 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 		return false;
 	}
 
-	private boolean isBlockNeedChange(Vector location,BaseBlock block){
-		BaseBlock current = world.getBlock(location);
-		if(current.getType() != block.getType() || current.getData() != block.getData()) return true;
+	private boolean isBlockEqual(BaseBlock current,BaseBlock block){
+		if(current.getType() == block.getType() && current.getData() == block.getData()) return true;
+		return false;
+	}
+
+	private boolean isBlockForbidden(BaseBlock block){
+		switch(block.getType()){
+			case 52:
+			case 46:
+			case 90:
+			case 116:
+			case 119:
+			case 130:
+			case 219:
+			case 220:
+			case 221:
+			case 222:
+			case 223:
+			case 224:
+			case 225:
+			case 226:
+			case 227:
+			case 228:
+			case 229:
+			case 230:
+			case 231:
+			case 232:
+			case 233:
+			case 234:
+			case 137:
+			case 210:
+			case 211:
+			case 422:
+			case 255:
+			case 217:
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isBlockTileEntity(BaseBlock block){
+		switch(block.getType()){
+			case 54:
+			case 130:
+			case 142:
+			case 27:
+			case 137:
+			case 52:
+			case 154:
+			case 84:
+			case 25:
+			case 144:
+			case 138:
+			case 176:
+			case 177:
+			case 63:
+			case 68:
+			case 323:
+			case 117:
+			case 116:
+			case 28:
+			case 66:
+			case 157:
+			case 61:
+			case 62:
+			case 140:
+			case 146:
+			case 149:
+			case 150:
+			case 158:
+			case 23:
+			case 123:
+			case 124:
+			case 29:
+			case 33:
+			case 151:
+			case 178:
+			return true;
+		}
 		return false;
 	}
 }

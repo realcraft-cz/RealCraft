@@ -39,7 +39,7 @@ public class PlotSquaredWorldEdit implements Listener {
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
 		String command = event.getMessage().substring(1).toLowerCase();
-		if((command.startsWith("p wea") || command.startsWith("wea")) && (player.hasPermission("group.Admin") || player.hasPermission("group.Moderator") || player.hasPermission("group.Builder"))){
+		if((command.equalsIgnoreCase("p wea") || command.equalsIgnoreCase("wea")) && (player.hasPermission("group.Admin") || player.hasPermission("group.Moderator") || player.hasPermission("group.Builder"))){
 			WEByPass.put(player.getName(),!WEByPass.get(player.getName()));
 			player.sendMessage("§8[§6P2§8] §6WorldEdit bypass "+(WEByPass.get(player.getName()) ? "§aenabled" : "§cdisabled"));
 			event.setCancelled(true);
