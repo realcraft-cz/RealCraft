@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dye;
@@ -52,5 +53,10 @@ public class CancelGrow implements Listener {
 	@EventHandler
 	public void BlockSpreadEvent(BlockSpreadEvent event){
 		if(event.getSource().getType() == Material.VINE) event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void LeavesDecayEvent(LeavesDecayEvent event){
+		event.setCancelled(true);
 	}
 }
