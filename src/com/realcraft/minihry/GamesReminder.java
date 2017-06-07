@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import com.realcraft.RealCraft;
 import com.realcraft.sockets.SocketData;
 import com.realcraft.sockets.SocketDataEvent;
+import com.realcraft.sockets.SocketManager;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -42,6 +43,7 @@ public class GamesReminder implements Listener {
 		SocketData data = new SocketData(CHANNEL_REMINDER);
 		data.setString("game",game);
 		data.setInt("players",players);
+		SocketManager.sendToAll(data);
 	}
 
 	@EventHandler
