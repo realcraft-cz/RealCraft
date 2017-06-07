@@ -65,3 +65,9 @@ commands:
     description: sound
   coinstest:
     description: coinstest
+  /schbr:
+    description: Set brush to schematic brush.
+  /schset:
+    description: Define a schematic set (same format as //schbr command)
+  /schlist:
+    description: List schematics available

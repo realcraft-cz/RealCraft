@@ -34,6 +34,7 @@ import com.realcraft.config.Config;
 import com.realcraft.creative.CancelGrow;
 import com.realcraft.creative.DisableSpectator;
 import com.realcraft.creative.PlotSquaredWorldEdit;
+import com.realcraft.creative.SchematicBrush;
 import com.realcraft.database.MySQL;
 import com.realcraft.heads.CosmeticHeads;
 import com.realcraft.lobby.Lobby;
@@ -142,6 +143,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		skins = new Skins(this);
 		gamesreminder = new GamesReminder(this);
 		quiz = new Quiz(this);
+		new SchematicBrush();
 		if(serverName.equalsIgnoreCase("lobby")){
 			auth = new Auth(this);
 			eventcmds = new EventCmds(this);
