@@ -74,8 +74,8 @@ public abstract class Check implements Listener, Runnable {
 
 		public int getBanTimeRange(){
 			switch(this){
-				case FLYHACK: return 10000;
-				case SPEEDHACK: return 10000;
+				case FLYHACK: return 30000;
+				case SPEEDHACK: return 30000;
 				case KILLAURA: return 30000;
 				default:break;
 			}

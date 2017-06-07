@@ -40,7 +40,7 @@ public class CheckSpeedHack extends Check {
 		from.setY(0);
 		to.setY(0);
 		if(!Utils.canPlayerFly(player) && !player.hasPotionEffect(PotionEffectType.SPEED)){
-			if(from.distance(to) > SPEED_LIMIT*((1f/0.2)*player.getWalkSpeed()) && !Utils.cantStandAtBetter(player.getLocation().getBlock()) && !Utils.isAboveIce(player.getLocation().getBlock())){
+			if(player.getWalkSpeed() > 0.99 && from.distance(to) > SPEED_LIMIT*((1f/0.2)*player.getWalkSpeed()) && !Utils.cantStandAtBetter(player.getLocation().getBlock()) && !Utils.isAboveIce(player.getLocation().getBlock())){
 				AntiCheat.getPlayer(player).speedChecks ++;
 				if(AntiCheat.getPlayer(player).speedChecks >= CHECKS_LIMIT){
 					AntiCheat.getPlayer(player).speedChecks = 0;
