@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
@@ -31,7 +32,13 @@ public class CancelGrow implements Listener {
 
 	@EventHandler
 	public void PlayerInteractEvent(PlayerInteractEvent event){
-		if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
+		if(event.getAction() == Action.PHYSICAL){
+			if(event.getClickedBlock().getType() == Material.SOIL){
+				event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
+				event.setCancelled(true);
+			}
+		}
+		else if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
 			if(item != null && item.getType() == Material.INK_SACK && item.getData() instanceof Dye && ((Dye)item.getData()).getColor() == DyeColor.WHITE){
 				Block block = event.getClickedBlock();
@@ -53,6 +60,11 @@ public class CancelGrow implements Listener {
 	@EventHandler
 	public void BlockSpreadEvent(BlockSpreadEvent event){
 		if(event.getSource().getType() == Material.VINE) event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void BlockFadeEvent(BlockFadeEvent event){
+		if(event.getBlock().getType() == Material.SOIL) event.setCancelled(true);
 	}
 
 	@EventHandler
