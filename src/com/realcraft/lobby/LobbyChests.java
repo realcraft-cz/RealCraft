@@ -20,7 +20,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Entity;
@@ -53,9 +53,9 @@ import com.realcraft.utils.Particles;
 import com.realcraft.utils.Title;
 import com.utils.UtilParticles;
 
-import net.minecraft.server.v1_11_R1.BlockPosition;
-import net.minecraft.server.v1_11_R1.TileEntityChest;
-import net.minecraft.server.v1_11_R1.TileEntityEnderChest;
+import net.minecraft.server.v1_12_R1.BlockPosition;
+import net.minecraft.server.v1_12_R1.TileEntityChest;
+import net.minecraft.server.v1_12_R1.TileEntityEnderChest;
 
 public class LobbyChests implements Listener, Runnable {
 	RealCraft plugin;
@@ -485,7 +485,7 @@ public class LobbyChests implements Listener, Runnable {
 	}
 
 	public void changeChestState(Location location,boolean open){
-		net.minecraft.server.v1_11_R1.World world = ((CraftWorld) location.getWorld()).getHandle();
+		net.minecraft.server.v1_12_R1.World world = ((CraftWorld) location.getWorld()).getHandle();
 		BlockPosition position = new BlockPosition(location.getX(), location.getY(), location.getZ());
 		if(location.getBlock().getType() == Material.ENDER_CHEST){
 			TileEntityEnderChest tileChest = (TileEntityEnderChest) world.getTileEntity(position);

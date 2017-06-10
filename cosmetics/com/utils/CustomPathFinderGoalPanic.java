@@ -1,10 +1,10 @@
 package com.utils;
 
-import net.minecraft.server.v1_11_R1.EntityCreature;
-import net.minecraft.server.v1_11_R1.EntityLiving;
-import net.minecraft.server.v1_11_R1.PathfinderGoal;
-import net.minecraft.server.v1_11_R1.RandomPositionGenerator;
-import net.minecraft.server.v1_11_R1.Vec3D;
+import net.minecraft.server.v1_12_R1.EntityCreature;
+import net.minecraft.server.v1_12_R1.EntityLiving;
+import net.minecraft.server.v1_12_R1.PathfinderGoal;
+import net.minecraft.server.v1_12_R1.RandomPositionGenerator;
+import net.minecraft.server.v1_12_R1.Vec3D;
 
 /**
  * Created by sacha on 25/07/15.
@@ -57,7 +57,7 @@ public class CustomPathFinderGoalPanic extends PathfinderGoal {
             return false;
         }
         // CraftBukkit end
-        return !this.b.getNavigation().n();
+        return !this.b.getNavigation().o();
     }
 
 

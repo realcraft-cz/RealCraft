@@ -1,7 +1,7 @@
 package com.mounts;
 
-import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -10,12 +10,12 @@ import com.nms.WrapperEntityHuman;
 import com.nms.WrapperEntityInsentient;
 import com.utils.EntityRegister;
 
-import net.minecraft.server.v1_11_R1.DamageSource;
-import net.minecraft.server.v1_11_R1.EntityHuman;
-import net.minecraft.server.v1_11_R1.EntityInsentient;
-import net.minecraft.server.v1_11_R1.EntitySpider;
-import net.minecraft.server.v1_11_R1.MathHelper;
-import net.minecraft.server.v1_11_R1.World;
+import net.minecraft.server.v1_12_R1.DamageSource;
+import net.minecraft.server.v1_12_R1.EntityHuman;
+import net.minecraft.server.v1_12_R1.EntityInsentient;
+import net.minecraft.server.v1_12_R1.EntitySpider;
+import net.minecraft.server.v1_12_R1.MathHelper;
+import net.minecraft.server.v1_12_R1.World;
 
 public class MountSpider extends Mount {
 
@@ -53,10 +53,10 @@ public class MountSpider extends Mount {
     	}
 
     	@Override
-    	public void g(float sideMot, float forMot){
+    	public void a(float sideMot, float forMot, float f2){
     		EntityHuman passenger = null;
-    		if(!bx().isEmpty()){
-    			passenger = (EntityHuman) bx().get(0);
+    		if(!bF().isEmpty()){
+    			passenger = (EntityHuman) bF().get(0);
     		}
     		ride(sideMot,forMot,passenger,this);
     	}

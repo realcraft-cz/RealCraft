@@ -1,9 +1,9 @@
 package com.mounts;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftZombieHorse;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftZombieHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ZombieHorse;
@@ -16,13 +16,13 @@ import com.realcraft.utils.Particles;
 import com.utils.EntityRegister;
 import com.utils.UtilParticles;
 
-import net.minecraft.server.v1_11_R1.DamageSource;
-import net.minecraft.server.v1_11_R1.EntityHorseZombie;
-import net.minecraft.server.v1_11_R1.EntityHuman;
-import net.minecraft.server.v1_11_R1.EntityInsentient;
-import net.minecraft.server.v1_11_R1.GenericAttributes;
-import net.minecraft.server.v1_11_R1.MathHelper;
-import net.minecraft.server.v1_11_R1.World;
+import net.minecraft.server.v1_12_R1.DamageSource;
+import net.minecraft.server.v1_12_R1.EntityHorseZombie;
+import net.minecraft.server.v1_12_R1.EntityHuman;
+import net.minecraft.server.v1_12_R1.EntityInsentient;
+import net.minecraft.server.v1_12_R1.GenericAttributes;
+import net.minecraft.server.v1_12_R1.MathHelper;
+import net.minecraft.server.v1_12_R1.World;
 
 public class MountWalkingDead extends Mount {
 
@@ -68,10 +68,10 @@ public class MountWalkingDead extends Mount {
     	}
 
     	@Override
-    	public void g(float sideMot, float forMot){
+    	public void a(float sideMot, float forMot, float f2){
     		EntityHuman passenger = null;
-    		if(!bx().isEmpty()){
-    			passenger = (EntityHuman) bx().get(0);
+    		if(!bF().isEmpty()){
+    			passenger = (EntityHuman) bF().get(0);
     		}
     		ride(sideMot,forMot,passenger,this);
     	}

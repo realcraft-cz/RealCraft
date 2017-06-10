@@ -106,18 +106,6 @@ public class LobbyJump implements Listener {
 					},i);
 				}
 
-				/*ItemStack elytra = player.getInventory().getChestplate();
-				if(elytra != null && elytra.getType() == Material.ELYTRA){
-					elytra.setDurability((short)0);
-					if(!player.getInventory().contains(Material.NETHER_STAR)){
-						ItemStack starboost = new ItemStack(Material.NETHER_STAR,1);
-						ItemMeta meta = starboost.getItemMeta();
-						meta.setDisplayName("§b§lElytra Boost");
-						starboost.setItemMeta(meta);
-						player.getInventory().setItem(2,starboost);
-					}
-				}*/
-
 				AntiCheat.exempt(player,2000);
 			} else {
 				event.setCancelled(true);

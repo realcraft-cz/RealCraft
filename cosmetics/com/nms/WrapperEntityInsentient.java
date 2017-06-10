@@ -1,6 +1,6 @@
 package com.nms;
 
-import net.minecraft.server.v1_11_R1.EntityInsentient;
+import net.minecraft.server.v1_12_R1.EntityInsentient;
 
 public class WrapperEntityInsentient extends WrapperEntityLiving {
 

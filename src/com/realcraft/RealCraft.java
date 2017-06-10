@@ -1,10 +1,12 @@
 package com.realcraft;
 
+import java.lang.reflect.Field;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,7 +15,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
-import org.inventivetalent.tabapi.TabAPI;
 
 import com.anticheat.AntiCheat;
 import com.earth2me.essentials.Essentials;
@@ -60,6 +61,10 @@ import com.realcraft.trading.Trading;
 import com.realcraft.utils.Glow;
 import com.realcraft.utils.Title;
 import com.realcraft.votes.Votes;
+
+import net.minecraft.server.v1_12_R1.IChatBaseComponent;
+import net.minecraft.server.v1_12_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerListHeaderFooter;
 
 public class RealCraft extends JavaPlugin implements Listener {
 	private static RealCraft instance;
@@ -315,16 +320,40 @@ public class RealCraft extends JavaPlugin implements Listener {
 
 	public class TabList {
 		public TabList(){
-			getServer().getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),new Runnable(){
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),new Runnable(){
 				@Override
 				public void run(){
 					for(Player player : Bukkit.getServer().getOnlinePlayers()){
 						int ping = ((CraftPlayer)player).getHandle().ping;
-						TabAPI.setHeaderFooter(player,new String[]{"§r","    §e§lRealCraft.cz§r    ","§r"},new String[]{"§r","§a"+ping+" ms §7| §e"+lobby.lobbymenu.getAllPlayersCount()+"/100","§7play.realcraft.cz","§r"});
+						//TabAPI.setHeaderFooter(player,new String[]{"§r","    §e§lRealCraft.cz§r    ","§r"},new String[]{"§r","§a"+ping+" ms §7| §e"+lobby.lobbymenu.getAllPlayersCount()+"/100","§7play.realcraft.cz","§r"});
+						TabList.this.setPlayerHeaderFooter(player,"§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+lobby.lobbymenu.getAllPlayersCount()+"/100\n§7play.realcraft.cz\n§r");
 						if(!player.getPlayerListName().equalsIgnoreCase(player.getDisplayName())) player.setPlayerListName(player.getDisplayName());
 					}
 				}
 			},2*20,2*20);
+		}
+
+		private void setPlayerHeaderFooter(Player player,String header,String footer){
+			PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
+			try {
+				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+header+"\"}");
+				Field field = packet.getClass().getDeclaredField("a");
+				field.setAccessible(true);
+				field.set(packet,component);
+				field.setAccessible(false);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			try {
+				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+footer+"\"}");
+				Field field = packet.getClass().getDeclaredField("b");
+				field.setAccessible(true);
+				field.set(packet,component);
+				field.setAccessible(false);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 		}
 	}
 }

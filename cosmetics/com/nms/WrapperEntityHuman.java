@@ -1,6 +1,6 @@
 package com.nms;
 
-import net.minecraft.server.v1_11_R1.EntityHuman;
+import net.minecraft.server.v1_12_R1.EntityHuman;
 
 public class WrapperEntityHuman extends WrapperEntityLiving {
 

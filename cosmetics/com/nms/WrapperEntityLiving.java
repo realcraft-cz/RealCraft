@@ -1,6 +1,6 @@
 package com.nms;
 
-import net.minecraft.server.v1_11_R1.EntityLiving;
+import net.minecraft.server.v1_12_R1.EntityLiving;
 
 public class WrapperEntityLiving extends WrapperEntity {
 
@@ -69,8 +69,8 @@ public class WrapperEntityLiving extends WrapperEntity {
     /*
      * 1_9_R2 : cl() - l(float)
      */
-    public float getMoveSpeed() { return handle.cq(); }
-    public void setMoveSpeed(float moveSpeed) { handle.l(moveSpeed); }
+    public float getMoveSpeed() { return handle.cy(); }
+    public void setMoveSpeed(float moveSpeed) { handle.k(moveSpeed); }
 
     @Override
     public EntityLiving getHandle() { return handle; }

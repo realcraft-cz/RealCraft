@@ -1,6 +1,6 @@
 package com.nms;
 
-import net.minecraft.server.v1_11_R1.Entity;
+import net.minecraft.server.v1_12_R1.Entity;
 
 public class WrapperEntity extends WrapperBase {
 
@@ -21,7 +21,7 @@ public class WrapperEntity extends WrapperBase {
     /*
      * 1_9_R2 : by()
      */
-    public boolean canPassengerSteer() { return handle.bA(); }
+    public boolean canPassengerSteer() { return handle.bI(); }
 
     public Entity getHandle() { return handle; }
 

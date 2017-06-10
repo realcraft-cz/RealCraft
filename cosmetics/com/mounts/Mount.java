@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftCreature;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftCreature;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -22,7 +22,7 @@ import com.cosmetics.Cosmetic;
 import com.cosmetics.Cosmetics;
 import com.realcraft.RealCraft;
 
-import net.minecraft.server.v1_11_R1.EntityCreature;
+import net.minecraft.server.v1_12_R1.EntityCreature;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 

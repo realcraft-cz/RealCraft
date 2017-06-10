@@ -3,7 +3,7 @@ package com.realcraft.lobby;
 import java.util.HashMap;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +17,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import com.anticheat.AntiCheat;
 import com.realcraft.RealCraft;
 
-import net.minecraft.server.v1_11_R1.PacketPlayOutMount;
+import net.minecraft.server.v1_12_R1.PacketPlayOutMount;
 
 public class LobbyPlayerRider implements Listener, Runnable {
 	RealCraft plugin;

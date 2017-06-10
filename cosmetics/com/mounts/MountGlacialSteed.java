@@ -1,7 +1,7 @@
 package com.mounts;
 
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftHorse;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import com.realcraft.utils.Particles;
 import com.utils.UtilParticles;
 
-import net.minecraft.server.v1_11_R1.GenericAttributes;
+import net.minecraft.server.v1_12_R1.GenericAttributes;
 
 public class MountGlacialSteed extends Mount {
 

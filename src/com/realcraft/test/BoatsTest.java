@@ -6,9 +6,9 @@ import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 
 import com.realcraft.RealCraft;
 
-import net.minecraft.server.v1_11_R1.Entity;
-import net.minecraft.server.v1_11_R1.EntityBoat;
-import net.minecraft.server.v1_11_R1.World;
+import net.minecraft.server.v1_12_R1.Entity;
+import net.minecraft.server.v1_12_R1.EntityBoat;
+import net.minecraft.server.v1_12_R1.World;
 
 public class BoatsTest implements Listener {
 
