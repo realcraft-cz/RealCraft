@@ -97,7 +97,7 @@ public class Lobby implements Listener {
 				if(plugin.config.getBoolean("lobby.chests.enabled",false)) lobbychests = new LobbyChests(plugin);
 				if(plugin.config.getBoolean("lobby.cosmetics.enabled",false)) lobbycosmetics = new LobbyCosmetics(plugin);
 				if(plugin.config.getBoolean("lobby.lanterns.enabled",false)) lobbylanterns = new LobbyLanterns(plugin);
-				if(plugin.config.getBoolean("lobby.citizens.enabled",false) && plugin.serverName.equalsIgnoreCase("lobby")) lobbycitizens = new LobbyCitizens(plugin);
+				//if(plugin.config.getBoolean("lobby.citizens.enabled",false) && plugin.serverName.equalsIgnoreCase("lobby")) lobbycitizens = new LobbyCitizens(plugin);
 				if(plugin.config.getBoolean("lobby.parkours.enabled",false)) lobbyparkours = new LobbyParkours(plugin);
 				if(plugin.config.getBoolean("lobby.autoparkour.enabled",false)) lobbyautoparkour = new LobbyAutoParkour(plugin);
 				if(plugin.config.getBoolean("lobby.playerrider.enabled",false)) lobbyplayerrider = new LobbyPlayerRider(plugin);
@@ -105,6 +105,7 @@ public class Lobby implements Listener {
 				if(RealCraft.isTestServer()){
 					new LobbyLottery(plugin);
 					lobbypokemons = new LobbyPokemons(plugin);
+					if(isLobby) new LobbyStands(plugin);
 				}
 			}
 			if(plugin.serverName.equalsIgnoreCase("parkour") && plugin.config.getBoolean("lobby.spawn.enabled",false)) lobbyspawn = new LobbySpawn(plugin);
@@ -350,7 +351,7 @@ public class Lobby implements Listener {
 					event.setCancelled(true);
 				}
 			}
-			else event.setCancelled(true);
+			//else event.setCancelled(true);//TODO uncomment
 		}
 	}
 

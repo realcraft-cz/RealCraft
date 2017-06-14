@@ -297,10 +297,10 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 		Bukkit.getServer().sendPluginMessage(plugin,"BungeeCord",out.toByteArray());
 	}
 
-	public void connectPlayerToServer(Player player,String server){
+	public static void connectPlayerToServer(Player player,String server){
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("Connect");
 		out.writeUTF(server);
-		player.sendPluginMessage(plugin,"BungeeCord",out.toByteArray());
+		player.sendPluginMessage(RealCraft.getInstance(),"BungeeCord",out.toByteArray());
 	}
 }

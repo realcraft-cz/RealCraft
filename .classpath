@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/AuthMe.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/PermissionsEx-1.23.3.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/WarpPortals-5.6.5-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/Residence.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/worldedit-bukkit-6.1.1-SNAPSHOT-dist.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/citizens-2.0.21-SNAPSHOT.jar"/>
@@ -24,5 +23,6 @@
 			<attribute name="javadoc_location" value="jar:file:/D:/Backups/realcraft_server/source/spigot-api-1.12-R0.1-20170610.061059-9-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/public/lobby/plugins/Residence4.6.3.1DevBuild.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
