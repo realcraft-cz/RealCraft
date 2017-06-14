@@ -14,6 +14,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -21,13 +22,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.realcraft.RealCraft;
+import com.realcraft.ServerType;
 import com.realcraft.sockets.SocketData;
 import com.realcraft.sockets.SocketDataEvent;
 import com.realcraft.sockets.SocketManager;
-import com.realcraft.sockets.SocketManager.SocketServer;
 import com.realcraft.utils.Title;
 
-public class Spectator implements CommandExecutor, TabCompleter, Runnable {
+public class Spectator implements CommandExecutor, TabCompleter, Runnable, Listener {
 	RealCraft plugin;
 
 	private static final String CHANNEL_SPEC = "spectatorSpec";
@@ -39,6 +40,7 @@ public class Spectator implements CommandExecutor, TabCompleter, Runnable {
 		plugin = realcraft;
 		plugin.getCommand("spec").setExecutor(this);
 		plugin.getCommand("specoff").setExecutor(this);
+		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,2*20,2*20);
 	}
 
@@ -129,7 +131,7 @@ public class Spectator implements CommandExecutor, TabCompleter, Runnable {
 	        SocketData data = new SocketData(CHANNEL_SPEC);
 			data.setString("player",serverPlayer.getPlayer());
 			data.setString("victim",victim);
-			SocketManager.send(SocketServer.getByName(serverPlayer.getServer()),data);
+			SocketManager.send(ServerType.getByName(serverPlayer.getServer()),data);
 
 			this.connectPlayerToServer(player,serverPlayer.getServer());
 		} else {

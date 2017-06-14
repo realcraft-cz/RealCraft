@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 import com.realcraft.RealCraft;
+import com.realcraft.ServerType;
 
 public class SocketManager implements Listener {
 
@@ -36,7 +37,7 @@ public class SocketManager implements Listener {
 											if(inStream.available() <= 0) continue;
 											String server = inStream.readUTF();
 											SocketData data = ((SocketData) inStream.readObject());
-											Bukkit.getPluginManager().callEvent(new SocketDataEvent(SocketServer.getByName(server),data));
+											Bukkit.getPluginManager().callEvent(new SocketDataEvent(ServerType.getByName(server),data));
 											socket.close();
 										}
 									} catch (Exception e){
@@ -60,7 +61,7 @@ public class SocketManager implements Listener {
 		}
 	}
 
-	public static void send(SocketServer server,SocketData data){
+	public static void send(ServerType server,SocketData data){
 		Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
 			@Override
 			public void run(){
@@ -79,7 +80,7 @@ public class SocketManager implements Listener {
 	}
 
 	public static void sendToAll(SocketData data){
-		for(SocketServer server : SocketServer.values()){
+		for(ServerType server : ServerType.values()){
 			if(!server.toString().equalsIgnoreCase(Bukkit.getServer().getServerName())) SocketManager.send(server,data);
 		}
 	}
@@ -90,13 +91,5 @@ public class SocketManager implements Listener {
 		else port += 25500;
 		port += PORT_INCREMENT;
 		return port;
-	}
-
-	public enum SocketServer {
-		LOBBY, SURVIVAL, CREATIVE, BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE, PARKOUR;
-
-		public static SocketServer getByName(String name){
-			return SocketServer.valueOf(name.toUpperCase());
-		}
 	}
 }

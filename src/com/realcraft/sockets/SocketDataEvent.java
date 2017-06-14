@@ -3,20 +3,20 @@ package com.realcraft.sockets;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.realcraft.sockets.SocketManager.SocketServer;
+import com.realcraft.ServerType;
 
 public class SocketDataEvent extends Event {
 
 	private static final HandlerList handlers = new HandlerList();
-	private SocketServer server;
+	private ServerType server;
 	private SocketData data;
 
-	public SocketDataEvent(SocketServer server,SocketData data){
+	public SocketDataEvent(ServerType server,SocketData data){
 		this.server = server;
 		this.data = data;
 	}
 
-	public SocketServer getServer(){
+	public ServerType getServer(){
 		return server;
 	}
 
