@@ -55,6 +55,8 @@ import com.realcraft.schema.Schema;
 import com.realcraft.skins.Skins;
 import com.realcraft.sockets.SocketManager;
 import com.realcraft.spectator.Spectator;
+import com.realcraft.survival.PassiveMode;
+import com.realcraft.survival.RandomSpawn;
 import com.realcraft.teleport.TeleportRequests;
 import com.realcraft.test.Test;
 import com.realcraft.trading.Trading;
@@ -156,6 +158,8 @@ public class RealCraft extends JavaPlugin implements Listener {
 			new Test();
 			if(RealCraft.isTestServer()){
 				cosmeticheads = new CosmeticHeads(this);
+				new PassiveMode();
+				new RandomSpawn();
 			}
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
@@ -163,6 +167,8 @@ public class RealCraft extends JavaPlugin implements Listener {
 			residencesigns = new ResidenceSigns(this);
 			trading = new Trading(this);
 			mapcrafter = new MapCrafter(this);
+			new PassiveMode();
+			new RandomSpawn();
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||
