@@ -65,8 +65,8 @@ public class MapCrafter {
 
 	public void saveResidences(){
 		JsonArray array = new JsonArray();
-		for(String name : Residence.getResidenceManager().getResidenceList()){
-			ClaimedResidence residence = Residence.getResidenceManager().getByName(name);
+		for(String name : Residence.getInstance().getResidenceManager().getResidenceList()){
+			ClaimedResidence residence = Residence.getInstance().getResidenceManager().getByName(name);
 			if(residence != null && residence.getWorld().equalsIgnoreCase("world")){
 				JsonObject playerJSON = new JsonObject();
 				playerJSON.addProperty("name",residence.getName());

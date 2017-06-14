@@ -15,15 +15,15 @@ import com.realcraft.RealCraft;
 
 public class ResidenceSigns implements Listener {
 	RealCraft plugin;
-	
+
 	public ResidenceSigns(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 	}
-	
+
 	public void onReload(){
 	}
-	
+
 	@EventHandler
 	public void onSignInteract(PlayerInteractEvent event){
 		Player player = event.getPlayer();
@@ -35,7 +35,7 @@ public class ResidenceSigns implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onSignCreate(SignChangeEvent event){
 		Player player = event.getPlayer();
@@ -46,7 +46,7 @@ public class ResidenceSigns implements Listener {
 				player.sendMessage("§cNeplatna residence!");
 				return;
 			}
-			ClaimedResidence residence = Residence.getResidenceManager().getByName(res);
+			ClaimedResidence residence = Residence.getInstance().getResidenceManager().getByName(res);
 			if(residence == null){
 				event.setCancelled(true);
 				player.sendMessage("§cNeplatna residence!");
