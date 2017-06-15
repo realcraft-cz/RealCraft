@@ -1,142 +1,77 @@
 package com.realcraft.sockets;
 
-import java.io.Serializable;
-import java.util.HashMap;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-public class SocketData implements Serializable {
+public class SocketData {
 
-	private static final long serialVersionUID = 1;
-	private String channel;
-	private final HashMap<String,SocketDataObject> objects = new HashMap<String,SocketDataObject>();
+	private JsonObject objects;
 
 	public SocketData(String channel){
-		this.channel = channel;
+		objects = new JsonObject();
+		objects.addProperty("channel",channel);
 	}
 
-	public String getChannel(){
-		return channel;
+	public SocketData(String channel,String data){
+		JsonElement element = new JsonParser().parse(data);
+		if(element.isJsonObject()) objects = element.getAsJsonObject();
 	}
 
-	public void setByte(String key,String data){
-		objects.put(key,new SocketDataObject(SocketDataType.BYTE,data));
-	}
-
-	public void setShort(String key,short data){
-		objects.put(key,new SocketDataObject(SocketDataType.SHORT,data));
+	public void setServer(String server){
+		objects.addProperty("server",server);
 	}
 
 	public void setInt(String key,int data){
-		objects.put(key,new SocketDataObject(SocketDataType.INT,data));
+		objects.addProperty(key,data);
 	}
 
 	public void setLong(String key,long data){
-		objects.put(key,new SocketDataObject(SocketDataType.LONG,data));
-	}
-
-	public void setFloat(String key,float data){
-		objects.put(key,new SocketDataObject(SocketDataType.FLOAT,data));
+		objects.addProperty(key,data);
 	}
 
 	public void setDouble(String key,double data){
-		objects.put(key,new SocketDataObject(SocketDataType.DOUBLE,data));
+		objects.addProperty(key,data);
 	}
 
 	public void setBoolean(String key,boolean data){
-		objects.put(key,new SocketDataObject(SocketDataType.BOOLEAN,data));
+		objects.addProperty(key,data);
 	}
 
 	public void setString(String key,String data){
-		objects.put(key,new SocketDataObject(SocketDataType.STRING,data));
+		objects.addProperty(key,data);
 	}
 
-	public void setObject(String key,Object data){
-		objects.put(key,new SocketDataObject(SocketDataType.OBJECT,data));
+	public String getServer(){
+		return (objects.has("server") ? objects.get("server").getAsString() : null);
 	}
 
-	public byte getByte(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return 0;
-		if(object.getType() != SocketDataType.BYTE) return 0;
-		return ((byte)object.getData());
-	}
-
-	public short getShort(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return 0;
-		if(object.getType() != SocketDataType.SHORT) return 0;
-		return ((short)object.getData());
+	public String getChannel(){
+		return (objects.has("channel") ? objects.get("channel").getAsString() : null);
 	}
 
 	public int getInt(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return 0;
-		if(object.getType() != SocketDataType.INT) return 0;
-		return ((int)object.getData());
+		return (objects.has(key) ? objects.get(key).getAsInt() : 0);
 	}
 
 	public long getLong(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return 0;
-		if(object.getType() != SocketDataType.LONG) return 0;
-		return ((long)object.getData());
-	}
-
-	public float getFloat(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return 0;
-		if(object.getType() != SocketDataType.FLOAT) return 0;
-		return ((float)object.getData());
+		return (objects.has(key) ? objects.get(key).getAsLong() : 0);
 	}
 
 	public double getDouble(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return 0;
-		if(object.getType() != SocketDataType.DOUBLE) return 0;
-		return ((double)object.getData());
+		return (objects.has(key) ? objects.get(key).getAsDouble() : 0);
 	}
 
 	public boolean getBoolean(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return false;
-		if(object.getType() != SocketDataType.BOOLEAN) return false;
-		return ((boolean)object.getData());
+		return (objects.has(key) ? objects.get(key).getAsBoolean() : false);
 	}
 
 	public String getString(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return null;
-		if(object.getType() != SocketDataType.STRING) return null;
-		return ((String)object.getData());
+		return (objects.has(key) ? objects.get(key).getAsString() : null);
 	}
 
-	public Object getObject(String key){
-		SocketDataObject object = objects.get(key);
-		if(object == null) return null;
-		if(object.getType() != SocketDataType.OBJECT) return null;
-		return (object.getData());
-	}
-
-	private class SocketDataObject implements Serializable {
-
-		private static final long serialVersionUID = 1;
-		private SocketDataType type;
-		private Object data;
-
-		private SocketDataObject(SocketDataType type,Object data){
-			this.type = type;
-			this.data = data;
-		}
-
-		private SocketDataType getType(){
-			return type;
-		}
-
-		private  Object getData(){
-			return data;
-		}
-	}
-
-	private enum SocketDataType implements Serializable {
-		BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, BOOLEAN, STRING, OBJECT;
+	@Override
+	public String toString(){
+		return objects.toString();
 	}
 }

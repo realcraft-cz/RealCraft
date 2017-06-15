@@ -1,8 +1,8 @@
 package com.realcraft.sockets;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -32,15 +32,15 @@ public class SocketManager implements Listener {
 								@Override
 								public void run(){
 									try {
-										ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
+										DataInputStream inStream = new DataInputStream(socket.getInputStream());
 										while(!socket.isClosed()){
 											if(inStream.available() <= 0) continue;
-											String server = inStream.readUTF();
-											SocketData data = ((SocketData) inStream.readObject());
-											Bukkit.getPluginManager().callEvent(new SocketDataEvent(ServerType.getByName(server),data));
+											SocketData data = new SocketData(null,inStream.readUTF());
+											Bukkit.getPluginManager().callEvent(new SocketDataEvent(ServerType.getByName(data.getServer()),data));
 											socket.close();
 										}
 									} catch (Exception e){
+										e.printStackTrace();
 									}
 								}
 							});
@@ -68,9 +68,9 @@ public class SocketManager implements Listener {
 				try {
 					Socket socket = new Socket(Inet4Address.getLocalHost(),SocketManager.getServerSocketPort(server.toString()));
 					socket.setSoTimeout(2000);
-					ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
-					outStream.writeUTF(Bukkit.getServer().getServerName().toUpperCase());
-					outStream.writeObject(data);
+					DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
+					data.setServer(Bukkit.getServer().getServerName().toUpperCase());
+					outStream.writeUTF(data.toString());
 					outStream.flush();
 					socket.close();
 				} catch (Exception e){
