@@ -10,6 +10,7 @@ public class Test {
 			new SignTest();
 			new CoinsTest();
 			//new KickTest();
+			new NameTest();
 		}
 		//new PremiumTest();
 	}
