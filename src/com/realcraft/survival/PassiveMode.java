@@ -1,6 +1,7 @@
 package com.realcraft.survival;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -25,6 +26,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.realcraft.RealCraft;
 
 public class PassiveMode implements Listener {
@@ -46,12 +48,20 @@ public class PassiveMode implements Listener {
 			public void onPacketSending(PacketEvent event){
 				if(event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA){
 					if(event.getPlayer().getEntityId() == event.getPacket().getIntegers().read(0)){
-						event.setCancelled(true);
+						List<WrappedWatchableObject> watchableObjectList = event.getPacket().getWatchableCollectionModifier().read(0);
+						for(WrappedWatchableObject metadata : watchableObjectList){
+							if(metadata.getIndex() == 0){
+								byte value = (byte)metadata.getValue();
+								if(value == 32){
+									event.setCancelled(true);
+								}
+							}
+						}
 					}
-				}
-				if(PassiveMode.getPassiveMode(event.getPlayer()).isEnabled()){
-					if(!((CraftPlayer)event.getPlayer()).getHandle().isInvisible()){
-						((CraftPlayer)event.getPlayer()).getHandle().setInvisible(true);
+					if(PassiveMode.getPassiveMode(event.getPlayer()).isEnabled()){
+						if(!((CraftPlayer)event.getPlayer()).getHandle().isInvisible()){
+							((CraftPlayer)event.getPlayer()).getHandle().setInvisible(true);
+						}
 					}
 				}
 			}
@@ -91,7 +101,7 @@ public class PassiveMode implements Listener {
 				event.setCancelled(true);
 				event.getPlayer().setFlying(false);
 				event.getPlayer().setAllowFlight(false);
-				event.getPlayer().sendMessage("§6[§7PassiveMode§6] §7Bez zapnuteho passive modu neni mozne letat.");
+				event.getPlayer().sendMessage("§6[§7PassiveMode§6] §cBez zapnuteho passive modu nelze letat.");
 			}
 		}
 	}
@@ -140,6 +150,7 @@ public class PassiveMode implements Listener {
 					Player killer = (Player) arrow.getShooter();
 					if(PassiveMode.getPassiveMode(player).isEnabled() || PassiveMode.getPassiveMode(killer).isEnabled()){
 						event.setCancelled(true);
+						player.setFireTicks(0);
 					}
 				}
 			}
