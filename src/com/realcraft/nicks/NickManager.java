@@ -16,7 +16,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
 import com.realcraft.RealCraft;
 
 public class NickManager implements Listener {
@@ -25,6 +28,19 @@ public class NickManager implements Listener {
 
 	public NickManager(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
+		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Server.PLAYER_INFO){
+			@Override
+			public void onPacketSending(PacketEvent event){
+				if(event.getPacketType() == PacketType.Play.Server.PLAYER_INFO){
+					Player player = Bukkit.getServer().getPlayer(event.getPacket().getPlayerInfoDataLists().read(0).get(0).getProfile().getName());
+					if(player != null && player.isOnline() && player.getEntityId() != event.getPlayer().getEntityId()){
+						if(NickManager.getPlayerNick(player).isEnabled()){
+							NickManager.getPlayerNick(player).updateForPlayer(event.getPlayer());
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public static PlayerNick getPlayerNick(Player player){
@@ -93,10 +109,10 @@ public class NickManager implements Listener {
 		}
 
 		public void update(){
-			for(Player player2 : Bukkit.getOnlinePlayers()){
+			for(Player target : Bukkit.getOnlinePlayers()){
 				try {
-					if(enabled) ProtocolLibrary.getProtocolManager().sendServerPacket(player2,removePacket);
-					ProtocolLibrary.getProtocolManager().sendServerPacket(player2,createPacket);
+					ProtocolLibrary.getProtocolManager().sendServerPacket(target,removePacket);
+					ProtocolLibrary.getProtocolManager().sendServerPacket(target,createPacket);
 				} catch (InvocationTargetException e){
 					e.printStackTrace();
 				}
@@ -106,6 +122,7 @@ public class NickManager implements Listener {
 
 		public void updateForPlayer(Player target){
 			try {
+				ProtocolLibrary.getProtocolManager().sendServerPacket(target,removePacket);
 				ProtocolLibrary.getProtocolManager().sendServerPacket(target,createPacket);
 			} catch (InvocationTargetException e){
 				e.printStackTrace();
