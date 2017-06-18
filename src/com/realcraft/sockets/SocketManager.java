@@ -8,19 +8,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
 
 import com.realcraft.RealCraft;
 import com.realcraft.ServerType;
 
-public class SocketManager implements Listener {
+public class SocketManager {
 
 	private static final int PORT_INCREMENT = 100;
 	private ServerSocket serverSocket = null;
 
 	public SocketManager(){
 		try {
-			serverSocket = new ServerSocket(SocketManager.getServerSocketPort(Bukkit.getServer().getServerName()));
+			serverSocket = new ServerSocket(SocketManager.getServerSocketPort(RealCraft.getServerType()));
 			serverSocket.setSoTimeout(2000);
 			Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
 				@Override
@@ -66,10 +65,9 @@ public class SocketManager implements Listener {
 			@Override
 			public void run(){
 				try {
-					Socket socket = new Socket(Inet4Address.getLocalHost(),SocketManager.getServerSocketPort(server.toString()));
+					Socket socket = new Socket(Inet4Address.getLocalHost(),SocketManager.getServerSocketPort(server));
 					socket.setSoTimeout(2000);
 					DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
-					data.setServer(Bukkit.getServer().getServerName().toUpperCase());
 					outStream.writeUTF(data.toString());
 					outStream.flush();
 					socket.close();
@@ -85,8 +83,8 @@ public class SocketManager implements Listener {
 		}
 	}
 
-	public static int getServerSocketPort(String server){
-		int port = RealCraft.getServerPortOrder(server);
+	public static int getServerSocketPort(ServerType server){
+		int port = server.getPortOrder();
 		if(RealCraft.isTestServer()) port += 24500;
 		else port += 25500;
 		port += PORT_INCREMENT;

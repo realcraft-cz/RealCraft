@@ -1,5 +1,7 @@
 package com.realcraft.sockets;
 
+import org.bukkit.Bukkit;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -11,6 +13,7 @@ public class SocketData {
 	public SocketData(String channel){
 		objects = new JsonObject();
 		objects.addProperty("channel",channel);
+		this.setServer(Bukkit.getServer().getServerName().toUpperCase());
 	}
 
 	public SocketData(String channel,String data){
