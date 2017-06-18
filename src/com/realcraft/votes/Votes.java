@@ -12,8 +12,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.realcraft.RealCraft;
+import com.realcraft.ServerType;
 import com.realcraft.playermanazer.PlayerManazer;
 import com.realcraft.sockets.SocketData;
 import com.realcraft.sockets.SocketDataEvent;
@@ -29,14 +31,18 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class Votes implements Listener, Runnable {
 
 	private RealCraft plugin;
-	private static final String VOTES = "votes_GALVotes";
+	private static final String VOTES = "votes";
+	private static final String CHANNEL_CHECKVOTES = "voteCheckVotes";
+	private static final String CHANNEL_PRINTVOTES = "votePrintVotes";
 	private static final String CHANNEL_REMINDER = "voteReminder";
+	private static final int REWARD = 20;
 	private HashMap<String,Long> voteReminds = new HashMap<String,Long>();
 
 	public Votes(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,60*20,60*20);
+		if(RealCraft.getServerType() == ServerType.LOBBY) new VotifierEventClass(this);
 	}
 
 	public void onReload(){
@@ -44,11 +50,8 @@ public class Votes implements Listener, Runnable {
 
 	@Override
 	public void run(){
-		for(Player player : Bukkit.getOnlinePlayers()){
-			if(RealCraft.getInstance().serverName.equalsIgnoreCase("lobby") ||
-				RealCraft.getInstance().serverName.equalsIgnoreCase("survival") ||
-				RealCraft.getInstance().serverName.equalsIgnoreCase("creative") ||
-				RealCraft.getInstance().serverName.equalsIgnoreCase("parkour")){
+		if(RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL || RealCraft.getServerType() == ServerType.CREATIVE || RealCraft.getServerType() == ServerType.PARKOUR){
+			for(Player player : Bukkit.getOnlinePlayers()){
 				this.checkPlayerReminder(player);
 			}
 		}
@@ -86,29 +89,116 @@ public class Votes implements Listener, Runnable {
 		}
 	}
 
-	@EventHandler
-	public void SocketDataEvent(SocketDataEvent event){
-		SocketData data = event.getData();
-		if(data.getChannel().equalsIgnoreCase(CHANNEL_REMINDER)){
-			voteReminds.put(data.getString("name"),data.getLong("time"));
+	public void checkUnconfirmedVotes(){
+		if(RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL || RealCraft.getServerType() == ServerType.CREATIVE || RealCraft.getServerType() == ServerType.PARKOUR){
+			for(Player player : Bukkit.getOnlinePlayers()){
+				this.checkPlayerVotes(player);
+			}
+		}
+		if(RealCraft.getServerType() == ServerType.LOBBY){
+			SocketData data = new SocketData(CHANNEL_CHECKVOTES);
+			SocketManager.send(ServerType.SURVIVAL,data);
+			SocketManager.send(ServerType.CREATIVE,data);
+			SocketManager.send(ServerType.PARKOUR,data);
 		}
 	}
 
-	@EventHandler(priority=EventPriority.MONITOR)
-    public void VotifierEvent(VotifierEvent event){
-		Vote vote = event.getVote();
-		if(vote.getUsername() != null && vote.getUsername().length() > 0){
-			PreparedStatement stmt;
-			try {
-				stmt = plugin.db.conn.prepareStatement("INSERT INTO "+VOTES+" (user_name,user_ip,vote_service,vote_created) VALUES(?,?,?,?)");
-				stmt.setString(1,vote.getUsername());
-				stmt.setString(2,vote.getAddress());
-				stmt.setString(3,vote.getServiceName());
-				stmt.setLong(4,Long.parseLong(vote.getTimeStamp()));
-				stmt.executeUpdate();
+	public void checkPlayerVotes(Player player){
+		int count = 0;
+		ResultSet rs = RealCraft.getInstance().db.query("SELECT COUNT(*) AS rows FROM "+VOTES+" WHERE user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"' AND vote_confirmed = '0'");
+		try {
+			if(rs.next()){
+				count = rs.getInt("rows");
 			}
-			catch (SQLException e){
-				e.printStackTrace();
+			rs.close();
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		if(count > 0){
+			RealCraft.getInstance().db.update("UPDATE "+VOTES+" SET vote_confirmed = '"+(System.currentTimeMillis()/1000)+"' WHERE user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"' AND vote_confirmed = '0'");
+			TextComponent component = new TextComponent("§3[Hlasovani] §fDekujeme hraci §6"+player.getName()+"§f za jeho "+(count > 1 ? "hlasy ("+count+"x)" : "hlas")+".");
+			component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,"https://www.realcraft.cz/hlasovat/"));
+			component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Klikni pro hlasovani").create()));
+			Bukkit.spigot().broadcast(component);
+			SocketData data = new SocketData(CHANNEL_PRINTVOTES);
+			data.setString("name",player.getName());
+			data.setInt("count",count);
+			SocketManager.sendToAll(data);
+			if(RealCraft.isTestServer()){
+				int reward = PlayerManazer.getPlayerInfo(player).giveCoins(REWARD*count);
+				player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
+				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+					public void run(){
+						PlayerManazer.getPlayerInfo(player).runCoinsEffect("§eOdmena za hlasovani",reward);
+					}
+				},20);
+			}
+		}
+	}
+
+	@EventHandler
+	public void PlayerJoinEvent(PlayerJoinEvent event){
+		Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+			@Override
+			public void run(){
+				if(event.getPlayer().isOnline()) Votes.this.checkPlayerVotes(event.getPlayer());
+			}
+		},3*20);
+	}
+
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		if(RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL || RealCraft.getServerType() == ServerType.CREATIVE || RealCraft.getServerType() == ServerType.PARKOUR){
+			SocketData data = event.getData();
+			if(data.getChannel().equalsIgnoreCase(CHANNEL_REMINDER)){
+				voteReminds.put(data.getString("name"),data.getLong("time"));
+			}
+			else if(data.getChannel().equalsIgnoreCase(CHANNEL_CHECKVOTES)){
+				this.checkUnconfirmedVotes();
+			}
+			else if(data.getChannel().equalsIgnoreCase(CHANNEL_PRINTVOTES)){
+				int count = data.getInt("count");
+				TextComponent component = new TextComponent("§3[Hlasovani] §fDekujeme hraci §6"+data.getString("name")+"§f za jeho "+(count > 1 ? "hlasy ("+count+"x)" : "hlas")+".");
+				component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,"https://www.realcraft.cz/hlasovat/"));
+				component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Klikni pro hlasovani").create()));
+				Bukkit.spigot().broadcast(component);
+			}
+		}
+	}
+
+	public class VotifierEventClass implements Listener {
+
+		public VotifierEventClass(Votes votes){
+			plugin.getServer().getPluginManager().registerEvents(this,plugin);
+		}
+
+		@EventHandler(priority=EventPriority.MONITOR)
+	    public void VotifierEvent(VotifierEvent event){
+			Vote vote = event.getVote();
+			if(vote.getUsername() != null && vote.getUsername().length() > 0){
+				int id = 0;
+				ResultSet rs = RealCraft.getInstance().db.query("SELECT user_id FROM authme WHERE user_name = '"+vote.getUsername()+"'");
+				try {
+					if(rs.next()){
+						id = rs.getInt("user_id");
+					}
+					rs.close();
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+				if(id != 0){
+					try {
+						PreparedStatement stmt;
+						stmt = plugin.db.conn.prepareStatement("INSERT INTO "+VOTES+" (user_id,vote_created) VALUES(?,?)");
+						stmt.setInt(1,id);
+						stmt.setLong(2,Long.parseLong(vote.getTimeStamp()));
+						stmt.executeUpdate();
+					}
+					catch (SQLException e){
+						e.printStackTrace();
+					}
+					Votes.this.checkUnconfirmedVotes();
+				}
 			}
 		}
 	}
