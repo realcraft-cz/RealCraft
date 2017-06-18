@@ -39,7 +39,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
@@ -53,7 +52,6 @@ import com.anticheat.AntiCheat;
 import com.google.common.collect.Sets;
 import com.realcraft.RealCraft;
 import com.realcraft.auth.AuthLoginEvent;
-import com.realcraft.playermanazer.PlayerManazer.PlayerInfo;
 import com.realcraft.spectator.Spectator;
 import com.realcraft.utils.Particles;
 import com.utils.CustomPathFinderGoalPanic;
@@ -83,7 +81,6 @@ public class Lobby implements Listener {
 	public LobbyPokemons lobbypokemons = null;
 
 	private boolean isLobby = false;
-	private boolean maintenance = false;
 
 	public Lobby(RealCraft realcraft){
 		plugin = realcraft;
@@ -97,7 +94,7 @@ public class Lobby implements Listener {
 				if(plugin.config.getBoolean("lobby.chests.enabled",false)) lobbychests = new LobbyChests(plugin);
 				if(plugin.config.getBoolean("lobby.cosmetics.enabled",false)) lobbycosmetics = new LobbyCosmetics(plugin);
 				if(plugin.config.getBoolean("lobby.lanterns.enabled",false)) lobbylanterns = new LobbyLanterns(plugin);
-				//if(plugin.config.getBoolean("lobby.citizens.enabled",false) && plugin.serverName.equalsIgnoreCase("lobby")) lobbycitizens = new LobbyCitizens(plugin);
+				if(plugin.config.getBoolean("lobby.citizens.enabled",false) && plugin.serverName.equalsIgnoreCase("lobby") && !RealCraft.isTestServer()) lobbycitizens = new LobbyCitizens(plugin);
 				if(plugin.config.getBoolean("lobby.parkours.enabled",false)) lobbyparkours = new LobbyParkours(plugin);
 				if(plugin.config.getBoolean("lobby.autoparkour.enabled",false)) lobbyautoparkour = new LobbyAutoParkour(plugin);
 				if(plugin.config.getBoolean("lobby.playerrider.enabled",false)) lobbyplayerrider = new LobbyPlayerRider(plugin);
@@ -113,9 +110,6 @@ public class Lobby implements Listener {
 		}
 		if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
 			plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		}
-		if(plugin.config.getBoolean("lobby.maintenance."+plugin.serverName,false)){
-			this.maintenance = true;
 		}
 	}
 
@@ -138,17 +132,6 @@ public class Lobby implements Listener {
 		if(lobbycosmetics != null) lobbycosmetics.onDisable();
 		if(lobbyautoparkour != null) lobbyautoparkour.onDisable();
 		if(lobbypokemons != null) lobbypokemons.onDisable();
-	}
-
-	@EventHandler(priority=EventPriority.NORMAL,ignoreCancelled = false)
-	public void onPlayerJoin(PlayerLoginEvent event){
-		if(maintenance){
-			PlayerInfo playerInfo = plugin.playermanazer.getPlayerInfo(event.getPlayer());
-			if(playerInfo == null || playerInfo.getRank() < 45){
-				event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-				event.setKickMessage("§fServer je docasne nedostupny, zkuste to prosim pozdeji.");
-			}
-		}
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
@@ -351,7 +334,7 @@ public class Lobby implements Listener {
 					event.setCancelled(true);
 				}
 			}
-			//else event.setCancelled(true);//TODO uncomment
+			else event.setCancelled(true);
 		}
 	}
 

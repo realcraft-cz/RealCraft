@@ -39,7 +39,7 @@ public class Quiz implements Listener, Runnable {
 	private static final String CHANNEL_QUESTION = "quizQuestion";
 	private static final String CHANNEL_ANSWER = "quizAnswer";
 	private static final String QUIZ_QUESTIONS = "quiz_questions";
-	private static final int REWARD = 100;
+	private static final int REWARD = 300;
 	private static final String CHAR = "\u2588";
 	private static final int[] CHAR_PATTERN = new int[]{
 		0,0,0,0,0,0,0,

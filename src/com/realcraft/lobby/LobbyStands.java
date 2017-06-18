@@ -31,6 +31,8 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.realcraft.RealCraft;
 import com.realcraft.ServerType;
 import com.realcraft.utils.ItemUtil;
+import com.realcraft.utils.RandomUtil;
+import com.realcraft.utils.StringUtil;
 
 import ru.beykerykt.lightapi.LightAPI;
 
@@ -195,15 +197,17 @@ public class LobbyStands implements Listener, Runnable {
 		private void update(){
 			if(server != ServerType.LOBBY){
 				int tmpPlayers = plugin.lobby.lobbymenu.getPlayersCount(server.toString());
+				tmpPlayers = RandomUtil.getRandomInteger(0,50);//TODO: remove
 				if(tmpPlayers != players){
 					players = tmpPlayers;
 					hologramPlayers.removeLine(0);
-					hologramPlayers.insertTextLine(0,players+" hracu");
+					hologramPlayers.insertTextLine(0,players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
 				}
 			}
 		}
 
 		public void click(Player player){
+			if(server == ServerType.LOBBY) return;
 			//server.connectPlayer(player);
 			player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f);
 		}

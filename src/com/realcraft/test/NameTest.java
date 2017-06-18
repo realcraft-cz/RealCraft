@@ -1,5 +1,6 @@
 package com.realcraft.test;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,10 +32,13 @@ public class NameTest implements Listener {
 		    infoAction.write(0, PlayerInfoAction.UPDATE_DISPLAY_NAME);
 		    ProtocolLibrary.getProtocolManager().broadcastServerPacket(tabList);*/
 
-			if(NickManager.getPlayerNick(event.getPlayer()).isEnabled()) NickManager.clearPlayerNick(event.getPlayer());
+			if(NickManager.getPlayerNick(event.getPlayer()).isEnabled()){
+				NickManager.clearPlayerNick(event.getPlayer());
+			}
 			else {
 				NickManager.setPlayerPrefix(event.getPlayer(),"§b§kABCDEFGHI§r ");
 				NickManager.setPlayerSuffix(event.getPlayer()," §b§kABCDEFGHI");
+				event.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 			}
 
 			/*Player victim = event.getPlayer();

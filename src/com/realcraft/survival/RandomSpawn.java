@@ -35,6 +35,7 @@ public class RandomSpawn implements Listener {
 				player.sendMessage("§cNahodny spawn do prirody muzete znovu pouzit za "+(((lastRandomSpawn.get(player)+RANDOM_LIMIT)-System.currentTimeMillis())/1000)+" sekund.");
 				return;
 			}
+			lastRandomSpawn.put(player,System.currentTimeMillis());
 			player.teleport(this.getRandomLocation(Bukkit.getWorld("world")));
 		}
 	}

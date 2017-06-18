@@ -280,7 +280,9 @@ public class PlayerManazer implements Listener {
 		}
 
 		private static final int[] coinsPercentages = new int[]{0,10,20,30,40,50,60,68,75,81,86,90,93,95,96,97,98,99,100};
+		private static final int[] coinsPercentages2 = new int[]{0,10,20,30,40,50,60,70,80,90,100};
 		private static final int[] coinsTimings = new int[]{2,4,6,8,10,12,14,16,18,20,22,24,26,29,33,38,44,51,59};
+		private static final int[] coinsTimings2 = new int[]{18,20,22,24,26,29,33,38,44,51,59};
 
 		public void runCoinsEffect(int coins){
 			this.runCoinsEffect(" ",coins,true);
@@ -292,13 +294,13 @@ public class PlayerManazer implements Listener {
 
 		public void runCoinsEffect(String title,int coins,boolean boost){
 			int i = 0;
-			for(int percent : coinsPercentages){
+			for(int percent : (coins >= 100 ? coinsPercentages : coinsPercentages2)){
 				Bukkit.getScheduler().scheduleSyncDelayedTask(RealCraft.getInstance(),new Runnable(){
 					@Override
 					public void run(){
 						showCoinsEffect(title,(int)Math.round((coins/100.0)*percent),boost);
 					}
-				},coinsTimings[i++]);
+				},(coins >= 100 ? coinsTimings[i++] : coinsTimings2[i++]-16));
 			}
 		}
 
