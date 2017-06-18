@@ -80,6 +80,7 @@ public class AntiSpam implements Listener {
 
 		/** Repeated chars */
 		message = message.replaceAll("(.)\\1{"+maxSameChars+",}",StringUtils.repeat("$1",maxSameChars));
+		message = message.replaceAll("(..)\\1{"+maxSameChars+",}",StringUtils.repeat("$1",maxSameChars));
 		event.setMessage(message);
 	}
 }
