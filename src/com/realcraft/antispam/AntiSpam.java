@@ -65,6 +65,9 @@ public class AntiSpam implements Listener {
 			return;
 		}
 
+		/** Clear CapsLock */
+		if(message.length() >= 5) message = this.clearCapsLock(message);
+
 		/** Similar messages */
 		String[] messages = LastPlayerMessages.getMessages(player);
 		for(String oldMessage : messages){
@@ -82,5 +85,10 @@ public class AntiSpam implements Listener {
 		message = message.replaceAll("(.)\\1{"+maxSameChars+",}",StringUtils.repeat("$1",maxSameChars));
 		message = message.replaceAll("(..)\\1{"+maxSameChars+",}",StringUtils.repeat("$1",maxSameChars));
 		event.setMessage(message);
+	}
+
+	private String clearCapsLock(String message){
+		if(message.matches("[^\\p{Ll}]+")) message = message.toLowerCase();
+		return message;
 	}
 }
