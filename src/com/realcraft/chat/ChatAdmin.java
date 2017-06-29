@@ -1,29 +1,27 @@
 package com.realcraft.chat;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import com.earth2me.essentials.Essentials;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.realcraft.RealCraft;
 import com.realcraft.banmanazer.BanUtils;
+import com.realcraft.sockets.SocketData;
+import com.realcraft.sockets.SocketDataEvent;
+import com.realcraft.sockets.SocketManager;
 
-public class ChatAdmin implements CommandExecutor, PluginMessageListener {
+public class ChatAdmin implements CommandExecutor, Listener {
 	RealCraft plugin;
 	Essentials essentials;
+	private static final String CHANNEL_CHAT = "adminChat";
 
 	public ChatAdmin(RealCraft realcraft){
 		plugin = realcraft;
-		plugin.getServer().getMessenger().registerOutgoingPluginChannel(plugin,"BungeeCord");
-		plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin,"BungeeCord",this);
+		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		plugin.getCommand("ac").setExecutor(this);
 	}
 
@@ -45,23 +43,16 @@ public class ChatAdmin implements CommandExecutor, PluginMessageListener {
 	}
 
 	private void sendAdminMessage(Player player,String message){
-		printAdminMessage(plugin.serverName,player.getDisplayName(),message);
+		this.printAdminMessage(player.getDisplayName(),message);
 		plugin.chatlog.onPlayerAdminChat(player,message);
 
-		ByteArrayDataOutput out = ByteStreams.newDataOutput();
-		out.writeUTF("Forward");
-		out.writeUTF("ONLINE");
-		out.writeUTF("RealCraftAdmin");
-
-		message = plugin.serverName+";"+player.getDisplayName()+";"+message;
-		byte[] data = message.getBytes();
-        out.writeShort(data.length);
-        out.write(data);
-
-        player.sendPluginMessage(plugin,"BungeeCord",out.toByteArray());
+        SocketData data = new SocketData(CHANNEL_CHAT);
+        data.setString("name",player.getDisplayName());
+        data.setString("message",message);
+        SocketManager.sendToAll(data);
 	}
 
-	private void printAdminMessage(String server,String sender,String message){
+	private void printAdminMessage(String sender,String message){
 		message = RealCraft.parseColors("&a[AdminChat] "+sender+": &c"+message);
 		for(Player player : plugin.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin") || player.hasPermission("group.Moderator") || player.hasPermission("group.Builder")){
@@ -70,26 +61,11 @@ public class ChatAdmin implements CommandExecutor, PluginMessageListener {
 		}
 	}
 
-	@Override
-	public void onPluginMessageReceived(String channel,Player player,byte[] message){
-		if(!channel.equals("BungeeCord")) return;
-		try {
-			DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
-			String subchannel = in.readUTF();
-			if(!subchannel.equals("RealCraftAdmin")) return;
-
-			short len = in.readShort();
-			byte[] data = new byte[len];
-			in.readFully(data);
-
-			String [] messageData = new String(data).split(";");
-			String server = messageData[0];
-			String sender = messageData[1];
-			String reason = BanUtils.combineSplit(2,messageData);
-
-			printAdminMessage(server,sender,reason);
-		} catch (IOException e){
-			e.printStackTrace();
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		SocketData data = event.getData();
+		if(data.getChannel().equalsIgnoreCase(CHANNEL_CHAT)){
+			this.printAdminMessage(data.getString("name"),data.getString("message"));
 		}
 	}
 }
