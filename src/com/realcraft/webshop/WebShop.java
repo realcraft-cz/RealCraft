@@ -64,13 +64,17 @@ public class WebShop implements Listener, Runnable {
 		RealCraft.getInstance().db.update("UPDATE "+PAYMENTS+" SET payment_finished = '"+(System.currentTimeMillis()/1000)+"' WHERE payment_id = '"+payment+"'");
 		int time = PermissionsEx.getPermissionManager().getUser(player).getOptionInteger("group-dVIP-until",null,0);
 		if(time > System.currentTimeMillis()/1000) time = (time-((int)(System.currentTimeMillis()/1000)));
-		PermissionsEx.getPermissionManager().getUser(player).addGroup("dVIP",null,days*86400+time);
+		if(days > 0) PermissionsEx.getPermissionManager().getUser(player).addGroup("dVIP",null,days*86400+time);
+		else {
+			PermissionsEx.getPermissionManager().getUser(player).addGroup("dVIP",null);
+			PermissionsEx.getPermissionManager().getUser(player).removePermission("group-dVIP-until");
+		}
 		PlayerManazer.getPlayerInfo(player).reload(player);
 		essentials.getUser(player).setDisplayNick();
 		player.sendMessage("§7-----------------------------------");
 		player.sendMessage("§r");
 		player.sendMessage("§r §r §aPolozka uspesne nactena");
-		player.sendMessage("§r §r §b§lVIP §f("+days+" dni)");
+		player.sendMessage("§r §r §b§lVIP §f("+(days > 0 ? days+" dni" : "neomezene")+")");
 		player.sendMessage("§r");
 		player.sendMessage("§7-----------------------------------");
 		player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
