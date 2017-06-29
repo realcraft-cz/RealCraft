@@ -28,6 +28,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.realcraft.RealCraft;
+import com.realcraft.chat.ChatCommandSpy;
 
 public class PassiveMode implements Listener {
 
@@ -52,11 +53,12 @@ public class PassiveMode implements Listener {
 						for(WrappedWatchableObject metadata : watchableObjectList){
 							if(metadata.getIndex() == 0){
 								byte value = (byte)metadata.getValue();
-								if(value == 32){
-									event.setCancelled(true);
-								}
+								if(value >= 30) value -= 30;
+								else if(value == -96) value = -128;
+								metadata.setValue(value);
 							}
 						}
+						event.getPacket().getWatchableCollectionModifier().write(0,watchableObjectList);
 					}
 					if(PassiveMode.getPassiveMode(event.getPlayer()).isEnabled()){
 						if(!((CraftPlayer)event.getPlayer()).getHandle().isInvisible()){
@@ -129,6 +131,7 @@ public class PassiveMode implements Listener {
 				player.sendMessage("§6[§7PassiveMode§6] §cPrikaz nemuzete pouzit pri letani.");
 				player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 			}
+			ChatCommandSpy.sendCommandMessage(player,command);
 			event.setCancelled(true);
 		}
 	}
