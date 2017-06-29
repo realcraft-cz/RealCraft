@@ -106,7 +106,7 @@ public class MountSlime extends Mount {
                 wEntity.setRotationYawHead(entity.yaw);
 
                 wEntity.setMoveSpeed(0.35f);
-                super.g(sideMot, forMot);
+                super.a(sideMot, forMot);
 
                 wEntity.setPrevLimbSwingAmount(wEntity.getLimbSwingAmount());
 
@@ -124,7 +124,7 @@ public class MountSlime extends Mount {
                 wEntity.setStepHeight(0.5f);
                 wEntity.setJumpMovementFactor(0.02f);
 
-                super.g(sideMot, forMot);
+                super.a(sideMot, forMot);
             }
     	}
     }

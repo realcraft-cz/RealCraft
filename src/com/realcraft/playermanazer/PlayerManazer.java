@@ -289,7 +289,7 @@ public class PlayerManazer implements Listener {
 		}
 
 		public void runCoinsEffect(String title,int coins){
-			this.runCoinsEffect(" ",coins,true);
+			this.runCoinsEffect(title,coins,true);
 		}
 
 		public void runCoinsEffect(String title,int coins,boolean boost){

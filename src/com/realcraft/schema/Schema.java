@@ -54,7 +54,7 @@ public class Schema implements Listener, CommandExecutor {
 			if(player.hasPermission("group.Manazer")){
 				if(args.length == 0){
 					player.sendMessage("Paste a schematic");
-					player.sendMessage("/schema paste <filename>");
+					player.sendMessage("/schema <filename>");
 					return true;
 				}
 				else if(args.length == 1){
@@ -112,7 +112,10 @@ public class Schema implements Listener, CommandExecutor {
 		@Override
 		public void run(){
 			try {
-				editSession = we.getWorldEdit().getEditSessionFactory().getEditSession(world,-1);
+				editSession = we.getSession(player).createEditSession(we.wrapPlayer(player));
+				//editSession.setBlockBag(we.getSession(player).getBlockBag(we.wrapPlayer(player)));
+				editSession.setBlockChangeLimit(-1);
+				//editSession = we.getWorldEdit().getEditSessionFactory().getEditSession(world,-1);
 				startStage(1);
 				startStage(2);
 				startStage(3);

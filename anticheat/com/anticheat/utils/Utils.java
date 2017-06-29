@@ -217,20 +217,22 @@ public class Utils {
      */
     public static boolean cantStandAtBetter(Block block)
     {
-    	Block otherBlock = block.getRelative(BlockFace.DOWN);
+    	return (cantStandAtBatterEx(block) && cantStandAtBatterEx(block.getRelative(BlockFace.DOWN)));
+    }
 
-    	boolean center1 = otherBlock.getType() == Material.AIR;
-    	boolean north1 = otherBlock.getRelative(BlockFace.NORTH).getType() == Material.AIR;
-    	boolean east1 = otherBlock.getRelative(BlockFace.EAST).getType() == Material.AIR;
-    	boolean south1 = otherBlock.getRelative(BlockFace.SOUTH).getType() == Material.AIR;
-    	boolean west1 = otherBlock.getRelative(BlockFace.WEST).getType() == Material.AIR;
-    	boolean northeast1 = otherBlock.getRelative(BlockFace.NORTH_EAST).getType() == Material.AIR;
-    	boolean northwest1 = otherBlock.getRelative(BlockFace.NORTH_WEST).getType() == Material.AIR;
-    	boolean southeast1 = otherBlock.getRelative(BlockFace.SOUTH_EAST).getType() == Material.AIR;
-    	boolean southwest1 = otherBlock.getRelative(BlockFace.SOUTH_WEST).getType() == Material.AIR;
-    	boolean overAir1 = (otherBlock.getRelative(BlockFace.DOWN).getType() == Material.AIR
-    						|| otherBlock.getRelative(BlockFace.DOWN).getType() == Material.WATER
-    						|| otherBlock.getRelative(BlockFace.DOWN).getType() == Material.LAVA);
+    private static boolean cantStandAtBatterEx(Block block){
+    	boolean center1 = block.getType() == Material.AIR;
+    	boolean north1 = block.getRelative(BlockFace.NORTH).getType() == Material.AIR;
+    	boolean east1 = block.getRelative(BlockFace.EAST).getType() == Material.AIR;
+    	boolean south1 = block.getRelative(BlockFace.SOUTH).getType() == Material.AIR;
+    	boolean west1 = block.getRelative(BlockFace.WEST).getType() == Material.AIR;
+    	boolean northeast1 = block.getRelative(BlockFace.NORTH_EAST).getType() == Material.AIR;
+    	boolean northwest1 = block.getRelative(BlockFace.NORTH_WEST).getType() == Material.AIR;
+    	boolean southeast1 = block.getRelative(BlockFace.SOUTH_EAST).getType() == Material.AIR;
+    	boolean southwest1 = block.getRelative(BlockFace.SOUTH_WEST).getType() == Material.AIR;
+    	boolean overAir1 = (block.getRelative(BlockFace.DOWN).getType() == Material.AIR
+    						|| block.getRelative(BlockFace.DOWN).getType() == Material.WATER
+    						|| block.getRelative(BlockFace.DOWN).getType() == Material.LAVA);
 
     	return (center1 && north1 && east1 && south1 && west1 && northeast1 && southeast1
     			&& northwest1 && southwest1 && overAir1);

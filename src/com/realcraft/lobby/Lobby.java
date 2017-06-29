@@ -106,7 +106,7 @@ public class Lobby implements Listener {
 				}
 			}
 			if(plugin.serverName.equalsIgnoreCase("parkour") && plugin.config.getBoolean("lobby.spawn.enabled",false)) lobbyspawn = new LobbySpawn(plugin);
-			//if(isLobby) lobbylabyrinth = new LobbyLabyrinth(plugin);
+			if(isLobby) new LobbyLabyrinth(plugin);
 		}
 		if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
 			plugin.getServer().getPluginManager().registerEvents(this,plugin);

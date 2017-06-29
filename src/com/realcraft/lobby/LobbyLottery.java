@@ -224,6 +224,13 @@ public class LobbyLottery implements Listener {
 				}
 			}
 
+			if(this.isRunning()){
+				for(int i=45+winnumberindex;i<=53;i++){
+					item = new ItemStack(Material.STAINED_GLASS_PANE,1,(short)0,(byte)14);
+					inventory.setItem(i,item);
+				}
+			}
+
 			if(!this.isRunning()){
 				item = new ItemStack(Material.EMERALD_BLOCK);
 				meta = item.getItemMeta();

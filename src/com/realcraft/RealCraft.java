@@ -180,6 +180,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			if(RealCraft.isTestServer()){
 				cosmeticheads = new CosmeticHeads(this);
 				new PassiveMode();
+				new RandomSpawn();
 			}
 		}
 		else if(serverName.equalsIgnoreCase("survival")){

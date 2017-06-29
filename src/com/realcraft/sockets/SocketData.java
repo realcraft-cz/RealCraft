@@ -13,16 +13,12 @@ public class SocketData {
 	public SocketData(String channel){
 		objects = new JsonObject();
 		objects.addProperty("channel",channel);
-		this.setServer(Bukkit.getServer().getServerName().toUpperCase());
+		objects.addProperty("server",Bukkit.getServer().getServerName().toUpperCase());
 	}
 
 	public SocketData(String channel,String data){
 		JsonElement element = new JsonParser().parse(data);
 		if(element.isJsonObject()) objects = element.getAsJsonObject();
-	}
-
-	public void setServer(String server){
-		objects.addProperty("server",server);
 	}
 
 	public void setInt(String key,int data){

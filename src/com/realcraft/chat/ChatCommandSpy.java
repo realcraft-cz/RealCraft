@@ -2,6 +2,7 @@ package com.realcraft.chat;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,7 +15,7 @@ public class ChatCommandSpy implements Listener {
 	RealCraft plugin;
 
 	boolean enabled = false;
-	private String commandMessage;
+	private static String commandMessage;
 	private String [] blockedCommands;
 
 	public ChatCommandSpy(RealCraft realcraft){
@@ -50,20 +51,20 @@ public class ChatCommandSpy implements Listener {
 		for(String cmd : blockedCommands){
 		    if(commandName.equalsIgnoreCase(cmd)) return;
 		}
-		this.sendCommandMessage(player,command);
+		sendCommandMessage(player,command);
 	}
 
-	public void sendCommandMessage(Player sender,String command){
-		String commandMessage = this.getCommandMessage(sender,command);
-		for(Player player : plugin.getServer().getOnlinePlayers()){
+	public static void sendCommandMessage(Player sender,String command){
+		String commandMessage = getCommandMessage(sender,command);
+		for(Player player : Bukkit.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin")){
 				player.sendMessage(commandMessage);
 			}
 		}
-		plugin.chatlog.onPlayerCommand(sender,command);
+		RealCraft.getInstance().chatlog.onPlayerCommand(sender,command);
 	}
 
-	public String getCommandMessage(Player player,String command){
+	public static String getCommandMessage(Player player,String command){
 		String result = commandMessage;
 		result = result.replaceAll("%player%",player.getName());
 		result = result.replaceAll("%command%",command);
