@@ -102,11 +102,14 @@ public class Lobby implements Listener {
 				if(RealCraft.isTestServer()){
 					new LobbyLottery(plugin);
 					lobbypokemons = new LobbyPokemons(plugin);
-					if(isLobby) new LobbyStands(plugin);
+					if(isLobby){
+						new LobbyStands(plugin);
+						new LobbyLabyrinth(plugin);
+					}
 				}
 			}
 			if(plugin.serverName.equalsIgnoreCase("parkour") && plugin.config.getBoolean("lobby.spawn.enabled",false)) lobbyspawn = new LobbySpawn(plugin);
-			if(isLobby) new LobbyLabyrinth(plugin);
+			//if(isLobby) new LobbyLabyrinth(plugin);
 		}
 		if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
 			plugin.getServer().getPluginManager().registerEvents(this,plugin);
