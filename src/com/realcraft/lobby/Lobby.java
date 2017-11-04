@@ -4,10 +4,12 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -35,6 +37,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -51,6 +54,7 @@ import org.bukkit.util.Vector;
 import com.anticheat.AntiCheat;
 import com.google.common.collect.Sets;
 import com.realcraft.RealCraft;
+import com.realcraft.ServerType;
 import com.realcraft.auth.AuthLoginEvent;
 import com.realcraft.spectator.Spectator;
 import com.realcraft.utils.Particles;
@@ -69,7 +73,7 @@ public class Lobby implements Listener {
 	public LobbyMenu lobbymenu = null;
 	public LobbyJump lobbyjump = null;
 	public LobbyFunGun lobbyfungun = null;
-	public LobbyChests lobbychests = null;
+	public LobbyMystery lobbychests = null;
 	public LobbyCosmetics lobbycosmetics = null;
 	public LobbyLanterns lobbylanterns = null;
 	public LobbyCitizens lobbycitizens = null;
@@ -79,6 +83,7 @@ public class Lobby implements Listener {
 	public LobbySpawn lobbyspawn = null;
 	public LobbyLottery lobbylottery = null;
 	public LobbyPokemons lobbypokemons = null;
+	public LobbyStands lobbystands = null;
 
 	private boolean isLobby = false;
 
@@ -89,27 +94,30 @@ public class Lobby implements Listener {
 			enabled = true;
 			if(plugin.config.getBoolean("lobby.menu.enabled",false)) lobbymenu = new LobbyMenu(plugin);
 			if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
-				if(plugin.config.getBoolean("lobby.jump.enabled",false) && plugin.serverName.equalsIgnoreCase("lobby")) lobbyjump = new LobbyJump(plugin);
-				if(plugin.config.getBoolean("lobby.fungun.enabled",false)) lobbyfungun = new LobbyFunGun(plugin);
-				if(plugin.config.getBoolean("lobby.chests.enabled",false)) lobbychests = new LobbyChests(plugin);
-				if(plugin.config.getBoolean("lobby.cosmetics.enabled",false)) lobbycosmetics = new LobbyCosmetics(plugin);
-				if(plugin.config.getBoolean("lobby.lanterns.enabled",false)) lobbylanterns = new LobbyLanterns(plugin);
-				if(plugin.config.getBoolean("lobby.citizens.enabled",false) && plugin.serverName.equalsIgnoreCase("lobby") && !RealCraft.isTestServer()) lobbycitizens = new LobbyCitizens(plugin);
-				if(plugin.config.getBoolean("lobby.parkours.enabled",false)) lobbyparkours = new LobbyParkours(plugin);
-				if(plugin.config.getBoolean("lobby.autoparkour.enabled",false)) lobbyautoparkour = new LobbyAutoParkour(plugin);
-				if(plugin.config.getBoolean("lobby.playerrider.enabled",false)) lobbyplayerrider = new LobbyPlayerRider(plugin);
-				if(plugin.config.getBoolean("lobby.spawn.enabled",false)) lobbyspawn = new LobbySpawn(plugin);
-				if(RealCraft.isTestServer()){
-					new LobbyLottery(plugin);
+				lobbyfungun = new LobbyFunGun(plugin);
+				lobbycosmetics = new LobbyCosmetics(plugin);
+				lobbylanterns = new LobbyLanterns(plugin);
+				lobbyparkours = new LobbyParkours(plugin);
+				lobbyautoparkour = new LobbyAutoParkour(plugin);
+				lobbyspawn = new LobbySpawn(plugin);
+				//lobbyjump = new LobbyJump(plugin);
+				//lobbyplayerrider = new LobbyPlayerRider(plugin);
+				if(isLobby){
+					lobbychests = new LobbyMystery(plugin);
 					lobbypokemons = new LobbyPokemons(plugin);
-					if(isLobby){
-						new LobbyStands(plugin);
-						new LobbyLabyrinth(plugin);
-					}
+					new LobbyLottery(plugin);
+					new LobbyLabyrinth(plugin);
+					lobbystands = new LobbyStands(plugin);
+					Bukkit.getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),new Runnable(){
+						@Override
+						public void run(){
+							World world = Bukkit.getServer().getWorld("world");
+							if(world.getTime() >= 13000 && world.getTime() <= 24000) world.setFullTime(world.getFullTime()+10);
+						}
+					},10,10);
 				}
 			}
-			if(plugin.serverName.equalsIgnoreCase("parkour") && plugin.config.getBoolean("lobby.spawn.enabled",false)) lobbyspawn = new LobbySpawn(plugin);
-			//if(isLobby) new LobbyLabyrinth(plugin);
+			if(plugin.serverName.equalsIgnoreCase("parkour")) lobbyspawn = new LobbySpawn(plugin);
 		}
 		if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
 			plugin.getServer().getPluginManager().registerEvents(this,plugin);
@@ -135,6 +143,7 @@ public class Lobby implements Listener {
 		if(lobbycosmetics != null) lobbycosmetics.onDisable();
 		if(lobbyautoparkour != null) lobbyautoparkour.onDisable();
 		if(lobbypokemons != null) lobbypokemons.onDisable();
+		if(lobbystands != null) lobbystands.onDisable();
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
@@ -152,16 +161,18 @@ public class Lobby implements Listener {
 		final Player player = event.getPlayer();
 		if(!Spectator.isPlayerSpectating(player)){
 			player.setGameMode(GameMode.ADVENTURE);
-			player.setWalkSpeed(0.3f);
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
-				@Override
-				public void run(){
-					player.setGameMode(GameMode.ADVENTURE);
-					player.setWalkSpeed(0.3f);
-					player.setAllowFlight(false);
-					player.setFlying(false);
-				}
-			},20);
+			if(RealCraft.getServerType() == ServerType.LOBBY){
+				player.setWalkSpeed(0.3f);
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
+					@Override
+					public void run(){
+						player.setGameMode(GameMode.ADVENTURE);
+						player.setWalkSpeed(0.3f);
+						player.setAllowFlight(false);
+						player.setFlying(false);
+					}
+				},20);
+			}
 		}
 	}
 
@@ -170,7 +181,7 @@ public class Lobby implements Listener {
 		Player player = event.getPlayer();
 		if(player.getWorld().getName().equalsIgnoreCase("world")){
 			player.setGameMode(GameMode.ADVENTURE);
-			player.setWalkSpeed(0.3f);
+			if(RealCraft.getServerType() == ServerType.LOBBY) player.setWalkSpeed(0.3f);
 		}
 	}
 
@@ -178,21 +189,6 @@ public class Lobby implements Listener {
 	public void PlayerChangedWorldEvent(final PlayerChangedWorldEvent event){
 		if(event.getFrom().getName().equalsIgnoreCase("world")){
 			event.getPlayer().setWalkSpeed(0.2f);
-			//event.getPlayer().setAllowFlight(false);
-			//event.getPlayer().setFlying(false);
-		}
-		else if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world")){
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
-				@Override
-				public void run(){
-					event.getPlayer().setWalkSpeed(0.3f);
-					if(!Spectator.isPlayerSpectating(event.getPlayer())){
-						event.getPlayer().setGameMode(GameMode.ADVENTURE);
-						event.getPlayer().setAllowFlight(false);
-						event.getPlayer().setFlying(false);
-					}
-				}
-			},20);
 		}
 	}
 
@@ -215,12 +211,12 @@ public class Lobby implements Listener {
 					event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
 					event.setCancelled(true);
 				}
-				else if(block != null && (block.getType() == Material.GOLD_PLATE || block.getType() == Material.IRON_PLATE)){
+				/*else if(block != null && (block.getType() == Material.GOLD_PLATE || block.getType() == Material.IRON_PLATE)){
 					if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world")){
 						event.setCancelled(true);
 						this.throwPlayerForward(event.getPlayer());
 					}
-				}
+				}*/
 			} else {
 				if(event.getPlayer().getGameMode() != GameMode.CREATIVE){
 					Block block = event.getClickedBlock();
@@ -337,7 +333,7 @@ public class Lobby implements Listener {
 					event.setCancelled(true);
 				}
 			}
-			else event.setCancelled(true);
+			else if(!(event.getDamager() instanceof Player) || ((Player)event.getDamager()).getGameMode() != GameMode.CREATIVE) event.setCancelled(true);
 		}
 	}
 
@@ -349,13 +345,24 @@ public class Lobby implements Listener {
 				this.sheepEffect((Sheep) event.getRightClicked());
 			}
 		}
+		if(event.getPlayer().getGameMode() != GameMode.CREATIVE && event.getRightClicked() != null && event.getRightClicked().getType() == EntityType.ITEM_FRAME){
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void HangingBreakByEntityEvent(HangingBreakByEntityEvent event){
+		if(event.getRemover() instanceof Player){
+			if(((Player)event.getRemover()).getGameMode() != GameMode.CREATIVE) event.setCancelled(true);
+		}
+		else event.setCancelled(true);
 	}
 
 	@EventHandler
 	public void CreatureSpawnEvent(CreatureSpawnEvent event){
 		if(event.getEntityType() != EntityType.PLAYER && event.getEntity().getWorld().getName().equalsIgnoreCase("world")){
 			if(event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() != EntityType.SHEEP) event.setCancelled(true);
-			else if(event.getSpawnReason() != SpawnReason.CUSTOM) event.setCancelled(true);
+			else if(event.getSpawnReason() != SpawnReason.CUSTOM && event.getEntityType() != EntityType.ARMOR_STAND) event.setCancelled(true);
 		}
 	}
 

@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,14 +39,16 @@ import com.realcraft.chat.ChatLog;
 import com.realcraft.chat.ChatNotice;
 import com.realcraft.chat.ChatPrivate;
 import com.realcraft.chat.ChatTips;
+import com.realcraft.coins.Coins;
 import com.realcraft.config.Config;
 import com.realcraft.creative.CancelGrow;
 import com.realcraft.creative.DisableSpectator;
 import com.realcraft.creative.PlotSquaredWorldEdit;
 import com.realcraft.creative.SchematicBrush;
-import com.realcraft.database.MySQL;
+import com.realcraft.database.DB;
 import com.realcraft.heads.CosmeticHeads;
 import com.realcraft.lobby.Lobby;
+import com.realcraft.lobby.LobbyMenu;
 import com.realcraft.mapcrafter.MapCrafter;
 import com.realcraft.minihry.EventCmds;
 import com.realcraft.minihry.GamesReminder;
@@ -60,6 +64,7 @@ import com.realcraft.residences.CheckResidences;
 import com.realcraft.residences.ResidenceSigns;
 import com.realcraft.restart.Restart;
 import com.realcraft.schema.Schema;
+import com.realcraft.shops.ShopManager;
 import com.realcraft.skins.Skins;
 import com.realcraft.sockets.SocketManager;
 import com.realcraft.spectator.Spectator;
@@ -69,12 +74,12 @@ import com.realcraft.teleport.TeleportRequests;
 import com.realcraft.test.Test;
 import com.realcraft.trading.Trading;
 import com.realcraft.utils.Glow;
-import com.realcraft.utils.Title;
-import com.realcraft.votes.Votes;
+import com.realcraft.utils.ItemUtil;
 import com.realcraft.webshop.WebShop;
 
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_12_R1.PacketPlayOutMapChunk;
 import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerListHeaderFooter;
 
 public class RealCraft extends JavaPlugin implements Listener {
@@ -84,7 +89,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 	private boolean maintenance = false;
 
 	public Config config;
-	public MySQL db;
+	public DB db;
 
 	public PlayerManazer playermanazer;
 	private BanManazer banmanazer;
@@ -95,7 +100,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 	private ChatNotice chatnotice;
 	private EventCmds eventcmds;
 	private Restart restart;
-	private Votes votes;
 	public Auth auth;
 	private CheckResidences checkresidences;
 	private ChatTips chattips;
@@ -143,12 +147,13 @@ public class RealCraft extends JavaPlugin implements Listener {
 		serverName = getServer().getServerName();
 		serverType = ServerType.getByName(serverName);
 		essentials = (Essentials) this.getServer().getPluginManager().getPlugin("Essentials");
+		ItemUtil.init();
 		config = new Config(this);
 		TESTSERVER = config.getBoolean("testserver",false);
 		if(config.getBoolean("lobby.maintenance."+serverName,false)){
 			this.maintenance = true;
 		}
-		db = new MySQL(this);
+		DB.init();
 		playermanazer = new PlayerManazer(this);
 		banmanazer = new BanManazer(this);
 		new Spectator(this);
@@ -172,16 +177,12 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new SchematicBrush();
 		new WebShop();
 		new NickManager();
+		new Coins();
 		if(serverName.equalsIgnoreCase("lobby")){
 			auth = new Auth(this);
 			eventcmds = new EventCmds(this);
 			cancelgrow = new CancelGrow(this);
-			new Test();
-			if(RealCraft.isTestServer()){
-				cosmeticheads = new CosmeticHeads(this);
-				new PassiveMode();
-				new RandomSpawn();
-			}
+			lobby = new Lobby(this);
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
 			checkresidences = new CheckResidences(this);
@@ -190,6 +191,8 @@ public class RealCraft extends JavaPlugin implements Listener {
 			mapcrafter = new MapCrafter(this);
 			new PassiveMode();
 			new RandomSpawn();
+			new ShopManager();
+			lobby = new Lobby(this);
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||
@@ -198,30 +201,32 @@ public class RealCraft extends JavaPlugin implements Listener {
 				serverName.equalsIgnoreCase("paintball") ||
 				serverName.equalsIgnoreCase("dominate") ||
 				serverName.equalsIgnoreCase("uhc")){
-			eventcmds = new EventCmds(this);
 			signblockprotection = new SignBlockProtection(this);
 			cancelgrow = new CancelGrow(this);
 		}
 		else if(serverName.equalsIgnoreCase("creative")){
 			disablespectator = new DisableSpectator(this);
 			cancelgrow = new CancelGrow(this);
-			cosmeticheads = new CosmeticHeads(this);
 			cancelgrow = new CancelGrow(this);
 			new PlotSquaredWorldEdit();
+			lobby = new Lobby(this);
 		}
-		lobby = new Lobby(this);
 		restart = new Restart(this);
-		votes = new Votes(this);
+		//votes = new Votes(this);
 		schema = new Schema(this);
 		Glow.registerGlow();
 		if(serverName.equalsIgnoreCase("parkour")){
 			parkour = new Parkour(this);
 			eventcmds = new EventCmds(this);
+			lobby = new Lobby(this);
 		}
 		socketmanager = new SocketManager();
 		new TabList();
 		new PacketListener();
+		new Test();
+		new CosmeticHeads(this);
 		this.getServer().getPluginManager().registerEvents(this,this);
+		this.updateWorldRules();
 	}
 
 	public void onDisable(){
@@ -273,7 +278,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 				chatnotice.onReload();
 				if(eventcmds != null) eventcmds.onReload();
 				restart.onReload();
-				if(votes != null) votes.onReload();
 				if(lobby != null) lobby.onReload();
 				auth.onReload();
 				if(checkresidences != null) checkresidences.onReload();
@@ -284,7 +288,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 				if(trading != null) trading.onReload();
 				if(mapcrafter != null) mapcrafter.onReload();
 				if(parkour != null) parkour.onReload();
-				if(cosmeticheads != null) cosmeticheads.onReload();
 				if(quiz != null) quiz.onReload();
 				chatprivate.onReload();
 				chatadvert.onReload();
@@ -308,8 +311,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 		event.setJoinMessage("");
 		final Player player = event.getPlayer();
 		if(this.playermanazer.getPlayerInfo(player).isLogged() || !serverName.equalsIgnoreCase("lobby")){
-			Title.showTitle(player,"§6"+RealCraft.getServerName(this.serverName),1,3,1);
-			Title.showSubTitle(player,"§3RealCraft.cz",1,3,1);
 			this.playermanazer.getPlayerInfo(player).setLogged(true);
 			for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
 
@@ -324,6 +325,26 @@ public class RealCraft extends JavaPlugin implements Listener {
 					for(Player user : Bukkit.getServer().getOnlinePlayers()){
 						if(user != player && playermanazer.getPlayerInfo(user).isLogged()){
 							user.sendMessage(RealCraft.parseColors("&2[&a+&2] "+player.getDisplayName()+"&f je &aonline"));
+						}
+					}
+				}
+			},20);
+		}
+
+		if(this.getServerType() == ServerType.SURVIVAL){
+			Bukkit.getScheduler().runTaskLater(this,new Runnable(){
+				@Override
+				public void run(){
+					if(player.isOnline()){
+						int cx = player.getLocation().getChunk().getX();
+						int cz = player.getLocation().getChunk().getZ();
+						int view = Bukkit.getViewDistance();
+						for(int x=-view;x<=view;x++){
+							for(int z=-view;z<=view;z++){
+								net.minecraft.server.v1_12_R1.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
+								PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(chunk,20);
+								((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+							}
 						}
 					}
 				}
@@ -357,6 +378,12 @@ public class RealCraft extends JavaPlugin implements Listener {
 		return ChatColor.translateAlternateColorCodes('&',message);
 	}
 
+	private void updateWorldRules(){
+		for(World world : Bukkit.getWorlds()){
+			world.setGameRuleValue("announceAdvancements","false");
+		}
+	}
+
 	//https://gist.github.com/aadnk/3928137
 	public class TabList {
 		public TabList(){
@@ -365,7 +392,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 				public void run(){
 					for(Player player : Bukkit.getServer().getOnlinePlayers()){
 						int ping = ((CraftPlayer)player).getHandle().ping;
-						TabList.this.setPlayerHeaderFooter(player,"§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+lobby.lobbymenu.getAllPlayersCount()+"/100\n§7play.realcraft.cz\n§r");
+						TabList.this.setPlayerHeaderFooter(player,"§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+LobbyMenu.getAllPlayersCount()+"/100\n§7play.realcraft.cz\n§r");
 						if(!player.getPlayerListName().equalsIgnoreCase(player.getDisplayName())) player.setPlayerListName(player.getDisplayName());
 					}
 				}
@@ -398,10 +425,10 @@ public class RealCraft extends JavaPlugin implements Listener {
 
 	public class PacketListener {
 		public PacketListener(){
-			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Server.ADVANCEMENTS){
+			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Server.ADVANCEMENTS,PacketType.Play.Server.RECIPES){
 				@Override
 				public void onPacketSending(PacketEvent event){
-					if(RealCraft.getServerType() != ServerType.SURVIVAL && event.getPacketType() == PacketType.Play.Server.ADVANCEMENTS){
+					if(RealCraft.getServerType() != ServerType.SURVIVAL){
 						event.setCancelled(true);
 					}
 				}

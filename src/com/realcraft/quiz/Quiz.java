@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -20,6 +21,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.realcraft.RealCraft;
+import com.realcraft.ServerType;
+import com.realcraft.lobby.LobbyMenu;
 import com.realcraft.playermanazer.PlayerManazer;
 import com.realcraft.sockets.SocketData;
 import com.realcraft.sockets.SocketDataEvent;
@@ -38,8 +41,11 @@ public class Quiz implements Listener, Runnable {
 	private boolean master = false;
 	private static final String CHANNEL_QUESTION = "quizQuestion";
 	private static final String CHANNEL_ANSWER = "quizAnswer";
+	private static final String CHANNEL_WINNER = "quizWinner";
 	private static final String QUIZ_QUESTIONS = "quiz_questions";
-	private static final int REWARD = 300;
+	private static final String QUIZ_ANSWERS = "quiz_answers";
+	private static final int ANSWER_LIMIT = 10;
+	private static final int REWARD = 100;
 	private static final String CHAR = "\u2588";
 	private static final int[] CHAR_PATTERN = new int[]{
 		0,0,0,0,0,0,0,
@@ -53,12 +59,13 @@ public class Quiz implements Listener, Runnable {
 		0,0,0,0,0,0,0,
 	};
 	private ArrayList<QuizQuestion> questions = new ArrayList<QuizQuestion>();
+	private HashMap<Player,Long> lastPlayerAnswers = new HashMap<Player,Long>();
 
 	public Quiz(RealCraft realcraft){
 		if(RealCraft.getInstance().serverName.equalsIgnoreCase("lobby")) master = true;
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		if(master) plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,60*20,60*20);
+		if(master) plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,1800*20,1800*20);
 		this.loadQuestions();
 	}
 
@@ -67,8 +74,7 @@ public class Quiz implements Listener, Runnable {
 
 	@Override
 	public void run(){
-		if(!RealCraft.isTestServer()) return;
-		//if(master) this.runRandomQuestion();
+		if(master) this.runRandomQuestion();
 	}
 
 	public void loadQuestions(){
@@ -89,11 +95,17 @@ public class Quiz implements Listener, Runnable {
 	}
 
 	public void runRandomQuestion(){
-		QuizQuestion question = questions.get(RandomUtil.getRandomInteger(0,questions.size()-1));
-		question.run();
-		SocketData data = new SocketData(CHANNEL_QUESTION);
-		data.setInt("id",question.getId());
-		SocketManager.sendToAll(data);
+		if(LobbyMenu.getAllPlayersCount() >= 10 || RealCraft.isTestServer()){
+			QuizQuestion question = questions.get(RandomUtil.getRandomInteger(0,questions.size()-1));
+			question.run();
+			SocketData data = new SocketData(CHANNEL_QUESTION);
+			data.setInt("id",question.getId());
+			SocketManager.sendToAll(data);
+		}
+	}
+
+	public boolean hasPlayerAnswered(Player player){
+		return (lastPlayerAnswers.get(player) != null && lastPlayerAnswers.get(player)+ANSWER_LIMIT*1000 > System.currentTimeMillis());
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
@@ -132,7 +144,15 @@ public class Quiz implements Listener, Runnable {
 		else if(data.getChannel().equalsIgnoreCase(CHANNEL_ANSWER)){
 			for(QuizQuestion question : questions){
 				if(question.getId() == data.getInt("id")){
-					question.setAnswered(data.getString("name"),data.getInt("reward"));
+					question.setAnswered(data.getString("name"),data.getBoolean("boost"));
+					break;
+				}
+			}
+		}
+		else if(data.getChannel().equalsIgnoreCase(CHANNEL_WINNER)){
+			for(QuizQuestion question : questions){
+				if(question.getId() == data.getInt("id")){
+					question.showWinner(data.getString("name"),data.getInt("reward"));
 					break;
 				}
 			}
@@ -202,21 +222,12 @@ public class Quiz implements Listener, Runnable {
 		}
 
 		public void answer(Player player,String id){
-			if(this.isAnswered()){
-				return;
-			}
+			if(this.isAnswered() || Quiz.this.hasPlayerAnswered(player)) return;
+			lastPlayerAnswers.put(player,System.currentTimeMillis());
 			for(QuizAnswer answer : this.getAnswers()){
 				if(answer.getId().equalsIgnoreCase(id)){
 					if(answer.isCorrect()){
-						int reward = PlayerManazer.getPlayerInfo(player).giveCoins(REWARD);
-						player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-						this.setAnswered(player.getName(),reward);
-						this.sendAnswered(player.getName(),reward);
-						Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
-							public void run(){
-								PlayerManazer.getPlayerInfo(player).runCoinsEffect("§3Quiz",reward);
-							}
-						},20);
+						QuizQuestion.this.sendAnswered(player.getName(),PlayerManazer.getPlayerInfo(player).hasCoinsBoost());
 					} else {
 						player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 					}
@@ -224,17 +235,47 @@ public class Quiz implements Listener, Runnable {
 			}
 		}
 
-		public void setAnswered(String name,int reward){
+		public void setAnswered(String name,boolean boost){
+			if(this.isAnswered()) return;
 			this.answered = true;
-			Bukkit.broadcastMessage("§3[Quiz] §6"+name+"§f odpovedel nejrychleji a ziskava §a+"+reward+" coins");
+			this.sendWinner(name,(boost ? REWARD*2 : REWARD));
 		}
 
-		private void sendAnswered(String name,int reward){
+		public void showWinner(String name,int reward){
+			this.answered = true;
+			Bukkit.broadcastMessage("§3[Quiz] §6"+name+"§f odpovedel nejrychleji a ziskava §a+"+reward+" coins");
+			Player player = Bukkit.getPlayer(name);
+			if(player != null){
+				PlayerManazer.getPlayerInfo(player).giveCoins(reward,false);
+				player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
+				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+					public void run(){
+						PlayerManazer.getPlayerInfo(player).runCoinsEffect("§3Quiz",reward,true);
+					}
+				},20);
+				Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
+					@Override
+					public void run(){
+						RealCraft.getInstance().db.update("INSERT INTO "+QUIZ_ANSWERS+" (quiz_id,user_id,answer_created) VALUES('"+QuizQuestion.this.getId()+"','"+PlayerManazer.getPlayerInfo(player).getId()+"','"+(System.currentTimeMillis()/1000)+"')");
+					}
+				});
+			}
+		}
+
+		private void sendAnswered(String name,boolean boost){
 			SocketData data = new SocketData(CHANNEL_ANSWER);
 			data.setInt("id",this.getId());
 			data.setString("name",name);
+			data.setBoolean("boost",boost);
+			SocketManager.send(ServerType.LOBBY,data);
+		}
+
+		private void sendWinner(String name,int reward){
+			SocketData data = new SocketData(CHANNEL_WINNER);
+			data.setInt("id",this.getId());
+			data.setString("name",name);
 			data.setInt("reward",reward);
-			SocketManager.sendToAll(data);
+			SocketManager.sendToAll(data,true);
 		}
 
 		private void sendToPlayer(Player player,TextComponent[] lines){

@@ -188,12 +188,9 @@ public class LobbyParkours implements Runnable {
 			FireworkUtil.spawnFirework(finishFirework,FireworkEffect.Type.BALL,false);
 			Particles.FIREWORKS_SPARK.display(0.5f,0.5f,0.5f,0.2f,64,finishFirework,64);
 			player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-			plugin.lobby.lobbychests.givePlayerFragments(player,2);
-			final int fragments = plugin.lobby.lobbychests.getPlayerKeyFragments(player);
 			Title.showTitle(player,"§aParkour dokoncen",0.2,7,0.2);
+			int fragments = 0;
 			if(fragments >= 10){
-				plugin.lobby.lobbychests.givePlayerKeys(player);
-				plugin.lobby.lobbychests.resetPlayerFragments(player);
 				Title.showSubTitle(player,"§fZiskal jsi §a1 klic§f k magicke truhle.",0,7.2,0.6);
 				Title.showActionTitle(player,"§fCelkovy cas: §e"+players.get(player).getTimeFormat(),7*20);
 			} else {

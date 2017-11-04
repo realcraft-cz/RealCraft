@@ -1,0 +1,1 @@
+jar cf D:\\Backups\\realcraft_server\\public\\lobby\\plugins\\RealCraft.jar -C bin . config.yml plugin.yml

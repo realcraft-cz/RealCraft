@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import com.parkour.exceptions.ParkourNotReadyException;
 import com.parkour.menu.ParkourMenuType;
 import com.realcraft.RealCraft;
-import com.realcraft.playermanazer.PlayerManazer.PlayerInfo;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
@@ -27,7 +26,6 @@ public class Parkour implements Runnable {
 	public static final String PARKOUR_ARENAS = "parkour_arenas";
 	public static final String PARKOUR_TIMES = "parkour_times";
 	public static final String PARKOUR_RATINGS = "parkour_ratings";
-	public static final int PARKOUR_LOBBY_FRAGMENTS = 2;
 	public static final double ARENA_GOODRATING = 0.5;
 	public static final int ARENA_SIZE = 64;
 	public static final int ARENA_MARGIN = 128;
@@ -183,7 +181,7 @@ public class Parkour implements Runnable {
 		Bukkit.getServer().spigot().broadcast(message);
 	}
 
-	public static void givePlayerFragments(ParkourPlayer player,int amount){
+	/*public static void givePlayerFragments(ParkourPlayer player,int amount){
 		PlayerInfo playerinfo = RealCraft.getInstance().playermanazer.getPlayerInfo(player.getPlayer());
 		if(playerinfo != null){
 			playerinfo.givePlayerFragments(amount);
@@ -193,5 +191,5 @@ public class Parkour implements Runnable {
 				playerinfo.resetPlayerFragments();
 			}
 		}
-	}
+	}*/
 }

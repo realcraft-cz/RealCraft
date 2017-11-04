@@ -76,6 +76,10 @@ public abstract class Mount extends Cosmetic {
 			player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 			return;
 		}
+		if(player.getLocation().getBlockY() < 60){
+			player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
+			return;
+		}
 		player.closeInventory();
 		Cosmetics.clearMounts(player);
 		this.setRunning(player,true);

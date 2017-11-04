@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.anticheat.checks.Check.CheckType;
 import com.anticheat.checks.CheckEnchant;
 import com.anticheat.checks.CheckFlyHack;
-import com.anticheat.checks.CheckKillAura;
 import com.anticheat.checks.CheckSpeedHack;
 import com.anticheat.events.AntiCheatDetectEvent;
 import com.realcraft.RealCraft;
@@ -39,7 +38,7 @@ public class AntiCheat implements Listener {
 		plugin = realcraft;
 		new CheckFlyHack();
 		new CheckSpeedHack();
-		new CheckKillAura();
+		//new CheckKillAura();
 		if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
 			new CheckEnchant();
 		}
@@ -65,7 +64,7 @@ public class AntiCheat implements Listener {
 		Player player = event.getPlayer();
 		if(event.getType().getBanLimit() != 0) AntiCheat.getPlayer(player).addTypeCheck(event.getType());
 		this.sendReport(player,event.getType().toString(),AntiCheat.getPlayer(player).getTypeChecks(event.getType()));
-		RealCraft.getInstance().db.update("INSERT INTO "+REPORTS+" (user_id,report_type,report_created) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+event.getType().getId()+"','"+(System.currentTimeMillis()/1000)+"')");
+		RealCraft.getInstance().db.update("INSERT INTO "+REPORTS+" (user_id,report_type,report_server,report_created) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+event.getType().getId()+"','"+RealCraft.getServerType().toString()+"','"+(System.currentTimeMillis()/1000)+"')");
 		if(event.getType().getBanLimit() != 0){
 			if(AntiCheat.getPlayer(player).getTypeChecks(event.getType()) >= event.getType().getBanLimit()){
 				AntiCheat.getPlayer(player).reset();
@@ -111,7 +110,7 @@ public class AntiCheat implements Listener {
 	}
 
 	private void sendReport(Player player,String type,int checks){
-		if(AntiCheat.getPlayer(player).lastReported+REPORT_TIMEOUT < System.currentTimeMillis()){
+		if(AntiCheat.getPlayer(player).lastReported+AntiCheat.REPORT_TIMEOUT < System.currentTimeMillis()){
 			printReport(RealCraft.getServerName(plugin.serverName),player.getName(),type,checks);
 			AntiCheat.getPlayer(player).lastReported = System.currentTimeMillis();
 

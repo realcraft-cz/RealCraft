@@ -20,7 +20,7 @@ import com.realcraft.utils.RandomUtil;
 
 public class RandomSpawn implements Listener {
 
-	private static final int RANDOM_LIMIT = 300*1000;
+	private static final int RANDOM_LIMIT = 60*1000;
 	private static final int RANDOM_SIZE = 5000;
 	private HashMap<Player,Long> lastRandomSpawn = new HashMap<Player,Long>();
 

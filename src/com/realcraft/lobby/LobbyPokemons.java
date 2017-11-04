@@ -1,12 +1,15 @@
 package com.realcraft.lobby;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -23,13 +26,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -48,31 +52,48 @@ import com.realcraft.utils.LocationUtil;
 import com.realcraft.utils.Particles;
 import com.realcraft.utils.Particles.OrdinaryColor;
 import com.realcraft.utils.RandomUtil;
-import com.realcraft.utils.Title;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.DespawnReason;
+import net.citizensnpcs.api.event.NPCLeftClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
+import net.citizensnpcs.api.event.NPCSpawnEvent;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.npc.SimpleNPCDataStore;
+import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.api.util.YamlStorage;
+import net.citizensnpcs.npc.skin.SkinnableEntity;
+import net.citizensnpcs.trait.LookClose;
 import net.minecraft.server.v1_12_R1.EntityInsentient;
 import net.minecraft.server.v1_12_R1.PathEntity;
 import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
+import ru.beykerykt.lightapi.LightAPI;
 
 public class LobbyPokemons implements Listener {
 
 	RealCraft plugin;
 	private static final String POKEMONS = "pokemons";
 	private static final String POKEMONS_USERS = "pokemons_users";
-	private static final String invName = "Pokemon";
-	private static final String invBuyName = "Pokemon > Koupit";
+	private static final String invName = "Nabidka pokemonu";
+	private static final String invBuyName = "Koupit pokemona";
+	private static final String pokedexName = "Pokedex";
+	private static final int NPC_ID = 602;
 	private static final int PRICE = 500;
 	private static ItemStack item = null;
-	private ArrayList<LobbyPokemonType> pokemonTypes = new ArrayList<LobbyPokemonType>();
+
+	private NPCRegistry npcRegistry;
+	private LobbyPokemonAsh ash;
+
+	private HashMap<Integer,LobbyPokemonType> pokemonTypes = new HashMap<Integer,LobbyPokemonType>();
 	private HashMap<Player,LobbyPokemon> pokemons = new HashMap<Player,LobbyPokemon>();
-	private HashMap<Player,Integer> playerPage = new HashMap<Player,Integer>();
-	private HashMap<Player,LobbyPokemonType> playerBuying = new HashMap<Player,LobbyPokemonType>();
-	private HashMap<Player,HashMap<Integer,Boolean>> playerPokemons = new HashMap<Player,HashMap<Integer,Boolean>>();
+	private HashMap<Player,LobbyPokemonPlayer> players = new HashMap<Player,LobbyPokemonPlayer>();
 
 	public LobbyPokemons(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		this.loadPokemons();
+		this.loadAsh();
 	}
 
 	public void onDisable(){
@@ -85,7 +106,7 @@ public class LobbyPokemons implements Listener {
 		ResultSet rs = RealCraft.getInstance().db.query("SELECT pokemon_id,pokemon_name,pokemon_url FROM "+POKEMONS);
 		try {
 			while(rs.next()){
-				pokemonTypes.add(new LobbyPokemonType(rs.getInt("pokemon_id"),rs.getString("pokemon_name"),rs.getString("pokemon_url")));
+				pokemonTypes.put(rs.getInt("pokemon_id"),new LobbyPokemonType(rs.getInt("pokemon_id"),rs.getString("pokemon_name"),rs.getString("pokemon_url")));
 			}
 			rs.close();
 		} catch (SQLException e){
@@ -93,29 +114,19 @@ public class LobbyPokemons implements Listener {
 		}
 	}
 
-	private void loadPlayerPokemons(Player player){
-		ResultSet rs = RealCraft.getInstance().db.query("SELECT pokemon_id FROM "+POKEMONS_USERS+" WHERE user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"'");
+	private void loadAsh(){
 		try {
-			HashMap<Integer,Boolean> types = new HashMap<Integer,Boolean>();
-			while(rs.next()){
-				rs.getInt("pokemon_id");
-				types.put(rs.getInt("pokemon_id"),true);
-			}
-			playerPokemons.put(player,types);
-			rs.close();
-		} catch (SQLException e){
+			this.npcRegistry = CitizensAPI.createAnonymousNPCRegistry(SimpleNPCDataStore.create(new YamlStorage(new File(RealCraft.getInstance().getDataFolder()+"/citizens.tmp.yml"))));
+			Location location = new Location(Bukkit.getWorld("world"),-83.5,65.0,64.5,0.0f,0.0f);
+			ash = new LobbyPokemonAsh(location);
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
 
-	private void buyPokemon(Player player,LobbyPokemonType type){
-		RealCraft.getInstance().db.insert("INSERT INTO "+POKEMONS_USERS+" (user_id,pokemon_id) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+type.getId()+"')");
-		playerPokemons.get(player).put(type.getId(),true);
-		player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-	}
-
-	private boolean hasPlayerPokemon(Player player,LobbyPokemonType type){
-		return (playerPokemons.containsKey(player) && playerPokemons.get(player).containsKey(type.getId()));
+	public LobbyPokemonPlayer getPokemonPlayer(Player player){
+		if(!players.containsKey(player)) players.put(player,new LobbyPokemonPlayer(player));
+		return players.get(player);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -123,7 +134,7 @@ public class LobbyPokemons implements Listener {
 		if(item == null){
 			item = new ItemStack(Material.MONSTER_EGG,1,(short)0,(byte)98);
 			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName("§e§l"+invName);
+			meta.setDisplayName("§e§l"+pokedexName);
 			item.setItemMeta(meta);
 		}
 		return item;
@@ -132,15 +143,14 @@ public class LobbyPokemons implements Listener {
 	@EventHandler
 	public void AuthLoginEvent(AuthLoginEvent event){
 		Player player = event.getPlayer();
-		player.getInventory().setItem(5,this.getItem());
-		this.loadPlayerPokemons(player);
+		player.getInventory().setItem(6,this.getItem());
 	}
 
 	@EventHandler
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
 		if(PlayerManazer.getPlayerInfo(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
-			player.getInventory().setItem(5,this.getItem());
+			player.getInventory().setItem(6,this.getItem());
 		}
 	}
 
@@ -159,7 +169,7 @@ public class LobbyPokemons implements Listener {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
 				@Override
 				public void run(){
-					event.getPlayer().getInventory().setItem(5,LobbyPokemons.this.getItem());
+					event.getPlayer().getInventory().setItem(6,LobbyPokemons.this.getItem());
 				}
 			},20);
 		}
@@ -172,7 +182,7 @@ public class LobbyPokemons implements Listener {
 		if(player.getWorld().getName().equalsIgnoreCase("world") && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase(this.getItem().getItemMeta().getDisplayName()) && (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
 			event.setCancelled(true);
 			if(PlayerManazer.getPlayerInfo(player).isLogged()){
-				this.openMenu(player,1);
+				this.getPokemonPlayer(player).openPokedex();
 			}
 		}
 	}
@@ -194,17 +204,14 @@ public class LobbyPokemons implements Listener {
 				if(event.getRawSlot() >= 0 && event.getRawSlot() < 6*9){
 					if(item.getType() != Material.AIR && item.hasItemMeta()){
 						if(item.getType() == Material.PAPER){
-							if(event.getRawSlot() == 45) this.openMenu(player,playerPage.get(player)-1);
-							else if(event.getRawSlot() == 53) this.openMenu(player,playerPage.get(player)+1);
+							if(event.getRawSlot() == 45) ash.openMenu(player,this.getPokemonPlayer(player).getPage()-1);
+							else if(event.getRawSlot() == 53) ash.openMenu(player,this.getPokemonPlayer(player).getPage()+1);
 							player.playSound(player.getLocation(),Sound.UI_BUTTON_CLICK,1f,1f);
 						} else {
-							for(LobbyPokemonType type : pokemonTypes){
+							for(LobbyPokemonType type : pokemonTypes.values()){
 								if(item.getItemMeta().getDisplayName().equalsIgnoreCase("§e"+type.getName())){
-									if(this.hasPlayerPokemon(player,type)){
-										this.createPokemon(player,type);
-										player.closeInventory();
-									} else {
-										this.openBuyMenu(player,type);
+									if(!this.getPokemonPlayer(player).hasPokemon(type)){
+										ash.openBuyMenu(player,type);
 										player.playSound(player.getLocation(),Sound.UI_BUTTON_CLICK,1f,1f);
 									}
 									break;
@@ -222,112 +229,49 @@ public class LobbyPokemons implements Listener {
 				ItemStack item = event.getCurrentItem();
 				if(event.getRawSlot() >= 0 && event.getRawSlot() < 6*9){
 					if(item.getType() == Material.EMERALD_BLOCK){
-						this.buyPokemon(player,playerBuying.get(player));
-						this.openMenu(player,playerPage.get(player));
+						ash.buyPokemon(player,this.getPokemonPlayer(player).getBuying());
 					}
 					else if(item.getType() == Material.REDSTONE_BLOCK){
-						this.openMenu(player,playerPage.get(player));
+						ash.openMenu(player,this.getPokemonPlayer(player).getPage());
 						player.playSound(player.getLocation(),Sound.UI_BUTTON_CLICK,1f,1f);
 					}
 				}
 			}
-
 		}
-		else if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world") && event.getSlotType() == SlotType.QUICKBAR && event.getCurrentItem().getType() == Material.ENCHANTMENT_TABLE){
-			event.setCancelled(true);
-			Player player = (Player) event.getWhoClicked();
-			if(PlayerManazer.getPlayerInfo(player).isLogged()){
-				this.openMenu(player,1);
-			}
-		}
-	}
-
-	private void openMenu(Player player,int page){
-		this.removePokemon(player);
-		playerPage.put(player,page);
-		Inventory inventory = Bukkit.createInventory(null,6*9,invName);
-		ItemStack item;
-		ItemMeta meta;
-
-		for(int i=0;i<5*9;i++){
-			int index = i+((page-1)*(5*9));
-			if(pokemonTypes.size() > index){
-				LobbyPokemonType type = pokemonTypes.get(index);
-				if(type != null){
-					inventory.setItem(i,type.getListItemStack(player));
+		else if(event.getInventory().getName().equalsIgnoreCase(pokedexName)){
+			if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world")){
+				event.setCancelled(true);
+				Player player = (Player) event.getWhoClicked();
+				ItemStack item = event.getCurrentItem();
+				if(event.getRawSlot() >= 0 && event.getRawSlot() < 6*9){
+					if(item.getType() != Material.AIR && item.hasItemMeta()){
+						if(item.getType() == Material.PAPER){
+							if(event.getRawSlot() == 45) this.getPokemonPlayer(player).openPokedex(this.getPokemonPlayer(player).getPage()-1);
+							else if(event.getRawSlot() == 53) this.getPokemonPlayer(player).openPokedex(this.getPokemonPlayer(player).getPage()+1);
+							player.playSound(player.getLocation(),Sound.UI_BUTTON_CLICK,1f,1f);
+						} else {
+							for(LobbyPokemonType type : pokemonTypes.values()){
+								if(item.getItemMeta().getDisplayName().equalsIgnoreCase("§e"+type.getName())){
+									this.getPokemonPlayer(player).equipPokemon(type);
+									break;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
-
-		int maxPage = (int)Math.ceil(pokemonTypes.size()/(5*9.0));
-		if(page > 1){
-			item = new ItemStack(Material.PAPER);
-			meta = item.getItemMeta();
-			meta.setDisplayName("§6§lPredchozi");
-			item.setItemMeta(meta);
-			inventory.setItem(45,item);
+		else if(event.getWhoClicked() instanceof Player){
+			ItemStack item = event.getCurrentItem();
+			if(item != null && item.getType() == this.getItem().getType() && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase(this.getItem().getItemMeta().getDisplayName())){
+				event.setCancelled(true);
+			}
 		}
-		if(page < maxPage){
-			item = new ItemStack(Material.PAPER);
-			meta = item.getItemMeta();
-			meta.setDisplayName("§6§lDalsi");
-			item.setItemMeta(meta);
-			inventory.setItem(53,item);
-		}
-
-		player.openInventory(inventory);
-	}
-
-	private void openBuyMenu(Player player,LobbyPokemonType type){
-		playerBuying.put(player,type);
-		Inventory inventory = Bukkit.createInventory(null,6*9,invBuyName);
-		ItemStack item;
-		ItemMeta meta;
-		ArrayList<String> lore;
-
-		inventory.setItem(13,type.getBuyItemStack());
-
-		item = new ItemStack(Material.EMERALD_BLOCK);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§a§lKoupit");
-		lore = new ArrayList<String>();
-		lore.add("§7Cena: §a"+PRICE+" coins");
-		lore.add("§7Klikni pro zakoupeni");
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		inventory.setItem(19,item);
-		inventory.setItem(20,item);
-		inventory.setItem(21,item);
-		inventory.setItem(28,item);
-		inventory.setItem(29,item);
-		inventory.setItem(30,item);
-		inventory.setItem(37,item);
-		inventory.setItem(38,item);
-		inventory.setItem(39,item);
-
-		item = new ItemStack(Material.REDSTONE_BLOCK);
-		meta = item.getItemMeta();
-		meta.setDisplayName("§c§lZrusit");
-		lore = new ArrayList<String>();
-		lore.add("§7Klikni pro zruseni");
-		meta.setLore(lore);
-		item.setItemMeta(meta);
-		inventory.setItem(23,item);
-		inventory.setItem(24,item);
-		inventory.setItem(25,item);
-		inventory.setItem(32,item);
-		inventory.setItem(33,item);
-		inventory.setItem(34,item);
-		inventory.setItem(41,item);
-		inventory.setItem(42,item);
-		inventory.setItem(43,item);
-
-		player.openInventory(inventory);
 	}
 
 	private void createPokemon(Player player,LobbyPokemonType type){
 		if(pokemons.containsKey(player)) this.removePokemon(player);
-		else pokemons.put(player,new LobbyPokemon(player,type));
+		pokemons.put(player,new LobbyPokemon(player,type));
 	}
 
 	private void removePokemon(Player player){
@@ -349,6 +293,7 @@ public class LobbyPokemons implements Listener {
 		private int tick = 0;
 		private boolean warnSound = false;
 		private long followTimeout = 0;
+		private long arrivedTimeout = 0;
 		private long sitTimeout = 0;
 		private long leftClickTimeout = 0;
 		private long rightClickTimeout = 0;
@@ -387,6 +332,7 @@ public class LobbyPokemons implements Listener {
 		private void create(){
 			Location location = player.getLocation();
 			location.setPitch(0f);
+			location.add(location.getDirection().setY(0).normalize().multiply(1.5));
 			entity = player.getWorld().spawnEntity(location,EntityType.ZOMBIE);
 			entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_VEX_CHARGE,1f,1f);
 			if(entity != null){
@@ -395,6 +341,9 @@ public class LobbyPokemons implements Listener {
 				((Zombie)entity).getEquipment().clear();
 				((Zombie)entity).getEquipment().setHelmet(type.getItemStack());
 				((Zombie)entity).getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
+				((Zombie)entity).getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
+				((Zombie)entity).getEquipment().setItemInMainHandDropChance(0);
+				((Zombie)entity).getEquipment().setItemInOffHandDropChance(0);
 				((Zombie)entity).addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,Integer.MAX_VALUE,1));
 				((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
 				this.clearPathfinders(entity);
@@ -444,8 +393,9 @@ public class LobbyPokemons implements Listener {
 					}
 					if(tick == 0 && distance <= 3*3){
 						if(entity.isOnGround()) entity.setVelocity(entity.getVelocity().add(new Vector(RandomUtil.getRandomDouble(-0.2,0.2),RandomUtil.getRandomDouble(0.3,0.6),RandomUtil.getRandomDouble(-0.2,0.2))));
-						switch(RandomUtil.getRandomInteger(0,2)){
+						switch(RandomUtil.getRandomInteger(0,3)){
 							case 0: entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_GHAST_HURT,0.3f,1f);
+							case 1: entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_CAT_HISS,0.3f,1f);
 						}
 						if(RandomUtil.getRandomBoolean()) entity.getWorld().spawnParticle(Particle.SWEEP_ATTACK,entity.getLocation().add(0,1.0,0),1);
 					}
@@ -477,7 +427,7 @@ public class LobbyPokemons implements Listener {
 						Location targetLocation = target.getEntity().getLocation();
 						if(distance <= 2*2) targetLocation.add(RandomUtil.getRandomDouble(-2.0,2.0),0,RandomUtil.getRandomDouble(-2.0,2.0));
 						try {
-							double speed = (distance > 2*2 ? 1.0 : 0.5);
+							double speed = (distance > 2*2 ? 0.7 : 0.5);
 							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 							PathEntity path;
 							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
@@ -488,7 +438,7 @@ public class LobbyPokemons implements Listener {
 						} catch (Exception exception){
 						}
 					}
-					if(tick == 0 && distance <= 2*2){
+					if(tick == 0 && distance <= 1*1){
 						if(RandomUtil.getRandomBoolean()) Particles.HEART.display(0f,0f,0f,0,1,entity.getLocation().add(0f,1f,0f),64);
 					}
 				} else {
@@ -551,16 +501,31 @@ public class LobbyPokemons implements Listener {
 					((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 					PathEntity path;
 					path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
-					if(distance > 30*30 && player.isOnGround()){
+					if(distance > 32*32 && player.isOnGround()){
 						((CraftEntity)entity).getHandle().setLocation(targetLocation.getBlockX(),targetLocation.getBlockY(),targetLocation.getBlockZ(),0,0);
 					}
 					if(path != null){
 						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
 						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
+						arrivedTimeout = System.currentTimeMillis()+600;
 					}
 				} else {
-					((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
-					this.clearPathfinders(entity);
+					if(arrivedTimeout >= System.currentTimeMillis()){
+						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
+						if(tick == 0) entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_GHAST_AMBIENT,1f,2f);
+					} else {
+						speed = 0.5;
+						if(tick == 0 && RandomUtil.getRandomBoolean()){
+							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
+							targetLocation.add(RandomUtil.getRandomDouble(-2.0,2.0),0,RandomUtil.getRandomDouble(-2.0,2.0));
+							PathEntity path;
+							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
+							if(path != null){
+								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
+								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
+							}
+						}
+					}
 				}
 			} catch (Exception exception){
 			}
@@ -573,6 +538,7 @@ public class LobbyPokemons implements Listener {
 				bField.setAccessible(true);
 				Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
 				cField.setAccessible(true);
+				((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
 				bField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
 				bField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());
 				cField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
@@ -583,10 +549,7 @@ public class LobbyPokemons implements Listener {
 		}
 
 		private void effect(){
-			if(entity == null || entity.isDead()){
-				LobbyPokemons.this.removePokemon(player);
-				return;
-			}
+			if(entity == null || entity.isDead()) return;
 			if(state != LobbyPokemonState.SITTING){
 				Particles.SNOW_SHOVEL.display(0.1f,0f,0.1f,0f,4,entity.getLocation().add(0,0.7,0),64);
 				if(mode == LobbyPokemonMode.HOSTILE) Particles.SPELL_MOB.display(new OrdinaryColor(170,0,0),entity.getLocation().add(0,0.7,0),64);
@@ -629,10 +592,19 @@ public class LobbyPokemons implements Listener {
 			}
 		}
 
+		@EventHandler
+		public void ChunkUnloadEvent(ChunkUnloadEvent event){
+			for(Entity entity : event.getChunk().getEntities()){
+				if(entity.equals(this.getEntity())){
+					event.setCancelled(true);
+				}
+			}
+		}
+
 		private void rightClick(Entity damager){
 			if(damager instanceof Player && damager.equals(player) && this.getDistanceToOwner() < 3*3 && sitTimeout < System.currentTimeMillis()){
 				rightClickTimeout = System.currentTimeMillis()+100;
-				if(state == LobbyPokemonState.FOLLOW){
+				if(state == LobbyPokemonState.FOLLOW || state == LobbyPokemonState.FRIEND){
 					state = LobbyPokemonState.SITTING;
 					sitTimeout = System.currentTimeMillis()+500;
 					((Zombie)entity).setAI(false);
@@ -644,6 +616,7 @@ public class LobbyPokemons implements Listener {
 							((CraftEntity)entity).getHandle().setLocation(entity.getLocation().getX(),entity.getLocation().getY()-0.7,entity.getLocation().getZ(),0,0);
 						}
 					});
+					this.clearPathfinders(entity);
 				}
 				else if(state == LobbyPokemonState.SITTING){
 					state = LobbyPokemonState.FOLLOW;
@@ -657,12 +630,19 @@ public class LobbyPokemons implements Listener {
 							entity.setVelocity(new Vector(0,0,0));
 						}
 					});
+					this.clearPathfinders(entity);
 				}
 			}
 		}
 
 		private void leftClick(Entity damager){
 			if(damager instanceof Player && damager.equals(player) && this.getDistanceToOwner() < 3*3){
+				player.getWorld().playSound(player.getLocation(),Sound.ENTITY_ITEM_PICKUP,1f,1f);
+				Particles.SPELL_WITCH.display(0.2f,0.2f,0.2f,0.5f,8,entity.getLocation().add(0f,0.9f,0f),64);
+				LobbyPokemons.this.removePokemon(player);
+				//leftClickTimeout = System.currentTimeMillis()+1000;
+			}
+			/*if(damager instanceof Player && damager.equals(player) && this.getDistanceToOwner() < 3*3){
 				leftClickTimeout = System.currentTimeMillis()+100;
 				if(state != LobbyPokemonState.SITTING){
 					state = LobbyPokemonState.FOLLOW;
@@ -681,7 +661,7 @@ public class LobbyPokemons implements Listener {
 						}
 					}
 				}
-			}
+			}*/
 		}
 
 		public void remove(){
@@ -689,6 +669,105 @@ public class LobbyPokemons implements Listener {
 			if(taskMove != null) taskMove.cancel();
 			if(taskEffect != null) taskEffect.cancel();
 			if(entity != null) entity.remove();
+		}
+	}
+
+	private class LobbyPokemonPlayer {
+
+		private Player player;
+		private int page = 1;
+		private LobbyPokemonType buying;
+		private HashMap<Integer,LobbyPokemonType> pokemons = new HashMap<Integer,LobbyPokemonType>();
+
+		public LobbyPokemonPlayer(Player player){
+			this.player = player;
+			this.loadPlayerPokemons();
+		}
+
+		public int getPage(){
+			return page;
+		}
+
+		public void setPage(int page){
+			this.page = page;
+		}
+
+		public LobbyPokemonType getBuying(){
+			return buying;
+		}
+
+		public void setBuying(LobbyPokemonType buying){
+			this.buying = buying;
+		}
+
+		public boolean hasPokemon(LobbyPokemonType type){
+			return pokemons.containsKey(type.getId());
+		}
+
+		public void loadPlayerPokemons(){
+			ResultSet rs = RealCraft.getInstance().db.query("SELECT pokemon_id FROM "+POKEMONS_USERS+" WHERE user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"'");
+			try {
+				pokemons.clear();
+				while(rs.next()){
+					int id = rs.getInt("pokemon_id");
+					pokemons.put(id,pokemonTypes.get(id));
+				}
+				rs.close();
+			} catch (SQLException e){
+				e.printStackTrace();
+			}
+		}
+
+		public void addPokemon(LobbyPokemonType type){
+			pokemons.put(type.getId(),type);
+			RealCraft.getInstance().db.insert("INSERT INTO "+POKEMONS_USERS+" (user_id,pokemon_id) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+type.getId()+"')");
+		}
+
+		public void openPokedex(){
+			this.openPokedex(1);
+		}
+
+		public void openPokedex(int page){
+			LobbyPokemons.this.getPokemonPlayer(player).setPage(page);
+			Inventory inventory = Bukkit.createInventory(null,6*9,pokedexName);
+			ItemStack item;
+			ItemMeta meta;
+
+			ArrayList<LobbyPokemonType> pokemonsTmp = new ArrayList<LobbyPokemonType>(pokemons.values());
+			for(int i=0;i<5*9;i++){
+				int index = i+((page-1)*(5*9));
+				if(pokemonsTmp.size() > index){
+					LobbyPokemonType type = pokemonsTmp.get(index);
+					if(type != null){
+						inventory.setItem(i,type.getPokedexItemStack());
+					}
+				}
+			}
+
+			int maxPage = (int)Math.ceil(pokemonsTmp.size()/(5*9.0));
+			if(page > 1){
+				item = new ItemStack(Material.PAPER);
+				meta = item.getItemMeta();
+				meta.setDisplayName("§6§lPredchozi");
+				item.setItemMeta(meta);
+				inventory.setItem(45,item);
+			}
+			if(page < maxPage){
+				item = new ItemStack(Material.PAPER);
+				meta = item.getItemMeta();
+				meta.setDisplayName("§6§lDalsi");
+				item.setItemMeta(meta);
+				inventory.setItem(53,item);
+			}
+
+			player.openInventory(inventory);
+		}
+
+		public void equipPokemon(LobbyPokemonType type){
+			if(this.hasPokemon(type)){
+				LobbyPokemons.this.createPokemon(player,type);
+			}
+			player.closeInventory();
 		}
 	}
 
@@ -724,20 +803,14 @@ public class LobbyPokemons implements Listener {
 			return itemStack;
 		}
 
-		@SuppressWarnings("deprecation")
 		public ItemStack getListItemStack(Player player){
 			ItemStack item;
 			ItemMeta meta;
 			ArrayList<String> lore;
-			if(LobbyPokemons.this.hasPlayerPokemon(player,this)){
-				item = this.getItemStack().clone();
-				meta = item.getItemMeta();
-				lore = new ArrayList<String>();
-				lore.add("§7Klikni pro spawnuti");
-				meta.setLore(lore);
-				item.setItemMeta(meta);
+			if(LobbyPokemons.this.getPokemonPlayer(player).hasPokemon(this)){
+				item = new ItemStack(Material.AIR);
 			} else {
-				item = new ItemStack(Material.INK_SACK,1,(short)0,(byte)8);
+				item = this.getItemStack().clone();
 				meta = item.getItemMeta();
 				meta.setDisplayName("§e"+this.getName());
 				lore = new ArrayList<String>();
@@ -746,6 +819,19 @@ public class LobbyPokemons implements Listener {
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 			}
+			return item;
+		}
+
+		public ItemStack getPokedexItemStack(){
+			ItemStack item;
+			ItemMeta meta;
+			ArrayList<String> lore;
+			item = this.getItemStack().clone();
+			meta = item.getItemMeta();
+			lore = new ArrayList<String>();
+			lore.add("§7Klikni pro spawnuti");
+			meta.setLore(lore);
+			item.setItemMeta(meta);
 			return item;
 		}
 
@@ -762,6 +848,206 @@ public class LobbyPokemons implements Listener {
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 			return item;
+		}
+	}
+
+	@EventHandler
+	public void NPCRightClickEvent(NPCRightClickEvent event){
+		if(event.getNPC().getId() == NPC_ID){
+			ash.onPlayerClick(event.getClicker());
+		}
+	}
+
+	@EventHandler
+	public void NPCLeftClickEvent(NPCLeftClickEvent event){
+		if(event.getNPC().getId() == NPC_ID){
+			ash.onPlayerClick(event.getClicker());
+		}
+	}
+
+	@EventHandler
+	public void NPCSpawnEvent(NPCSpawnEvent event){
+		if(event.getNPC().getId() == NPC_ID){
+			if(ash != null) ash.updateSkin();
+		}
+	}
+
+	@EventHandler
+	public void ChunkLoadEvent(ChunkLoadEvent event){
+		if(ash != null){
+			if(ash.isInChunk(event.getChunk())){
+				ash.spawn();
+			}
+		}
+	}
+
+	@EventHandler
+	public void ChunkUnloadEvent(ChunkUnloadEvent event){
+		if(ash != null){
+			if(ash.isInChunk(event.getChunk())){
+				ash.remove();
+			}
+		}
+	}
+
+	private class LobbyPokemonAsh {
+		NPC npc;
+		Location location;
+		SkinnableEntity skinnable = null;
+
+		public LobbyPokemonAsh(Location location){
+			this.location = location;
+			this.npc = npcRegistry.createNPC(EntityType.PLAYER,UUID.fromString("00000000-0000-0000-0000-00000000000"+NPC_ID),NPC_ID,"");
+			npc.setName("§f§lAsh");
+			npc.setProtected(true);
+
+			LookClose look = npc.getTrait(LookClose.class);
+			look.setRange(3);
+			look.toggle();
+
+			this.spawn();
+			LightAPI.createLight(location.clone().add(0.0,1.0,0.0),15,false);
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),new Runnable(){
+				@Override
+				public void run(){
+					LobbyPokemonAsh.this.updateSkin();
+				}
+			},20,20);
+		}
+
+		public boolean isInChunk(Chunk chunk){
+			return (location.getBlockX() >> 4 == chunk.getX() && location.getBlockZ() >> 4 == chunk.getZ());
+		}
+
+		public void onPlayerClick(Player player){
+			this.openMenu(player);
+		}
+
+		public void spawn(){
+			npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_METADATA,"eyJ0aW1lc3RhbXAiOjE1MDczNzAxNDQ3NzYsInByb2ZpbGVJZCI6ImE5MGI4MmIwNzE4NTQ0ZjU5YmE1MTZkMGY2Nzk2NDkwIiwicHJvZmlsZU5hbWUiOiJJbUZhdFRCSCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTY5YWI4YjBmMTlhMWM5OWZlM2FkODZlYTFhMmVhMmJlZWVmYmE4ZTFiOTM0MzMwODc0M2I3YmNiZDgifX19");
+			npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_SIGN_METADATA,"kxHR94GVVXcIylOruGoa6wRJoayaHqW4bmGl+YJfAClDUIU6KrX0+o1PIzH2G7xeYkLCx2FiZUAytVH4t+FEE99kduVXqVSSqhq/0A1OcoYAAhTfYrfBXhuygQ8PR0sFlgDUnoJ4b4PbBn/oYvwx0kymNd0Xp3x0S+gmSbSrh+C9kmcX8INKkbXnbz4pH+kkQAr8OerpSU12bxTB3ohULkvD1ujP1Bq8QGxomhtP7NBbvHypfvlweDYoScullCvzeIlzkGvZ88uHTh5PxruO045zx7iwndxGrDbW1SGdV1u5CiCESx8SYHTCOx4JaWkvTE33RfrJ5M8/XYW2TzaYaAOnwo5jYzVA6E/nQpopNLzjSt420AiastcaMW7JUWGXiNB6yi1Dkz/U6TvaLMNHVLmiNQ7zdlfnNO290C+rGfphWlHhTHl1CMH99RFMY01HDm8w+Z36eVOE15wTc9aEthCHJCL47nao//rCdkPVeiXHxD/+ZitqFa7Sd4yC/pQCd5g3AocRZMkEC+JBW1dKXM52dEZBIs6xMXZPhgGiqkRecun4ozKET1QfAWmOQv5dHUCo7EKy4equjVx12uh7h+H06FNsNNbL83os4fOnZGEqAq5y1k77P10OVLhrQ3MdC7xGjqOZQka9Uld614slpmBWdwxvH5sM8fVIrOCjCGM=");
+			npc.data().setPersistent(NPC.PLAYER_SKIN_USE_LATEST,false);
+			npc.spawn(location);
+		}
+
+		public void remove(){
+			npc.despawn(DespawnReason.PLUGIN);
+			skinnable = null;
+		}
+
+		public void updateSkin(){
+			npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_METADATA,"eyJ0aW1lc3RhbXAiOjE1MDczNzAxNDQ3NzYsInByb2ZpbGVJZCI6ImE5MGI4MmIwNzE4NTQ0ZjU5YmE1MTZkMGY2Nzk2NDkwIiwicHJvZmlsZU5hbWUiOiJJbUZhdFRCSCIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTY5YWI4YjBmMTlhMWM5OWZlM2FkODZlYTFhMmVhMmJlZWVmYmE4ZTFiOTM0MzMwODc0M2I3YmNiZDgifX19");
+			npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_SIGN_METADATA,"kxHR94GVVXcIylOruGoa6wRJoayaHqW4bmGl+YJfAClDUIU6KrX0+o1PIzH2G7xeYkLCx2FiZUAytVH4t+FEE99kduVXqVSSqhq/0A1OcoYAAhTfYrfBXhuygQ8PR0sFlgDUnoJ4b4PbBn/oYvwx0kymNd0Xp3x0S+gmSbSrh+C9kmcX8INKkbXnbz4pH+kkQAr8OerpSU12bxTB3ohULkvD1ujP1Bq8QGxomhtP7NBbvHypfvlweDYoScullCvzeIlzkGvZ88uHTh5PxruO045zx7iwndxGrDbW1SGdV1u5CiCESx8SYHTCOx4JaWkvTE33RfrJ5M8/XYW2TzaYaAOnwo5jYzVA6E/nQpopNLzjSt420AiastcaMW7JUWGXiNB6yi1Dkz/U6TvaLMNHVLmiNQ7zdlfnNO290C+rGfphWlHhTHl1CMH99RFMY01HDm8w+Z36eVOE15wTc9aEthCHJCL47nao//rCdkPVeiXHxD/+ZitqFa7Sd4yC/pQCd5g3AocRZMkEC+JBW1dKXM52dEZBIs6xMXZPhgGiqkRecun4ozKET1QfAWmOQv5dHUCo7EKy4equjVx12uh7h+H06FNsNNbL83os4fOnZGEqAq5y1k77P10OVLhrQ3MdC7xGjqOZQka9Uld614slpmBWdwxvH5sM8fVIrOCjCGM=");
+			npc.data().setPersistent(NPC.PLAYER_SKIN_USE_LATEST,false);
+			SkinnableEntity skinnableTmp = (SkinnableEntity) npc.getEntity();
+			if(skinnableTmp != null && skinnable == null){
+				skinnable = skinnableTmp;
+				skinnable.setSkinName("steve",false);
+			}
+			else if(skinnableTmp == null) skinnable = null;
+			Equipment equip = npc.getTrait(Equipment.class);
+			equip.set(Equipment.EquipmentSlot.HAND,ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTJhODUwZmVhYmIwNzM0OWNmZTI0NWIyNmEyNjRlYTM2ZGY3MzMzOGY4NGNkMmVlMzgzM2IxODVlMWUyZTJkOCJ9fX0="));
+		}
+
+		public void openMenu(Player player){
+			player.playSound(player.getLocation(),Sound.ENTITY_VILLAGER_TRADING,1f,1f);
+			this.openMenu(player,1);
+		}
+
+		public void openMenu(Player player,int page){
+			LobbyPokemons.this.getPokemonPlayer(player).setPage(page);
+			Inventory inventory = Bukkit.createInventory(null,6*9,invName);
+			ItemStack item;
+			ItemMeta meta;
+
+			ArrayList<LobbyPokemonType> pokemonsTmp = new ArrayList<LobbyPokemonType>(pokemonTypes.values());
+			for(int i=0;i<5*9;i++){
+				int index = i+((page-1)*(5*9));
+				if(pokemonsTmp.size() > index){
+					LobbyPokemonType type = pokemonsTmp.get(index);
+					if(type != null){
+						inventory.setItem(i,type.getListItemStack(player));
+					}
+				}
+			}
+
+			int maxPage = (int)Math.ceil(pokemonsTmp.size()/(5*9.0));
+			if(page > 1){
+				item = new ItemStack(Material.PAPER);
+				meta = item.getItemMeta();
+				meta.setDisplayName("§6§lPredchozi");
+				item.setItemMeta(meta);
+				inventory.setItem(45,item);
+			}
+			if(page < maxPage){
+				item = new ItemStack(Material.PAPER);
+				meta = item.getItemMeta();
+				meta.setDisplayName("§6§lDalsi");
+				item.setItemMeta(meta);
+				inventory.setItem(53,item);
+			}
+
+			player.openInventory(inventory);
+		}
+
+		public void openBuyMenu(Player player,LobbyPokemonType type){
+			LobbyPokemons.this.getPokemonPlayer(player).setBuying(type);
+			Inventory inventory = Bukkit.createInventory(null,6*9,invBuyName);
+			ItemStack item;
+			ItemMeta meta;
+			ArrayList<String> lore;
+
+			inventory.setItem(13,type.getBuyItemStack());
+
+			item = new ItemStack(Material.EMERALD_BLOCK);
+			meta = item.getItemMeta();
+			meta.setDisplayName("§a§lKoupit");
+			lore = new ArrayList<String>();
+			lore.add("§7Cena: §a"+PRICE+" coins");
+			lore.add("§7Klikni pro zakoupeni");
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			inventory.setItem(19,item);
+			inventory.setItem(20,item);
+			inventory.setItem(21,item);
+			inventory.setItem(28,item);
+			inventory.setItem(29,item);
+			inventory.setItem(30,item);
+			inventory.setItem(37,item);
+			inventory.setItem(38,item);
+			inventory.setItem(39,item);
+
+			item = new ItemStack(Material.REDSTONE_BLOCK);
+			meta = item.getItemMeta();
+			meta.setDisplayName("§c§lZrusit");
+			lore = new ArrayList<String>();
+			lore.add("§7Klikni pro zruseni");
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			inventory.setItem(23,item);
+			inventory.setItem(24,item);
+			inventory.setItem(25,item);
+			inventory.setItem(32,item);
+			inventory.setItem(33,item);
+			inventory.setItem(34,item);
+			inventory.setItem(41,item);
+			inventory.setItem(42,item);
+			inventory.setItem(43,item);
+
+			player.openInventory(inventory);
+		}
+
+		public void buyPokemon(Player player,LobbyPokemonType type){
+			if(PlayerManazer.getPlayerInfo(player).getCoins() < PRICE){
+				player.sendMessage("§cNemas dostatek coinu.");
+				player.playSound(player.getLocation(),Sound.ENTITY_VILLAGER_NO,1f,1f);
+				return;
+			}
+			PlayerManazer.getPlayerInfo(player).giveCoins(-PRICE);
+			LobbyPokemons.this.getPokemonPlayer(player).addPokemon(type);
+			player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
+			location.getWorld().playSound(location,Sound.ENTITY_VILLAGER_YES,1f,1f);
+			ash.openMenu(player,LobbyPokemons.this.getPokemonPlayer(player).getPage());
 		}
 	}
 }

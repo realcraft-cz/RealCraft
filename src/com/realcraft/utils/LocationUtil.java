@@ -17,8 +17,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.earth2me.essentials.utils.LocationUtil.Vector3D;
-
 public class LocationUtil {
 
 	public static final Set<Material> HOLLOW_MATERIALS = new HashSet<>();
@@ -80,6 +78,18 @@ public class LocationUtil {
 		HOLLOW_MATERIALS.add(Material.FENCE_GATE);
 	}
 
+	public static class Vector3D {
+		public int x;
+		public int y;
+		public int z;
+
+		public Vector3D(int x,int y,int z){
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+	}
+
 	static {
 		List<Vector3D> pos = new ArrayList<Vector3D>();
 		for (int x = -RADIUS; x <= RADIUS; x++) {
@@ -102,8 +112,8 @@ public class LocationUtil {
 		double x = (config.getDouble(path+".x"));
 		double y = (config.getDouble(path+".y"));
 		double z = (config.getDouble(path+".z"));
-		float yaw = (float)(config.getDouble(path+".yaw"));
-		float pitch = (float)(config.getDouble(path+".pitch"));
+		float yaw = (float)(config.getDouble(path+".yaw",0));
+		float pitch = (float)(config.getDouble(path+".pitch",0));
 		World world = Bukkit.getServer().getWorld(config.getString(path+".world"));
 		return new Location(world,x,y,z,yaw,pitch);
 	}
@@ -122,6 +132,10 @@ public class LocationUtil {
 		Location eyeLocation = player.getEyeLocation();
 		Vector toEntity = target.toVector().subtract(eyeLocation.toVector());
 		return (toEntity.normalize().dot(eyeLocation.getDirection()) > range);
+	}
+
+	public static boolean isSimilar(Location location1,Location location2){
+		return (location1.getWorld() == location2.getWorld() && location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY() && location1.getBlockZ() == location2.getBlockZ());
 	}
 
 	public static BlockFace yawToFace (float yaw) {

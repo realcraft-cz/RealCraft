@@ -203,6 +203,7 @@ public class Utils {
 		return (player.getGameMode() == GameMode.CREATIVE ||
 				player.getGameMode() == GameMode.SPECTATOR ||
 				player.hasPotionEffect(PotionEffectType.LEVITATION) ||
+				player.hasPotionEffect(PotionEffectType.JUMP) ||
 				player.isFlying() ||
 				player.isInsideVehicle() ||
 				player.isGliding());
@@ -217,10 +218,10 @@ public class Utils {
      */
     public static boolean cantStandAtBetter(Block block)
     {
-    	return (cantStandAtBatterEx(block) && cantStandAtBatterEx(block.getRelative(BlockFace.DOWN)));
+    	return (cantStandAtBetterEx(block) && cantStandAtBetterEx(block.getRelative(BlockFace.DOWN)));
     }
 
-    private static boolean cantStandAtBatterEx(Block block){
+    private static boolean cantStandAtBetterEx(Block block){
     	boolean center1 = block.getType() == Material.AIR;
     	boolean north1 = block.getRelative(BlockFace.NORTH).getType() == Material.AIR;
     	boolean east1 = block.getRelative(BlockFace.EAST).getType() == Material.AIR;

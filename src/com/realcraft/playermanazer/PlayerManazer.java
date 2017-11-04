@@ -63,11 +63,9 @@ public class PlayerManazer implements Listener {
 		boolean logged = false;
 		int coins = 0;
 		int lobbyKeys = 0;
-		int lobbyFragments = 0;
 		String avatar;
-		boolean coinsboost = true;
+		int coinsboost = 0;
 		int lastLotteryTime = 0;
-		boolean activeVoter = false;
 
 		public PlayerInfo(Player player){
 			this.player = player;
@@ -76,7 +74,6 @@ public class PlayerManazer implements Listener {
 			getDatabaseNoticeWords();
 			getLobbyData();
 			loadLastLotteryTime();
-			loadActiveVoter();
 		}
 
 		public void reload(Player player){
@@ -85,12 +82,11 @@ public class PlayerManazer implements Listener {
 			getDatabaseNoticeWords();
 			getLobbyData();
 			loadLastLotteryTime();
-			loadActiveVoter();
 		}
 
 		private void getDatabaseData(){
 			if(RealCraft.getInstance().db.connected){
-				ResultSet rs = RealCraft.getInstance().db.query("SELECT user_id,user_name,user_rank,user_avatar,user_coins FROM authme WHERE user_uuid = '"+uuid+"'");
+				ResultSet rs = RealCraft.getInstance().db.query("SELECT user_id,user_name,user_rank,user_avatar,user_coins,user_coinsboost FROM authme WHERE user_uuid = '"+uuid+"'");
 				try {
 					if(rs.next()){
 						id = rs.getInt("user_id");
@@ -98,6 +94,7 @@ public class PlayerManazer implements Listener {
 						rank = rs.getInt("user_rank");
 						avatar = rs.getString("user_avatar");
 						coins = rs.getInt("user_coins");
+						coinsboost = rs.getInt("user_coinsboost");
 					}
 					rs.close();
 				} catch (SQLException e){
@@ -125,11 +122,10 @@ public class PlayerManazer implements Listener {
 
 		public void getLobbyData(){
 			if(RealCraft.getInstance().db.connected){
-				ResultSet rs = RealCraft.getInstance().db.query("SELECT user_lobby_keys,user_lobby_fragments FROM authme WHERE user_id = '"+id+"'");
+				ResultSet rs = RealCraft.getInstance().db.query("SELECT user_lobby_keys FROM authme WHERE user_id = '"+id+"'");
 				try {
 					if(rs.next()){
 						lobbyKeys = rs.getInt("user_lobby_keys");
-						lobbyFragments = rs.getInt("user_lobby_fragments");
 					}
 					rs.close();
 				} catch (SQLException e){
@@ -235,10 +231,6 @@ public class PlayerManazer implements Listener {
 			return lobbyKeys;
 		}
 
-		public int getLobbyFragments(){
-			return lobbyFragments;
-		}
-
 		public void givePlayerKeys(int keys){
 			lobbyKeys += keys;
 			RealCraft.getInstance().db.update("UPDATE authme SET user_lobby_keys='"+lobbyKeys+"' WHERE user_id = '"+id+"'");
@@ -250,22 +242,26 @@ public class PlayerManazer implements Listener {
 			RealCraft.getInstance().db.update("UPDATE authme SET user_lobby_keys='"+lobbyKeys+"' WHERE user_id = '"+id+"'");
 		}
 
-		public void givePlayerFragments(int fragments){
+		/*public int getLobbyFragments(){
+			return lobbyFragments;
+		}*/
+
+		/*public void givePlayerFragments(int fragments){
 			lobbyFragments += fragments;
 			RealCraft.getInstance().db.update("UPDATE authme SET user_lobby_fragments='"+lobbyFragments+"' WHERE user_id = '"+id+"'");
-		}
+		}*/
 
-		public void resetPlayerFragments(){
+		/*public void resetPlayerFragments(){
 			lobbyFragments = 0;
 			RealCraft.getInstance().db.update("UPDATE authme SET user_lobby_fragments='"+lobbyFragments+"' WHERE user_id = '"+id+"'");
-		}
+		}*/
 
 		public int getCoins(){
 			return coins;
 		}
 
 		public boolean hasCoinsBoost(){
-			return coinsboost;
+			return (coinsboost > System.currentTimeMillis()/1000);
 		}
 
 		public int giveCoins(int coins){
@@ -273,7 +269,7 @@ public class PlayerManazer implements Listener {
 		}
 
 		public int giveCoins(int coins,boolean boost){
-			coins = (coinsboost && boost && coins > 0 ? coins*2 : coins);
+			coins = (this.hasCoinsBoost() && boost && coins > 0 ? coins*2 : coins);
 			this.coins += coins;
 			RealCraft.getInstance().db.update("UPDATE authme SET user_coins='"+this.coins+"' WHERE user_id = '"+id+"'");
 			return coins;
@@ -306,7 +302,7 @@ public class PlayerManazer implements Listener {
 
 		private void showCoinsEffect(String title,int coins,boolean boost){
 			Title.showTitle(player,title,0.0,2,0.5);
-			Title.showSubTitle(player,"§a+"+coins+" coins"+(coinsboost && boost ? " §b(2x)" : ""),0.0,2,0.5);
+			Title.showSubTitle(player,"§a+"+coins+" coins"+(this.hasCoinsBoost() && boost ? " §b(2x)" : ""),0.0,2,0.5);
 			player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1,1);
 		}
 
@@ -327,7 +323,7 @@ public class PlayerManazer implements Listener {
 			return lastLotteryTime;
 		}
 
-		private void loadActiveVoter(){
+		/*private void loadActiveVoter(){
 			if(RealCraft.getInstance().db.connected){
 				activeVoter = false;
 				ResultSet rs = RealCraft.getInstance().db.query("SELECT user_id FROM votes_GALVotes WHERE user_id = '"+this.getId()+"' AND vote_created > '"+(System.currentTimeMillis()/1000-(2*86400))+"'");
@@ -343,6 +339,6 @@ public class PlayerManazer implements Listener {
 
 		public boolean isActiveVoter(){
 			return activeVoter;
-		}
+		}*/
 	}
 }

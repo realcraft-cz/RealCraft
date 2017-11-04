@@ -40,7 +40,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 	HashMap<Integer,MenuItem> menuItems = new HashMap<Integer,MenuItem>();
 
 	public ArrayList<String> servers = new ArrayList<String>();
-	HashMap<String,Integer> serverPlayers = new HashMap<String,Integer>();
+	static HashMap<String,Integer> serverPlayers = new HashMap<String,Integer>();
 
 	public LobbyMenu(RealCraft realcraft){
 		plugin = realcraft;
@@ -66,14 +66,18 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 		this.updateMenu();
 	}
 
+	public static ItemStack getItem(){
+		ItemStack item = new ItemStack(Material.COMPASS,1);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName("§a§l"+invName);
+		item.setItemMeta(meta);
+		return item;
+	}
+
 	@EventHandler
 	public void AuthLoginEvent(AuthLoginEvent event){
 		Player player = event.getPlayer();
-		ItemStack compass = new ItemStack(Material.COMPASS,1);
-		ItemMeta meta = compass.getItemMeta();
-		meta.setDisplayName("§a§l"+invName);
-		compass.setItemMeta(meta);
-		player.getInventory().setItem(0,compass);
+		player.getInventory().setItem(0,LobbyMenu.getItem());
 		player.getInventory().setHeldItemSlot(0);
 	}
 
@@ -81,23 +85,15 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
 		if(plugin.playermanazer.getPlayerInfo(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
-			ItemStack compass = new ItemStack(Material.COMPASS,1);
-			ItemMeta meta = compass.getItemMeta();
-			meta.setDisplayName("§a§l"+invName);
-			compass.setItemMeta(meta);
-			player.getInventory().setItem(0,compass);
+			player.getInventory().setItem(0,LobbyMenu.getItem());
 			player.getInventory().setHeldItemSlot(0);
 		}
 	}
 
 	@EventHandler
 	public void PlayerChangedWorldEvent(final PlayerChangedWorldEvent event){
-		final ItemStack compass = new ItemStack(Material.COMPASS,1);
-		ItemMeta meta = compass.getItemMeta();
-		meta.setDisplayName("§a§l"+invName);
-		compass.setItemMeta(meta);
 		if(event.getFrom().getName().equalsIgnoreCase("world")){
-			event.getPlayer().getInventory().remove(compass);
+			event.getPlayer().getInventory().remove(LobbyMenu.getItem());
 		}
 		else if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world")){
 			event.getPlayer().getInventory().setHeldItemSlot(8);
@@ -105,7 +101,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 				@Override
 				public void run(){
 					event.getPlayer().getInventory().setHeldItemSlot(0);
-					event.getPlayer().getInventory().setItem(0,compass);
+					event.getPlayer().getInventory().setItem(0,LobbyMenu.getItem());
 				}
 			},20);
 		}
@@ -170,6 +166,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 				index,
 				plugin.config.getInt("lobby.menu.slots."+idx+".max-players"),
 				Material.getMaterial(plugin.config.getString("lobby.menu.slots."+idx+".material")),
+				plugin.config.getInt("lobby.menu.slots."+idx+".data"),
 				plugin.config.getStringList("lobby.menu.slots."+idx+".info")
 			);
 		}
@@ -193,13 +190,14 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 		int maxplayers = 0;
 		int index = 0;
 
-		public MenuItem(String server,String name,int index,int maxplayers,Material material,List<String> info){
+		@SuppressWarnings("deprecation")
+		public MenuItem(String server,String name,int index,int maxplayers,Material material,int data,List<String> info){
 			this.name = ChatColor.translateAlternateColorCodes('&',name);
 			this.server = server;
 			this.index = index;
 			this.maxplayers = maxplayers;
 			this.info = info;
-			this.itemstack = new ItemStack(material);
+			this.itemstack = new ItemStack(material,1,(short)0,(byte)data);
 			menuItems.put(this.index,this);
 		}
 
@@ -269,7 +267,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 		}
 	}
 
-	public int getAllPlayersCount(){
+	public static int getAllPlayersCount(){
 		return (serverPlayers.containsKey("ALL") ? serverPlayers.get("ALL") : 0);
 	}
 

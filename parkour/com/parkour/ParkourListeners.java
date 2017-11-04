@@ -395,9 +395,7 @@ public class ParkourListeners implements Listener, TabCompleter {
 				}
 				else if(block != null && block.getType() == Material.GOLD_PLATE && player.getPlayer().getGameMode() != GameMode.CREATIVE && !player.getPlayer().getAllowFlight()){
 					Parkour.teleportToLobby(player);
-					Parkour.givePlayerFragments(player,Parkour.PARKOUR_LOBBY_FRAGMENTS);
 					Title.showTitle(player.getPlayer(),"§aParkour dokoncen",0.2,7,0.2);
-					Title.showSubTitle(player.getPlayer(),"§fZiskal jsi §e"+Parkour.PARKOUR_LOBBY_FRAGMENTS+" ulomky§f klice.",0.2,7,0.2);
 					FireworkUtil.spawnFirework(player.getPlayer().getLocation(),FireworkEffect.Type.BALL,Color.WHITE,true,true);
 					player.getPlayer().playSound(player.getPlayer().getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1,1);
 					player.reset();

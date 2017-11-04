@@ -119,9 +119,10 @@ public class LobbyFunGun implements Listener {
 		if(projectile.getType() == EntityType.SNOWBALL && projectile.getWorld().getName().equalsIgnoreCase("world") && projectile.getCustomName() != null && projectile.getCustomName().equalsIgnoreCase("fungun")){
 			Location location = projectile.getLocation();
 			event.getEntity().remove();
-			Particles.LAVA.display(1.3f,1f,1.3f,0f,5,location,128);
-			Particles.HEART.display(0.8f,0.8f,0.8f,0f,6,location,128);
-			location.getWorld().playSound(location,Sound.ENTITY_CAT_PURREOW,1.0f,1.5f);
+			Particles.LAVA.display(1.0f,1f,1.0f,0f,3,location,128);
+			Particles.HEART.display(0.8f,0.8f,0.8f,0f,4,location,128);
+			location.getWorld().playSound(location,Sound.ENTITY_CAT_AMBIENT,0.1f,1.0f);
+			location.getWorld().playSound(location,Sound.ENTITY_CAT_AMBIENT,0.1f,1.0f);
 		}
 	}
 

@@ -78,8 +78,12 @@ public class SocketManager {
 	}
 
 	public static void sendToAll(SocketData data){
+		SocketManager.sendToAll(data,false);
+	}
+
+	public static void sendToAll(SocketData data,boolean yourself){
 		for(ServerType server : ServerType.values()){
-			if(!server.toString().equalsIgnoreCase(Bukkit.getServer().getServerName())) SocketManager.send(server,data);
+			if(yourself || !server.toString().equalsIgnoreCase(Bukkit.getServer().getServerName())) SocketManager.send(server,data);
 		}
 	}
 

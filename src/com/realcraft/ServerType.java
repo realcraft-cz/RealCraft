@@ -7,7 +7,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 public enum ServerType {
-	LOBBY, SURVIVAL, CREATIVE, PARKOUR, BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE;
+	BUNGEE, LOBBY, SURVIVAL, CREATIVE, PARKOUR, BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE;
 
 	public static ServerType getByName(String name){
 		return ServerType.valueOf(name.toUpperCase());
@@ -19,6 +19,7 @@ public enum ServerType {
 
 	public String getName(){
 		switch(this){
+			case BUNGEE: return "Bungee";
 			case LOBBY: return "Lobby";
 			case SURVIVAL: return "Survival";
 			case CREATIVE: return "Creative";
@@ -35,6 +36,7 @@ public enum ServerType {
 
 	public ChatColor getColor(){
 		switch(this){
+			case BUNGEE: return ChatColor.WHITE;
 			case LOBBY: return ChatColor.YELLOW;
 			case SURVIVAL: return ChatColor.AQUA;
 			case CREATIVE: return ChatColor.GREEN;
@@ -51,6 +53,7 @@ public enum ServerType {
 
 	public int getPortOrder(){
 		switch(this){
+			case BUNGEE: return 100;
 			case LOBBY: return 0;
 			case SURVIVAL: return 1;
 			case CREATIVE: return 2;

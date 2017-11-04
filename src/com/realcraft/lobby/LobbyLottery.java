@@ -5,46 +5,57 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.realcraft.RealCraft;
-import com.realcraft.auth.AuthLoginEvent;
 import com.realcraft.playermanazer.PlayerManazer;
 import com.realcraft.utils.Glow;
 import com.realcraft.utils.ItemUtil;
+import com.realcraft.utils.LocationUtil;
 import com.realcraft.utils.StringUtil;
 import com.realcraft.utils.Title;
+
+import ru.beykerykt.lightapi.LightAPI;
 
 public class LobbyLottery implements Listener {
 
 	RealCraft plugin;
 	public static final String LOTTERIES = "lotteries";
-	private static final int REPEAT_LIMIT = 5;
+	private static final int MIN_COINS = 100;
+	private static final int REPEAT_LIMIT = 60;
 	private static final String invName = "Loterie";
 	private static final String arrowUp = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDQ4Yjc2OGM2MjM0MzJkZmIyNTlmYjNjMzk3OGU5OGRlYzExMWY3OWRiZDZjZDg4ZjIxMTU1Mzc0YjcwYjNjIn19fQ==";
 	private static final String arrowDown = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmRhZGQ3NTVkMDg1MzczNTJiZjdhOTNlM2JiN2RkNGQ3MzMxMjFkMzlmMmZiNjcwNzNjZDQ3MWY1NjExOTRkZCJ9fX0=";
 	private static final double[] multipliers = new double[]{1.5,3,10,50,200};
 	private HashMap<Player,LobbyLotteryInventory> lotteries = new HashMap<Player,LobbyLotteryInventory>();
 	private Random random = new Random();
+	private Location location;
+	private Hologram hologram;
 
 	public LobbyLottery(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
+		location = LocationUtil.getConfigLocation(plugin.config.getConfig(),"lottery.location");
+		hologram = HologramsAPI.createHologram(plugin,location.clone().add(0.5,2.0,0.5));
+		hologram.insertTextLine(0,"§d§l"+invName);
+		hologram.insertTextLine(1,"§7Vsad si");
+		hologram.insertTextLine(2,"§7a vyhraj");
+		LightAPI.createLight(location.clone().add(0.5,2.0,0.5),15,false);
 	}
 
 	public LobbyLotteryInventory getLottery(Player player){
@@ -53,61 +64,14 @@ public class LobbyLottery implements Listener {
 	}
 
 	@EventHandler
-	public void AuthLoginEvent(AuthLoginEvent event){
-		Player player = event.getPlayer();
-		ItemStack item = new ItemStack(Material.ENCHANTMENT_TABLE,1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§d§l"+invName);
-		item.setItemMeta(meta);
-		player.getInventory().setItem(8,item);
-	}
-
-	@EventHandler
-	public void PlayerRespawnEvent(PlayerRespawnEvent event){
-		Player player = event.getPlayer();
-		if(PlayerManazer.getPlayerInfo(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
-			ItemStack item = new ItemStack(Material.ENCHANTMENT_TABLE,1);
-			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName("§d§l"+invName);
-			item.setItemMeta(meta);
-			player.getInventory().setItem(8,item);
-		}
-	}
-
-	@EventHandler
-	public void PlayerChangedWorldEvent(final PlayerChangedWorldEvent event){
-		final ItemStack item = new ItemStack(Material.ENCHANTMENT_TABLE,1);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName("§d§l"+invName);
-		item.setItemMeta(meta);
-		if(event.getFrom().getName().equalsIgnoreCase("world")){
-			event.getPlayer().getInventory().remove(item);
-		}
-		else if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world")){
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
-				@Override
-				public void run(){
-					event.getPlayer().getInventory().setItem(8,item);
-				}
-			},20);
-		}
-	}
-
-	@EventHandler
 	public void PlayerInteractEvent(PlayerInteractEvent event){
 		Player player = event.getPlayer();
-		if(player.getWorld().getName().equalsIgnoreCase("world") && player.getInventory().getItemInMainHand().getType() == Material.ENCHANTMENT_TABLE && (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
-			event.setCancelled(true);
-			if(PlayerManazer.getPlayerInfo(player).isLogged()){
+		if((event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && player.getWorld().getName().equalsIgnoreCase("world")){
+			Block block = event.getClickedBlock();
+			if(block != null && block.getType() == Material.ENCHANTMENT_TABLE && LocationUtil.isSimilar(block.getLocation(),location) && PlayerManazer.getPlayerInfo(player).isLogged()){
+				event.setCancelled(true);
 				this.openMenu(player);
 			}
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void PlayerDropItemEvent(PlayerDropItemEvent event){
-		if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world") && event.getItemDrop().getItemStack().getType() == Material.ENCHANTMENT_TABLE){
-			event.setCancelled(true);
 		}
 	}
 
@@ -124,13 +88,6 @@ public class LobbyLottery implements Listener {
 					else if(event.getRawSlot() == 52) this.getLottery(player).confirm();
 					else if(event.getRawSlot() == 53) this.getLottery(player).close();
 				}
-			}
-		}
-		else if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world") && event.getSlotType() == SlotType.QUICKBAR && event.getCurrentItem().getType() == Material.ENCHANTMENT_TABLE){
-			event.setCancelled(true);
-			Player player = (Player) event.getWhoClicked();
-			if(PlayerManazer.getPlayerInfo(player).isLogged()){
-				this.openMenu(player);
 			}
 		}
 	}
@@ -186,7 +143,13 @@ public class LobbyLottery implements Listener {
 
 		public void open(){
 			if(PlayerManazer.getPlayerInfo(player).getLastLotteryTime()+REPEAT_LIMIT > System.currentTimeMillis()/1000){
-				player.sendMessage("§d[Loterie] §cDalsi losovani muzes provest za "+(((PlayerManazer.getPlayerInfo(player).getLastLotteryTime()+REPEAT_LIMIT)-(System.currentTimeMillis()/1000))/60)+" minut");
+				int seconds = (int)((PlayerManazer.getPlayerInfo(player).getLastLotteryTime()+REPEAT_LIMIT)-(System.currentTimeMillis()/1000));
+				player.sendMessage("§d[Loterie] §cLosuj znovu za "+seconds+" "+StringUtil.inflect(seconds,new String[]{"sekundu","sekundy","sekund"})+".");
+				player.getPlayer().playSound(player.getPlayer().getLocation(),Sound.ENTITY_ITEM_BREAK,1,1);
+				return;
+			}
+			if(PlayerManazer.getPlayerInfo(player).getCoins() < MIN_COINS){
+				player.sendMessage("§d[Loterie] §cNemas dostatek coinu ("+MIN_COINS+" coins).");
 				player.getPlayer().playSound(player.getPlayer().getLocation(),Sound.ENTITY_ITEM_BREAK,1,1);
 				return;
 			}

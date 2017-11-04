@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -25,7 +26,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
 
 import com.realcraft.RealCraft;
-import com.realcraft.playermanazer.PlayerManazer.PlayerInfo;
+import com.realcraft.playermanazer.PlayerManazer;
 import com.realcraft.utils.FireworkUtil;
 import com.realcraft.utils.LocationUtil;
 import com.realcraft.utils.Title;
@@ -107,8 +108,12 @@ public class LobbyAutoParkour implements Listener, Runnable {
 			Block block = event.getClickedBlock();
 			if(block != null && (block.getType() == Material.STONE_PLATE || block.getType() == Material.WOOD_PLATE)
 					&& block.getLocation().getBlockX() == plateLocation.getBlockX() && block.getLocation().getBlockY() == plateLocation.getBlockY() && block.getLocation().getBlockZ() == plateLocation.getBlockZ()){
-				event.setCancelled(true);
-				this.startPlayerParkour(event.getPlayer());
+				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+					@Override
+					public void run(){
+						LobbyAutoParkour.this.startPlayerParkour(event.getPlayer());
+					}
+				},10);
 			}
 		}
 	}
@@ -134,12 +139,14 @@ public class LobbyAutoParkour implements Listener, Runnable {
 			players.put(player,new ParkourPlayer(player));
 			player.setFlying(false);
 			player.setAllowFlight(false);
+			player.setWalkSpeed(0.3f);
 			Location random = this.chooseRandomStartLocation();
 			this.createNextStep(player,random);
 			Location teleport = random.clone();
 			teleport.setPitch(player.getLocation().getPitch());
 			teleport.setYaw(player.getLocation().getYaw());
 			player.teleport(teleport.add(0.5,1,0.5));
+			player.getWorld().playSound(teleport,Sound.ENTITY_ENDERMEN_TELEPORT,1f,1f);
 		}
 	}
 
@@ -205,7 +212,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 			this.maxTime = 15;
 			this.level = 1;
 			this.jumps = -1;
-			Title.showTitle(player,ChatColor.GREEN+"Level "+this.level,0,5.2,0.6);
+			Title.showTitle(player,"Parkour Challenge",0,5.2,0.6);
 		}
 
 		@SuppressWarnings("deprecation")
@@ -224,38 +231,31 @@ public class LobbyAutoParkour implements Listener, Runnable {
 				this.jumps = 0;
 				this.maxTime -= 5;
 				this.time = this.maxTime;
-				int fragments = this.level;
 				this.level ++;
 				FireworkUtil.spawnFirework(base.clone().add(0.5,1.0,0.5),FireworkEffect.Type.BALL,color.getColor(),true,false);
 
-				String fragmentText = "ulomku";
-				if(fragments == 1) fragmentText = "ulomek";
-				else if(fragments < 5) fragmentText = "ulomky";
-				this.givePlayerFragments(player,fragments);
-				plugin.lobby.lobbychests.loadPlayerKeys(player);
-				if(this.level <= LobbyAutoParkour.levels) Title.showTitle(player,ChatColor.GREEN+"Level "+this.level,0,5.2,0.6);
-				else {
-					Title.showTitle(player,ChatColor.GREEN+"! Parkour Master !",0,5.2,0.6);
-					plugin.getServer().broadcastMessage("§b[ParkourMaster]§r §6"+player.getName()+"§f dokoncil cely parkour, MASTER!");
-				}
-				Title.showSubTitle(player,"§fZiskal jsi §e"+fragments+" "+fragmentText+"§f klice.",0,5.2,0.6);
+				int coins = 0;
+				if(this.level-1 == 1) coins = 15;
+				else if(this.level-1 == 2) coins = 30;
+				else if(this.level-1 == 3) coins = 50;
+				int reward = PlayerManazer.getPlayerInfo(player).giveCoins(coins);
+
+				String title = "";
+				if(this.level <= LobbyAutoParkour.levels) title = "Level "+(this.level-1);
+				else title = ChatColor.GREEN+"Parkour Master";
+				Title.showTitle(player,title,0,5.2,0.6);
 				if(this.level <= LobbyAutoParkour.levels) Title.showActionTitle(player,""+ChatColor.YELLOW+(this.jumps)+"/"+LobbyAutoParkour.jumpsPerLevel);
 				player.playSound(destination,Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
 				if(this.level-1 == LobbyAutoParkour.levels) cancelPlayerParkour(player);
+
+				final String finalTitle = title;
+				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+					public void run(){
+						PlayerManazer.getPlayerInfo(player).runCoinsEffect(finalTitle,reward);
+					}
+				},20);
 			}
 			else Title.showActionTitle(player,""+ChatColor.YELLOW+this.jumps+"/"+LobbyAutoParkour.jumpsPerLevel);
-		}
-
-		public void givePlayerFragments(Player player,int amount){
-			PlayerInfo playerinfo = plugin.playermanazer.getPlayerInfo(player);
-			if(playerinfo != null){
-				playerinfo.givePlayerFragments(amount);
-				int fragments = playerinfo.getLobbyFragments();
-				if(fragments >= 10){
-					playerinfo.givePlayerKeys(1);
-					playerinfo.resetPlayerFragments();
-				}
-			}
 		}
 
 		public Location getBase(){
@@ -295,6 +295,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 		public void cancel(){
 			if(this.level < 4) player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 			player.setExp(0);
+			player.setWalkSpeed(0.2f);
 		}
 	}
 

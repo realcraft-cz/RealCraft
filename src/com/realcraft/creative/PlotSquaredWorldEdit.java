@@ -5,10 +5,15 @@ import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -56,6 +61,28 @@ public class PlotSquaredWorldEdit implements Listener {
 		WEByPass.put(event.getPlayer().getName(),false);
 	}
 
+	@EventHandler
+	public void EntitySpawnEvent(EntitySpawnEvent event){
+		if(this.isEntityForbidden(event.getEntity())){
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void EntityExplodeEvent(EntityExplodeEvent event){
+		if(event.getEntityType() == EntityType.PRIMED_TNT){
+			event.setCancelled(true);
+			event.blockList().clear();
+		}
+	}
+
+	@EventHandler
+	public void ExplosionPrimeEvent(ExplosionPrimeEvent event){
+		if(event.getEntityType() == EntityType.PRIMED_TNT){
+			event.setCancelled(true);
+		}
+	}
+
 	@Subscribe(priority = Priority.NORMAL)
 	public void EditSessionEvent(EditSessionEvent event){
 		if(event.getActor() != null && event.getActor().isPlayer()){
@@ -99,5 +126,16 @@ public class PlotSquaredWorldEdit implements Listener {
 			player.setMeta("WorldEditRegionPlot",plot);
 		}
 		return regions;
+	}
+
+	private boolean isEntityForbidden(Entity entity){
+		switch(entity.getType()){
+			case FIREBALL: return true;
+			case DRAGON_FIREBALL: return true;
+			case SMALL_FIREBALL: return true;
+			case WITHER: return true;
+			default:break;
+		}
+		return false;
 	}
 }

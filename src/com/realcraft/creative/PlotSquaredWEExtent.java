@@ -23,10 +23,12 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 	private static final int BLOCKS_LIMIT = 500000;
 	private static final int TILES_LIMIT = 4096;
 	private static final int ENTITIES_LIMIT = 512;
+	private static final int CRITICALS_LIMIT = 128;
 
 	private int blocksCount = 0;
 	private int tilesCount = 0;
 	private int entitiesCount = 0;
+	private int criticalsCount = 0;
 
 	public PlotSquaredWEExtent(HashSet<RegionWrapper> mask,World world,Extent extent){
 		super(extent);
@@ -38,14 +40,22 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 	public boolean setBlock(Vector location,BaseBlock block) throws WorldEditException {
 		if(this.isBlockEqual(world.getBlock(location),block)) return false;
 		if(this.isBlockForbidden(block)) return false;
+		if(this.blocksCount >= BLOCKS_LIMIT) return false;
 		if(this.isBlockTileEntity(block)){
-			if(this.tilesCount < TILES_LIMIT && this.blocksCount < BLOCKS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
+			if(this.tilesCount < TILES_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
 				this.tilesCount ++;
 				this.blocksCount ++;
 				return super.setBlock(location,block);
 			}
+		}
+		else if(this.isBlockCritical(block)){
+			if(this.criticalsCount < CRITICALS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
+				this.criticalsCount ++;
+				this.blocksCount ++;
+				return super.setBlock(location,block);
+			}
 		} else {
-			if(this.blocksCount < BLOCKS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
+			if(this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
 				this.blocksCount ++;
 				return super.setBlock(location,block);
 			}
@@ -168,6 +178,18 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 			case 33:
 			case 151:
 			case 178:
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isBlockCritical(BaseBlock block){
+		switch(block.getType()){
+			case 8:
+			case 9:
+			case 10:
+			case 11:
+			case 209:
 			return true;
 		}
 		return false;

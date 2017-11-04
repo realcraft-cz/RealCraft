@@ -3,15 +3,17 @@ package com.realcraft.test;
 import com.realcraft.RealCraft;
 
 public class Test {
+
 	public Test(){
-		//new BoatsTest();
 		new SoundsTest();
+		new ParticlesTest();
+		new ChunkTest();
+		new ImageTest();
+		new PokemonTest();
 		if(RealCraft.isTestServer()){
-			new SignTest();
-			new CoinsTest();
+			//new SignTest();
 			//new KickTest();
-			new NameTest();
+			//new SpectatorTest();
 		}
-		//new PremiumTest();
 	}
 }

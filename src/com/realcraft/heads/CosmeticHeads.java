@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.realcraft.RealCraft;
+import com.realcraft.ServerType;
 import com.realcraft.utils.ItemUtil;
 
 public class CosmeticHeads implements Listener {
@@ -34,9 +35,6 @@ public class CosmeticHeads implements Listener {
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		this.loadCategories();
-	}
-
-	public void onReload(){
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,8 +63,10 @@ public class CosmeticHeads implements Listener {
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
 		String command = event.getMessage().substring(1).toLowerCase();
 		if(command.startsWith("heads") || command.startsWith("hlavy")){
-			this.openMenu(event.getPlayer());
-			event.setCancelled(true);
+			if(RealCraft.getServerType() == ServerType.CREATIVE || event.getPlayer().hasPermission("group.Manazer")){
+				this.openMenu(event.getPlayer());
+				event.setCancelled(true);
+			}
 		}
 	}
 
@@ -233,10 +233,9 @@ public class CosmeticHeads implements Listener {
 				List<Map<String, Object>> tempPoints = (List<Map<String, Object>>) config.get("heads");
 				if(tempPoints != null && !tempPoints.isEmpty()){
 					for(Map<String, Object> point : tempPoints){
-						String id = point.get("id").toString();
 						String name = point.get("name").toString();
 						String value = point.get("value").toString();
-						heads.add(new CosmeticHead(id,name,value));
+						heads.add(new CosmeticHead(name,value));
 					}
 				}
 			}
@@ -245,19 +244,13 @@ public class CosmeticHeads implements Listener {
 
 	private class CosmeticHead {
 
-		private String id;
 		private String name;
 		private String value;
 		private ItemStack item = null;
 
-		public CosmeticHead(String id,String name,String value){
-			this.id = id;
+		public CosmeticHead(String name,String value){
 			this.name = name;
 			this.value = value;
-		}
-
-		public String getId(){
-			return id;
 		}
 
 		public String getName(){

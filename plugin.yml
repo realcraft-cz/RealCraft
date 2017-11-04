@@ -59,12 +59,19 @@ commands:
     description: saveloc
   trade:
     description: trade
+  shop:
+    aliases: [chestshop,obchod]
+    description: shop
   join:
     description: join
   sound:
     description: sound
-  coinstest:
-    description: coinstest
+  efekt:
+    description: efekt
+  coins:
+    description: coins
+    usage: coins
+    aliases: [coin,money,balance,bal]
   /schbr:
     description: Set brush to schematic brush.
   /schset:

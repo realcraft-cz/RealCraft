@@ -128,7 +128,7 @@ public class Trade implements Listener, Runnable {
 	}
 
 	public void accept(Player player){
-		if(player.equals(player1.getName())){
+		if(player.getName().equals(player1.getName())){
 			player1.sendMessage("§cNemas zadnou zadost o obchodovani.");
 			return;
 		}
@@ -136,7 +136,7 @@ public class Trade implements Listener, Runnable {
 	}
 
 	public void deny(Player player){
-		if(player.equals(player1.getName())){
+		if(player.getName().equals(player1.getName())){
 			player1.sendMessage("§cNemas zadnou zadost o obchodovani.");
 			return;
 		}

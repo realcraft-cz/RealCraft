@@ -83,7 +83,7 @@ public class LobbyScoreboard implements Listener, Runnable {
 
 		this.resetLines();
 
-		if(!RealCraft.isTestServer()){
+		/*if(!RealCraft.isTestServer()){
 			this.addLine(" ");
 			this.addLine("§a§lPripojeno");
 			this.addLine("§f"+lobby.lobbymenu.getAllPlayersCount()+"/100");
@@ -96,20 +96,19 @@ public class LobbyScoreboard implements Listener, Runnable {
 			this.addLine(" ");
 			this.addLine("§d§lWeb");
 			this.addLine("§fwww.realcraft.cz");
-		} else {
-			this.addLine(" ");
-			this.addLine("§7§lPripojeno");
-			this.addLine("§f"+lobby.lobbymenu.getAllPlayersCount()+"/100");
-			this.addLine(" ");
-			this.addLine("§a§lCoins");
-			this.addLine("§f"+PlayerManazer.getPlayerInfo(player).getCoins());
-			this.addLine(" ");
-			this.addLine("§b§lMagicke klice");
-			this.addLine("§f"+lobby.lobbychests.getPlayerKeys(player)+" ");
-			this.addLine(" ");
-			this.addLine("§c§lWeb");
-			this.addLine("§fwww.realcraft.cz");
-		}
+		}*/
+		this.addLine(" ");
+		this.addLine("§7§lPripojeno");
+		this.addLine("§f"+LobbyMenu.getAllPlayersCount()+"/100");
+		this.addLine(" ");
+		this.addLine("§a§lCoins");
+		this.addLine("§f"+PlayerManazer.getPlayerInfo(player).getCoins());
+		this.addLine(" ");
+		this.addLine("§b§lMagicke klice");
+		this.addLine("§f"+PlayerManazer.getPlayerInfo(player).getLobbyKeys()+" ");
+		this.addLine(" ");
+		this.addLine("§c§lWeb");
+		this.addLine("§fwww.realcraft.cz");
 
 		for(Entry<Integer,String> entry : lines.entrySet()){
 			int index = lines.size()-entry.getKey();

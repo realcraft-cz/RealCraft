@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -45,6 +46,16 @@ public abstract class Gadget extends Cosmetic {
 				this.removeItems(player.getInventory(),type.toMaterial(),1);
 				this.giveAmount(player,-1);
 				this.onClick(player);
+			}
+		}
+	}
+
+	@EventHandler
+	public void InventoryClickEvent(InventoryClickEvent event){
+		if(event.getWhoClicked() instanceof Player){
+			ItemStack item = event.getCurrentItem();
+			if(item != null && item.getType() == type.toMaterial() && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase(type.toString())){
+				event.setCancelled(true);
 			}
 		}
 	}

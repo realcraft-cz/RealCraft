@@ -1,34 +1,10 @@
 package com.realcraft.votes;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.HashMap;
+public class Votes {
 
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+}
 
-import com.realcraft.RealCraft;
-import com.realcraft.ServerType;
-import com.realcraft.playermanazer.PlayerManazer;
-import com.realcraft.sockets.SocketData;
-import com.realcraft.sockets.SocketDataEvent;
-import com.realcraft.sockets.SocketManager;
-import com.vexsoftware.votifier.model.Vote;
-import com.vexsoftware.votifier.model.VotifierEvent;
-
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-
-public class Votes implements Listener, Runnable {
+/*public class Votes implements Listener, Runnable {
 
 	private RealCraft plugin;
 	private static final String VOTES = "votes";
@@ -202,4 +178,4 @@ public class Votes implements Listener, Runnable {
 			}
 		}
 	}
-}
+}*/

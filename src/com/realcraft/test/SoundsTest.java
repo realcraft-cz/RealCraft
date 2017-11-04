@@ -29,7 +29,7 @@ public class SoundsTest implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
 		Player player = (Player) sender;
-		if(command.getName().equalsIgnoreCase("sound")){
+		if(command.getName().equalsIgnoreCase("sound") && player.hasPermission("group.Manazer")){
 			if(task != null){
 				task.cancel();
 				task = null;

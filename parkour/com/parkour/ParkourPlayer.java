@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -338,6 +339,7 @@ public class ParkourPlayer {
 			border.setCenter(bounds[0].getX()+(Parkour.ARENA_SIZE/2),bounds[0].getZ()+(Parkour.ARENA_SIZE/2));
 			border.setSize(Parkour.ARENA_SIZE);
 			border.setWarningDistance(0);
+			border.world = ((CraftWorld)this.getPlayer().getWorld()).getHandle();
 			PacketPlayOutWorldBorder packet;
 			packet = new PacketPlayOutWorldBorder(border,EnumWorldBorderAction.SET_CENTER);
 			((CraftPlayer)this.getPlayer()).getHandle().playerConnection.sendPacket(packet);

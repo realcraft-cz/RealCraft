@@ -1,9 +1,10 @@
-package com.parkour.utils;
+package com.realcraft.utils;
 
 import java.util.ArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -87,5 +88,26 @@ public class JsonUtil {
 			array.add(json);
 		}
 		return array.toString();
+	}
+
+	@SuppressWarnings("deprecation")
+	public static ItemStack getJSONItem(String value){
+		JsonElement element = new JsonParser().parse(value);
+		if(!element.isJsonObject()) return null;
+		JsonObject json = element.getAsJsonObject();
+		int id = json.get("id").getAsInt();
+		int data = json.get("data").getAsInt();
+		int amount = json.get("amount").getAsInt();
+		return new ItemStack(id,amount,(short)0,(byte)data);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static String toJSONItem(ItemStack item){
+		if(item == null) return "";
+		JsonObject json = new JsonObject();
+		json.addProperty("id",item.getType().getId());
+		json.addProperty("data",item.getData().getData());
+		json.addProperty("amount",item.getAmount());
+		return json.toString();
 	}
 }

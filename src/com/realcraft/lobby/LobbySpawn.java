@@ -47,7 +47,7 @@ public class LobbySpawn implements Listener {
 	}
 
 	@EventHandler(priority=EventPriority.HIGHEST)
-	public void onPlayerLogin(PlayerJoinEvent event){
+	public void PlayerJoinEvent(PlayerJoinEvent event){
 		if(this.enabled) event.getPlayer().teleport(spawnLocation);
 	}
 }
