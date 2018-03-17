@@ -1,0 +1,4 @@
+name: RealCraft
+main: realcraft.bungee.RealCraftBungee
+version: 1.0
+author: RealCraft.cz

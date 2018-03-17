@@ -1,6 +1,6 @@
 name: RealCraft
+main: realcraft.bukkit.RealCraft
 version: 1.0
-main: com.realcraft.RealCraft
 author: RealCraft.cz
 
 commands:

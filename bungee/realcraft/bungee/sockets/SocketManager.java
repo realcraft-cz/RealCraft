@@ -1,0 +1,95 @@
+package realcraft.bungee.sockets;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import realcraft.bungee.RealCraftBungee;
+import realcraft.bungee.ServerType;
+
+public class SocketManager {
+
+	private static final int PORT_INCREMENT = 100;
+	private ServerSocket serverSocket = null;
+
+	public SocketManager(){
+		try {
+			serverSocket = new ServerSocket(SocketManager.getServerSocketPort(ServerType.BUNGEE));
+			serverSocket.setSoTimeout(2000);
+			RealCraftBungee.getInstance().getProxy().getScheduler().runAsync(RealCraftBungee.getInstance(),new Runnable(){
+				@Override
+				public void run(){
+					while(!serverSocket.isClosed()){
+						try {
+							Socket socket = serverSocket.accept();
+							RealCraftBungee.getInstance().getProxy().getScheduler().runAsync(RealCraftBungee.getInstance(),new Runnable(){
+								@Override
+								public void run(){
+									try {
+										DataInputStream inStream = new DataInputStream(socket.getInputStream());
+										while(!socket.isClosed()){
+											if(inStream.available() <= 0) continue;
+											SocketData data = new SocketData(null,inStream.readUTF());
+											RealCraftBungee.getInstance().getProxy().getPluginManager().callEvent(new SocketDataEvent(ServerType.getByName(data.getServer()),data));
+											socket.close();
+										}
+									} catch (Exception e){
+										e.printStackTrace();
+									}
+								}
+							});
+						} catch (Exception e){
+						}
+					}
+				}
+			});
+		} catch (Exception e){
+		}
+	}
+
+	public void onDisable(){
+		try {
+			serverSocket.close();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	public static void send(ServerType server,SocketData data){
+		RealCraftBungee.getInstance().getProxy().getScheduler().runAsync(RealCraftBungee.getInstance(),new Runnable(){
+			@Override
+			public void run(){
+				try {
+					Socket socket = new Socket(Inet4Address.getLocalHost(),SocketManager.getServerSocketPort(server));
+					socket.setSoTimeout(2000);
+					DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
+					outStream.writeUTF(data.toString());
+					outStream.flush();
+					socket.close();
+				} catch (Exception e){
+				}
+			}
+		});
+	}
+
+	public static void sendToAll(SocketData data){
+		SocketManager.sendToAll(data,false);
+	}
+
+	public static void sendToAll(SocketData data,boolean yourself){
+		for(ServerType server : ServerType.values()){
+			if(yourself || !server.toString().equalsIgnoreCase(ServerType.BUNGEE.toString())) SocketManager.send(server,data);
+		}
+	}
+
+	public static int getServerSocketPort(ServerType server){
+		int port = server.getPortOrder();
+		if(RealCraftBungee.isTestServer()) port += 24500;
+		else port += 25500;
+		port += PORT_INCREMENT;
+		return port;
+	}
+}

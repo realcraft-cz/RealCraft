@@ -1,0 +1,40 @@
+package realcraft.bukkit.cosmetics.gadgets;
+
+import java.util.Random;
+
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
+
+public class GadgetFirework extends Gadget {
+
+	static Random random = new Random();
+
+	public GadgetFirework(GadgetType type){
+		super(type);
+	}
+
+	@Override
+	public void onClick(final Player player){
+		this.setRunning(player,false);
+		Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+        FireworkMeta fwm = fw.getFireworkMeta();
+
+        int rt = random.nextInt(5);
+        FireworkEffect.Type type = FireworkEffect.Type.values()[rt];
+
+        Color c1 = Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        Color c2 = Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+
+        FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean())
+                .withColor(c1).withFade(c2).with(type)
+                .trail(random.nextBoolean()).build();
+
+        fwm.addEffect(effect);
+        fwm.setPower(random.nextInt(3));
+        fw.setFireworkMeta(fwm);
+	}
+}
