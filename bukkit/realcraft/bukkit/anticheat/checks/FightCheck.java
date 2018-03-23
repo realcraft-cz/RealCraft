@@ -95,7 +95,7 @@ public class FightCheck implements Listener, Runnable {
         if (max > 15) {
         	data.speedViolations ++;
         	if(data.speedViolations > 3){
-	        	AntiCheatDetectEvent callevent = new AntiCheatDetectEvent(player.getPlayer(),CheckType.KILLAURA);
+	        	AntiCheatDetectEvent callevent = new AntiCheatDetectEvent(player.getPlayer(),CheckType.CLICKAURA);
 				Bukkit.getServer().getPluginManager().callEvent(callevent);
 				data.speedViolations = 0;
         	}

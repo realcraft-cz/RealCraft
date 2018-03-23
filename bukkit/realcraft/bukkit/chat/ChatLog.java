@@ -22,12 +22,15 @@ public class ChatLog implements Listener {
 	public void onReload(){
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event){
 		if(!plugin.db.connected || event.isCancelled()) return;
 		Player player = event.getPlayer();
 		String message = event.getMessage();
+		this.onPlayerChat(player,message);
+	}
 
+	public void onPlayerChat(Player player,String message){
 		PreparedStatement stmt;
 		try {
 			int playerid = plugin.playermanazer.getPlayerInfo(player).getId();

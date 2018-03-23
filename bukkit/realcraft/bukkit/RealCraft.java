@@ -50,6 +50,7 @@ import realcraft.bukkit.creative.DisableSpectator;
 import realcraft.bukkit.creative.PlotSquaredWorldEdit;
 import realcraft.bukkit.creative.SchematicBrush;
 import realcraft.bukkit.database.DB;
+import realcraft.bukkit.develop.LocationsSaver;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
 import realcraft.bukkit.lobby.LobbyMenu;
@@ -221,6 +222,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new PacketListener();
 		new Test();
 		new CosmeticHeads(this);
+		new LocationsSaver();
 		this.getServer().getPluginManager().registerEvents(this,this);
 		this.updateWorldRules();
 	}

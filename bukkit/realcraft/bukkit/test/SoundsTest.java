@@ -20,7 +20,6 @@ public class SoundsTest implements CommandExecutor {
 	float pitch = 1f;
 
 	public SoundsTest(){
-		RealCraft.getInstance().getCommand("sound").setExecutor(this);
 		for(Sound sound : Sound.values()){
 			sounds.add(sound);
 		}

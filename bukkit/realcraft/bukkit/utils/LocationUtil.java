@@ -191,13 +191,27 @@ public class LocationUtil {
             }
         }
     }
+
     public static float faceToYaw(BlockFace face){
+    	return faceToYaw(face,false);
+    }
+
+    public static float faceToYaw(BlockFace face, boolean useSubCardinalDirections){
+    	if(useSubCardinalDirections){
+    		switch(face){
+		    	case NORTH_EAST: return 45f;
+		    	case SOUTH_EAST: return 135f;
+		    	case SOUTH_WEST: return 225f;
+		    	case NORTH_WEST: return 315f;
+				default: break;
+	    	}
+    	}
     	switch(face){
-    	case NORTH: return 0f;
-    	case EAST: return 90f;
-    	case SOUTH: return 180f;
-    	case WEST: return 270f;
-		default: return 0f;
+	    	case NORTH: return 0f;
+	    	case EAST: return 90f;
+	    	case SOUTH: return 180f;
+	    	case WEST: return 270f;
+			default: return 0f;
     	}
     }
 

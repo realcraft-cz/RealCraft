@@ -24,13 +24,11 @@ import realcraft.bukkit.cosmetics.hats.Hat;
 import realcraft.bukkit.cosmetics.mounts.Mount;
 import realcraft.bukkit.cosmetics.mounts.Mount.MountType;
 import realcraft.bukkit.cosmetics.mounts.MountGlacialSteed;
-import realcraft.bukkit.cosmetics.mounts.MountInfernalHorror;
 import realcraft.bukkit.cosmetics.mounts.MountNyanSheep;
 import realcraft.bukkit.cosmetics.mounts.MountPig;
 import realcraft.bukkit.cosmetics.mounts.MountSlime;
 import realcraft.bukkit.cosmetics.mounts.MountSnake;
 import realcraft.bukkit.cosmetics.mounts.MountSpider;
-import realcraft.bukkit.cosmetics.mounts.MountWalkingDead;
 import realcraft.bukkit.cosmetics.particleeffects.ParticleEffect;
 import realcraft.bukkit.cosmetics.particleeffects.ParticleEffect.ParticleEffectType;
 import realcraft.bukkit.cosmetics.particleeffects.ParticleEffectAngelWings;
@@ -115,8 +113,8 @@ public class Cosmetics {
 		pets.add(new PetDog(PetType.DOG));
 		pets.add(new PetChick(PetType.CHICK));
 
-		mounts.add(new MountInfernalHorror(MountType.INFERNALHORROR));
-		mounts.add(new MountWalkingDead(MountType.WALKINGDEAD));
+		//mounts.add(new MountInfernalHorror(MountType.INFERNALHORROR));
+		//mounts.add(new MountWalkingDead(MountType.WALKINGDEAD));
 		mounts.add(new MountGlacialSteed(MountType.GLACIALSTEED));
 		mounts.add(new MountSnake(MountType.SNAKE));
 		mounts.add(new MountNyanSheep(MountType.NYANSHEEP));

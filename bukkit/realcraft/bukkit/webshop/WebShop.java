@@ -44,7 +44,7 @@ public class WebShop implements Listener, Runnable {
 	}
 
 	public void checkPlayerPayments(Player player){
-		ResultSet rs = RealCraft.getInstance().db.query("SELECT * FROM "+PAYMENTS+" WHERE user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"' AND payment_finished = '0' AND ("+(RealCraft.getServerType() == ServerType.SURVIVAL ? "payment_type = '"+TYPE_VIP+"' OR payment_type = '"+TYPE_ITEM+"'" : "payment_type = '"+TYPE_VIP+"'")+") ORDER BY payment_created ASC LIMIT 1");
+		ResultSet rs = RealCraft.getInstance().db.query("SELECT * FROM "+PAYMENTS+" WHERE payment_finished = '0' AND user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"' AND ("+(RealCraft.getServerType() == ServerType.SURVIVAL ? "payment_type = '"+TYPE_VIP+"' OR payment_type = '"+TYPE_ITEM+"'" : "payment_type = '"+TYPE_VIP+"'")+") LIMIT 1");
 		try {
 			while(rs.next()){
 				if(rs.getInt("payment_type") == TYPE_VIP){

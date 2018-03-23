@@ -13,8 +13,9 @@ public class Test {
 		if(RealCraft.isTestServer()){
 			//new SignTest();
 			//new KickTest();
-			//new SpectatorTest();
-			new AntiCheatTest();
+			new SpectatorTest();
+			new RandomTest();
+			new CombatTest();
 		}
 	}
 }

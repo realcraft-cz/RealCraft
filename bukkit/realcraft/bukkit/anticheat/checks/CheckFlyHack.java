@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.anticheat.utils.Utils;
@@ -19,7 +20,7 @@ public class CheckFlyHack extends Check {
 	private static final int CHECKS_LIMIT = 10;
 	private static final double BLOCKS_LIMIT = 30.0;
 
-	private static final int CHECKS_Y_LIMIT = 5;
+	private static final int CHECKS_Y_LIMIT = 10;
 	private static final double BLOCKS_Y_LIMIT = 10.0;
 
 	public CheckFlyHack(){
@@ -45,6 +46,12 @@ public class CheckFlyHack extends Check {
 	@EventHandler
 	public void PlayerTeleportEvent(PlayerTeleportEvent event){
 		AntiCheat.getPlayer(event.getPlayer()).reset();
+	}
+
+	@EventHandler
+	public void PlayerToggleFlightEvent(PlayerToggleFlightEvent event){
+		AntiCheat.getPlayer(event.getPlayer()).reset();
+		AntiCheat.exempt(event.getPlayer(),2000);
 	}
 
 	@EventHandler
@@ -87,8 +94,8 @@ public class CheckFlyHack extends Check {
 				}
 			}
 		} else {
-			AntiCheat.getPlayer(player).blocksOverFlight = 0;
-			AntiCheat.getPlayer(player).flightChecks = 0;
+			AntiCheat.getPlayer(player).blocksOverFlightY = 0;
+			AntiCheat.getPlayer(player).flightChecksY = 0;
 		}
 	}
 }

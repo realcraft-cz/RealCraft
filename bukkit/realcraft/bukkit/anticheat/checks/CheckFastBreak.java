@@ -5,7 +5,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.anticheat.utils.BlockProperties;
@@ -32,11 +31,6 @@ public class CheckFastBreak extends Check {
 		if(event.getPlayer().getGameMode() != GameMode.CREATIVE){
 			this.check(event.getPlayer(),event.getBlock());
 		}
-	}
-
-	@EventHandler
-	public void PlayerInteractEvent(PlayerInteractEvent event){
-
 	}
 
 	public void check(Player player,Block block){

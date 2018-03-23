@@ -32,7 +32,7 @@ public class ChatNotice implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event){
 		if(!enabled || !plugin.db.connected || event.isCancelled()) return;
 

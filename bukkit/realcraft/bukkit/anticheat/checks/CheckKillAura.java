@@ -11,17 +11,14 @@ import com.comphenix.protocol.wrappers.EnumWrappers.EntityUseAction;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.AntiCheat;
-import realcraft.bukkit.anticheat.utils.ActionFrequency;
 
 public class CheckKillAura extends Check {
 
 	private static final int HIT_LIMIT = 15;
 	private static final int CHECKS_LIMIT = 3;
 
-	private int tick;
-
 	public CheckKillAura(){
-		super(CheckType.KILLAURA);
+		super(CheckType.CLICKAURA);
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Client.USE_ENTITY){
 			@Override
 			public void onPacketReceiving(PacketEvent event){
@@ -39,39 +36,53 @@ public class CheckKillAura extends Check {
 
 	@Override
 	public void run(){
-		tick ++;
 	}
 
 	public void check(Player player){
-		AntiCheat.getPlayer(player).killBuckets.add(System.currentTimeMillis(), 1f);
-
-		final long fullTime = 333 * 6;
-		final float fullLag = 1f;
-		final float total = AntiCheat.getPlayer(player).killBuckets.score(1f) * 1000f / (fullLag * fullTime);
-
-		if (tick < AntiCheat.getPlayer(player).killShortTermTick){
-			AntiCheat.getPlayer(player).killShortTermTick = tick;
-			AntiCheat.getPlayer(player).killShortTermCount = 1;
-		}
-		else if (tick - AntiCheat.getPlayer(player).killShortTermTick < 7){
-			AntiCheat.getPlayer(player).killShortTermCount ++;
-		} else {
-			AntiCheat.getPlayer(player).killShortTermTick = tick;
-			AntiCheat.getPlayer(player).killShortTermCount = 1;
-		}
-
-		final float shortTerm = AntiCheat.getPlayer(player).killShortTermCount * 1000f / (50f * 7);
-		final float max = Math.max(shortTerm,total);
-
-		if (max > HIT_LIMIT){
-			AntiCheat.getPlayer(player).killChecks ++;
-			if(AntiCheat.getPlayer(player).killChecks > CHECKS_LIMIT){
-				AntiCheat.getPlayer(player).killChecks = 0;
-				AntiCheat.getPlayer(player).killBuckets = new ActionFrequency(6,333);
+		AntiCheat.getPlayer(player).hitFrequency.add();
+		int frequency = AntiCheat.getPlayer(player).hitFrequency.getFrequency();
+		if(frequency > HIT_LIMIT){
+			AntiCheat.getPlayer(player).hitChecks ++;
+			AntiCheat.getPlayer(player).hitFrequency.clear();
+			if(AntiCheat.getPlayer(player).hitChecks >= CHECKS_LIMIT){
+				AntiCheat.getPlayer(player).hitChecks = 0;
 				this.detect(player);
 			}
-			AntiCheat.getPlayer(player).killShortTermTick = tick;
-			AntiCheat.getPlayer(player).killShortTermCount = 1;
+		}
+	}
+
+	public static class HitFrequency {
+
+		private long[] buckets;
+
+		public HitFrequency(int range){
+			this.buckets = new long[range];
+		}
+
+		public void add(){
+			this.update();
+			buckets[0] = System.currentTimeMillis();
+		}
+
+		public int getFrequency(){
+			long now = System.currentTimeMillis();
+			int buckets = 0;
+			for(long bucket : this.buckets){
+				if(bucket > now-this.buckets.length){
+					buckets ++;
+				}
+			}
+			return buckets;
+		}
+
+		public void clear(){
+			this.buckets = new long[this.buckets.length];
+		}
+
+		private void update(){
+			for(int i=this.buckets.length-1;i>0;i--){
+				this.buckets[i] = this.buckets[i-1];
+			}
 		}
 	}
 }

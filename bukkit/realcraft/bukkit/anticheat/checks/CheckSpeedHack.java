@@ -18,7 +18,7 @@ public class CheckSpeedHack extends Check {
 	private static final int CHECKS_LIMIT = 5;
 
 	private static final double DEFAULT_SPEED = 0.21;
-	private static final double SNEAK_MODIFIER = 0.43;
+	//private static final double SNEAK_MODIFIER = 0.43;
 	private static final double SPRINT_MODIFIER = 1.33;
 
 	private static final double SPEED_OFFSET = 0.15;
@@ -89,6 +89,6 @@ public class CheckSpeedHack extends Check {
 	}
 
 	private double getPlayerMaxSpeed(Player player){
-		return DEFAULT_SPEED*((1f/0.20)*player.getWalkSpeed())*(player.isSprinting() ? SPRINT_MODIFIER : 1)*(player.isSneaking() ? SNEAK_MODIFIER : 1);
+		return DEFAULT_SPEED*((1f/0.20)*player.getWalkSpeed())*(player.isSprinting() ? SPRINT_MODIFIER : 1)*(player.isSneaking() ? 1 : 1);
 	}
 }

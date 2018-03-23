@@ -70,6 +70,7 @@ public class ImageTest implements Listener {
 					}
 				} catch (IncompleteRegionException e) {
 					player.sendMessage("§cMake a region selection first.");
+					return;
 				}
 				//http://www.michalvanek.net/s/20170918103852.png
 				//http://www.michalvanek.net/s/20170918104757.png

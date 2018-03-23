@@ -51,12 +51,8 @@ commands:
   glow:
     description: glow
     usage: glow
-  test:
-    usage: test
   schema:
     usage: schema
-  saveloc:
-    description: saveloc
   trade:
     description: trade
   shop:

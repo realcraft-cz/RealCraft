@@ -27,7 +27,7 @@ public abstract class Check implements Listener, Runnable {
 	}
 
 	public enum CheckType {
-		FLYHACK, SPEEDHACK, SNEAKHACK, KILLAURA, ENCHANT, FASTBREAK;
+		FLYHACK, SPEEDHACK, SNEAKHACK, CLICKAURA, CRITICALS, ENCHANT, FASTBREAK;
 
 		public static CheckType getByName(String name){
 			return CheckType.valueOf(name.toUpperCase());
@@ -38,7 +38,8 @@ public abstract class Check implements Listener, Runnable {
 				case FLYHACK: return "FlyHack";
 				case SPEEDHACK: return "SpeedHack";
 				case SNEAKHACK: return "SneakHack";
-				case KILLAURA: return "KillAura";
+				case CLICKAURA: return "ClickAura";
+				case CRITICALS: return "Criticals";
 				case ENCHANT: return "SuperEnchant";
 				case FASTBREAK: return "FastBreak";
 			}
@@ -50,7 +51,8 @@ public abstract class Check implements Listener, Runnable {
 				case FLYHACK: return 1;
 				case SPEEDHACK: return 8;
 				case SNEAKHACK: return 10;
-				case KILLAURA: return 4;
+				case CLICKAURA: return 4;
+				case CRITICALS: return 11;
 				case ENCHANT: return 7;
 				case FASTBREAK: return 9;
 			}
@@ -61,7 +63,6 @@ public abstract class Check implements Listener, Runnable {
 			switch(this){
 				case FLYHACK: return 20;
 				case SPEEDHACK: return 10;
-				case KILLAURA: return 1;
 				default:break;
 			}
 			return 0;
@@ -70,13 +71,10 @@ public abstract class Check implements Listener, Runnable {
 		public int getBanLimit(){
 			switch(this){
 				case FLYHACK: return 3;
-				case SPEEDHACK: return 999;
-				case SNEAKHACK: return 999;
-				case KILLAURA: return 5;
-				case FASTBREAK: return 999;
+				case SNEAKHACK: return 3;
 				default:break;
 			}
-			return 0;
+			return 999;
 		}
 
 		public int getBanTimeRange(){
@@ -84,7 +82,8 @@ public abstract class Check implements Listener, Runnable {
 				case FLYHACK: return 60;
 				case SPEEDHACK: return 60;
 				case SNEAKHACK: return 60;
-				case KILLAURA: return 60;
+				case CLICKAURA: return 60;
+				case CRITICALS: return 60;
 				case FASTBREAK: return 60;
 				default:break;
 			}

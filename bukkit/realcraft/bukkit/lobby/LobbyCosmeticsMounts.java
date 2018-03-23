@@ -36,8 +36,8 @@ public class LobbyCosmeticsMounts {
 	public static void openMenu(Player player){
 		Inventory menu = Bukkit.createInventory(player,6*9,LobbyCosmeticsMain.LobbyCosmeticsType.MOUNTS.toInventoryName());
 
-		setItem(menu,getIndex(1,2),Cosmetics.getMount(Mount.MountType.INFERNALHORROR));
-		setItem(menu,getIndex(1,3),Cosmetics.getMount(Mount.MountType.WALKINGDEAD));
+		//setItem(menu,getIndex(1,2),Cosmetics.getMount(Mount.MountType.INFERNALHORROR));
+		//setItem(menu,getIndex(1,3),Cosmetics.getMount(Mount.MountType.WALKINGDEAD));
 		setItem(menu,getIndex(1,4),Cosmetics.getMount(Mount.MountType.GLACIALSTEED));
 		setItem(menu,getIndex(1,5),Cosmetics.getMount(Mount.MountType.SNAKE));
 		setItem(menu,getIndex(1,6),Cosmetics.getMount(Mount.MountType.NYANSHEEP));

@@ -6,8 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import realcraft.bukkit.anticheat.checks.Check.CheckType;
+import realcraft.bukkit.anticheat.checks.CheckKillAura.HitFrequency;
 import realcraft.bukkit.anticheat.checks.CheckSneakHack.SneakFrequency;
-import realcraft.bukkit.anticheat.utils.ActionFrequency;
 import realcraft.bukkit.anticheat.utils.Utils;
 
 public class AntiCheatPlayer {
@@ -30,13 +30,10 @@ public class AntiCheatPlayer {
 	/** SNEAKHACK */
 	public int sneakChecks = 0;
 	public SneakFrequency sneakFrequency = new SneakFrequency(1000);
-	public boolean sneakState = false;
 
 	/** KILLAURA */
-	public ActionFrequency killBuckets = new ActionFrequency(6,333);
-	public int killShortTermTick = 0;
-	public int killShortTermCount = 0;
-	public int killChecks = 0;
+	public int hitChecks = 0;
+	public HitFrequency hitFrequency = new HitFrequency(1000);
 
 	/** FASTBREAK */
 	public long fastBreakBreakTime = 0;
@@ -80,12 +77,9 @@ public class AntiCheatPlayer {
 
 		sneakChecks = 0;
 		sneakFrequency = new SneakFrequency(1000);
-		sneakState = false;
 
-		killBuckets = new ActionFrequency(6,333);
-		killShortTermTick = 0;
-		killShortTermCount = 0;
-		killChecks = 0;
+		hitChecks = 0;
+		hitFrequency = new HitFrequency(1000);
 
 		fastBreakBreakTime = 0;
 		fastBreakChecks = 0;

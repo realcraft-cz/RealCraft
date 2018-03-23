@@ -13,6 +13,7 @@ import realcraft.bukkit.anticheat.checks.Check.CheckType;
 import realcraft.bukkit.anticheat.checks.CheckEnchant;
 import realcraft.bukkit.anticheat.checks.CheckFastBreak;
 import realcraft.bukkit.anticheat.checks.CheckFlyHack;
+import realcraft.bukkit.anticheat.checks.CheckKillAura;
 import realcraft.bukkit.anticheat.checks.CheckSneakHack;
 import realcraft.bukkit.anticheat.checks.CheckSpeedHack;
 import realcraft.bukkit.anticheat.events.AntiCheatDetectEvent;
@@ -43,11 +44,14 @@ public class AntiCheat implements Listener {
 		new CheckSpeedHack();
 		new CheckSneakHack();
 		new CheckFastBreak();
+		new CheckKillAura();
 		if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
 			new CheckEnchant();
 		}
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		if(RealCraft.isTestServer()) DEBUG = true;
+		if(RealCraft.isTestServer()){
+			DEBUG = true;
+		}
 	}
 
 	public static AntiCheatPlayer getPlayer(Player player){

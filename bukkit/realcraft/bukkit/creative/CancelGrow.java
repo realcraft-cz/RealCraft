@@ -59,7 +59,7 @@ public class CancelGrow implements Listener {
 
 	@EventHandler
 	public void BlockSpreadEvent(BlockSpreadEvent event){
-		if(event.getSource().getType() == Material.VINE) event.setCancelled(true);
+		if(event.getSource().getType() == Material.VINE || event.getSource().getType() == Material.BROWN_MUSHROOM || event.getSource().getType() == Material.RED_MUSHROOM) event.setCancelled(true);
 	}
 
 	@EventHandler
@@ -71,9 +71,4 @@ public class CancelGrow implements Listener {
 	public void LeavesDecayEvent(LeavesDecayEvent event){
 		event.setCancelled(true);
 	}
-
-	/*@EventHandler
-	public void BlockPhysicsEvent(BlockPhysicsEvent event){
-		event.setCancelled(true);
-	}*/
 }

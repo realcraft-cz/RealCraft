@@ -1,10 +1,6 @@
 package realcraft.bukkit.restart;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,8 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -22,7 +16,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.Glow;
-import realcraft.bukkit.utils.LocationUtil;
 
 public class Restart implements Runnable, CommandExecutor {
 	RealCraft plugin;
@@ -34,9 +27,6 @@ public class Restart implements Runnable, CommandExecutor {
 	String restartMessageCountdown;
 	String restartMessage;
 	int taskId;
-
-	FileConfiguration locationsConfig;
-	ArrayList<Location> locations = new ArrayList<Location>();
 
 	public Restart(RealCraft realcraft){
 		plugin = realcraft;
@@ -50,7 +40,6 @@ public class Restart implements Runnable, CommandExecutor {
 			plugin.getCommand("rpos").setExecutor(this);
 			plugin.getCommand("chunk").setExecutor(this);
 			plugin.getCommand("glow").setExecutor(this);
-			plugin.getCommand("saveloc").setExecutor(this);
 			taskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,3600*20,60*20);
 		}
 	}
@@ -136,42 +125,7 @@ public class Restart implements Runnable, CommandExecutor {
 				}
 			}
 		}
-		else if(command.getName().equalsIgnoreCase("saveloc")){
-			if(player.hasPermission("group.Manazer")){
-				if(args.length == 1 && args[0].equalsIgnoreCase("reset")){
-					player.sendMessage("Locations reset.");
-					locations = new ArrayList<Location>();
-					return true;
-				}
-				Location location = player.getLocation();
-				locations.add(location);
-				player.sendMessage("Location saved ["+location.getBlockX()+","+location.getBlockY()+","+location.getBlockZ()+"]");
-				this.saveLocations();
-			}
-		}
 		return true;
-	}
-
-	public void saveLocations(){
-		ArrayList<HashMap<String, Object>> locationList = new ArrayList<HashMap<String, Object>>();
-		for(Location location : locations){
-			HashMap<String, Object> section = new HashMap<String, Object>();
-			section.put("world", location.getWorld().getName());
-			section.put("x", location.getBlockX()+0.5);
-			section.put("y", Math.round(location.getY()));
-			section.put("z", location.getBlockZ()+0.5);
-			section.put("pitch", (double) LocationUtil.faceToYaw(LocationUtil.yawToFace(location.getPitch())));
-			section.put("yaw", (double) LocationUtil.faceToYaw(LocationUtil.yawToFace(location.getYaw())));
-			locationList.add(section);
-		}
-		locationsConfig = new YamlConfiguration();
-		locationsConfig.set("spawns",locationList);
-		try {
-			File file = new File(RealCraft.getInstance().getDataFolder()+"/locations.yml");
-			locationsConfig.save(file);
-		} catch (IOException e){
-			e.printStackTrace();
-		}
 	}
 
 	int currentX = 0;

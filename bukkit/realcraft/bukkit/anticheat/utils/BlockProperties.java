@@ -203,7 +203,7 @@ public class BlockProperties {
 	}
 
 	private static boolean isValidTool(final Material blockId, final BlockProps blockProps, final ToolProps toolProps, final int efficiency){
-        boolean isValidTool = blockProps.tool.toolType == toolProps.toolType;
+        boolean isValidTool = (blockProps != null && blockProps.tool.toolType == toolProps.toolType);
 
         if (!isValidTool && efficiency > 0) {
             if (blockId == Material.SNOW) {

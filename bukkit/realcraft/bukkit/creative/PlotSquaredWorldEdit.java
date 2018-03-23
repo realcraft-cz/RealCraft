@@ -93,6 +93,24 @@ public class PlotSquaredWorldEdit implements Listener, Runnable {
 			player.sendMessage("§8[§6P2§8] §6WorldEdit bypass "+(WEByPass.get(player.getName()) ? "§aenabled" : "§cdisabled"));
 			event.setCancelled(true);
 		}
+		else if(command.startsWith("up ")){
+			if(player != null && (!WEByPass.containsKey(player.getName()) || WEByPass.get(player.getName()) == false)){
+				PlotPlayer plotPlayer = PlotPlayer.wrap(player.getName());
+				if(plotPlayer == null){
+					event.setCancelled(true);
+					return;
+				}
+				HashSet<RegionWrapper> mask = this.getMask(plotPlayer);
+				if(mask.isEmpty()){
+					event.setCancelled(true);
+					return;
+				}
+				if(!this.maskContains(mask,player.getLocation())){
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
 	}
 
 	@EventHandler
@@ -196,6 +214,15 @@ public class PlotSquaredWorldEdit implements Listener, Runnable {
 			player.setMeta("WorldEditRegionPlot",plot);
 		}
 		return regions;
+	}
+
+	private boolean maskContains(HashSet<RegionWrapper> mask,org.bukkit.Location location){
+		for(RegionWrapper region : mask){
+			if(region.isIn(location.getBlockX(),location.getBlockY(),location.getBlockZ())){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isEntityForbidden(Entity entity){

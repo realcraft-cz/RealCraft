@@ -49,6 +49,7 @@ public class MountSpider extends Mount {
     public class CustomSpider extends EntitySpider {
     	public CustomSpider(World world){
     		super(world);
+    		setNoAI(true);
     	}
 
     	@Override

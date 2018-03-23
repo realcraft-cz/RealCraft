@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.LocationUtil;
@@ -48,6 +49,11 @@ public class LobbySpawn implements Listener {
 
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void PlayerJoinEvent(PlayerJoinEvent event){
+		if(this.enabled) event.getPlayer().teleport(spawnLocation);
+	}
+
+	@EventHandler(priority=EventPriority.HIGHEST)
+	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		if(this.enabled) event.getPlayer().teleport(spawnLocation);
 	}
 }
