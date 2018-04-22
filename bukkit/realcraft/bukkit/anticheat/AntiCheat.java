@@ -3,6 +3,7 @@ package realcraft.bukkit.anticheat;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.checks.Check.CheckType;
+import realcraft.bukkit.anticheat.checks.CheckClickAura;
 import realcraft.bukkit.anticheat.checks.CheckEnchant;
 import realcraft.bukkit.anticheat.checks.CheckFastBreak;
 import realcraft.bukkit.anticheat.checks.CheckFlyHack;
@@ -19,10 +21,10 @@ import realcraft.bukkit.anticheat.checks.CheckSpeedHack;
 import realcraft.bukkit.anticheat.events.AntiCheatDetectEvent;
 import realcraft.bukkit.banmanazer.BanManazer;
 import realcraft.bukkit.database.DB;
-import realcraft.bukkit.playermanazer.PlayerManazer;
 import realcraft.bukkit.sockets.SocketData;
 import realcraft.bukkit.sockets.SocketDataEvent;
 import realcraft.bukkit.sockets.SocketManager;
+import realcraft.bukkit.users.Users;
 
 //https://github.com/m1enkrafftman/AntiCheatPlus/blob/master/src/main/java/net/dynamicdev/anticheat/check/checks/MovementCheck.java
 
@@ -44,6 +46,7 @@ public class AntiCheat implements Listener {
 		new CheckSpeedHack();
 		new CheckSneakHack();
 		new CheckFastBreak();
+		new CheckClickAura();
 		new CheckKillAura();
 		if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
 			new CheckEnchant();
@@ -73,7 +76,7 @@ public class AntiCheat implements Listener {
 		Player player = event.getPlayer();
 		if(event.getType().getBanLimit() != 0) AntiCheat.getPlayer(player).addTypeCheck(event.getType());
 		this.sendReport(player,event.getType().toString(),AntiCheat.getPlayer(player).getTypeChecks(event.getType()));
-		if(!DEBUG) DB.update("INSERT INTO "+REPORTS+" (user_id,report_type,report_ping,report_server,report_created) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+event.getType().getId()+"','"+PlayerManazer.getPlayerInfo(player).getPing()+"','"+RealCraft.getServerType().toString()+"','"+(System.currentTimeMillis()/1000)+"')");
+		if(!DEBUG) DB.update("INSERT INTO "+REPORTS+" (user_id,report_type,report_ping,report_server,report_created) VALUES('"+Users.getUser(player).getId()+"','"+event.getType().getId()+"','"+Users.getUser(player).getPing()+"','"+RealCraft.getServerType().toString()+"','"+(System.currentTimeMillis()/1000)+"')");
 		if(event.getType().getBanLimit() != 0){
 			if(AntiCheat.getPlayer(player).getTypeChecks(event.getType()) >= event.getType().getBanLimit()){
 				AntiCheat.getPlayer(player).reset();
@@ -113,7 +116,7 @@ public class AntiCheat implements Listener {
 			if(player.hasPermission("group.Admin")){
 				CheckType type = CheckType.getByName(_type);
 				player.sendMessage("§c[AC | §7"+server+"§c] §f"+name+" §7| "+type.toString()+" [§f"+checks+"/"+type.getBanLimit()+"§7]");
-				player.playSound(player.getLocation(),PlayerManazer.getPlayerInfo(player).getNoticeSound(),1,1);
+				player.playSound(player.getLocation(),Sound.BLOCK_NOTE_PLING,1f,1f);
 			}
 		}
 	}

@@ -14,7 +14,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer.PlayerInfo;
+import realcraft.bukkit.users.Users;
 
 public class MapCrafter {
 	RealCraft plugin;
@@ -42,15 +42,13 @@ public class MapCrafter {
 		JsonArray array = new JsonArray();
 		for(Player player : plugin.getServer().getOnlinePlayers()){
 			if(player.getWorld().getName().equalsIgnoreCase("world") && player.getGameMode() != GameMode.SPECTATOR){
-				PlayerInfo playerInfo = plugin.playermanazer.getPlayerInfo(player);
 				JsonObject playerJSON = new JsonObject();
 				playerJSON.addProperty("username",player.getName());
 				playerJSON.addProperty("world","world_survival");
 				playerJSON.addProperty("x",player.getLocation().getBlockX());
 				playerJSON.addProperty("y",player.getLocation().getBlockY());
 				playerJSON.addProperty("z",player.getLocation().getBlockZ());
-				if(playerInfo != null) playerJSON.addProperty("avatar",playerInfo.getId()+"-"+playerInfo.getAvatar());
-				else playerJSON.addProperty("avatar","steve");
+				playerJSON.addProperty("avatar",Users.getUser(player).getId()+"-"+Users.getUser(player).getAvatar());
 				array.add(playerJSON);
 			}
 		}

@@ -62,12 +62,13 @@ import net.minecraft.server.v1_12_R1.PathEntity;
 import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.Particles;
 import realcraft.bukkit.utils.Particles.OrdinaryColor;
 import realcraft.bukkit.utils.RandomUtil;
+import realcraft.share.database.DB;
 import ru.beykerykt.lightapi.LightAPI;
 
 public class LobbyPokemons implements Listener {
@@ -103,7 +104,7 @@ public class LobbyPokemons implements Listener {
 	}
 
 	private void loadPokemons(){
-		ResultSet rs = RealCraft.getInstance().db.query("SELECT pokemon_id,pokemon_name,pokemon_url FROM "+POKEMONS);
+		ResultSet rs = DB.query("SELECT pokemon_id,pokemon_name,pokemon_url FROM "+POKEMONS);
 		try {
 			while(rs.next()){
 				pokemonTypes.put(rs.getInt("pokemon_id"),new LobbyPokemonType(rs.getInt("pokemon_id"),rs.getString("pokemon_name"),rs.getString("pokemon_url")));
@@ -149,7 +150,7 @@ public class LobbyPokemons implements Listener {
 	@EventHandler
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
-		if(PlayerManazer.getPlayerInfo(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
+		if(Users.getUser(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
 			player.getInventory().setItem(6,this.getItem());
 		}
 	}
@@ -181,7 +182,7 @@ public class LobbyPokemons implements Listener {
 		ItemStack item = player.getInventory().getItemInMainHand();
 		if(player.getWorld().getName().equalsIgnoreCase("world") && item.hasItemMeta() && item.getItemMeta().hasDisplayName() && item.getItemMeta().getDisplayName().equalsIgnoreCase(this.getItem().getItemMeta().getDisplayName()) && (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
 			event.setCancelled(true);
-			if(PlayerManazer.getPlayerInfo(player).isLogged()){
+			if(Users.getUser(player).isLogged()){
 				this.getPokemonPlayer(player).openPokedex();
 			}
 		}
@@ -705,7 +706,7 @@ public class LobbyPokemons implements Listener {
 		}
 
 		public void loadPlayerPokemons(){
-			ResultSet rs = RealCraft.getInstance().db.query("SELECT pokemon_id FROM "+POKEMONS_USERS+" WHERE user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"'");
+			ResultSet rs = DB.query("SELECT pokemon_id FROM "+POKEMONS_USERS+" WHERE user_id = '"+Users.getUser(player).getId()+"'");
 			try {
 				pokemons.clear();
 				while(rs.next()){
@@ -720,7 +721,7 @@ public class LobbyPokemons implements Listener {
 
 		public void addPokemon(LobbyPokemonType type){
 			pokemons.put(type.getId(),type);
-			RealCraft.getInstance().db.insert("INSERT INTO "+POKEMONS_USERS+" (user_id,pokemon_id) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+type.getId()+"')");
+			DB.update("INSERT INTO "+POKEMONS_USERS+" (user_id,pokemon_id) VALUES('"+Users.getUser(player).getId()+"','"+type.getId()+"')");
 		}
 
 		public void openPokedex(){
@@ -1038,12 +1039,12 @@ public class LobbyPokemons implements Listener {
 		}
 
 		public void buyPokemon(Player player,LobbyPokemonType type){
-			if(PlayerManazer.getPlayerInfo(player).getCoins() < PRICE){
+			if(Users.getUser(player).getCoins() < PRICE){
 				player.sendMessage("§cNemas dostatek coinu.");
 				player.playSound(player.getLocation(),Sound.ENTITY_VILLAGER_NO,1f,1f);
 				return;
 			}
-			PlayerManazer.getPlayerInfo(player).giveCoins(-PRICE);
+			Users.getUser(player).giveCoins(-PRICE);
 			LobbyPokemons.this.getPokemonPlayer(player).addPokemon(type);
 			player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
 			location.getWorld().playSound(location,Sound.ENTITY_VILLAGER_YES,1f,1f);

@@ -18,10 +18,11 @@ import net.md_5.bungee.connection.InitialHandler;
 import net.md_5.bungee.connection.LoginResult;
 import net.md_5.bungee.connection.LoginResult.Property;
 import realcraft.bungee.RealCraftBungee;
-import realcraft.bungee.playermanazer.PlayerManazer;
 import realcraft.bungee.skins.exceptions.SkinsLimitException;
 import realcraft.bungee.skins.exceptions.SkinsNotFoundException;
 import realcraft.bungee.skins.utils.ReflectionUtil;
+import realcraft.bungee.users.Users;
+import realcraft.share.skins.Skin;
 
 public class Skins {
 
@@ -36,10 +37,10 @@ public class Skins {
 	}
 
 	public static void changeSkin(ProxiedPlayer player,String name) throws SkinsLimitException, SkinsNotFoundException {
-		if(PlayerManazer.getPlayerInfo(player).getLastSkinned()+SKIN_LIMIT > System.currentTimeMillis()/1000) throw new SkinsLimitException((int)(PlayerManazer.getPlayerInfo(player).getLastSkinned()+SKIN_LIMIT-(System.currentTimeMillis()/1000)));
+		if(Users.getUser(player).getLastSkinned()+SKIN_LIMIT > System.currentTimeMillis()/1000) throw new SkinsLimitException((int)(Users.getUser(player).getLastSkinned()+SKIN_LIMIT-(System.currentTimeMillis()/1000)));
 		Skin skin = Skins.getSkin(name);
 		if(skin == null) throw new SkinsNotFoundException();
-		PlayerManazer.getPlayerInfo(player).setSkin(name);
+		Users.getUser(player).setSkin(name);
 		Skins.setSkin(player,skin);
 		Skins.sendResetRequest(player);
 	}
@@ -58,6 +59,7 @@ public class Skins {
 			profile.getProperties()[0].setSignature(newprops[0].getSignature());
 			ReflectionUtil.setObject(InitialHandler.class,handler,"loginProfile",profile);
 		} catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 

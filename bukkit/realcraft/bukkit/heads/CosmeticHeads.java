@@ -21,8 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.ServerType;
 import realcraft.bukkit.utils.ItemUtil;
+import realcraft.share.ServerType;
 
 public class CosmeticHeads implements Listener {
 

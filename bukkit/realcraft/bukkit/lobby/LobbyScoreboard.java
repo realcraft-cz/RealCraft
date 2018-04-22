@@ -16,7 +16,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 
 public class LobbyScoreboard implements Listener, Runnable {
 	Lobby lobby;
@@ -102,10 +102,10 @@ public class LobbyScoreboard implements Listener, Runnable {
 		this.addLine("§f"+LobbyMenu.getAllPlayersCount()+"/100");
 		this.addLine(" ");
 		this.addLine("§a§lCoins");
-		this.addLine("§f"+PlayerManazer.getPlayerInfo(player).getCoins());
+		this.addLine("§f"+Users.getUser(player).getCoins());
 		this.addLine(" ");
 		this.addLine("§b§lMagicke klice");
-		this.addLine("§f"+PlayerManazer.getPlayerInfo(player).getLobbyKeys()+" ");
+		this.addLine("§f"+Users.getUser(player).getLobbyKeys()+" ");
 		this.addLine(" ");
 		this.addLine("§c§lWeb");
 		this.addLine("§fwww.realcraft.cz");

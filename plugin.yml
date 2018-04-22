@@ -68,6 +68,10 @@ commands:
     description: coins
     usage: coins
     aliases: [coin,money,balance,bal]
+  friend:
+    description: friend
+    usage: friend
+    aliases: [f,fr,friends,frends,party]
   /schbr:
     description: Set brush to schematic brush.
   /schset:

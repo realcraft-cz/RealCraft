@@ -33,7 +33,6 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerListHeaderFooter;
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.antispam.AntiSpam;
 import realcraft.bukkit.auth.Auth;
-import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.banmanazer.BanManazer;
 import realcraft.bukkit.chat.ChatAdmin;
 import realcraft.bukkit.chat.ChatAdvert;
@@ -51,18 +50,16 @@ import realcraft.bukkit.creative.PlotSquaredWorldEdit;
 import realcraft.bukkit.creative.SchematicBrush;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.develop.LocationsSaver;
+import realcraft.bukkit.friends.Friends;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
 import realcraft.bukkit.lobby.LobbyMenu;
 import realcraft.bukkit.mapcrafter.MapCrafter;
 import realcraft.bukkit.minihry.EventCmds;
 import realcraft.bukkit.minihry.GamesReminder;
-import realcraft.bukkit.moderatorchat.ModeratorChat;
 import realcraft.bukkit.mute.Mute;
 import realcraft.bukkit.nicks.NickManager;
 import realcraft.bukkit.parkour.Parkour;
-import realcraft.bukkit.playermanazer.PlayerManazer;
-import realcraft.bukkit.playermanazer.PlayerManazer.PlayerInfo;
 import realcraft.bukkit.quiz.Quiz;
 import realcraft.bukkit.report.Report;
 import realcraft.bukkit.residences.CheckResidences;
@@ -78,9 +75,12 @@ import realcraft.bukkit.survival.RandomSpawn;
 import realcraft.bukkit.teleport.TeleportRequests;
 import realcraft.bukkit.test.Test;
 import realcraft.bukkit.trading.Trading;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Glow;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.webshop.WebShop;
+import realcraft.share.ServerType;
+import realcraft.share.users.UserRank;
 
 public class RealCraft extends JavaPlugin implements Listener {
 	private static RealCraft instance;
@@ -91,12 +91,10 @@ public class RealCraft extends JavaPlugin implements Listener {
 	public Config config;
 	public DB db;
 
-	public PlayerManazer playermanazer;
 	private BanManazer banmanazer;
 	private Mute mute;
 	private AntiSpam antispam;
 	public ChatLog chatlog;
-	private ModeratorChat moderatorchat;
 	private ChatNotice chatnotice;
 	private EventCmds eventcmds;
 	private Restart restart;
@@ -121,7 +119,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 	private MapCrafter mapcrafter;
 	private Parkour parkour;
 	public Skins skins;
-	private CosmeticHeads cosmeticheads;
 	private Quiz quiz;
 	private SocketManager socketmanager;
 
@@ -153,14 +150,13 @@ public class RealCraft extends JavaPlugin implements Listener {
 			this.maintenance = true;
 		}
 		DB.init();
-		playermanazer = new PlayerManazer(this);
+		new Users();
 		banmanazer = new BanManazer(this);
 		new Spectator(this);
 		mute = new Mute(this);
 		antispam = new AntiSpam(this);
 		anticheat = new AntiCheat(this);
 		chatlog = new ChatLog(this);
-		moderatorchat = new ModeratorChat(this);
 		chatnotice = new ChatNotice(this);
 		chattips = new ChatTips(this);
 		chatprivate = new ChatPrivate(this);
@@ -177,6 +173,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new WebShop();
 		new NickManager();
 		new Coins();
+		new Friends();
 		if(serverName.equalsIgnoreCase("lobby")){
 			auth = new Auth(this);
 			eventcmds = new EventCmds(this);
@@ -272,7 +269,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 				mute.onReload();
 				antispam.onReload();
 				chatlog.onReload();
-				moderatorchat.onReload();
 				chatnotice.onReload();
 				if(eventcmds != null) eventcmds.onReload();
 				restart.onReload();
@@ -307,12 +303,8 @@ public class RealCraft extends JavaPlugin implements Listener {
 	public void PlayerJoinEvent(PlayerJoinEvent event){
 		event.setJoinMessage("");
 		final Player player = event.getPlayer();
-		if(this.playermanazer.getPlayerInfo(player).isLogged() || !serverName.equalsIgnoreCase("lobby")){
-			this.playermanazer.getPlayerInfo(player).setLogged(true);
+		if(Users.getUser(player).isLogged() || !serverName.equalsIgnoreCase("lobby")){
 			for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
-
-			AuthLoginEvent callevent = new AuthLoginEvent(player);
-			Bukkit.getServer().getPluginManager().callEvent(callevent);
 		}
 
 		if(!Spectator.isPlayerSpectating(player)){
@@ -320,7 +312,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 				@Override
 				public void run(){
 					for(Player user : Bukkit.getServer().getOnlinePlayers()){
-						if(user != player && playermanazer.getPlayerInfo(user).isLogged()){
+						if(user != player && Users.getUser(user).isLogged()){
 							user.sendMessage(RealCraft.parseColors("&2[&a+&2] "+player.getDisplayName()+"&f je &aonline"));
 						}
 					}
@@ -352,8 +344,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 	@EventHandler(priority=EventPriority.NORMAL,ignoreCancelled = false)
 	public void PlayerLoginEvent(PlayerLoginEvent event){
 		if(maintenance){
-			PlayerInfo playerInfo = playermanazer.getPlayerInfo(event.getPlayer());
-			if(playerInfo == null || playerInfo.getRank() < 45){
+			if(!Users.getUser(event.getPlayer()).getRank().isMinimum(UserRank.BUILDER)){
 				event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
 				event.setKickMessage("§fServer je docasne nedostupny, zkuste to prosim pozdeji.");
 			}
@@ -365,7 +356,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		event.setQuitMessage("");
 		Player player = event.getPlayer();
 		for(Player user : Bukkit.getServer().getOnlinePlayers()){
-			if(user != player && this.playermanazer.getPlayerInfo(user).isLogged()){
+			if(user != player && Users.getUser(user).isLogged()){
 				user.sendMessage(RealCraft.parseColors("&4[&c-&4] "+player.getDisplayName()+"&f je &coffline"));
 			}
 		}
@@ -389,7 +380,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 				public void onPacketReceiving(PacketEvent event){
 					if(event.getPacketType() == PacketType.Play.Client.KEEP_ALIVE){
 						int ping = (int)((System.nanoTime()/1000000L)-event.getPacket().getLongs().read(0));
-						PlayerManazer.getPlayerInfo(event.getPlayer()).setPing(ping);
+						Users.getUser(event.getPlayer()).setPing(ping);
 					}
 				}
 			});
@@ -397,7 +388,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 				@Override
 				public void run(){
 					for(Player player : Bukkit.getServer().getOnlinePlayers()){
-						int ping = PlayerManazer.getPlayerInfo(player).getPing();
+						int ping = Users.getUser(player).getPing();
 						TabList.this.setPlayerHeaderFooter(player,"§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+LobbyMenu.getAllPlayersCount()+"/100\n§7play.realcraft.cz\n§r");
 						if(!player.getPlayerListName().equalsIgnoreCase(player.getDisplayName())) player.setPlayerListName(player.getDisplayName());
 					}

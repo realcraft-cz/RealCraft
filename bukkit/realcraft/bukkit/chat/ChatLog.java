@@ -10,6 +10,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.database.DB;
+import realcraft.bukkit.users.Users;
+import realcraft.share.users.User;
 
 public class ChatLog implements Listener {
 	RealCraft plugin;
@@ -24,7 +27,7 @@ public class ChatLog implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event){
-		if(!plugin.db.connected || event.isCancelled()) return;
+		if(event.isCancelled()) return;
 		Player player = event.getPlayer();
 		String message = event.getMessage();
 		this.onPlayerChat(player,message);
@@ -33,9 +36,9 @@ public class ChatLog implements Listener {
 	public void onPlayerChat(Player player,String message){
 		PreparedStatement stmt;
 		try {
-			int playerid = plugin.playermanazer.getPlayerInfo(player).getId();
+			int playerid = Users.getUser(player).getId();
 			if(playerid != 0){
-				stmt = plugin.db.conn.prepareStatement("INSERT INTO chatlog (user_id,user_ip,message,timestamp,type) VALUES(?,?,?,?,?)");
+				stmt = DB.conn.prepareStatement("INSERT INTO chatlog (user_id,user_ip,message,timestamp,type) VALUES(?,?,?,?,?)");
 				stmt.setInt(1,playerid);
 				stmt.setString(2,player.getAddress().getAddress().getHostAddress());
 				stmt.setString(3,message);
@@ -52,9 +55,9 @@ public class ChatLog implements Listener {
 	public void onPlayerAdminChat(Player player,String message){
 		PreparedStatement stmt;
 		try {
-			int playerid = plugin.playermanazer.getPlayerInfo(player).getId();
+			int playerid = Users.getUser(player).getId();
 			if(playerid != 0){
-				stmt = plugin.db.conn.prepareStatement("INSERT INTO chatlog (user_id,user_ip,message,timestamp,type) VALUES(?,?,?,?,?)");
+				stmt = DB.conn.prepareStatement("INSERT INTO chatlog (user_id,user_ip,message,timestamp,type) VALUES(?,?,?,?,?)");
 				stmt.setInt(1,playerid);
 				stmt.setString(2,player.getAddress().getAddress().getHostAddress());
 				stmt.setString(3,message);
@@ -68,16 +71,16 @@ public class ChatLog implements Listener {
 		}
 	}
 
-	public void onPrivateMessage(Player sender,Player recipient,String message){
+	public void onPrivateMessage(User sender,User recipient,String message){
 		PreparedStatement stmt;
 		try {
-			int senderid = plugin.playermanazer.getPlayerInfo(sender).getId();
-			int recipientid = plugin.playermanazer.getPlayerInfo(recipient).getId();
+			int senderid = sender.getId();
+			int recipientid = recipient.getId();
 			if(senderid != 0 && recipientid != 0){
-				stmt = plugin.db.conn.prepareStatement("INSERT INTO chatlog (user_id,recipient_id,user_ip,message,timestamp,type) VALUES(?,?,?,?,?,?)");
+				stmt = DB.conn.prepareStatement("INSERT INTO chatlog (user_id,recipient_id,user_ip,message,timestamp,type) VALUES(?,?,?,?,?,?)");
 				stmt.setInt(1,senderid);
 				stmt.setInt(2,recipientid);
-				stmt.setString(3,sender.getAddress().getAddress().getHostAddress());
+				stmt.setString(3,sender.getAddress());
 				stmt.setString(4,message);
 				stmt.setLong(5,System.currentTimeMillis()/1000);
 				stmt.setInt(6,2);
@@ -92,9 +95,9 @@ public class ChatLog implements Listener {
 	public void onPlayerCommand(Player player,String command){
 		PreparedStatement stmt;
 		try {
-			int playerid = plugin.playermanazer.getPlayerInfo(player).getId();
+			int playerid = Users.getUser(player).getId();
 			if(playerid != 0){
-				stmt = plugin.db.conn.prepareStatement("INSERT INTO chatcommands (user_id,user_ip,command,timestamp) VALUES(?,?,?,?)");
+				stmt = DB.conn.prepareStatement("INSERT INTO chatcommands (user_id,user_ip,command,timestamp) VALUES(?,?,?,?)");
 				stmt.setInt(1,playerid);
 				stmt.setString(2,player.getAddress().getAddress().getHostAddress());
 				stmt.setString(3,command);

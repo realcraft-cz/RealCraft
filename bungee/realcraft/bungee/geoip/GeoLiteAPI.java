@@ -5,10 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 
+import net.md_5.bungee.BungeeCord;
 import realcraft.bungee.RealCraftBungee;
 
 public class GeoLiteAPI {
@@ -36,7 +38,7 @@ public class GeoLiteAPI {
             }
         }
         // Ok, let's try to download the data file!
-        plugin.getProxy().getScheduler().runAsync(plugin,new Runnable(){
+        BungeeCord.getInstance().getScheduler().runAsync(plugin,new Runnable(){
             @Override
             public void run() {
                 try {
@@ -92,5 +94,14 @@ public class GeoLiteAPI {
         }
         return "N/A";
     }
+
+    public static boolean isCountryBlocked(InetSocketAddress inetAddress){
+		String address = inetAddress.getAddress().getHostAddress().replace("/","");
+		if(address.length() > 0){
+			String country = GeoLiteAPI.getCountryCode(RealCraftBungee.getInstance(),address);
+			if(country.equalsIgnoreCase("CZ") || country.equalsIgnoreCase("SK")) return false;
+		}
+		return true;
+	}
 
 }

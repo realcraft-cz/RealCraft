@@ -27,7 +27,7 @@ public abstract class Check implements Listener, Runnable {
 	}
 
 	public enum CheckType {
-		FLYHACK, SPEEDHACK, SNEAKHACK, CLICKAURA, CRITICALS, ENCHANT, FASTBREAK;
+		FLYHACK, SPEEDHACK, SNEAKHACK, CLICKAURA, KILLAURA, ENCHANT, FASTBREAK;
 
 		public static CheckType getByName(String name){
 			return CheckType.valueOf(name.toUpperCase());
@@ -39,7 +39,7 @@ public abstract class Check implements Listener, Runnable {
 				case SPEEDHACK: return "SpeedHack";
 				case SNEAKHACK: return "SneakHack";
 				case CLICKAURA: return "ClickAura";
-				case CRITICALS: return "Criticals";
+				case KILLAURA: return "KillAura";
 				case ENCHANT: return "SuperEnchant";
 				case FASTBREAK: return "FastBreak";
 			}
@@ -52,7 +52,7 @@ public abstract class Check implements Listener, Runnable {
 				case SPEEDHACK: return 8;
 				case SNEAKHACK: return 10;
 				case CLICKAURA: return 4;
-				case CRITICALS: return 11;
+				case KILLAURA: return 11;
 				case ENCHANT: return 7;
 				case FASTBREAK: return 9;
 			}
@@ -72,6 +72,7 @@ public abstract class Check implements Listener, Runnable {
 			switch(this){
 				case FLYHACK: return 3;
 				case SNEAKHACK: return 3;
+				case CLICKAURA: return 5;
 				default:break;
 			}
 			return 999;
@@ -83,8 +84,7 @@ public abstract class Check implements Listener, Runnable {
 				case SPEEDHACK: return 60;
 				case SNEAKHACK: return 60;
 				case CLICKAURA: return 60;
-				case CRITICALS: return 60;
-				case FASTBREAK: return 60;
+				case KILLAURA: return 60;
 				default:break;
 			}
 			return 0;

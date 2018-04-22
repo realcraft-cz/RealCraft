@@ -30,7 +30,8 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import cz.ceph.LampControl.utils.SwitchBlock;
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.coins.Coins;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.FireworkUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.Particles;
@@ -137,7 +138,7 @@ public class LobbyLabyrinth implements Listener, Runnable {
 		if(event.getItem().getItemStack().getType() == Material.EMERALD && event.getItem().getLocation().distanceSquared(finish) < 10){
 			Player player = event.getPlayer();
 			if(!this.getLabyrinthPlayer(player).hasLimit()){
-				final int reward = PlayerManazer.getPlayerInfo(player).giveCoins(REWARD);
+				final int reward = Users.getUser(player).giveCoins(REWARD);
 				FireworkUtil.spawnFirework(finish.clone().add(0,0.5,0),FireworkEffect.Type.BALL,Color.LIME,true,false);
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 					@Override
@@ -149,7 +150,7 @@ public class LobbyLabyrinth implements Listener, Runnable {
 				},5);
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 					public void run(){
-						PlayerManazer.getPlayerInfo(player).runCoinsEffect("§aLabyrint dokoncen",reward);
+						Coins.runCoinsEffect(player,"§aLabyrint dokoncen",reward);
 					}
 				},20);
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){

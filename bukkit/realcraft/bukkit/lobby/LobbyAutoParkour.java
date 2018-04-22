@@ -26,7 +26,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.coins.Coins;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.FireworkUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.Title;
@@ -238,7 +239,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 				if(this.level-1 == 1) coins = 15;
 				else if(this.level-1 == 2) coins = 30;
 				else if(this.level-1 == 3) coins = 50;
-				int reward = PlayerManazer.getPlayerInfo(player).giveCoins(coins);
+				int reward = Users.getUser(player).giveCoins(coins);
 
 				String title = "";
 				if(this.level <= LobbyAutoParkour.levels) title = "Level "+(this.level-1);
@@ -251,7 +252,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 				final String finalTitle = title;
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 					public void run(){
-						PlayerManazer.getPlayerInfo(player).runCoinsEffect(finalTitle,reward);
+						Coins.runCoinsEffect(player,finalTitle,reward);
 					}
 				},20);
 			}

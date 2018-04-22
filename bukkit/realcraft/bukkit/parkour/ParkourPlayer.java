@@ -30,7 +30,7 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.parkour.exceptions.ParkourCreateLimitException;
 import realcraft.bukkit.parkour.exceptions.ParkourInProgressException;
 import realcraft.bukkit.parkour.menu.ParkourMenuType;
-import realcraft.bukkit.playermanazer.PlayerManazer.PlayerInfo;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Title;
 
 public class ParkourPlayer {
@@ -47,8 +47,7 @@ public class ParkourPlayer {
 
 	public ParkourPlayer(Player player){
 		this.player = player;
-		PlayerInfo playerInfo = RealCraft.getInstance().playermanazer.getPlayerInfo(player);
-		this.id = playerInfo.getId();
+		this.id = Users.getUser(player).getId();
 		this.reset();
 	}
 

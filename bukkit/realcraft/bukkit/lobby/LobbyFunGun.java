@@ -26,6 +26,7 @@ import org.bukkit.util.Vector;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Particles;
 import realcraft.bukkit.utils.RandomUtil;
 
@@ -55,7 +56,7 @@ public class LobbyFunGun implements Listener {
 	@EventHandler
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
+		if(Users.getUser(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
 			ItemStack fungun = new ItemStack(Material.BLAZE_ROD,1);
 			ItemMeta meta = fungun.getItemMeta();
 			meta.setDisplayName("§6§lFun Gun");
@@ -83,7 +84,7 @@ public class LobbyFunGun implements Listener {
 		Player player = event.getPlayer();
 		if(player.getInventory().getItemInMainHand().getType() == Material.BLAZE_ROD && (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
 			event.setCancelled(true);
-			if(plugin.playermanazer.getPlayerInfo(player).isLogged()){
+			if(Users.getUser(player).isLogged()){
 				this.fireFunGun(player);
 			}
 		}

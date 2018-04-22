@@ -3,7 +3,7 @@ package realcraft.bukkit.sockets;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import realcraft.bukkit.ServerType;
+import realcraft.share.ServerType;
 
 public class SocketDataEvent extends Event {
 

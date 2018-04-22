@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import realcraft.bungee.RealCraftBungee;
-import realcraft.bungee.ServerType;
+import realcraft.share.ServerType;
 
 public class SocketManager {
 
@@ -47,6 +47,7 @@ public class SocketManager {
 				}
 			});
 		} catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 

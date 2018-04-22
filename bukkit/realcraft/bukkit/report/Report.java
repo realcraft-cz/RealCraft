@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -105,7 +106,7 @@ public class Report implements CommandExecutor, PluginMessageListener {
 		for(Player player : plugin.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin") || player.hasPermission("group.Moderator")){
 				player.sendMessage(reportMessage);
-				player.playSound(player.getLocation(),plugin.playermanazer.getPlayerInfo(player).getNoticeSound(),1,1);
+				player.playSound(player.getLocation(),Sound.BLOCK_NOTE_PLING,1,1);
 			}
 		}
 	}

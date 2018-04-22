@@ -58,12 +58,12 @@ import net.minecraft.server.v1_12_R1.EntityCreature;
 import net.minecraft.server.v1_12_R1.EntityInsentient;
 import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.ServerType;
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.cosmetics.utils.CustomPathFinderGoalPanic;
 import realcraft.bukkit.spectator.Spectator;
 import realcraft.bukkit.utils.Particles;
+import realcraft.share.ServerType;
 
 public class Lobby implements Listener {
 	RealCraft plugin;
@@ -71,13 +71,11 @@ public class Lobby implements Listener {
 	boolean enabled = false;
 
 	public LobbyMenu lobbymenu = null;
-	public LobbyJump lobbyjump = null;
 	public LobbyFunGun lobbyfungun = null;
 	public LobbyMystery lobbychests = null;
 	public LobbyCosmetics lobbycosmetics = null;
 	public LobbyLanterns lobbylanterns = null;
 	public LobbyCitizens lobbycitizens = null;
-	public LobbyParkours lobbyparkours = null;
 	public LobbyAutoParkour lobbyautoparkour = null;
 	public LobbyPlayerRider lobbyplayerrider = null;
 	public LobbySpawn lobbyspawn = null;
@@ -97,7 +95,6 @@ public class Lobby implements Listener {
 				lobbyfungun = new LobbyFunGun(plugin);
 				lobbycosmetics = new LobbyCosmetics(plugin);
 				lobbylanterns = new LobbyLanterns(plugin);
-				lobbyparkours = new LobbyParkours(plugin);
 				lobbyautoparkour = new LobbyAutoParkour(plugin);
 				lobbyspawn = new LobbySpawn(plugin);
 				//lobbyjump = new LobbyJump(plugin);
@@ -127,13 +124,11 @@ public class Lobby implements Listener {
 	public void onReload(){
 		enabled = true;
 		if(lobbymenu != null) lobbymenu.onReload();
-		if(lobbyjump != null) lobbyjump.onReload();
 		if(lobbyfungun != null) lobbyfungun.onReload();
 		if(lobbychests != null) lobbychests.onReload();
 		if(lobbycosmetics != null) lobbycosmetics.onReload();
 		if(lobbylanterns != null) lobbylanterns.onReload();
 		if(lobbycitizens != null) lobbycitizens.onReload();
-		if(lobbyparkours != null) lobbyparkours.onReload();
 		if(lobbyautoparkour != null) lobbyautoparkour.onReload();
 		if(lobbyplayerrider != null) lobbyplayerrider.onReload();
 		if(lobbyspawn != null) lobbyspawn.onReload();

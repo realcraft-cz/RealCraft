@@ -10,7 +10,7 @@ import java.net.Socket;
 import org.bukkit.Bukkit;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.ServerType;
+import realcraft.share.ServerType;
 
 public class SocketManager {
 
@@ -35,7 +35,12 @@ public class SocketManager {
 										while(!socket.isClosed()){
 											if(inStream.available() <= 0) continue;
 											SocketData data = new SocketData(null,inStream.readUTF());
-											Bukkit.getPluginManager().callEvent(new SocketDataEvent(ServerType.getByName(data.getServer()),data));
+											Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
+												@Override
+												public void run(){
+													Bukkit.getPluginManager().callEvent(new SocketDataEvent(ServerType.getByName(data.getServer()),data));
+												}
+											});
 											socket.close();
 										}
 									} catch (Exception e){

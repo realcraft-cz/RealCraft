@@ -15,8 +15,8 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import com.earth2me.essentials.Essentials;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.ServerType;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
+import realcraft.share.ServerType;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class WebShop implements Listener, Runnable {
@@ -44,7 +44,7 @@ public class WebShop implements Listener, Runnable {
 	}
 
 	public void checkPlayerPayments(Player player){
-		ResultSet rs = RealCraft.getInstance().db.query("SELECT * FROM "+PAYMENTS+" WHERE payment_finished = '0' AND user_id = '"+PlayerManazer.getPlayerInfo(player).getId()+"' AND ("+(RealCraft.getServerType() == ServerType.SURVIVAL ? "payment_type = '"+TYPE_VIP+"' OR payment_type = '"+TYPE_ITEM+"'" : "payment_type = '"+TYPE_VIP+"'")+") LIMIT 1");
+		ResultSet rs = RealCraft.getInstance().db.query("SELECT * FROM "+PAYMENTS+" WHERE payment_finished = '0' AND user_id = '"+Users.getUser(player).getId()+"' AND ("+(RealCraft.getServerType() == ServerType.SURVIVAL ? "payment_type = '"+TYPE_VIP+"' OR payment_type = '"+TYPE_ITEM+"'" : "payment_type = '"+TYPE_VIP+"'")+") LIMIT 1");
 		try {
 			while(rs.next()){
 				if(rs.getInt("payment_type") == TYPE_VIP){
@@ -69,7 +69,7 @@ public class WebShop implements Listener, Runnable {
 			PermissionsEx.getPermissionManager().getUser(player).addGroup("dVIP",null);
 			PermissionsEx.getPermissionManager().getUser(player).removePermission("group-dVIP-until");
 		}
-		PlayerManazer.getPlayerInfo(player).reload(player);
+		Users.getUser(player).reload();
 		essentials.getUser(player).setDisplayNick();
 		player.sendMessage("§7-----------------------------------");
 		player.sendMessage("§r");

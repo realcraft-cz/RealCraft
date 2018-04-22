@@ -23,6 +23,7 @@ public class CheckEnchant extends Check {
 		this.check(event.getPlayer(),event.getPlayer().getInventory().getItem(event.getNewSlot()));
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void PlayerPickupItemEvent(PlayerPickupItemEvent event){
 		this.check(event.getPlayer(),event.getItem().getItemStack());

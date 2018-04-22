@@ -54,7 +54,7 @@ public class ChatAdvert implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerChat(AsyncPlayerChatEvent event){
 		if(!enabled || event.isCancelled()) return;
 		Player sender = event.getPlayer();

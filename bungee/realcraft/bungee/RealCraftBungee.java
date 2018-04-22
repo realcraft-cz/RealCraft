@@ -6,22 +6,19 @@ import java.util.concurrent.TimeUnit;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
 import realcraft.bungee.commands.ListCommand;
-import realcraft.bungee.commands.LoginCommand;
-import realcraft.bungee.commands.RegisterCommand;
 import realcraft.bungee.config.Config;
-import realcraft.bungee.database.MySQL;
-import realcraft.bungee.listeners.PlayerEvents;
+import realcraft.bungee.database.DB;
 import realcraft.bungee.motd.ServerMotd;
-import realcraft.bungee.playermanazer.PlayerManazer;
 import realcraft.bungee.skins.Skins;
 import realcraft.bungee.sockets.SocketManager;
+import realcraft.bungee.users.Users;
 
 public class RealCraftBungee extends Plugin implements Runnable {
 	private static RealCraftBungee instance;
-	public static boolean publicServer = false;
+	public static boolean testServer = false;
 
 	public Config config;
-	public MySQL db;
+	public DB db;
 	public SocketManager socketmanager;
 
 	int restartHour = 4;
@@ -29,33 +26,30 @@ public class RealCraftBungee extends Plugin implements Runnable {
 	public void onEnable(){
 		instance = this;
 		config = new Config(this);
-		db = new MySQL(this);
+		testServer = !config.getBoolean("settings.public",false);
+		DB.init();
 		socketmanager = new SocketManager();
-		new PlayerManazer(this);
+		//new PlayerManazer(this);
+		new Users();
 		new Skins(this);
-		this.getProxy().getPluginManager().registerListener(this, new PlayerEvents(this));
-		getProxy().getPluginManager().registerCommand(this,new LoginCommand(this));
-		getProxy().getPluginManager().registerCommand(this,new RegisterCommand(this));
 		getProxy().getPluginManager().registerCommand(this,new ListCommand(this));
-		getProxy().registerChannel("RealCraftPing");
 		getProxy().getScheduler().schedule(this,this,3600,60,TimeUnit.SECONDS);
 		getProxy().getScheduler().schedule(this,new Runnable(){
 			@Override
 			public void run(){
-				if(publicServer) db.update("UPDATE bungee_status SET value = '"+(System.currentTimeMillis()/1000)+"' WHERE variable = 'lastping'");
-				PlayerManazer.updatePlayTime();
+				if(!testServer) DB.update("UPDATE bungee_status SET value = '"+(System.currentTimeMillis()/1000)+"' WHERE variable = 'lastping'");
+				Users.updatePlayTime();
 			}
 		},10,10,TimeUnit.SECONDS);
 
-		publicServer = config.getBoolean("settings.public",false);
-		if(publicServer) db.update("UPDATE authme SET user_logged = '0'");
+		if(!testServer) DB.update("UPDATE authme SET user_logged = '0'");
 		new ServerMotd(this);
 	}
 
 	public void onDisable(){
-		if(publicServer) db.update("UPDATE authme SET user_logged = '0'");
+		if(!testServer) DB.update("UPDATE authme SET user_logged = '0'");
 		config.onDisable();
-		db.onDisable();
+		DB.onDisable();
 		socketmanager.onDisable();
 	}
 
@@ -64,7 +58,7 @@ public class RealCraftBungee extends Plugin implements Runnable {
 	}
 
 	public static boolean isTestServer(){
-		return !publicServer;
+		return testServer;
 	}
 
 	public static String parseColors(String message){

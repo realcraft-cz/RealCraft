@@ -1,7 +1,5 @@
 package realcraft.bukkit.auth;
 
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,18 +11,18 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
-
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer.PlayerInfo;
+import realcraft.bukkit.sockets.SocketData;
+import realcraft.bukkit.sockets.SocketDataEvent;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Title;
+import realcraft.share.ServerType;
+import realcraft.share.users.User;
 
-public class Auth implements Listener, PluginMessageListener {
+public class Auth implements Listener {
 	RealCraft plugin;
 
 	double x,y,z;
@@ -35,7 +33,6 @@ public class Auth implements Listener, PluginMessageListener {
 	public Auth(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin,"RealCraftAuth",this);
 		x = plugin.config.getDouble("authspawn.x");
 		y = plugin.config.getDouble("authspawn.y");
 		z = plugin.config.getDouble("authspawn.z");
@@ -60,7 +57,7 @@ public class Auth implements Listener, PluginMessageListener {
 	public void onPlayerMove(PlayerMoveEvent event){
 		if(!enabled) return;
 		Player player = event.getPlayer();
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() == false){
+		if(!Users.getUser(player).isLogged()){
 			movePlayerToSpawn(player,false);
 		}
 	}
@@ -69,7 +66,7 @@ public class Auth implements Listener, PluginMessageListener {
 	public void onPlayerBlockPlace(BlockPlaceEvent event){
 		if(!enabled) return;
 		Player player = event.getPlayer();
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() == false){
+		if(!Users.getUser(player).isLogged()){
 			event.setCancelled(true);
 		}
 	}
@@ -78,7 +75,7 @@ public class Auth implements Listener, PluginMessageListener {
 	public void onPlayerBlockDamage(BlockDamageEvent event){
 		if(!enabled) return;
 		Player player = event.getPlayer();
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() == false){
+		if(!Users.getUser(player).isLogged()){
 			event.setCancelled(true);
 		}
 	}
@@ -87,17 +84,17 @@ public class Auth implements Listener, PluginMessageListener {
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event){
 		if(!enabled) return;
 		Player player = event.getPlayer();
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() == false){
+		if(!Users.getUser(player).isLogged()){
 			event.setCancelled(true);
 		}
 	}
 
 	public void movePlayerToSpawn(final Player player,boolean loggedin){
 		player.teleport(new Location(plugin.getServer().getWorld("world") ,x, y, z, yaw, pitch));
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() == false){
+		if(!Users.getUser(player).isLogged()){
 			for(Player player2 : plugin.getServer().getOnlinePlayers()) player.hidePlayer(player2);
 			Title.showTitle(player,"§3RealCraft.cz",1,30,1);
-			if(plugin.playermanazer.getPlayerInfo(player).getId() != 0){
+			if(Users.getUser(player).isRegistered()){
 				Title.showSubTitle(player,"§6Prihlas se pomoci /login <heslo>",1,30,1);
 			} else {
 				Title.showSubTitle(player,"§6Registruj se /register <heslo> <heslo>",1,30,1);
@@ -107,7 +104,7 @@ public class Auth implements Listener, PluginMessageListener {
 			for(Player player2 : plugin.getServer().getOnlinePlayers()) player.showPlayer(player2);
 			for(PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
 			if(loggedin == false){
-				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
+				Bukkit.getScheduler().runTaskLater(plugin,new Runnable(){
 					@Override
 					public void run(){
 						AuthLoginEvent callevent = new AuthLoginEvent(player);
@@ -118,38 +115,19 @@ public class Auth implements Listener, PluginMessageListener {
 		}
 	}
 
-
-	@Override
-	public void onPluginMessageReceived(String channel, Player player, byte[] message){
-		if(!channel.equals("RealCraftAuth")) return;
-		ByteArrayDataInput in = ByteStreams.newDataInput(message);
-		String subchannel = in.readUTF();
-		if(subchannel.equals("LoggedIn")){
-			UUID uuid = UUID.fromString(in.readUTF());
-			if(uuid != null){
-				player = plugin.getServer().getPlayer(uuid);
-				if(player != null){
-					plugin.playermanazer.getPlayerInfo(player).setLogged(true);
-					AuthLoginEvent callevent = new AuthLoginEvent(player);
-					Bukkit.getServer().getPluginManager().callEvent(callevent);
-					movePlayerToSpawn(player,true);
-					if(plugin.serverName.equalsIgnoreCase("lobby")){
-						Title.showTitle(player,"",0,0,0);
-						Title.showSubTitle(player,"",0,0,0);
-					}
-				}
-			}
-		}
-		else if(subchannel.equals("LoggedOut")){
-			UUID uuid = UUID.fromString(in.readUTF());
-			if(uuid != null){
-				PlayerInfo info = plugin.playermanazer.getPlayerInfo(uuid);
-				if(info != null){
-					plugin.playermanazer.getPlayerInfo(uuid).setLogged(false);
-					player = plugin.getServer().getPlayer(uuid);
-					if(player != null){
-						movePlayerToSpawn(player,false);
-					}
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		SocketData data = event.getData();
+		if(data.getChannel().equalsIgnoreCase(Users.CHANNEL_BUNGEE_LOGIN)){
+			User user = Users.getUser(data.getInt("id"));
+			Player player = Users.getPlayer(user);
+			if(player != null){
+				AuthLoginEvent callevent = new AuthLoginEvent(player);
+				Bukkit.getServer().getPluginManager().callEvent(callevent);
+				movePlayerToSpawn(player,true);
+				if(RealCraft.getServerType() == ServerType.LOBBY){
+					Title.showTitle(player,"",0,0,0);
+					Title.showSubTitle(player,"",0,0,0);
 				}
 			}
 		}

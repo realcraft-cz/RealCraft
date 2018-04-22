@@ -59,7 +59,7 @@ import net.minecraft.server.v1_12_R1.TileEntityEnderChest;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.cosmetics.utils.UtilParticles;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.FireworkUtil;
 import realcraft.bukkit.utils.Glow;
 import realcraft.bukkit.utils.LocationUtil;
@@ -113,7 +113,7 @@ public class LobbyMystery implements Listener, Runnable {
 	@EventHandler
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
-		if(PlayerManazer.getPlayerInfo(player).isLogged()) this.loadPlayerKeys(player);
+		if(Users.getUser(player).isLogged()) this.loadPlayerKeys(player);
 	}
 
 	@EventHandler
@@ -131,19 +131,19 @@ public class LobbyMystery implements Listener, Runnable {
 	}
 
 	public void givePlayerKey(Player player,int amount){
-		PlayerManazer.getPlayerInfo(player).givePlayerKeys(amount);
+		Users.getUser(player).giveLobbyKeys(amount);
 		this.loadPlayerKeys(player);
 		player.getInventory().setHeldItemSlot(8);
 	}
 
 	public void removePlayerKey(Player player){
-		PlayerManazer.getPlayerInfo(player).removePlayerKeys(1);
+		Users.getUser(player).giveLobbyKeys(-1);
 		this.loadPlayerKeys(player);
 	}
 
 	public void loadPlayerKeys(Player player){
 		if(player.getWorld().getName().equalsIgnoreCase("world")){
-			int keys = PlayerManazer.getPlayerInfo(player).getLobbyKeys();
+			int keys = Users.getUser(player).getLobbyKeys();
 			player.getInventory().remove(Material.TRIPWIRE_HOOK);
 			if(keys > 0){
 				if(keys > 64) keys = 64;
@@ -172,7 +172,7 @@ public class LobbyMystery implements Listener, Runnable {
 	@EventHandler(ignoreCancelled = true)
 	public void PlayerDropItemEvent(PlayerDropItemEvent event){
 		if(event.getItemDrop().getItemStack().getType() == Material.TRIPWIRE_HOOK && event.getItemDrop().getItemStack().hasItemMeta() && event.getItemDrop().getItemStack().getItemMeta().hasDisplayName() && event.getItemDrop().getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase("§b§l"+"Klic k truhle")){
-			PlayerManazer.getPlayerInfo(event.getPlayer()).removePlayerKeys(event.getItemDrop().getItemStack().getAmount());
+			Users.getUser(event.getPlayer()).giveLobbyKeys(-event.getItemDrop().getItemStack().getAmount());
 		}
 	}
 
@@ -181,7 +181,7 @@ public class LobbyMystery implements Listener, Runnable {
 		if(event.getEntity() instanceof Player){
 			Player player = (Player)event.getEntity();
 			if(event.getItem().getItemStack().getType() == Material.TRIPWIRE_HOOK && event.getItem().getItemStack().hasItemMeta() && event.getItem().getItemStack().getItemMeta().hasDisplayName() && event.getItem().getItemStack().getItemMeta().getDisplayName().equalsIgnoreCase("§b§l"+"Klic k truhle")){
-				PlayerManazer.getPlayerInfo(player).givePlayerKeys(event.getItem().getItemStack().getAmount());
+				Users.getUser(player).giveLobbyKeys(event.getItem().getItemStack().getAmount());
 			}
 		}
 	}
@@ -495,12 +495,12 @@ public class LobbyMystery implements Listener, Runnable {
 		}
 
 		public void buyKey(Player player){
-			if(PlayerManazer.getPlayerInfo(player).getCoins() < SMITH_PRICE){
+			if(Users.getUser(player).getCoins() < SMITH_PRICE){
 				player.sendMessage("§cNemas dostatek coinu.");
 				player.playSound(player.getLocation(),Sound.ENTITY_VILLAGER_NO,1f,1f);
 				return;
 			}
-			PlayerManazer.getPlayerInfo(player).giveCoins(-SMITH_PRICE);
+			Users.getUser(player).giveCoins(-SMITH_PRICE);
 			LobbyMystery.this.givePlayerKey(player);
 			location.getWorld().playSound(location,Sound.BLOCK_ANVIL_USE,1f,1f);
 			location.getWorld().playSound(location,Sound.ENTITY_VILLAGER_YES,1f,1f);

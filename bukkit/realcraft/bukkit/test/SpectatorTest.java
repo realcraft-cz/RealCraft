@@ -18,7 +18,14 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+
+import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.utils.ReflectionUtils;
 
 public class SpectatorTest implements Listener {
 
@@ -34,6 +41,25 @@ public class SpectatorTest implements Listener {
 		team.setColor(ChatColor.GRAY);
 		team.setCanSeeFriendlyInvisibles(true);
 		team.setOption(Option.COLLISION_RULE,OptionStatus.NEVER);
+
+		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),PacketType.Play.Server.PLAYER_INFO){
+
+			@Override
+			public void onPacketSending(PacketEvent event){
+				if(event.getPacketType() == PacketType.Play.Server.PLAYER_INFO){
+					try {
+						String name = event.getPacket().getPlayerInfoDataLists().read(0).get(0).getProfile().getName();
+						PacketPlayOutPlayerInfo packet = (PacketPlayOutPlayerInfo) event.getPacket().getHandle();
+						PacketPlayOutPlayerInfo.EnumPlayerInfoAction action = (PacketPlayOutPlayerInfo.EnumPlayerInfoAction) ReflectionUtils.getField(packet.getClass(),true,"a").get(packet);
+						if(spectators.containsKey(Bukkit.getPlayer(name))){
+							event.setCancelled(true);
+						}
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+		});
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
@@ -65,7 +91,7 @@ public class SpectatorTest implements Listener {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,20*300,999,false,false));
 		player.setCollidable(false);
 		for(Player player2 : Bukkit.getOnlinePlayers()){
-			player2.hidePlayer(RealCraft.getInstance(),player);
+			player2.hidePlayer(player);
 		}
 		player.setScoreboard(scoreboard);
 		team.addEntry(player.getName());
@@ -77,7 +103,7 @@ public class SpectatorTest implements Listener {
 		player.setFlying(false);
 		player.removePotionEffect(PotionEffectType.INVISIBILITY);
 		for(Player player2 : Bukkit.getOnlinePlayers()){
-			player2.showPlayer(RealCraft.getInstance(),player);
+			player2.showPlayer(player);
 		}
 		player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 		team.removeEntry(player.getName());

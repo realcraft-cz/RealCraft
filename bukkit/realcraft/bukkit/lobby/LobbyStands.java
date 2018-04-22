@@ -29,9 +29,10 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.ServerType;
+import realcraft.bukkit.utils.BungeeMessages;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.StringUtil;
+import realcraft.share.ServerType;
 import ru.beykerykt.lightapi.LightAPI;
 
 public class LobbyStands implements Listener, Runnable {
@@ -213,7 +214,7 @@ public class LobbyStands implements Listener, Runnable {
 
 		public void click(Player player){
 			if(server == ServerType.LOBBY) return;
-			server.connectPlayer(player);
+			BungeeMessages.connectPlayerToServer(player,server);
 		}
 
 		private ItemStack getHelmet(){

@@ -26,14 +26,16 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.ServerType;
+import realcraft.bukkit.coins.Coins;
 import realcraft.bukkit.lobby.LobbyMenu;
-import realcraft.bukkit.playermanazer.PlayerManazer;
 import realcraft.bukkit.sockets.SocketData;
 import realcraft.bukkit.sockets.SocketDataEvent;
 import realcraft.bukkit.sockets.SocketManager;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.RandomUtil;
 import realcraft.bukkit.utils.StringUtil;
+import realcraft.share.ServerType;
+import realcraft.share.database.DB;
 
 public class Quiz implements Listener, Runnable {
 
@@ -78,19 +80,17 @@ public class Quiz implements Listener, Runnable {
 	}
 
 	public void loadQuestions(){
-		if(plugin.db.connected){
-			ResultSet rs = RealCraft.getInstance().db.query("SELECT quiz_id,quiz_question,quiz_answers FROM "+QUIZ_QUESTIONS);
-			try {
-				questions = new ArrayList<QuizQuestion>();
-				while(rs.next()){
-					int id = rs.getInt("quiz_id");
-					String question = rs.getString("quiz_question");
-					String answers = rs.getString("quiz_answers");
-					questions.add(new QuizQuestion(id,question,answers));
-				}
-				rs.close();
-			} catch (SQLException e){
+		ResultSet rs = DB.query("SELECT quiz_id,quiz_question,quiz_answers FROM "+QUIZ_QUESTIONS);
+		try {
+			questions = new ArrayList<QuizQuestion>();
+			while(rs.next()){
+				int id = rs.getInt("quiz_id");
+				String question = rs.getString("quiz_question");
+				String answers = rs.getString("quiz_answers");
+				questions.add(new QuizQuestion(id,question,answers));
 			}
+			rs.close();
+		} catch (SQLException e){
 		}
 	}
 
@@ -227,7 +227,7 @@ public class Quiz implements Listener, Runnable {
 			for(QuizAnswer answer : this.getAnswers()){
 				if(answer.getId().equalsIgnoreCase(id)){
 					if(answer.isCorrect()){
-						QuizQuestion.this.sendAnswered(player.getName(),PlayerManazer.getPlayerInfo(player).hasCoinsBoost());
+						QuizQuestion.this.sendAnswered(player.getName(),Users.getUser(player).hasCoinsBoost());
 					} else {
 						player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 					}
@@ -246,17 +246,17 @@ public class Quiz implements Listener, Runnable {
 			Bukkit.broadcastMessage("§3[Quiz] §6"+name+"§f odpovedel nejrychleji a ziskava §a+"+reward+" coins");
 			Player player = Bukkit.getPlayer(name);
 			if(player != null){
-				PlayerManazer.getPlayerInfo(player).giveCoins(reward,false);
+				Users.getUser(player).giveCoins(reward,false);
 				player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 					public void run(){
-						PlayerManazer.getPlayerInfo(player).runCoinsEffect("§3Quiz",reward,true);
+						Coins.runCoinsEffect(player,"§3Quiz",reward,true);
 					}
 				},20);
 				Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
 					@Override
 					public void run(){
-						RealCraft.getInstance().db.update("INSERT INTO "+QUIZ_ANSWERS+" (quiz_id,user_id,answer_created) VALUES('"+QuizQuestion.this.getId()+"','"+PlayerManazer.getPlayerInfo(player).getId()+"','"+(System.currentTimeMillis()/1000)+"')");
+						DB.update("INSERT INTO "+QUIZ_ANSWERS+" (quiz_id,user_id,answer_created) VALUES('"+QuizQuestion.this.getId()+"','"+Users.getUser(player).getId()+"','"+(System.currentTimeMillis()/1000)+"')");
 					}
 				});
 			}

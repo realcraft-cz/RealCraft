@@ -8,8 +8,8 @@ import realcraft.bukkit.anticheat.AntiCheat;
 
 public class CheckSneakHack extends Check {
 
-	private static final int CHECKS_LIMIT = 3;
 	private static final int SNEAK_LIMIT = 60;
+	private static final int CHECKS_LIMIT = 3;
 
 	public CheckSneakHack(){
 		super(CheckType.SNEAKHACK);
@@ -28,8 +28,8 @@ public class CheckSneakHack extends Check {
 		AntiCheat.getPlayer(player).sneakFrequency.add();
 		int frequency = AntiCheat.getPlayer(player).sneakFrequency.getFrequency();
 		if(frequency > SNEAK_LIMIT){
-			AntiCheat.getPlayer(player).sneakChecks ++;
 			AntiCheat.getPlayer(player).sneakFrequency.clear();
+			AntiCheat.getPlayer(player).sneakChecks ++;
 			if(AntiCheat.getPlayer(player).sneakChecks >= CHECKS_LIMIT){
 				AntiCheat.getPlayer(player).sneakChecks = 0;
 				this.detect(player);

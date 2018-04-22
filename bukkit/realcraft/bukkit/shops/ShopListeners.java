@@ -34,10 +34,10 @@ import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer;
 import realcraft.bukkit.shops.ShopMarket.ShopMarketPlace;
 import realcraft.bukkit.shops.ShopMarket.ShopMarketResidence;
 import realcraft.bukkit.shops.ShopPlayer.ShopPlayerCommand;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.Title;
 
@@ -104,7 +104,7 @@ public class ShopListeners implements Listener, CommandExecutor {
 							event.setCancelled(true);
 							ShopManager.sendMessage(player,"§cNejsi vlastnik teto residence.");
 						}
-						else if(PlayerManazer.getPlayerInfo(player).getCoins() < ShopManager.SHOP_FEE){
+						else if(Users.getUser(player).getCoins() < ShopManager.SHOP_FEE){
 							event.setCancelled(true);
 							ShopManager.sendMessage(player,"§cNemas dostatek coinu pro vytvoreni obchodu ("+ShopManager.SHOP_FEE+" coins).");
 						} else {
@@ -271,7 +271,7 @@ public class ShopListeners implements Listener, CommandExecutor {
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("crate") || args[0].equalsIgnoreCase("crete")){
-				if(PlayerManazer.getPlayerInfo(player).getCoins() < ShopManager.SHOP_FEE){
+				if(Users.getUser(player).getCoins() < ShopManager.SHOP_FEE){
 					ShopManager.sendMessage(player,"§cNemas dostatek coinu pro vytvoreni obchodu ("+ShopManager.SHOP_FEE+" coins).");
 					return true;
 				}

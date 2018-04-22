@@ -24,12 +24,14 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.coins.Coins;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Glow;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.StringUtil;
 import realcraft.bukkit.utils.Title;
+import realcraft.share.database.DB;
 import ru.beykerykt.lightapi.LightAPI;
 
 public class LobbyLottery implements Listener {
@@ -68,7 +70,7 @@ public class LobbyLottery implements Listener {
 		Player player = event.getPlayer();
 		if((event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && player.getWorld().getName().equalsIgnoreCase("world")){
 			Block block = event.getClickedBlock();
-			if(block != null && block.getType() == Material.ENCHANTMENT_TABLE && LocationUtil.isSimilar(block.getLocation(),location) && PlayerManazer.getPlayerInfo(player).isLogged()){
+			if(block != null && block.getType() == Material.ENCHANTMENT_TABLE && LocationUtil.isSimilar(block.getLocation(),location) && Users.getUser(player).isLogged()){
 				event.setCancelled(true);
 				this.openMenu(player);
 			}
@@ -113,6 +115,7 @@ public class LobbyLottery implements Listener {
 		private boolean[] numbers = new boolean[5*9];
 		private Inventory inventory;
 		private int coins = 100;
+		private long lastLotteryTime;
 
 		private boolean running = false;
 		private int task = -1;
@@ -142,13 +145,13 @@ public class LobbyLottery implements Listener {
 		}
 
 		public void open(){
-			if(PlayerManazer.getPlayerInfo(player).getLastLotteryTime()+REPEAT_LIMIT > System.currentTimeMillis()/1000){
-				int seconds = (int)((PlayerManazer.getPlayerInfo(player).getLastLotteryTime()+REPEAT_LIMIT)-(System.currentTimeMillis()/1000));
+			if(lastLotteryTime+REPEAT_LIMIT > System.currentTimeMillis()/1000){
+				int seconds = (int)((lastLotteryTime+REPEAT_LIMIT)-(System.currentTimeMillis()/1000));
 				player.sendMessage("§d[Loterie] §cLosuj znovu za "+seconds+" "+StringUtil.inflect(seconds,new String[]{"sekundu","sekundy","sekund"})+".");
 				player.getPlayer().playSound(player.getPlayer().getLocation(),Sound.ENTITY_ITEM_BREAK,1,1);
 				return;
 			}
-			if(PlayerManazer.getPlayerInfo(player).getCoins() < MIN_COINS){
+			if(Users.getUser(player).getCoins() < MIN_COINS){
 				player.sendMessage("§d[Loterie] §cNemas dostatek coinu ("+MIN_COINS+" coins).");
 				player.getPlayer().playSound(player.getPlayer().getLocation(),Sound.ENTITY_ITEM_BREAK,1,1);
 				return;
@@ -269,8 +272,8 @@ public class LobbyLottery implements Listener {
 			this.coins += coins*(shiftclick ? 1000 : 100);
 			if(this.coins > 5000) this.coins = 5000;
 			else if(this.coins < 100) this.coins = 100;
-			if(this.coins > PlayerManazer.getPlayerInfo(player).getCoins()){
-				this.coins = PlayerManazer.getPlayerInfo(player).getCoins();
+			if(this.coins > Users.getUser(player).getCoins()){
+				this.coins = Users.getUser(player).getCoins();
 				player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 			}
 			player.playSound(player.getLocation(),Sound.UI_BUTTON_CLICK,1f,1f);
@@ -278,8 +281,8 @@ public class LobbyLottery implements Listener {
 		}
 
 		public void confirm(){
-			if(PlayerManazer.getPlayerInfo(player).getCoins() >= coins){
-				PlayerManazer.getPlayerInfo(player).giveCoins(-coins);
+			if(Users.getUser(player).getCoins() >= coins){
+				Users.getUser(player).giveCoins(-coins);
 				currentRun = -1;
 				running = true;
 				this.update();
@@ -306,7 +309,7 @@ public class LobbyLottery implements Listener {
 			this.update();
 			this.reset();
 			if(wincoins > 0){
-				wincoins = PlayerManazer.getPlayerInfo(player).giveCoins(wincoins,false);
+				wincoins = Users.getUser(player).giveCoins(wincoins,false);
 				Bukkit.broadcastMessage("§d[Loterie] §6"+player.getName()+" §fuhodl "+winnumbers+" "+StringUtil.inflect(winnumbers,new String[]{"cislo","cisla","cisel"})+" a ziskava §a+"+wincoins+" coins");
 			}
 			final int givencoins = wincoins;
@@ -314,7 +317,7 @@ public class LobbyLottery implements Listener {
 			Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 				public void run(){
 					LobbyLotteryInventory.this.close();
-					if(givencoins > 0) PlayerManazer.getPlayerInfo(player).runCoinsEffect("§aVyhra v loterii",givencoins,false);
+					if(givencoins > 0) Coins.runCoinsEffect(player,"§aVyhra v loterii",givencoins,false);
 					else {
 						Title.showTitle(player,"§cBez vyhry",0.0,4,0.5);
 						Title.showSubTitle(player,"§fNic jsi nevyhral, zkus to priste.",0.0,4,0.5);
@@ -322,11 +325,11 @@ public class LobbyLottery implements Listener {
 				}
 			},20);
 			final int winnumbers2 = winnumbers;
+			lastLotteryTime = System.currentTimeMillis()/1000;
 			Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
 				@Override
 				public void run(){
-					RealCraft.getInstance().db.update("INSERT INTO "+LOTTERIES+" (user_id,lottery_bet,lottery_win,lottery_numbers,lottery_created) VALUES('"+PlayerManazer.getPlayerInfo(player).getId()+"','"+betcoins+"','"+givencoins+"','"+winnumbers2+"','"+(System.currentTimeMillis()/1000)+"')");
-					PlayerManazer.getPlayerInfo(player).loadLastLotteryTime();
+					DB.update("INSERT INTO "+LOTTERIES+" (user_id,lottery_bet,lottery_win,lottery_numbers,lottery_created) VALUES('"+Users.getUser(player).getId()+"','"+betcoins+"','"+givencoins+"','"+winnumbers2+"','"+(System.currentTimeMillis()/1000)+"')");
 				}
 			});
 		}

@@ -47,7 +47,7 @@ public class CheckResidences {
 				try {
 					if(rs.next()){
 						long lastlogin = rs.getLong("user_lastlogin");
-						if(lastlogin+(expireDays*86400*1000) < System.currentTimeMillis()){
+						if(lastlogin != 0 && lastlogin+(expireDays*86400) < System.currentTimeMillis()/1000){
 							System.out.println("[RealCraft] Residence "+res+" ("+owner+") smazana!");
 							residence.remove();
 						}

@@ -3,7 +3,7 @@ package realcraft.bukkit.shops;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.StringUtil;
 import realcraft.bukkit.utils.Title;
 
@@ -18,7 +18,7 @@ public class ShopPlayer {
 
 	public ShopPlayer(Player player){
 		this.player = player;
-		this.id = PlayerManazer.getPlayerInfo(player).getId();
+		this.id = Users.getUser(player).getId();
 	}
 
 	public Player getPlayer(){

@@ -1,7 +1,7 @@
 package realcraft.bungee.sockets;
 
 import net.md_5.bungee.api.plugin.Event;
-import realcraft.bungee.ServerType;
+import realcraft.share.ServerType;
 
 public class SocketDataEvent extends Event {
 

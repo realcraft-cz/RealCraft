@@ -24,7 +24,7 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.strtotime;
 import ru.beykerykt.lightapi.LightAPI;
@@ -126,7 +126,7 @@ public class ShopMarket implements Runnable {
 	}
 
 	public static ShopMarketResidence getPlayerMarket(Player player){
-		return ShopMarket.getMarket(PlayerManazer.getPlayerInfo(player).getId());
+		return ShopMarket.getMarket(Users.getUser(player).getId());
 	}
 
 	public static ArrayList<ShopMarketPlace> getPlaces(){
@@ -204,7 +204,7 @@ public class ShopMarket implements Runnable {
 			ShopManager.sendMessage(player,"§cMaximalni nabidka je "+MAX_PRICE+" coins.");
 			return;
 		}
-		else if(PlayerManazer.getPlayerInfo(player).getCoins() < price){
+		else if(Users.getUser(player).getCoins() < price){
 			ShopManager.sendMessage(player,"§cNemas dostatek coinu.");
 			return;
 		} else {
@@ -212,8 +212,8 @@ public class ShopMarket implements Runnable {
 			ShopManager.sendMessage(player,"§7Cena za zverejneni obchodu se plati jednou za den.");
 			ShopManager.sendMessage(player,"§7Vyssi nabidka te posune na predni pozice trhu.");
 			player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-			PlayerManazer.getPlayerInfo(player).giveCoins(-price);
-			ShopMarketResidence market = new ShopMarketResidence(PlayerManazer.getPlayerInfo(player).getId(),player.getName(),price,residence.getName(),(int)(System.currentTimeMillis()/1000));
+			Users.getUser(player).giveCoins(-price);
+			ShopMarketResidence market = new ShopMarketResidence(Users.getUser(player).getId(),player.getName(),price,residence.getName(),(int)(System.currentTimeMillis()/1000));
 			markets.put(market.getOwner(),market);
 			RealCraft.getInstance().db.update("INSERT INTO "+MARKETS+" (user_id,market_price,market_residence,market_lastpaid) VALUES('"+market.getOwner()+"','"+market.getPrice()+"','"+market.getResidence()+"','"+market.getLastPaid()+"')");
 			ShopMarket.updateMarkets();
@@ -271,9 +271,9 @@ public class ShopMarket implements Runnable {
 			int yesterday = (int)(strtotime.strtotime("yesterday").getTime()/1000);
 			if(lastPaid > yesterday && lastPaid < yesterday+86400){
 				Player player = Bukkit.getPlayer(this.getOwnerName());
-				if(player != null && PlayerManazer.getPlayerInfo(player).getId() == this.getOwner()){
+				if(player != null && Users.getUser(player).getId() == this.getOwner()){
 					lastPaid = (int)(System.currentTimeMillis()/1000);
-					PlayerManazer.getPlayerInfo(player).giveCoins(-this.getPrice(),false);
+					Users.getUser(player).giveCoins(-this.getPrice(),false);
 					RealCraft.getInstance().db.update("UPDATE "+MARKETS+" SET market_lastpaid = '"+lastPaid+"' WHERE user_id = '"+this.getOwner()+"'");
 					ShopManager.sendMessage(player,"§fPoplatek za verejny trh: §c-"+this.getPrice()+" coins");
 					player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f);

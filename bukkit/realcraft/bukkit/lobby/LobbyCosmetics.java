@@ -24,6 +24,7 @@ import realcraft.bukkit.cosmetics.mounts.Mount;
 import realcraft.bukkit.cosmetics.particleeffects.ParticleEffect;
 import realcraft.bukkit.cosmetics.pets.Pet;
 import realcraft.bukkit.cosmetics.suits.Suit;
+import realcraft.bukkit.users.Users;
 
 public class LobbyCosmetics implements Listener {
 	RealCraft plugin;
@@ -57,7 +58,7 @@ public class LobbyCosmetics implements Listener {
 	@EventHandler
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
+		if(Users.getUser(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
 			ItemStack chest = new ItemStack(Material.CHEST,1);
 			ItemMeta meta = chest.getItemMeta();
 			meta.setDisplayName("§e§lDoplnky");
@@ -142,7 +143,7 @@ public class LobbyCosmetics implements Listener {
 		Player player = event.getPlayer();
 		if(player.getWorld().getName().equalsIgnoreCase("world") && player.getInventory().getItemInMainHand().getType() == Material.CHEST && (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
 			event.setCancelled(true);
-			if(plugin.playermanazer.getPlayerInfo(player).isLogged()){
+			if(Users.getUser(player).isLogged()){
 				LobbyCosmeticsMain.openMenu(player);
 			}
 		}
@@ -153,7 +154,7 @@ public class LobbyCosmetics implements Listener {
 		if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world")){
 			if(event.getSlotType() == SlotType.QUICKBAR && event.getCurrentItem().getType() == Material.CHEST){
 				event.setCancelled(true);
-				if(plugin.playermanazer.getPlayerInfo((Player)event.getWhoClicked()).isLogged()){
+				if(Users.getUser((Player)event.getWhoClicked()).isLogged()){
 					LobbyCosmeticsMain.openMenu((Player)event.getWhoClicked());
 				}
 			}

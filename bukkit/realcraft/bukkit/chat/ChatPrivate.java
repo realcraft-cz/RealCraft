@@ -1,19 +1,33 @@
 package realcraft.bukkit.chat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.earth2me.essentials.Essentials;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.antispam.StringSimilarity;
-import realcraft.bukkit.banmanazer.BanUtils;
-import realcraft.bukkit.playermanazer.PlayerManazer.PlayerInfo;
+import realcraft.bukkit.sockets.SocketData;
+import realcraft.bukkit.sockets.SocketDataEvent;
+import realcraft.bukkit.sockets.SocketManager;
+import realcraft.bukkit.users.Users;
+import realcraft.share.users.User;
+import realcraft.share.users.UserRank;
+import realcraft.share.utils.StringUtil;
 
-public class ChatPrivate implements Listener, CommandExecutor {
+public class ChatPrivate implements Listener, CommandExecutor, TabCompleter {
+
+	private static final String CHANNEL_PM = "privateMsg";
+
 	RealCraft plugin;
 	Essentials essentials;
 
@@ -21,6 +35,8 @@ public class ChatPrivate implements Listener, CommandExecutor {
 	public int spamHistory;
 	double spamProbability;
 	String spamMessage = null;
+
+	private HashMap<User,User> lastMessagePlayers = new HashMap<User,User>();
 
 	public ChatPrivate(RealCraft realcraft){
 		plugin = realcraft;
@@ -47,81 +63,110 @@ public class ChatPrivate implements Listener, CommandExecutor {
 				return true;
 			}
 			if(command.getName().equalsIgnoreCase("msg")){
+				User fPlayer = Users.getUser(player);
 				if(args.length < 2){
 					player.sendMessage("Zaslat soukromou zpravu konkretnimu hraci.");
 					player.sendMessage("/"+command.getName().toLowerCase()+" <player> <message>");
 					return true;
 				}
-				Player recipient = plugin.getServer().getPlayer(args[0]);
+				User recipient = Users.getOnlineUser(args[0]);
 				if(recipient == null){
 					player.sendMessage(RealCraft.parseColors("&cHrac nenalezen."));
 					return true;
 				}
-				else if(recipient == player){
+				else if(recipient.equals(fPlayer)){
 					player.sendMessage(RealCraft.parseColors("&cNemuzes zaslat zpravu sam sobe."));
 					return true;
 				}
-				else if(essentials.getUser(recipient).isIgnoredPlayer(essentials.getUser(player))){
+				else if(essentials.getOfflineUser(recipient.getName()).isIgnoredPlayer(essentials.getUser(player))){
 					player.sendMessage(RealCraft.parseColors("&cTento hrac te ignoruje."));
 					return true;
 				}
-				sendPrivateMessage(player,recipient,BanUtils.combineSplit(1,args));
+				String message = StringUtil.combineSplit(1,args);
+				String[] messages = LastPlayerPrivateMessages.getMessages(fPlayer,recipient);
+				for(String oldMessage : messages){
+					if(oldMessage != null && StringSimilarity.similarity(message,oldMessage) > spamProbability){
+						if(spamMessage != null) sender.sendMessage(RealCraft.parseColors(spamMessage));
+						return true;
+					}
+				}
+				LastPlayerPrivateMessages.addMessage(fPlayer,recipient,message);
+				sendPrivateMessage(fPlayer,recipient,message);
 			}
 			else if(command.getName().equalsIgnoreCase("reply")){
-				PlayerInfo playermanazer = plugin.playermanazer.getPlayerInfo(player);
-				if(playermanazer != null){
-					if(playermanazer.getLastMessagePlayer() == null){
-						player.sendMessage(RealCraft.parseColors("&cZadny hrac ti nezaslal soukromou zpravu."));
-						return true;
-					}
-					if(args.length < 1){
-						player.sendMessage("Odeslat odpoved na posledni soukromou zpravu.");
-						player.sendMessage("/"+command.getName().toLowerCase()+" <message>");
-						return true;
-					}
-					sendPrivateMessage(player,playermanazer.getLastMessagePlayer(),BanUtils.combineSplit(0,args));
+				User fPlayer = Users.getUser(player);
+				if(!lastMessagePlayers.containsKey(Users.getUser(player)) || !lastMessagePlayers.get(Users.getUser(player)).isLogged()){
+					player.sendMessage(RealCraft.parseColors("&cZadny hrac ti nezaslal soukromou zpravu."));
+					return true;
 				}
-			}
-		} else {
-			if(command.getName().equalsIgnoreCase("msg")){
-				if(args.length < 2) return true;
-				Player recipient = plugin.getServer().getPlayer(args[0]);
-				if(recipient == null) return true;
-				recipient.sendMessage(RealCraft.parseColors(BanUtils.combineSplit(1,args)));
+				else if(args.length < 1){
+					player.sendMessage("Odeslat odpoved na posledni soukromou zpravu.");
+					player.sendMessage("/"+command.getName().toLowerCase()+" <message>");
+					return true;
+				}
+				String message = StringUtil.combineSplit(0,args);
+				String[] messages = LastPlayerPrivateMessages.getMessages(fPlayer,lastMessagePlayers.get(Users.getUser(player)));
+				for(String oldMessage : messages){
+					if(oldMessage != null && StringSimilarity.similarity(message,oldMessage) > spamProbability){
+						if(spamMessage != null) sender.sendMessage(RealCraft.parseColors(spamMessage));
+						return true;
+					}
+				}
+				LastPlayerPrivateMessages.addMessage(fPlayer,lastMessagePlayers.get(Users.getUser(player)),message);
+				sendPrivateMessage(fPlayer,lastMessagePlayers.get(Users.getUser(player)),message);
 			}
 		}
 		return true;
 	}
 
-	private boolean sendPrivateMessage(Player sender,Player recipient,String message){
-		if(!sender.hasPermission("group.Moderator")){
-			String[] messages = LastPlayerPrivateMessages.getMessages(sender,recipient);
-			for(String oldMessage : messages){
-				if(oldMessage != null && StringSimilarity.similarity(message,oldMessage) > spamProbability){
-					if(spamMessage != null) sender.sendMessage(RealCraft.parseColors(spamMessage));
-					return false;
-				}
+	@Override
+	public List<String> onTabComplete(CommandSender sender,Command command,String alias,String[] args){
+		Player player = (Player) sender;
+		if(command.getName().equalsIgnoreCase("msg")){
+			List<String> players = new ArrayList<String>();
+			for(User user : Users.getOnlineUsers()){
+				if(user.getName().toLowerCase().startsWith(alias.toLowerCase()) && !user.getName().equalsIgnoreCase(player.getName())) players.add(user.getName());
 			}
-			LastPlayerPrivateMessages.addMessage(sender,recipient,message);
+			return players;
 		}
+		return null;
+	}
 
-		message = plugin.chatadvert.checkAdvert(sender,message);
-
-		sender.sendMessage(RealCraft.parseColors("&6[ja -> "+recipient.getDisplayName()+"&6] &r"+message));
-		recipient.sendMessage(RealCraft.parseColors("&6["+sender.getDisplayName()+" &6-> ja] &r"+message));
-		this.socialSpy(sender,recipient,message);
+	private void sendPrivateMessage(User sender,User recipient,String message){
+		SocketData data = new SocketData(CHANNEL_PM);
+		data.setInt("sender",sender.getId());
+		data.setInt("recipient",recipient.getId());
+		data.setString("message",message);
+		SocketManager.sendToAll(data,true);
 		plugin.chatlog.onPrivateMessage(sender,recipient,message);
-
-		PlayerInfo playermanazer = plugin.playermanazer.getPlayerInfo(recipient);
-		if(playermanazer != null) playermanazer.setLastMessagePlayer(sender);
-		return true;
 	}
 
-	private void socialSpy(Player sender,Player recipient,String message){
-		message = RealCraft.parseColors("&7["+sender.getDisplayName()+" &7-> "+recipient.getDisplayName()+"&7] &r&7"+message);
-		for(Player player : plugin.getServer().getOnlinePlayers()){
-			if((player != sender && player != recipient) && (player.hasPermission("group.Admin") || player.hasPermission("group.Moderator"))){
-				if(essentials.getUser(player).isSocialSpyEnabled()) player.sendMessage(message);
+	private void showPrivateMessageToSender(User recipient,User sender,String message){
+		Users.getPlayer(sender).sendMessage("§6[ja -> §f"+recipient.getName()+"§6] §r"+message);
+	}
+
+	private void showPrivateMessageToRecipient(User recipient,User sender,String message){
+		Users.getPlayer(recipient).sendMessage("§6[§f"+sender.getName()+" §6-> ja] §r"+message);
+	}
+
+	private void showPrivateMessageToAdmin(User user,User recipient,User sender,String message){
+		if(essentials.getUser(Users.getPlayer(user)).isSocialSpyEnabled()) Users.getPlayer(user).sendMessage("§6[§7"+sender.getName()+" §6-> §7"+recipient.getName()+"§6] §r§7"+message);
+	}
+
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		SocketData data = event.getData();
+		if(data.getChannel().equalsIgnoreCase(CHANNEL_PM)){
+			User sender = Users.getUser(data.getInt("sender"));
+			User recipient = Users.getUser(data.getInt("recipient"));
+			String message = data.getString("message");
+			if(Users.getPlayer(sender) != null) this.showPrivateMessageToSender(recipient,sender,message);
+			if(Users.getPlayer(recipient) != null) this.showPrivateMessageToRecipient(recipient,sender,message);
+			lastMessagePlayers.put(recipient,sender);
+			for(User user : Users.getOnlineUsers()){
+				if(user.getRank().isMinimum(UserRank.ADMIN)){
+					if(!user.equals(sender) && !user.equals(recipient) && Users.getPlayer(user) != null) this.showPrivateMessageToAdmin(user,recipient,sender,message);
+				}
 			}
 		}
 	}

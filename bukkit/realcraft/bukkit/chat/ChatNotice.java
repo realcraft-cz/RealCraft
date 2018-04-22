@@ -1,14 +1,6 @@
 package realcraft.bukkit.chat;
 
-import java.text.Normalizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import realcraft.bukkit.RealCraft;
 
@@ -32,9 +24,9 @@ public class ChatNotice implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	/*@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event){
-		if(!enabled || !plugin.db.connected || event.isCancelled()) return;
+		if(!enabled || event.isCancelled()) return;
 
 		String message = event.getMessage().toLowerCase();
 		String nfdNormalizedString = Normalizer.normalize(message, Normalizer.Form.NFD);
@@ -59,5 +51,5 @@ public class ChatNotice implements Listener {
 			if(m.find()) return true;
 		}
 		return false;
-	}
+	}*/
 }

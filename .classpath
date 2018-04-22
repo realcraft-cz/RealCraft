@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="bukkit"/>
 	<classpathentry kind="src" path="bungee"/>
+	<classpathentry kind="src" path="share"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/mysql-connector-java-5.1.33-bin.jar"/>
 	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/Essentials-2.x-SNAPSHOT.jar"/>

@@ -1,6 +1,6 @@
 package realcraft.bukkit.test;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,8 +12,13 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import realcraft.bukkit.RealCraft;
 
 public class RandomTest implements Listener {
+
+	public RandomTest(){
+		RealCraft.getInstance().getServer().getPluginManager().registerEvents(this,RealCraft.getInstance());
+	}
 
 	@EventHandler(priority=EventPriority.LOW)
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){

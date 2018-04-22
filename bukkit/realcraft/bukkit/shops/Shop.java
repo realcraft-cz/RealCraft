@@ -15,7 +15,7 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.DateUtil;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.JsonUtil;
@@ -100,7 +100,7 @@ public class Shop {
 	}
 
 	public boolean isOwner(Player player){
-		return (PlayerManazer.getPlayerInfo(player).getId() == this.getOwner());
+		return (Users.getUser(player).getId() == this.getOwner());
 	}
 
 	public Inventory getInventory(){
@@ -144,7 +144,7 @@ public class Shop {
 			player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 			return;
 		}
-		if(PlayerManazer.getPlayerInfo(player).getCoins() < this.getPrice()){
+		if(Users.getUser(player).getCoins() < this.getPrice()){
 			ShopManager.sendMessage(player,"§cNemas dostatek coinu.");
 			player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 			return;
@@ -154,19 +154,19 @@ public class Shop {
 			player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 			return;
 		}
-		PlayerManazer.getPlayerInfo(player).giveCoins(-this.getPrice());
+		Users.getUser(player).giveCoins(-this.getPrice());
 		ItemUtil.removeItems(this.getInventory(),this.getItem(),this.getItem().getAmount());
 		player.getInventory().addItem(this.getItem().clone());
 		ShopManager.sendMessage(player,"Zakoupeno §6"+this.getItemName()+"§f (§c-"+this.getPrice()+" coins§f)");
 		player.playSound(player.getLocation(),Sound.ENTITY_ITEM_PICKUP,1f,1f);
-		RealCraft.getInstance().db.update("INSERT INTO "+ShopManager.TRANSACTIONS+" (shop_id,user_id,transaction_created) VALUES('"+this.getId()+"','"+PlayerManazer.getPlayerInfo(player).getId()+"','"+(int)(System.currentTimeMillis()/1000)+"')");
+		RealCraft.getInstance().db.update("INSERT INTO "+ShopManager.TRANSACTIONS+" (shop_id,user_id,transaction_created) VALUES('"+this.getId()+"','"+Users.getUser(player).getId()+"','"+(int)(System.currentTimeMillis()/1000)+"')");
 		this.sales ++;
 		this.update();
 	}
 
 	public void checkTransactions(){
 		Player player = Bukkit.getPlayer(this.getOwnerName());
-		if(player != null && PlayerManazer.getPlayerInfo(player).getId() == this.getOwner()){
+		if(player != null && Users.getUser(player).getId() == this.getOwner()){
 			ResultSet rs = RealCraft.getInstance().db.query("SELECT COUNT(*) AS count FROM "+ShopManager.TRANSACTIONS+" WHERE shop_id = '"+this.getId()+"' AND transaction_finished = '0'");
 			try {
 				if(rs.next()){
@@ -176,7 +176,7 @@ public class Shop {
 							@Override
 							public void run(){
 								int coins = Shop.this.getPrice()*count;
-								PlayerManazer.getPlayerInfo(player).giveCoins(coins,false);
+								Users.getUser(player).giveCoins(coins,false);
 								ShopManager.sendMessage(player,"Prijem: §a+"+coins+" coins §7("+count+" "+StringUtil.inflect(count,new String[]{"prodej","prodeje","prodeju"})+")");
 								player.playSound(player.getLocation(),Sound.ENTITY_EXPERIENCE_ORB_PICKUP,1f,1f);
 							}

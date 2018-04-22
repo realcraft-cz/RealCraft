@@ -13,7 +13,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.JsonUtil;
 
 public class ShopManager implements Runnable {
@@ -111,7 +111,7 @@ public class ShopManager implements Runnable {
 				shops.put(shop.getLocation(),shop);
 				ShopManager.sendMessage(player,"§aObchod vytvoren: §e"+shop.getItemName()+"§f za §a"+shop.getPrice()+" coins");
 				player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-				PlayerManazer.getPlayerInfo(player).giveCoins(-SHOP_FEE);
+				Users.getUser(player).giveCoins(-SHOP_FEE);
 			}
 		} catch (SQLException e){
 			e.printStackTrace();

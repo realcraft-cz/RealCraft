@@ -51,7 +51,7 @@ public class ServerMotd implements Listener, Runnable {
 					} catch (SQLException e){
 						e.printStackTrace();
 					}
-					if(!plugin.publicServer){
+					if(plugin.testServer){
 						title = RealCraftBungee.parseColors("&7&lRealCraft.cz&r &7&l|&r &7verze &l1.11");
 						description = RealCraftBungee.parseColors("&cTestovaci server");
 					}

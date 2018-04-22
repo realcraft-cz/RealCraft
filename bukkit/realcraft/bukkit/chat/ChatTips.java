@@ -10,8 +10,10 @@ import java.util.Random;
 import org.bukkit.entity.Player;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.playermanazer.PlayerManazer.PlayerInfo;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Title;
+import realcraft.share.users.User;
+import realcraft.share.users.UserRank;
 
 public class ChatTips implements Runnable {
 	RealCraft plugin;
@@ -123,9 +125,8 @@ public class ChatTips implements Runnable {
 			String message = this.parseMessage();
 			for(Player player : plugin.getServer().getOnlinePlayers()){
 				if(tip_minrank != 0 || tip_maxrank != 0){
-					PlayerInfo playerinfo = plugin.playermanazer.getPlayerInfo(player);
-					if(playerinfo != null && (playerinfo.getRank() < tip_minrank || (tip_maxrank != 0 && playerinfo.getRank() > tip_maxrank))) continue;
-					else if(playerinfo == null) continue;
+					User user = Users.getUser(player);
+					if(!user.getRank().isMinimum(UserRank.fromId(tip_minrank)) || (tip_maxrank != 0 && !user.getRank().isMaximum(UserRank.fromId(tip_maxrank)))) continue;
 				}
 				if(tip_actionbar == false) player.sendMessage(message);
 				else {

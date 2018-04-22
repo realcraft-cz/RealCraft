@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
-import realcraft.bukkit.playermanazer.PlayerManazer;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.DateUtil;
 
 public class BanManazer implements Listener, CommandExecutor {
@@ -93,7 +93,7 @@ public class BanManazer implements Listener, CommandExecutor {
 
 	public static void banPlayer(Player player,int expire,String reason,Player admin){
 		BanInfo ban = null;
-		if(admin != null) ban = new BanInfo(player.getName(),BanUtils.getAddress(player.getAddress().getAddress()),reason,expire,PlayerManazer.getPlayerInfo(admin).getId(),admin.getName(),BanUtils.getAddress(admin.getAddress().getAddress()));
+		if(admin != null) ban = new BanInfo(player.getName(),BanUtils.getAddress(player.getAddress().getAddress()),reason,expire,Users.getUser(admin).getId(),admin.getName(),BanUtils.getAddress(admin.getAddress().getAddress()));
 		else ban = new BanInfo(player.getName(),BanUtils.getAddress(player.getAddress().getAddress()),reason,expire,0,"","");
 		ban.insertToDB();
 		player.kickPlayer(ban.getKickMessage());

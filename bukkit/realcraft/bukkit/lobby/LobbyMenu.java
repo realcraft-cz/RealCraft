@@ -30,6 +30,7 @@ import com.google.common.io.ByteStreams;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Glow;
 
 public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
@@ -85,7 +86,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 	@EventHandler
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
-		if(plugin.playermanazer.getPlayerInfo(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
+		if(Users.getUser(player).isLogged() && player.getWorld().getName().equalsIgnoreCase("world")){
 			player.getInventory().setItem(0,LobbyMenu.getItem());
 			player.getInventory().setHeldItemSlot(0);
 		}
@@ -113,7 +114,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 		Player player = event.getPlayer();
 		if(player.getWorld().getName().equalsIgnoreCase("world") && player.getInventory().getItemInMainHand().getType() == Material.COMPASS && (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
 			event.setCancelled(true);
-			if(plugin.playermanazer.getPlayerInfo(player).isLogged()){
+			if(Users.getUser(player).isLogged()){
 				this.openMenu(player);
 			}
 		}
@@ -141,7 +142,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 		else if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world") && event.getSlotType() == SlotType.QUICKBAR && event.getCurrentItem().getType() == Material.COMPASS){
 			event.setCancelled(true);
 			Player player = (Player) event.getWhoClicked();
-			if(plugin.playermanazer.getPlayerInfo(player).isLogged()){
+			if(Users.getUser(player).isLogged()){
 				this.openMenu(player);
 			}
 		}

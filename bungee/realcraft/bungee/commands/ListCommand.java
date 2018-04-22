@@ -14,33 +14,22 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import realcraft.bungee.RealCraftBungee;
-import realcraft.bungee.playermanazer.PlayerManazer;
+import realcraft.bungee.users.Users;
+import realcraft.share.users.UserRank;
 
 public class ListCommand extends Command {
 	RealCraftBungee plugin;
 
-	String [] rankColors = new String[100];
-
 	public ListCommand(RealCraftBungee plugin){
 		super("glist","","list","players");
 		this.plugin = plugin;
-		rankColors[0] = "§f";
-		rankColors[20] = "§7";
-		rankColors[30] = "§e";
-		rankColors[40] = "§b";
-		rankColors[45] = "§5";
-		rankColors[50] = "§6";
-		rankColors[60] = "§a";
-		rankColors[70] = "§4";
-		rankColors[80] = "§4";
-		rankColors[90] = "§4";
 	}
 
 	@Override
 	public void execute(CommandSender sender,String[] args){
 		if(sender instanceof ProxiedPlayer){
 			ProxiedPlayer cmdsender = (ProxiedPlayer) sender;
-			boolean isAdmin = (PlayerManazer.getPlayerInfo(cmdsender).getRank() >= 50);
+			boolean isAdmin = Users.getUser(cmdsender).getRank().isMinimum(UserRank.ADMIN);
 			Map<String,ServerInfo> servers = plugin.getProxy().getServers();
 			int players = 0;
 			for(Entry<String, ServerInfo> entry : servers.entrySet()){
@@ -49,8 +38,8 @@ public class ListCommand extends Command {
 				messages.add(new TextComponent("§a["+server.getName()+"] §e("+server.getPlayers().size()+"): "));
 				int index = 0;
 				for(ProxiedPlayer player : server.getPlayers()){
-					String color = rankColors[0];
-					color = (PlayerManazer.getPlayerInfo(player) != null ? rankColors[PlayerManazer.getPlayerInfo(player).getRank()]: rankColors[0]);
+					String color = Users.getUser(player).getRank().getChatColor();
+					if(Users.getUser(player).getRank() == UserRank.HRAC) color = "§f";
 					TextComponent message = new TextComponent((index == 0 ? "" : ", ")+color+player.getName()+"§r");
 					message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 							new ComponentBuilder(

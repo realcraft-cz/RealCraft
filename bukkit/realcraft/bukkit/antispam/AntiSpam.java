@@ -51,7 +51,7 @@ public class AntiSpam implements Listener {
 		LastPlayerMessages.initMessages(e.getPlayer());
 	}
 
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerChat(AsyncPlayerChatEvent event){
 		Player player = event.getPlayer();
 		String message = event.getMessage();

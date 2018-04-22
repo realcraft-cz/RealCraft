@@ -23,11 +23,11 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.ServerType;
 import realcraft.bukkit.sockets.SocketData;
 import realcraft.bukkit.sockets.SocketDataEvent;
 import realcraft.bukkit.sockets.SocketManager;
 import realcraft.bukkit.utils.Title;
+import realcraft.share.ServerType;
 
 public class Spectator implements CommandExecutor, TabCompleter, Runnable, Listener {
 	RealCraft plugin;
