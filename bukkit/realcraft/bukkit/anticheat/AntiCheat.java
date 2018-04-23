@@ -95,10 +95,10 @@ public class AntiCheat implements Listener {
 	public void SocketDataEvent(SocketDataEvent event){
 		SocketData data = event.getData();
 		if(data.getChannel().equalsIgnoreCase(CHANNEL_REPORT)){
-			printReport(RealCraft.getServerName(event.getServer().toString()),data.getString("player"),data.getString("type"),data.getInt("checks"));
+			printReport(event.getServer().getName(),data.getString("player"),data.getString("type"),data.getInt("checks"));
 		}
 		else if(data.getChannel().equalsIgnoreCase(CHANNEL_BAN)){
-			printBanReport(RealCraft.getServerName(event.getServer().toString()),data.getString("player"),data.getString("type"));
+			printBanReport(event.getServer().getName(),data.getString("player"),data.getString("type"));
 		}
 	}
 

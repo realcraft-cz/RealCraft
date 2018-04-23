@@ -72,6 +72,10 @@ commands:
     description: friend
     usage: friend
     aliases: [f,fr,friends,frends,party]
+  fight:
+    description: fight
+    usage: fight
+    aliases: [fights,duel,duels]
   /schbr:
     description: Set brush to schematic brush.
   /schset:

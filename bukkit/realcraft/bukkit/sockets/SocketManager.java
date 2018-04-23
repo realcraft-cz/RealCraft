@@ -15,7 +15,7 @@ import realcraft.share.ServerType;
 public class SocketManager {
 
 	private static final int PORT_INCREMENT = 100;
-	private ServerSocket serverSocket = null;
+	private ServerSocket serverSocket;
 
 	public SocketManager(){
 		try {
@@ -59,7 +59,7 @@ public class SocketManager {
 
 	public void onDisable(){
 		try {
-			serverSocket.close();
+			if(serverSocket != null) serverSocket.close();
 		} catch (IOException e){
 			e.printStackTrace();
 		}

@@ -25,7 +25,7 @@ public enum UserRank {
 			case ADMIN: return "Admin";
 			case MANAZER: return "Manazer";
 		}
-		return "";
+		return null;
 	}
 
 	public String getChatColor(){

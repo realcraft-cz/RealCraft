@@ -1,33 +1,40 @@
 package realcraft.bukkit.fights.arenas;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.fights.FightType;
 
 public abstract class FightArena {
 
 	private String name;
-	private FightArenaType type;
+	private FightType type;
+	private FileConfiguration config;
 
 	private World world;
 	private int time = -1;
+	private ArrayList<Location> spawns = new ArrayList<Location>();
 
-	private FileConfiguration config;
-
-	public FightArena(String name,FightArenaType type){
+	public FightArena(String name,FightType type){
 		this.name = name;
+		this.loadSpawns();
 	}
 
 	public String getName(){
 		return name;
 	}
 
-	public FightArenaType getType(){
+	public FightType getType(){
 		return type;
 	}
 
@@ -56,12 +63,38 @@ public abstract class FightArena {
 		return config;
 	}
 
-	public enum FightArenaType {
-		PUBLIC, DUEL;
+	public ArrayList<Location> getSpawns(){
+		return spawns;
+	}
 
-		@Override
-		public String toString(){
-			return this.name().toLowerCase();
+	@SuppressWarnings("unchecked")
+	private void loadSpawns(){
+		List<Map<String, Object>> temps = (List<Map<String, Object>>) this.getConfig().get("spawns");
+		if(temps != null && !temps.isEmpty()){
+			for(Map<String, Object> trader : temps){
+				double x = Double.valueOf(trader.get("x").toString());
+				double y = Double.valueOf(trader.get("y").toString());
+				double z = Double.valueOf(trader.get("z").toString());
+				float yaw = Float.valueOf(trader.get("yaw").toString());
+				float pitch = Float.valueOf(trader.get("pitch").toString());
+				World world = Bukkit.getWorld(trader.get("world").toString());
+				if(world == null){
+					world = Bukkit.createWorld(new WorldCreator(trader.get("world").toString()));
+					if(world == null){
+						continue;
+					}
+				}
+				spawns.add(new Location(world,x,y,z,yaw,pitch));
+			}
 		}
+	}
+
+	@Override
+	public boolean equals(Object object){
+		if(object instanceof FightArena){
+			FightArena toCompare = (FightArena) object;
+			return (toCompare.getName().equals(this.getName()) && toCompare.getType() == this.getType());
+		}
+		return false;
 	}
 }

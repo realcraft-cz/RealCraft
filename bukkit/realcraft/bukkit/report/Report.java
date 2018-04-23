@@ -18,6 +18,7 @@ import com.google.common.io.ByteStreams;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.banmanazer.BanUtils;
+import realcraft.share.ServerType;
 
 public class Report implements CommandExecutor, PluginMessageListener {
 	RealCraft plugin;
@@ -97,7 +98,7 @@ public class Report implements CommandExecutor, PluginMessageListener {
 
 	private void printReport(String server,String sender,String reported,String reason){
 		String reportMessage = warnMessage;
-		reportMessage = reportMessage.replaceAll("%server%",RealCraft.getServerName(server));
+		reportMessage = reportMessage.replaceAll("%server%",ServerType.getByName(server).getName());
 		reportMessage = reportMessage.replaceAll("%sender%",sender);
 		reportMessage = reportMessage.replaceAll("%reported%",reported);
 		reportMessage = reportMessage.replaceAll("%reason%",reason);

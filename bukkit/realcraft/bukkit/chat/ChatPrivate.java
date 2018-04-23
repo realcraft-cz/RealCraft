@@ -122,10 +122,10 @@ public class ChatPrivate implements Listener, CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender,Command command,String alias,String[] args){
 		Player player = (Player) sender;
-		if(command.getName().equalsIgnoreCase("msg")){
+		if(command.getName().equalsIgnoreCase("msg") && args.length == 1){
 			List<String> players = new ArrayList<String>();
 			for(User user : Users.getOnlineUsers()){
-				if(user.getName().toLowerCase().startsWith(alias.toLowerCase()) && !user.getName().equalsIgnoreCase(player.getName())) players.add(user.getName());
+				if(user.getName().toLowerCase().startsWith(args[0].toLowerCase()) && !user.getName().equalsIgnoreCase(player.getName())) players.add(user.getName());
 			}
 			return players;
 		}

@@ -3,7 +3,7 @@ package realcraft.share;
 import net.md_5.bungee.api.ChatColor;
 
 public enum ServerType {
-	BUNGEE, LOBBY, SURVIVAL, CREATIVE, PARKOUR, BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE;
+	BUNGEE, LOBBY, SURVIVAL, CREATIVE, PARKOUR, BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE, FIGHTS;
 
 	public static ServerType getByName(String name){
 		return ServerType.valueOf(name.toUpperCase());
@@ -26,6 +26,7 @@ public enum ServerType {
 			case RAGEMODE: return "RageMode";
 			case PAINTBALL: return "Paintball";
 			case DOMINATE: return "Dominate";
+			case FIGHTS: return "Fights";
 		}
 		return "unknown";
 	}
@@ -43,6 +44,7 @@ public enum ServerType {
 			case RAGEMODE: return ChatColor.RED.toString();
 			case PAINTBALL: return ChatColor.GOLD.toString();
 			case DOMINATE: return ChatColor.YELLOW.toString();
+			case FIGHTS: return ChatColor.AQUA.toString();
 		}
 		return ChatColor.WHITE.toString();
 	}
@@ -60,6 +62,7 @@ public enum ServerType {
 			case RAGEMODE: return 6;
 			case PAINTBALL: return 7;
 			case DOMINATE: return 10;
+			case FIGHTS: return 11;
 		}
 		return 0;
 	}

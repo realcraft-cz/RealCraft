@@ -5,8 +5,6 @@ import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -50,6 +48,7 @@ import realcraft.bukkit.creative.PlotSquaredWorldEdit;
 import realcraft.bukkit.creative.SchematicBrush;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.develop.LocationsSaver;
+import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.friends.Friends;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
@@ -205,6 +204,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 			new PlotSquaredWorldEdit();
 			lobby = new Lobby(this);
 		}
+		else if(serverName.equalsIgnoreCase("fights")){
+			new Fights();
+		}
 		restart = new Restart(this);
 		//votes = new Votes(this);
 		schema = new Schema(this);
@@ -226,77 +228,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 
 	public void onDisable(){
 		config.onDisable();
-		db.onDisable();
+		DB.onDisable();
 		if(lobby != null) lobby.onDisable();
 		socketmanager.onDisable();
-	}
-
-	public static String getServerName(String server){
-		if(server.equalsIgnoreCase("lobby")) return "Lobby";
-		else if(server.equalsIgnoreCase("survival")) return "Survival";
-		else if(server.equalsIgnoreCase("creative")) return "Creative";
-		else if(server.equalsIgnoreCase("bedwars")) return "BedWars";
-		else if(server.equalsIgnoreCase("hidenseek")) return "Hide & Seek";
-		else if(server.equalsIgnoreCase("blockparty")) return "BlockParty";
-		else if(server.equalsIgnoreCase("ragemode")) return "RageMode";
-		else if(server.equalsIgnoreCase("paintball")) return "Paintball";
-		else if(server.equalsIgnoreCase("dominate")) return "Dominate";
-		else if(server.equalsIgnoreCase("parkour")) return "Parkour";
-		return "unknown";
-	}
-
-	public static int getServerPortOrder(String server){
-		if(server.equalsIgnoreCase("lobby")) return 0;
-		else if(server.equalsIgnoreCase("survival")) return 1;
-		else if(server.equalsIgnoreCase("creative")) return 2;
-		else if(server.equalsIgnoreCase("bedwars")) return 3;
-		else if(server.equalsIgnoreCase("hidenseek")) return 4;
-		else if(server.equalsIgnoreCase("blockparty")) return 5;
-		else if(server.equalsIgnoreCase("ragemode")) return 6;
-		else if(server.equalsIgnoreCase("paintball")) return 7;
-		else if(server.equalsIgnoreCase("dominate")) return 10;
-		else if(server.equalsIgnoreCase("parkour")) return 9;
-		return 0;
-	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
-		if(args.length > 0){
-			if(args[0].equalsIgnoreCase("reload")){
-				this.reloadConfig();
-				config.onReload();
-				banmanazer.onReload();
-				mute.onReload();
-				antispam.onReload();
-				chatlog.onReload();
-				chatnotice.onReload();
-				if(eventcmds != null) eventcmds.onReload();
-				restart.onReload();
-				if(lobby != null) lobby.onReload();
-				auth.onReload();
-				if(checkresidences != null) checkresidences.onReload();
-				chattips.onReload();
-				if(residencesigns != null) residencesigns.onReload();
-				if(disablespectator != null) disablespectator.onReload();
-				if(cancelgrow != null) cancelgrow.onReload();
-				if(trading != null) trading.onReload();
-				if(mapcrafter != null) mapcrafter.onReload();
-				if(parkour != null) parkour.onReload();
-				if(quiz != null) quiz.onReload();
-				chatprivate.onReload();
-				chatadvert.onReload();
-				chatadmin.onReload();
-				chatformat.onReload();
-				chatcommandspy.onReload();
-				teleportrequests.onReload();
-				report.onReload();
-				gamesreminder.onReload();
-				schema.onReload();
-				getServer().getLogger().info("RealCraft reloaded!");
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@EventHandler(priority=EventPriority.NORMAL,ignoreCancelled = true)
@@ -320,7 +254,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			},20);
 		}
 
-		if(this.getServerType() == ServerType.SURVIVAL){
+		if(RealCraft.getServerType() == ServerType.SURVIVAL){
 			Bukkit.getScheduler().runTaskLater(this,new Runnable(){
 				@Override
 				public void run(){
