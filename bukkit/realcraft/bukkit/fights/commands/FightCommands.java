@@ -1,4 +1,4 @@
-package realcraft.bukkit.fights;
+package realcraft.bukkit.fights.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.fights.commands.FightCommand;
-import realcraft.bukkit.fights.commands.FightCommandDuel;
 
 public class FightCommands implements CommandExecutor, TabCompleter {
 
@@ -22,6 +20,7 @@ public class FightCommands implements CommandExecutor, TabCompleter {
 		RealCraft.getInstance().getCommand("fight").setExecutor(this);
 		commands = new FightCommand[]{
 			new FightCommandDuel(),
+			new FightCommandAccept(),
 		};
 	}
 
@@ -29,9 +28,15 @@ public class FightCommands implements CommandExecutor, TabCompleter {
 	public boolean onCommand(CommandSender sender,Command command,String label,String[] args){
 		Player player = (Player) sender;
 		if(command.getName().equalsIgnoreCase("fight")){
-			if(args.length == 0 || this.getCommand(args[0]) == null){
+			if((args.length == 0 || this.getCommand(args[0]) == null) && !label.equalsIgnoreCase("duel")){
 				this.showHelpPage(player);
 				return true;
+			}
+			if(label.equalsIgnoreCase("duel")){
+				String[] args2 = new String[args.length+1];
+				args2[0] = "duel";
+				if(args2.length > 1) args2[1] = args[0];
+				args = args2;
 			}
 			String[] arguments = new String[args.length-1];
 			System.arraycopy(args,1,arguments,0,args.length-1);
@@ -45,7 +50,8 @@ public class FightCommands implements CommandExecutor, TabCompleter {
 	public List<String> onTabComplete(CommandSender sender,Command command,String alias,String[] args){
 		Player player = (Player) sender;
 		if(command.getName().equalsIgnoreCase("fight")){
-			if(args.length == 1) return this.findCommands(args[0]);
+			if(alias.equalsIgnoreCase("duel")) return this.getCommand("duel").onTabComplete(player,args[0]);
+			else if(args.length == 1) return this.findCommands(args[0]);
 			else if(args.length == 2 && this.getCommand(args[0]) != null) return this.getCommand(args[0]).onTabComplete(player,args[1]);
 		}
 		return null;
@@ -67,8 +73,9 @@ public class FightCommands implements CommandExecutor, TabCompleter {
 	}
 
 	private void showHelpPage(Player player){
-		player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §a§lFights §7§m"+StringUtils.repeat(" ",47-"Fights".length()));
-		player.sendMessage("§6/fight duel §e<player> §f- Vyzvat hrace na duel");
+		player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §b§lFights §7§m"+StringUtils.repeat(" ",47-"Fights".length()));
+		player.sendMessage("§6/fight duel §e<player> §f- Vyzvat hrace na souboj");
+		player.sendMessage("§6/fight accept §e<player> §f- Prijmout vyzvu od hrace");
 		player.sendMessage("§7§m"+StringUtils.repeat(" ",62));
 	}
 }

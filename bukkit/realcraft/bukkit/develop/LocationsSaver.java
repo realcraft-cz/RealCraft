@@ -34,8 +34,9 @@ public class LocationsSaver implements Listener {
 			if(args.length < 2){
 				player.sendMessage("§fLocations saver");
 				player.sendMessage("§f/loc add <group>");
-				player.sendMessage("§f/loc clear <group>");
 				player.sendMessage("§f/loc save <filename>");
+				player.sendMessage("§f/loc clear <group>");
+				player.sendMessage("§f/loc clearall");
 				return;
 			}
 			else if(args[1].equalsIgnoreCase("add")){
@@ -68,6 +69,10 @@ public class LocationsSaver implements Listener {
 				this.saveGroups(args[2]);
 				player.sendMessage("§aLocations saved to §6"+args[2]+".yml");
 			}
+			else if(args[1].equalsIgnoreCase("clearall")){
+				player.sendMessage("§aAll location groups cleared");
+				this.clearGroups();
+			}
 		}
 	}
 
@@ -88,11 +93,15 @@ public class LocationsSaver implements Listener {
 			config.set(group.getName(),locations);
 		}
 		try {
-			File file = new File(RealCraft.getInstance().getDataFolder()+"/"+filename+".yml");
+			File file = new File(RealCraft.getInstance().getDataFolder()+"/develop/"+filename+".yml");
 			config.save(file);
 		} catch (IOException e){
 			e.printStackTrace();
 		}
+	}
+
+	private void clearGroups(){
+		groups.clear();
 	}
 
 	private class LocationGroup {

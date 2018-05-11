@@ -48,11 +48,11 @@ import realcraft.bukkit.creative.PlotSquaredWorldEdit;
 import realcraft.bukkit.creative.SchematicBrush;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.develop.LocationsSaver;
+import realcraft.bukkit.develop.WorldTeleporter;
 import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.friends.Friends;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
-import realcraft.bukkit.lobby.LobbyMenu;
 import realcraft.bukkit.mapcrafter.MapCrafter;
 import realcraft.bukkit.minihry.EventCmds;
 import realcraft.bukkit.minihry.GamesReminder;
@@ -119,6 +119,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 	private Parkour parkour;
 	public Skins skins;
 	private Quiz quiz;
+	private Fights fights;
 	private SocketManager socketmanager;
 
 	public String serverName;
@@ -205,7 +206,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			lobby = new Lobby(this);
 		}
 		else if(serverName.equalsIgnoreCase("fights")){
-			new Fights();
+			fights = new Fights();
 		}
 		restart = new Restart(this);
 		//votes = new Votes(this);
@@ -222,6 +223,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new Test();
 		new CosmeticHeads(this);
 		new LocationsSaver();
+		new WorldTeleporter();
 		this.getServer().getPluginManager().registerEvents(this,this);
 		this.updateWorldRules();
 	}
@@ -231,6 +233,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		DB.onDisable();
 		if(lobby != null) lobby.onDisable();
 		socketmanager.onDisable();
+		if(fights != null) fights.onDisable();
 	}
 
 	@EventHandler(priority=EventPriority.NORMAL,ignoreCancelled = true)
@@ -323,7 +326,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 				public void run(){
 					for(Player player : Bukkit.getServer().getOnlinePlayers()){
 						int ping = Users.getUser(player).getPing();
-						TabList.this.setPlayerHeaderFooter(player,"§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+LobbyMenu.getAllPlayersCount()+"/100\n§7play.realcraft.cz\n§r");
+						TabList.this.setPlayerHeaderFooter(player,"§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+Users.getOnlineUsers().size()+"/100\n§7play.realcraft.cz\n§r");
 						if(!player.getPlayerListName().equalsIgnoreCase(player.getDisplayName())) player.setPlayerListName(player.getDisplayName());
 					}
 				}

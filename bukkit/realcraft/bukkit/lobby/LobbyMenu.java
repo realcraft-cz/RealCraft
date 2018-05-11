@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -102,8 +103,10 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
 				@Override
 				public void run(){
-					event.getPlayer().getInventory().setHeldItemSlot(0);
-					event.getPlayer().getInventory().setItem(0,LobbyMenu.getItem());
+					if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world")){
+						event.getPlayer().getInventory().setHeldItemSlot(0);
+						event.getPlayer().getInventory().setItem(0,LobbyMenu.getItem());
+					}
 				}
 			},20);
 		}
@@ -157,7 +160,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 	}
 
 	private void createMenu(){
-		menu = Bukkit.createInventory(null,5*9,invName);
+		menu = Bukkit.createInventory(null,6*9,invName);
 		Set<String> positions = plugin.config.getKeys("lobby.menu.slots");
 		for(String idx : positions){
 			String [] pos = idx.split(":");
@@ -227,6 +230,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 			}
 			itemstack.setAmount((this.players == 0 ? 1 : this.players));
 			ItemMeta meta = itemstack.getItemMeta();
+			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 			meta.setDisplayName(this.name);
 			meta.setLore(lore);
 			if(this.players > 0) meta.addEnchant(new Glow(255),1,true);

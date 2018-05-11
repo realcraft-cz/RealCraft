@@ -24,5 +24,6 @@
 			<attribute name="javadoc_location" value="jar:file:/D:/Backups/realcraft_server/source/spigot-api-1.12-R0.1-20170610.061059-9-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/Backups/realcraft_server/source/Multiverse-Core-2.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

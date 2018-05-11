@@ -22,4 +22,12 @@ public class StringUtil {
 		}
 		return null;
 	}
+
+	public static String timeFormat(int time){
+		int min = (int) Math.floor(time / 60);
+		int sec = time % 60;
+		String minStr = (min < 10) ? "0" + String.valueOf(min) : String.valueOf(min);
+		String secStr = (sec < 10) ? "0" + String.valueOf(sec) : String.valueOf(sec);
+		return minStr + ":" + secStr;
+	}
 }

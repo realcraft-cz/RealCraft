@@ -4,30 +4,54 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.generator.ChunkGenerator;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.fights.FightType;
+import realcraft.bukkit.utils.LocationUtil;
+import realcraft.share.utils.RandomUtil;
 
 public abstract class FightArena {
 
+	private int id;
 	private String name;
 	private FightType type;
 	private FileConfiguration config;
 
-	private World world;
+	protected World world;
 	private int time = -1;
-	private ArrayList<Location> spawns = new ArrayList<Location>();
+	private Environment environment;
+	private Biome biome;
 
-	public FightArena(String name,FightType type){
+	private Location basicLocation;
+	private Location spectatorLocation;
+	private int spectatorRadius;
+	private ArrayList<Location> spawns = new ArrayList<Location>();
+	private FightArenaRegion region;
+
+	public FightArena(int id,String name,FightType type){
+		this.id = id;
 		this.name = name;
-		this.loadSpawns();
+		this.type = type;
+		this.initWorld();
+		this.region = new FightArenaRegion(this);
+	}
+
+	public int getId(){
+		return id;
 	}
 
 	public String getName(){
@@ -48,6 +72,16 @@ public abstract class FightArena {
 		return time;
 	}
 
+	public Environment getEnvironment(){
+		if(environment == null) environment = Environment.valueOf(this.getConfig().getString("environment",Environment.NORMAL.toString()).toUpperCase());
+		return environment;
+	}
+
+	public Biome getBiome(){
+		if(biome == null) biome = Biome.valueOf(this.getConfig().getString("biome",Biome.VOID.toString()).toUpperCase());
+		return biome;
+	}
+
 	public FileConfiguration getConfig(){
 		if(config == null){
 			File file = new File(RealCraft.getInstance().getDataFolder()+"/fights/"+this.getType().toString()+"/"+this.getName()+"/"+"config.yml");
@@ -63,23 +97,31 @@ public abstract class FightArena {
 		return config;
 	}
 
+	public FightArenaRegion getRegion(){
+		return region;
+	}
+
 	public ArrayList<Location> getSpawns(){
 		return spawns;
 	}
 
+	public Location getRandomSpawn(){
+		return spawns.get(RandomUtil.getRandomInteger(0,spawns.size()-1));
+	}
+
 	@SuppressWarnings("unchecked")
-	private void loadSpawns(){
+	public void loadSpawns(){
 		List<Map<String, Object>> temps = (List<Map<String, Object>>) this.getConfig().get("spawns");
 		if(temps != null && !temps.isEmpty()){
-			for(Map<String, Object> trader : temps){
-				double x = Double.valueOf(trader.get("x").toString());
-				double y = Double.valueOf(trader.get("y").toString());
-				double z = Double.valueOf(trader.get("z").toString());
-				float yaw = Float.valueOf(trader.get("yaw").toString());
-				float pitch = Float.valueOf(trader.get("pitch").toString());
-				World world = Bukkit.getWorld(trader.get("world").toString());
+			for(Map<String, Object> spawn : temps){
+				double x = Double.valueOf(spawn.get("x").toString());
+				double y = Double.valueOf(spawn.get("y").toString());
+				double z = Double.valueOf(spawn.get("z").toString());
+				float yaw = Float.valueOf(spawn.get("yaw").toString());
+				float pitch = Float.valueOf(spawn.get("pitch").toString());
+				World world = Bukkit.getWorld(spawn.get("world").toString());
 				if(world == null){
-					world = Bukkit.createWorld(new WorldCreator(trader.get("world").toString()));
+					world = Bukkit.createWorld(new WorldCreator(spawn.get("world").toString()));
 					if(world == null){
 						continue;
 					}
@@ -89,12 +131,76 @@ public abstract class FightArena {
 		}
 	}
 
+	private void initWorld(){
+		if(this.getWorld() == null){
+			WorldCreator creator = new WorldCreator(this.getConfig().getString("world"));
+			creator.type(WorldType.FLAT);
+			creator.environment(this.getEnvironment());
+			creator.generator(new CustomGenerator(this.getBiome()));
+			world = Bukkit.getServer().createWorld(creator);
+		}
+		this.getWorld().setDifficulty(Difficulty.HARD);
+		this.getWorld().setPVP(true);
+		this.getWorld().setAutoSave(true);
+		this.getWorld().setFullTime(this.getTime());
+		this.getWorld().setMonsterSpawnLimit(0);
+		this.getWorld().setGameRuleValue("doDaylightCycle","false");
+		this.getWorld().setGameRuleValue("doWeatherCycle","false");
+		this.getWorld().setGameRuleValue("doMobSpawning","false");
+	}
+
+	public Location getBasicLocation(){
+		if(basicLocation == null) basicLocation = LocationUtil.getConfigLocation(this.getConfig(),"location");
+		return basicLocation;
+	}
+
+	public Location getSpectatorLocation(){
+		if(spectatorLocation == null) spectatorLocation = LocationUtil.getConfigLocation(this.getConfig(),"spectator");
+		return spectatorLocation;
+	}
+
+	public int getSpectatorRadius(){
+		if(spectatorRadius == 0) spectatorRadius = this.getConfig().getInt("spectator.radius",128);
+		return spectatorRadius;
+	}
+
 	@Override
 	public boolean equals(Object object){
 		if(object instanceof FightArena){
 			FightArena toCompare = (FightArena) object;
-			return (toCompare.getName().equals(this.getName()) && toCompare.getType() == this.getType());
+			return (toCompare.getId() == this.getId());
 		}
 		return false;
+	}
+
+	private class CustomGenerator extends ChunkGenerator {
+
+		private Biome biome;
+
+		public CustomGenerator(Biome biome){
+			this.biome = biome;
+		}
+
+		@Override
+		public boolean canSpawn(World world,int x,int z){
+			return true;
+		}
+
+		@Override
+		public ChunkData generateChunkData(World world,Random random,int cx,int cz,BiomeGrid biomeGrid){
+			ChunkData data = this.createChunkData(world);
+			for(int x=0;x<16;x++){
+				for(int z=0;z<16;z++){
+					biomeGrid.setBiome(x,z,biome);
+				}
+			}
+			if(cx == 0 && cz == 0) data.setBlock(0,64,0,Material.BEDROCK);
+			return data;
+		}
+
+		@Override
+		public Location getFixedSpawnLocation(World world,Random random){
+			return new Location(world,0,66,0);
+		}
 	}
 }

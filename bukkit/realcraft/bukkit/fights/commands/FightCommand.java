@@ -35,7 +35,7 @@ public abstract class FightCommand {
 
 	protected FightPlayer findFriendPlayer(FightPlayer fPlayer,String name){
 		FightPlayer victim = Fights.getFightPlayer(name);
-		if(victim != null /*&& !victim.equals(fPlayer)*/) return victim;
+		if(victim != null && victim.getPlayer() != null && !victim.equals(fPlayer)) return victim;
 		return null;
 	}
 

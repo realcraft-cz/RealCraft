@@ -36,7 +36,7 @@ public class FriendCommandAdd extends FriendCommand {
 			return;
 		}
 		for(FriendsRequest request : sender.getRequests()){
-			if(request.getRecipient().getId() == recipient.getId() && request.getCreated()+(FriendRequests.REQUEST_TIMEOUT_SECONDS*1000) > System.currentTimeMillis()){
+			if(request.getRecipient().getId() == recipient.getId() && !request.isExpired()){
 				player.sendMessage("§cZadost o pratelstvi byla jiz odeslana.");
 				return;
 			}

@@ -84,7 +84,7 @@ public abstract class Check implements Listener, Runnable {
 				case FLYHACK: return 60;
 				case SPEEDHACK: return 60;
 				case SNEAKHACK: return 60;
-				case CLICKAURA: return 60;
+				case CLICKAURA: return 120;
 				case KILLAURA: return 180;
 				default:break;
 			}

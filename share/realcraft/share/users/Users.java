@@ -16,6 +16,8 @@ public abstract class Users {
 	public static final String CHANNEL_BUNGEE_LOGIN = "bungeeLogin";
 	public static final String CHANNEL_BUNGEE_DISCONNECT = "bungeeDisconnect";
 	public static final String CHANNEL_BUNGEE_SWITCH = "bungeeSwitch";
+	public static final String CHANNEL_BUNGEE_USERS_REQUEST = "bungeeUsersRequest";
+	public static final String CHANNEL_BUNGEE_USERS_LIST = "bungeeUsersList";
 
 	private static ConcurrentHashMap<Integer,User> users = new ConcurrentHashMap<Integer,User>();
 

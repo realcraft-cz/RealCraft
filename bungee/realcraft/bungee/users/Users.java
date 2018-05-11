@@ -1,6 +1,7 @@
 package realcraft.bungee.users;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import com.google.common.base.Charsets;
@@ -16,6 +17,7 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import realcraft.bungee.RealCraftBungee;
 import realcraft.bungee.sockets.SocketData;
+import realcraft.bungee.sockets.SocketDataEvent;
 import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.auth.UsersAuthentication;
 import realcraft.share.ServerType;
@@ -62,12 +64,25 @@ public class Users extends realcraft.share.users.Users implements Listener {
         SocketManager.sendToAll(data);
 	}
 
-
 	@EventHandler
 	public void PlayerDisconnectEvent(PlayerDisconnectEvent event){
 		ProxiedPlayer player = event.getPlayer();
 		User user = Users.getUser(player);
 		Users.disconnectUser(user);
+	}
+
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		SocketData data = event.getData();
+		if(data.getChannel().equalsIgnoreCase(CHANNEL_BUNGEE_USERS_REQUEST)){
+			SocketData data2 = new SocketData(CHANNEL_BUNGEE_USERS_LIST);
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			for(User user : Users.getOnlineUsers()){
+				list.add(user.getId());
+			}
+			data2.setIntList("players",list);
+	        SocketManager.send(event.getServer(),data2);
+		}
 	}
 
 	private static void connectUser(User user){

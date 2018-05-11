@@ -68,9 +68,7 @@ public abstract class FightScoreboard {
 	public void update(){
 		scoreboard.clearSlot(DisplaySlot.SIDEBAR);
 		objective = scoreboard.getObjective("objective");
-		if(objective != null){
-			objective.unregister();
-		}
+		if(objective != null) objective.unregister();
 		objective = scoreboard.registerNewObjective("objective","dummy");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		objective.setDisplayName(title);
@@ -88,6 +86,7 @@ public abstract class FightScoreboard {
 	}
 
 	public void addPlayer(FightPlayer fPlayer){
+		this.removeSpectator(fPlayer);
 		if(fPlayer.getPlayer().getScoreboard() != scoreboard) fPlayer.getPlayer().setScoreboard(scoreboard);
 	}
 
@@ -95,7 +94,7 @@ public abstract class FightScoreboard {
 		spectatorTeam.addEntry(fPlayer.getPlayer().getName());
 	}
 
-	public void removeSpectator(FightPlayer gPlayer){
-		spectatorTeam.removeEntry(gPlayer.getPlayer().getName());
+	public void removeSpectator(FightPlayer fPlayer){
+		spectatorTeam.removeEntry(fPlayer.getPlayer().getName());
 	}
 }

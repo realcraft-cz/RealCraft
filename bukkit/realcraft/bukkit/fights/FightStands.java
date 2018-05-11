@@ -26,6 +26,9 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.fights.menu.FightMenuDuels;
+import realcraft.bukkit.fights.menu.FightMenuKits;
+import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.StringUtil;
 import ru.beykerykt.lightapi.LightAPI;
 
@@ -74,7 +77,7 @@ public class FightStands implements Listener, Runnable {
 		for(FightStand stand : stands){
 			if(stand.getType().toString().equals(event.getRightClicked().getCustomName())){
 				event.setCancelled(true);
-				stand.click(event.getPlayer());
+				stand.rightClick(Fights.getFightPlayer(event.getPlayer()));
 				break;
 			}
 		}
@@ -87,7 +90,7 @@ public class FightStands implements Listener, Runnable {
 				if(stand.getType().toString().equals(event.getEntity().getCustomName())){
 					if(event.getDamager() instanceof Player){
 						event.setCancelled(true);
-						stand.click((Player)event.getDamager());
+						stand.leftClick(Fights.getFightPlayer((Player)event.getDamager()));
 					}
 					break;
 				}
@@ -120,20 +123,23 @@ public class FightStands implements Listener, Runnable {
 
 		private ArmorStand stand;
 		private Hologram hologramName;
-		private Hologram hologramPlayers;
+		private Hologram hologramInfo;
 		private int players = 0;
 
 		public FightStand(FightType type,Location location){
 			this.type = type;
 			this.location = location;
 			this.spawn();
-			hologramName = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,2.9,0.0));
-			hologramPlayers = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,2.6,0.0));
-
+			hologramName = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,3.9,0.0));
 			hologramName.insertTextLine(0,type.getName());
-			hologramPlayers.insertTextLine(0,"0 hracu");
-
+			hologramName.insertTextLine(1,"0 hracu");
+			hologramInfo = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,3.3,0.0));
+			hologramInfo.insertTextLine(0,"§dLevy klik");
+			hologramInfo.insertTextLine(1,"§7Pripojit do hry");
+			hologramInfo.insertTextLine(2,"§dPravy klik");
+			hologramInfo.insertTextLine(3,"§7Sledovat hru");
 			LightAPI.createLight(location.clone().add(0.0,2.0,0.0),15,false);
+			LightAPI.createLight(location.clone().add(0.0,3.0,0.0),15,false);
 		}
 
 		public FightType getType(){
@@ -147,6 +153,7 @@ public class FightStands implements Listener, Runnable {
 		public void spawn(){
 			this.remove();
 			stand = (ArmorStand)location.getWorld().spawnEntity(location,EntityType.ARMOR_STAND);
+			stand.setInvulnerable(true);
 			stand.setBasePlate(false);
 			stand.setArms(true);
 			stand.setCustomName(type.toString());
@@ -169,30 +176,46 @@ public class FightStands implements Listener, Runnable {
 		public void update(int players){
 			if(this.players != players){
 				this.players = players;
-				hologramPlayers.removeLine(0);
-				hologramPlayers.insertTextLine(0,players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
+				hologramName.removeLine(1);
+				hologramName.insertTextLine(1,players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
 			}
-			if(stand == null || stand.isDead()) this.spawn();
+			if(stand == null || stand.isDead()){
+				this.spawn();
+			}
 		}
 
-		public void click(Player player){
-			System.out.println("FightStands: click "+type);
+		public void leftClick(FightPlayer fPlayer){
+			if(type == FightType.PUBLIC){
+				FightMenuKits.openMenu(fPlayer);
+			}
+			else if(type == FightType.DUEL){
+				fPlayer.joinQueue();
+			}
+		}
+
+		public void rightClick(FightPlayer fPlayer){
+			if(type == FightType.PUBLIC){
+				Fights.getPublics().joinSpectator(fPlayer);
+			}
+			else if(type == FightType.DUEL){
+				FightMenuDuels.openMenu(fPlayer);
+			}
 		}
 
 		private void equip(){
 			if(type == FightType.PUBLIC){
-				stand.getEquipment().setHelmet(new ItemStack(Material.SKULL_ITEM));
-				stand.getEquipment().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
-				stand.getEquipment().setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
+				stand.getEquipment().setHelmet(ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk3ZWRlNDlmNTJlMjVhZGVhYTU4YjFkNzgxNmZjY2UyMjI5ZmQ4ZjI0ZWI1ZjA2NWIyM2YzNzY1ODk0NGUifX19"));
+				stand.getEquipment().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE));
+				stand.getEquipment().setLeggings(new ItemStack(Material.GOLD_LEGGINGS));
 				stand.getEquipment().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
-				stand.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SWORD));
+				stand.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD));
 			}
 			else if(type == FightType.DUEL){
-				stand.getEquipment().setHelmet(new ItemStack(Material.SKULL_ITEM));
-				stand.getEquipment().setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE));
-				stand.getEquipment().setLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS));
+				stand.getEquipment().setHelmet(ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk3ZWRlNDlmNTJlMjVhZGVhYTU4YjFkNzgxNmZjY2UyMjI5ZmQ4ZjI0ZWI1ZjA2NWIyM2YzNzY1ODk0NGUifX19"));
+				stand.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
+				stand.getEquipment().setLeggings(new ItemStack(Material.DIAMOND_LEGGINGS));
 				stand.getEquipment().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
-				stand.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_SWORD));
+				stand.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD));
 			}
 		}
 	}

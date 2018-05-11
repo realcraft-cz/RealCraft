@@ -21,9 +21,9 @@ public class FriendNotices implements Listener {
 	public static final String CHANNEL_BUNGEE_LOGIN = "bungeeLogin";
 	public static final String CHANNEL_BUNGEE_LOGOUT = "bungeeLogout";
 
-	private static final String FRIENDS_PREFIX = "§d#§r ";
-	private static final String FRIENDS_PREFIX_GREEN = "§a#§r ";
-	private static final String FRIENDS_PREFIX_RED = "§c#§r ";
+	private static final String FRIENDS_PREFIX = "§d[#]§r ";
+	private static final String FRIENDS_PREFIX_GREEN = "§a[#]§r ";
+	private static final String FRIENDS_PREFIX_RED = "§c[#]§r ";
 
 	public FriendNotices(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());

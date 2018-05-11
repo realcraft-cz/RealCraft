@@ -16,6 +16,7 @@ public class Test {
 			new SpectatorTest();
 			new RandomTest();
 			new CombatTest();
+			new VehicleTest();
 		}
 	}
 }

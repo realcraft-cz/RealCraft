@@ -3,42 +3,79 @@ package realcraft.bukkit.fights;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
+
+import com.earth2me.essentials.Essentials;
 
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.fights.FightPlayer.FightPlayerState;
+import realcraft.bukkit.fights.commands.FightCommands;
 import realcraft.bukkit.fights.duels.FightDuels;
+import realcraft.bukkit.fights.events.FightPlayerJoinLobbyEvent;
+import realcraft.bukkit.fights.menu.FightMenu;
 import realcraft.bukkit.lobby.LobbyAutoParkour;
-import realcraft.bukkit.lobby.LobbyMenu;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.LocationUtil;
-import realcraft.bungee.skins.utils.StringUtil;
 import realcraft.share.users.User;
 
-public class Fights implements Listener {
+public class Fights {
+
+	public static final String[] NUMBERS = new String[]{"§c\u278A","§6\u278B","§e\u278C"};
+
+	private static int currentArenaId = 1;
 
 	private static FileConfiguration config;
+	private static Essentials essentials;
 
 	private static HashMap<User,FightPlayer> players = new HashMap<User,FightPlayer>();
 
 	private static Location lobbyLocation;
-	private static FightLobbyScoreboard lobbyScoreboard;
+
+	private static FightPublics publics;
+	private static FightDuels duels;
+
+	private static String[] commands;
 
 	public Fights(){
-		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
+		publics = new FightPublics();
+		duels = new FightDuels();
 		new FightListeners();
 		new FightCommands();
-		new FightPublics();
-		new FightDuels();
 		new FightStands();
-		new LobbyMenu(RealCraft.getInstance());
+		new FightMenu();
+		new FightRankBoard();
 		new LobbyAutoParkour(RealCraft.getInstance());
+	}
+
+	public void onDisable(){
+		new Thread(new Runnable(){
+			public void run(){
+				for(int i=0;i<5;i++){
+					try {
+						Thread.sleep(i*200);
+					} catch (InterruptedException e){
+						e.printStackTrace();
+					}
+					for(World world : Bukkit.getWorlds()){
+						File [] mapsFiles = new File(world.getWorldFolder()+"/data/").listFiles();
+						if(mapsFiles != null){
+							for(File file : mapsFiles){
+								if(!file.isDirectory() && (file.getName().startsWith("map_") || file.getName().startsWith("idcounts"))){
+									file.delete();
+								}
+							}
+						}
+					}
+				}
+			}
+		}).start();
 	}
 
 	public static FileConfiguration getConfig(){
@@ -54,6 +91,11 @@ public class Fights implements Listener {
 			}
 		}
 		return config;
+	}
+
+	public static Essentials getEssentials(){
+		if(essentials == null) essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+		return essentials;
 	}
 
 	public static FightPlayer getFightPlayer(Player player){
@@ -81,8 +123,8 @@ public class Fights implements Listener {
 
 	public static ArrayList<FightPlayer> getFightPlayers(FightType type){
 		ArrayList<FightPlayer> players = new ArrayList<FightPlayer>();
-		for(FightPlayer fPlayer : Fights.getOnlineFightPlayers()){
-			if(fPlayer.getState() == FightPlayerState.FIGHT && fPlayer.getArena().getType() == type) players.add(fPlayer);
+		for(FightPlayer fPlayer : Fights.getFightPlayers()){
+			if(fPlayer.getPlayer() != null && fPlayer.getState() != FightPlayerState.NONE && fPlayer.getArena().getType() == type) players.add(fPlayer);
 		}
 		return players;
 	}
@@ -91,28 +133,32 @@ public class Fights implements Listener {
 		return new ArrayList<FightPlayer>(players.values());
 	}
 
+	public static FightPublics getPublics(){
+		return publics;
+	}
+
+	public static FightDuels getDuels(){
+		return duels;
+	}
+
+	public static int getNewArenaId(){
+		return currentArenaId++;
+	}
+
+	public static void joinLobby(FightPlayer fPlayer){
+		Bukkit.getServer().getPluginManager().callEvent(new FightPlayerJoinLobbyEvent(fPlayer));
+	}
+
 	public static Location getLobbyLocation(){
 		if(lobbyLocation == null) lobbyLocation = LocationUtil.getConfigLocation(Fights.getConfig(),"lobby");
 		return lobbyLocation;
 	}
 
-	public static FightLobbyScoreboard getLobbyScoreboard(){
-		if(lobbyScoreboard == null) lobbyScoreboard = new FightLobbyScoreboard();
-		return lobbyScoreboard;
-	}
-
-	public static class FightLobbyScoreboard extends FightScoreboard {
-
-		@Override
-		public void update(){
-			int players;
-			this.setTitle("§b§lFights");
-			this.setLine(0,"");
-			players = Fights.getFightPlayers(FightType.PUBLIC).size();
-			this.setLine(1,"§e§lFFA: §r"+players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
-			players = Fights.getFightPlayers(FightType.DUEL).size();
-			this.setLine(2,"§b§lDuely: §r"+players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
-			super.update();
+	public static String[] getCommands(){
+		if(commands == null){
+			List<String> tmpcmds = Fights.getConfig().getStringList("commands");
+			if(!tmpcmds.isEmpty()) commands = tmpcmds.toArray(new String[tmpcmds.size()]);
 		}
+		return commands;
 	}
 }

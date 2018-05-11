@@ -4,7 +4,8 @@ import realcraft.bukkit.fights.FightType;
 
 public class FightPublicArena extends FightArena {
 
-	public FightPublicArena(String name){
-		super(name,FightType.PUBLIC);
+	public FightPublicArena(int id,String name){
+		super(id,name,FightType.PUBLIC);
+		this.loadSpawns();
 	}
 }

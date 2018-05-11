@@ -10,32 +10,40 @@ import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.fights.duels.FightDuelsRequests;
 import realcraft.bukkit.fights.duels.FightDuelsRequests.FightDuelRequest;
 
-public class FightCommandDuel extends FightCommand {
+public class FightCommandAccept extends FightCommand {
 
-	public FightCommandDuel(){
-		super("duel");
+	public FightCommandAccept(){
+		super("accept");
 	}
 
 	@Override
 	public void perform(Player player,String[] args){
 		if(args.length == 0){
-			player.sendMessage("Vyzvat hrace na souboj");
-			player.sendMessage("§6/fight duel §e<player>");
+			player.sendMessage("Prijmout vyzvu od hrace");
+			player.sendMessage("§6/fight accept §e<player>");
 			return;
 		}
 		FightPlayer sender = Fights.getFightPlayer(player);
+		if(sender.getDuel() != null){
+			player.sendMessage("§cPrave jsi v probihajicim duelu.");
+			return;
+		}
 		FightPlayer recipient = this.findFriendPlayer(sender,args[0]);
 		if(recipient == null){
 			player.sendMessage("§cHrac nenalezen.");
 			return;
 		}
 		for(FightDuelRequest request : sender.getRequests()){
-			if(request.getRecipient().equals(recipient) && !request.isExpired()){
-				player.sendMessage("§cVyzva o souboj byla jiz odeslana.");
+			if(request.getSender().equals(recipient) && !request.isExpired()){
+				if(request.getSender().getDuel() != null){
+					player.sendMessage("§cHrac je v probihajicim duelu.");
+					return;
+				}
+				FightDuelsRequests.acceptRequest(request);
 				return;
 			}
 		}
-		FightDuelsRequests.sendRequest(sender,recipient);
+		player.sendMessage("§cOd tohoto hrace nemas zadnou vyzvu.");
 	}
 
 	@Override

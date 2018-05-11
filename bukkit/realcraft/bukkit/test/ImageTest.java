@@ -44,7 +44,6 @@ public class ImageTest implements Listener {
 				Location location1 = player.getLocation();
 				Location location2 = player.getLocation();
 				try {
-
 					BlockVector vec = selector.getPrimaryPosition();
 					Vector vector;
 					vector = selector.getRegion().getMinimumPoint();
@@ -72,8 +71,6 @@ public class ImageTest implements Listener {
 					player.sendMessage("§cMake a region selection first.");
 					return;
 				}
-				//http://www.michalvanek.net/s/20170918103852.png
-				//http://www.michalvanek.net/s/20170918104757.png
 				MapUtil.pasteMap(args[1],location1,location2);
 			}
 		}
