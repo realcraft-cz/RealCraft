@@ -1,7 +1,11 @@
 package realcraft.bukkit.fights;
 
-import java.util.UUID;
-
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+import net.minecraft.server.v1_13_R1.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_13_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -10,61 +14,24 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityCreatePortalEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.hanging.HangingBreakEvent.RemoveCause;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerEggThrowEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.material.Door;
 import org.bukkit.material.Gate;
 import org.bukkit.material.TrapDoor;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-
-import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.fights.FightPlayer.FightPlayerState;
@@ -75,6 +42,8 @@ import realcraft.bukkit.fights.events.FightPlayerRankChange;
 import realcraft.bukkit.fights.events.FightPlayerRankCreatedEvent;
 import realcraft.bukkit.utils.ReflectionUtils;
 import realcraft.bukkit.utils.Title;
+
+import java.util.UUID;
 
 public class FightListeners implements Listener {
 
@@ -213,7 +182,7 @@ public class FightListeners implements Listener {
 	@EventHandler(priority=EventPriority.LOW)
 	public void BlockFadeEvent(BlockFadeEvent event){
 		Block block = event.getBlock();
-		if(block != null && block.getType() == Material.SOIL){
+		if(block != null && block.getType() == Material.FARMLAND){
 			event.setCancelled(true);
 		}
 	}
@@ -227,7 +196,7 @@ public class FightListeners implements Listener {
 
 	@EventHandler(priority=EventPriority.LOW)
 	public void BlockGrowEvent(BlockGrowEvent event){
-		if(event.getNewState().getType() == Material.SUGAR_CANE_BLOCK){
+		if(event.getNewState().getType() == Material.SUGAR_CANE){
 			event.setCancelled(true);
 		}
 	}
@@ -246,7 +215,7 @@ public class FightListeners implements Listener {
 	public void EntityInteractEvent(EntityInteractEvent event){
 		if(event.getEntity() instanceof Animals){
 			Block block = event.getBlock();
-			if(block != null && block.getType() == Material.SOIL){
+			if(block != null && block.getType() == Material.FARMLAND){
 				event.setCancelled(true);
 			}
 		}
@@ -307,7 +276,7 @@ public class FightListeners implements Listener {
 		if(block != null){
 			BlockState blockState = block.getState();
 			if(blockState != null){
-				if(event.getAction() == Action.PHYSICAL && blockState != null && blockState.getType() == Material.SOIL){
+				if(event.getAction() == Action.PHYSICAL && blockState != null && blockState.getType() == Material.FARMLAND){
 					event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
 					event.setCancelled(true);
 				}
@@ -317,10 +286,10 @@ public class FightListeners implements Listener {
 				else if((blockState.getType() == Material.CHEST || blockState.getType() == Material.ENDER_CHEST || blockState.getType() == Material.TRAPPED_CHEST)){
 					event.setCancelled(true);
 				}
-				else if((blockState.getType() == Material.LEVER || blockState.getType() == Material.REDSTONE_COMPARATOR || blockState.getType() == Material.DIODE)){
+				else if((blockState.getType() == Material.LEVER || blockState.getType() == Material.COMPARATOR || blockState.getType() == Material.REPEATER)){
 					event.setCancelled(true);
 				}
-				else if(blockState.getType() == Material.WORKBENCH){
+				else if(blockState.getType() == Material.CRAFTING_TABLE){
 					event.setCancelled(true);
 				}
 				else if(blockState instanceof Furnace){
@@ -441,7 +410,7 @@ public class FightListeners implements Listener {
 		Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 			public void run(){
 				if(fPlayer.getPlayer() != null){
-					fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.ENTITY_ENDERDRAGON_DEATH,1f,1f);
+					fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.ENTITY_ENDER_DRAGON_DEATH,1f,1f);
 					if(fPlayer.getRank().getId() > event.getOldRank().getId()){
 						Title.showTitle(fPlayer.getPlayer(),"§aRank zvysen",0.5,7,0.5);
 						FightDuels.sendMessage("§a"+FightRank.CHAR_UP+" §b"+fPlayer.getUser().getName()+"§r zvysil svuj rank na "+fPlayer.getRank().getChatColor()+"§l"+fPlayer.getRank().getName());
@@ -461,7 +430,7 @@ public class FightListeners implements Listener {
 		Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 			public void run(){
 				if(fPlayer.getPlayer() != null){
-					fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.ENTITY_ENDERDRAGON_DEATH,1f,1f);
+					fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.ENTITY_ENDER_DRAGON_DEATH,1f,1f);
 					Title.showTitle(fPlayer.getPlayer(),"§aRank nastaven",0.5,7,0.5);
 					Title.showSubTitle(fPlayer.getPlayer(),fPlayer.getRank().getChatColor()+"§l"+fPlayer.getRank().getName(),0.5,7,0.5);
 					FightDuels.sendMessage("§7"+FightRank.CHAR_SET+" §b"+fPlayer.getUser().getName()+"§r ma nyni rank "+fPlayer.getRank().getChatColor()+"§l"+fPlayer.getRank().getName());

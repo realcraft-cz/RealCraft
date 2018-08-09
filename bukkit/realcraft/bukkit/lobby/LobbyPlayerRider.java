@@ -1,9 +1,8 @@
 package realcraft.bukkit.lobby;
 
-import java.util.HashMap;
-
+import net.minecraft.server.v1_13_R1.PacketPlayOutMount;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,10 +12,10 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
-
-import net.minecraft.server.v1_12_R1.PacketPlayOutMount;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.AntiCheat;
+
+import java.util.HashMap;
 
 public class LobbyPlayerRider implements Listener, Runnable {
 	RealCraft plugin;
@@ -50,7 +49,7 @@ public class LobbyPlayerRider implements Listener, Runnable {
 			Player player = event.getPlayer();
 			if(player.getPassenger() == null){
 				Entity player2 = event.getRightClicked();
-				if(player2.getVehicle() == null && RealCraft.getInstance().lobby.lobbycitizens != null && !RealCraft.getInstance().lobby.lobbycitizens.npcRegistry.isNPC(player2)){
+				if(player2.getVehicle() == null){
 					player.eject();
 					player.setPassenger(player2);
 					PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)player).getHandle());

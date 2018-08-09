@@ -2,6 +2,7 @@ package realcraft.bukkit.fights.duels;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -75,7 +76,7 @@ public class FightDuel implements Listener {
 				else if(startTime <= 3){
 					for(FightPlayer fPlayer : Fights.getFightPlayers(FightType.DUEL)){
 						if(fPlayer.getDuel() == this){
-							fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_HAT,1f,1f);
+							fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_BLOCK_HAT,1f,1f);
 							Title.showTitle(fPlayer.getPlayer(),Fights.NUMBERS[startTime-1],0,1.2,0);
 						}
 					}
@@ -294,6 +295,12 @@ public class FightDuel implements Listener {
 			}
 			if(this.getState() != FightState.INGAME){
 				if(fPlayer.getDuel() == this || fDamager.getDuel() == this) event.setCancelled(true);
+			}
+		}
+		else if(event.getEntity() instanceof Player && event.getDamager().getType() == EntityType.ARROW){
+			FightPlayer fPlayer = Fights.getFightPlayer((Player)event.getEntity());
+			if(this.isDuelPlayer(fPlayer)){
+				lastHit = System.currentTimeMillis();
 			}
 		}
 	}

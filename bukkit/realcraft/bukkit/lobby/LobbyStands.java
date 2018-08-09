@@ -1,16 +1,8 @@
 package realcraft.bukkit.lobby;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -24,16 +16,17 @@ import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.BungeeMessages;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.StringUtil;
 import realcraft.share.ServerType;
 import ru.beykerykt.lightapi.LightAPI;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class LobbyStands implements Listener, Runnable {
 
@@ -210,7 +203,7 @@ public class LobbyStands implements Listener, Runnable {
 					hologramPlayers.insertTextLine(0,players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
 				}
 			}
-			if(stand == null || stand.isDead()) this.spawn();
+			if(stand == null || stand.isDead() || !stand.isValid()) this.spawn();
 		}
 
 		public void click(Player player){
@@ -230,9 +223,10 @@ public class LobbyStands implements Listener, Runnable {
 				case RAGEMODE: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6XC9cL3RleHR1cmVzLm1pbmVjcmFmdC5uZXRcL3RleHR1cmVcL2YxMThlNTc5MjFiOWQ1ZjM2Yzk5YTE3NDZiOWRkMjFkYTliYTJlMDNhOTFmYTE2NWRjOTI1MmVjYzQ5MGI4In19fQ==");
 				case PAINTBALL: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6XC9cL3RleHR1cmVzLm1pbmVjcmFmdC5uZXRcL3RleHR1cmVcLzY5MzdlYWRjNTNjMzliOTY4OGNjMzk2NTVkMWI3OGZkNjEyYzFjZDYyNWMyYTg5NjM4YzVlMjcyMTZjNmU0ZCJ9fX0=");
 				case DOMINATE: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNjNzFhODVlZWIzY2Q2NDQ5MTU5Njc1YWE4OTI3OGEyYTFkNTg3YjRkMGI3NjgxNzRmYzJlMTVjOWJlNGQifX19");
+				case RACES: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzk4NzNhNzYwMjNkNmNmYmZhMTExMjBlNWFmNWNkM2ZiNDMzYTczNTdkMTk1MTI5NmU4YzljZDE5OGM0ZTc3YiJ9fX0=");
 				default:break;
 			}
-			return new ItemStack(Material.SKULL_ITEM);
+			return new ItemStack(Material.SKELETON_SKULL);
 		}
 
 		private ItemStack getChestplate(){
@@ -240,13 +234,14 @@ public class LobbyStands implements Listener, Runnable {
 			if(server == ServerType.LOBBY) item.setType(Material.AIR);
 			else if(server == ServerType.SURVIVAL) item = new ItemStack(Material.DIAMOND_CHESTPLATE);
 			else if(server == ServerType.CREATIVE) ItemUtil.setLetherColor(item,"#2CCC1E");
-			else if(server == ServerType.FIGHTS) item = new ItemStack(Material.GOLD_CHESTPLATE);
+			else if(server == ServerType.FIGHTS) item = new ItemStack(Material.GOLDEN_CHESTPLATE);
 			else if(server == ServerType.BEDWARS) ItemUtil.setLetherColor(item,"#CC0000");
 			else if(server == ServerType.HIDENSEEK) ItemUtil.setLetherColor(item,"#3A86CC");
 			else if(server == ServerType.BLOCKPARTY) ItemUtil.setLetherColor(item,"#DC82EB");
 			else if(server == ServerType.RAGEMODE) ItemUtil.setLetherColor(item,"#AAAAAA");
 			else if(server == ServerType.PAINTBALL) ItemUtil.setLetherColor(item,"#E6823B");
 			else if(server == ServerType.DOMINATE) item = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+			else if(server == ServerType.RACES) ItemUtil.setLetherColor(item,"#FFFFFF");
 			return item;
 		}
 
@@ -262,6 +257,7 @@ public class LobbyStands implements Listener, Runnable {
 			else if(server == ServerType.RAGEMODE) ItemUtil.setLetherColor(item,"#AAAAAA");
 			else if(server == ServerType.PAINTBALL) ItemUtil.setLetherColor(item,"#E6823B");
 			else if(server == ServerType.DOMINATE) item = new ItemStack(Material.IRON_LEGGINGS);
+			else if(server == ServerType.RACES) ItemUtil.setLetherColor(item,"#000000");
 			return item;
 		}
 
@@ -276,7 +272,8 @@ public class LobbyStands implements Listener, Runnable {
 			else if(server == ServerType.BLOCKPARTY) ItemUtil.setLetherColor(item,"#B451C4");
 			else if(server == ServerType.RAGEMODE) ItemUtil.setLetherColor(item,"#888888");
 			else if(server == ServerType.PAINTBALL) ItemUtil.setLetherColor(item,"#C77031");
-			else if(server == ServerType.DOMINATE) item = new ItemStack(Material.GOLD_BOOTS);
+			else if(server == ServerType.DOMINATE) item = new ItemStack(Material.GOLDEN_BOOTS);
+			else if(server == ServerType.RACES) ItemUtil.setLetherColor(item,"#E75422");
 			return item;
 		}
 
@@ -284,14 +281,15 @@ public class LobbyStands implements Listener, Runnable {
 		private ItemStack getMainHand(){
 			switch(server){
 				case SURVIVAL: return new ItemStack(Material.IRON_PICKAXE);
-				case CREATIVE: return new ItemStack(Material.GRASS);
+				case CREATIVE: return new ItemStack(Material.GRASS_BLOCK);
 				case FIGHTS: return new ItemStack(Material.IRON_SWORD);
-				case BEDWARS: return new ItemStack(Material.BED,1,(short)0,(byte)14);
+				case BEDWARS: return new ItemStack(Material.RED_BED);
 				case HIDENSEEK: return new ItemStack(Material.BOOKSHELF);
 				case BLOCKPARTY: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6XC9cL3RleHR1cmVzLm1pbmVjcmFmdC5uZXRcL3RleHR1cmVcLzhmOTIzM2MxMjQ3ZTAzZTlmZDI3NzQyNzM3ZTc5ZTRjY2ViZDIyNWE5YjA1OWQ1OTZkNWNkMzRlMjZmMjE2NSJ9fX0=");
 				case RAGEMODE: return new ItemStack(Material.BOW);
-				case PAINTBALL: return new ItemStack(Material.SNOW_BALL);
-				case DOMINATE: return new ItemStack(Material.GOLD_SWORD);
+				case PAINTBALL: return new ItemStack(Material.SNOWBALL);
+				case DOMINATE: return new ItemStack(Material.GOLDEN_SWORD);
+				case RACES: return new ItemStack(Material.SADDLE);
 				default:break;
 			}
 			return new ItemStack(Material.AIR);

@@ -31,7 +31,7 @@ public class PokemonTest implements Listener {
 				player.sendMessage("§cHrac nenalezen.");
 				return;
 			}
-			victim.getInventory().setItem(6,RealCraft.getInstance().lobby.lobbypokemons.getItem());
+			//victim.getInventory().setItem(6,RealCraft.getInstance().lobby.lobbypokemons.getItem());
 		}
 	}
 }

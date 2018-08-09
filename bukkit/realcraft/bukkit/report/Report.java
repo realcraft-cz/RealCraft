@@ -1,24 +1,22 @@
 package realcraft.bukkit.report;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-
+import com.earth2me.essentials.Essentials;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-
-import com.earth2me.essentials.Essentials;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.banmanazer.BanUtils;
 import realcraft.share.ServerType;
+
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.HashMap;
 
 public class Report implements CommandExecutor, PluginMessageListener {
 	RealCraft plugin;
@@ -107,7 +105,7 @@ public class Report implements CommandExecutor, PluginMessageListener {
 		for(Player player : plugin.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin") || player.hasPermission("group.Moderator")){
 				player.sendMessage(reportMessage);
-				player.playSound(player.getLocation(),Sound.BLOCK_NOTE_PLING,1,1);
+				player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_PLING,1,1);
 			}
 		}
 	}

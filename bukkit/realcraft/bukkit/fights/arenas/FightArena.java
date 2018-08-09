@@ -1,28 +1,21 @@
 package realcraft.bukkit.fights.arenas;
 
+import org.bukkit.*;
+import org.bukkit.World.Environment;
+import org.bukkit.block.Biome;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.generator.ChunkGenerator;
+import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.fights.FightType;
+import realcraft.bukkit.utils.LocationUtil;
+import realcraft.share.utils.RandomUtil;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Difficulty;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
-import org.bukkit.block.Biome;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.generator.ChunkGenerator;
-
-import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.fights.FightType;
-import realcraft.bukkit.utils.LocationUtil;
-import realcraft.share.utils.RandomUtil;
 
 public abstract class FightArena {
 
@@ -47,7 +40,6 @@ public abstract class FightArena {
 		this.name = name;
 		this.type = type;
 		this.initWorld();
-		this.region = new FightArenaRegion(this);
 	}
 
 	public int getId(){
@@ -78,7 +70,7 @@ public abstract class FightArena {
 	}
 
 	public Biome getBiome(){
-		if(biome == null) biome = Biome.valueOf(this.getConfig().getString("biome",Biome.VOID.toString()).toUpperCase());
+		if(biome == null) biome = Biome.valueOf(this.getConfig().getString("biome",Biome.THE_VOID.toString()).toUpperCase());
 		return biome;
 	}
 
@@ -98,6 +90,7 @@ public abstract class FightArena {
 	}
 
 	public FightArenaRegion getRegion(){
+		if(region == null) region = new FightArenaRegion(this);
 		return region;
 	}
 

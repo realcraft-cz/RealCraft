@@ -1,69 +1,41 @@
 package realcraft.bukkit.lobby;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import com.google.common.collect.Sets;
+import net.minecraft.server.v1_13_R1.Entity;
+import net.minecraft.server.v1_13_R1.EntityCreature;
+import net.minecraft.server.v1_13_R1.EntityInsentient;
+import net.minecraft.server.v1_13_R1.PathfinderGoalSelector;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.material.Bed;
-import org.bukkit.material.TrapDoor;
 import org.bukkit.util.Vector;
-
-import com.google.common.collect.Sets;
-
-import net.minecraft.server.v1_12_R1.Entity;
-import net.minecraft.server.v1_12_R1.EntityCreature;
-import net.minecraft.server.v1_12_R1.EntityInsentient;
-import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.auth.AuthLoginEvent;
-import realcraft.bukkit.cosmetics.utils.CustomPathFinderGoalPanic;
+import realcraft.bukkit.cosmetics2.utils.CustomPathFinderGoalPanic;
+import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.spectator.Spectator;
+import realcraft.bukkit.utils.MaterialUtil;
 import realcraft.bukkit.utils.Particles;
 import realcraft.share.ServerType;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Random;
 
 public class Lobby implements Listener {
 	RealCraft plugin;
@@ -72,15 +44,10 @@ public class Lobby implements Listener {
 
 	public LobbyMenu lobbymenu = null;
 	public LobbyFunGun lobbyfungun = null;
-	public LobbyMystery lobbychests = null;
-	public LobbyCosmetics lobbycosmetics = null;
 	public LobbyLanterns lobbylanterns = null;
-	public LobbyCitizens lobbycitizens = null;
 	public LobbyAutoParkour lobbyautoparkour = null;
-	public LobbyPlayerRider lobbyplayerrider = null;
 	public LobbySpawn lobbyspawn = null;
 	public LobbyLottery lobbylottery = null;
-	public LobbyPokemons lobbypokemons = null;
 	public LobbyStands lobbystands = null;
 
 	private boolean isLobby = false;
@@ -93,17 +60,16 @@ public class Lobby implements Listener {
 			if(plugin.config.getBoolean("lobby.menu.enabled",false)) lobbymenu = new LobbyMenu(plugin);
 			if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
 				lobbyfungun = new LobbyFunGun(plugin);
-				lobbycosmetics = new LobbyCosmetics(plugin);
 				lobbylanterns = new LobbyLanterns(plugin);
 				lobbyautoparkour = new LobbyAutoParkour(plugin);
 				lobbyspawn = new LobbySpawn(plugin);
-				//lobbyjump = new LobbyJump(plugin);
-				//lobbyplayerrider = new LobbyPlayerRider(plugin);
 				if(isLobby){
-					lobbychests = new LobbyMystery(plugin);
-					lobbypokemons = new LobbyPokemons(plugin);
+					new LobbyElytra();
+					new LobbySpleef();
 					new LobbyLottery(plugin);
-					new LobbyLabyrinth(plugin);
+					new LobbyLightsOff();
+					new LobbyCanvas();
+					//new LobbyPlayerRider(plugin);
 					lobbystands = new LobbyStands(plugin);
 					Bukkit.getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),new Runnable(){
 						@Override
@@ -121,23 +87,8 @@ public class Lobby implements Listener {
 		}
 	}
 
-	public void onReload(){
-		enabled = true;
-		if(lobbymenu != null) lobbymenu.onReload();
-		if(lobbyfungun != null) lobbyfungun.onReload();
-		if(lobbychests != null) lobbychests.onReload();
-		if(lobbycosmetics != null) lobbycosmetics.onReload();
-		if(lobbylanterns != null) lobbylanterns.onReload();
-		if(lobbycitizens != null) lobbycitizens.onReload();
-		if(lobbyautoparkour != null) lobbyautoparkour.onReload();
-		if(lobbyplayerrider != null) lobbyplayerrider.onReload();
-		if(lobbyspawn != null) lobbyspawn.onReload();
-	}
-
 	public void onDisable(){
-		if(lobbycosmetics != null) lobbycosmetics.onDisable();
 		if(lobbyautoparkour != null) lobbyautoparkour.onDisable();
-		if(lobbypokemons != null) lobbypokemons.onDisable();
 		if(lobbystands != null) lobbystands.onDisable();
 	}
 
@@ -147,7 +98,7 @@ public class Lobby implements Listener {
 		Player player = event.getPlayer();
 		player.getInventory().clear();
 		player.setGameMode(GameMode.ADVENTURE);
-		player.setWalkSpeed(0.3f);
+		player.setWalkSpeed(0.2f);
 		new LobbyScoreboard(this,player);
 	}
 
@@ -157,12 +108,12 @@ public class Lobby implements Listener {
 		if(!Spectator.isPlayerSpectating(player)){
 			player.setGameMode(GameMode.ADVENTURE);
 			if(RealCraft.getServerType() == ServerType.LOBBY){
-				player.setWalkSpeed(0.3f);
+				player.setWalkSpeed(0.2f);
 				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin,new Runnable(){
 					@Override
 					public void run(){
 						player.setGameMode(GameMode.ADVENTURE);
-						player.setWalkSpeed(0.3f);
+						player.setWalkSpeed(0.2f);
 						player.setAllowFlight(false);
 						player.setFlying(false);
 					}
@@ -176,7 +127,7 @@ public class Lobby implements Listener {
 		Player player = event.getPlayer();
 		if(player.getWorld().getName().equalsIgnoreCase("world")){
 			player.setGameMode(GameMode.ADVENTURE);
-			if(RealCraft.getServerType() == ServerType.LOBBY) player.setWalkSpeed(0.3f);
+			if(RealCraft.getServerType() == ServerType.LOBBY) player.setWalkSpeed(0.2f);
 		}
 	}
 
@@ -202,7 +153,7 @@ public class Lobby implements Listener {
 		if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world")){
 			if(event.getAction() == Action.PHYSICAL){
 				Block block = event.getClickedBlock();
-				if(block != null && block.getType() == Material.SOIL){
+				if(block != null && block.getType() == Material.FARMLAND){
 					event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
 					event.setCancelled(true);
 				}
@@ -218,16 +169,16 @@ public class Lobby implements Listener {
 					if(block != null){
 						BlockState blockState = block.getState();
 						if(blockState != null){
-							if(blockState.getData() instanceof TrapDoor){
+							if(MaterialUtil.isTrapdoor(blockState.getType())){
 								event.setCancelled(true);
 							}
-							else if(blockState.getData() instanceof Bed){
+							else if(MaterialUtil.isBed(blockState.getType())){
 								event.setCancelled(true);
 							}
-							else if(blockState.getType() == Material.LEVER || blockState.getType() == Material.REDSTONE_COMPARATOR || blockState.getType() == Material.DIODE){
+							else if(blockState.getType() == Material.LEVER || blockState.getType() == Material.COMPARATOR || blockState.getType() == Material.REPEATER){
 								event.setCancelled(true);
 							}
-							else if(blockState.getType() == Material.WORKBENCH){
+							else if(blockState.getType() == Material.CRAFTING_TABLE){
 								event.setCancelled(true);
 							}
 							else if(blockState instanceof Furnace){
@@ -255,7 +206,7 @@ public class Lobby implements Listener {
 	public void EntityInteractEvent(EntityInteractEvent event){
 		if(event.getEntity() instanceof Animals){
 			Block block = event.getBlock();
-			if(block != null && block.getType() == Material.SOIL && block.getWorld().getName().equalsIgnoreCase("world")){
+			if(block != null && block.getType() == Material.FARMLAND && block.getWorld().getName().equalsIgnoreCase("world")){
 				event.setCancelled(true);
 			}
 		}
@@ -264,14 +215,14 @@ public class Lobby implements Listener {
 	@EventHandler
 	public void BlockFadeEvent(BlockFadeEvent event){
 		Block block = event.getBlock();
-		if(block != null && block.getType() == Material.SOIL && block.getWorld().getName().equalsIgnoreCase("world")){
+		if(block != null && block.getType() == Material.FARMLAND && block.getWorld().getName().equalsIgnoreCase("world")){
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void BlockGrowEvent(BlockGrowEvent event){
-		if(event.getNewState().getType() == Material.SUGAR_CANE_BLOCK && event.getBlock().getWorld().getName().equalsIgnoreCase("world")){
+		if(event.getNewState().getType() == Material.SUGAR_CANE && event.getBlock().getWorld().getName().equalsIgnoreCase("world")){
 			event.setCancelled(true);
 		}
 	}
@@ -304,13 +255,13 @@ public class Lobby implements Listener {
 				}
 				else if(event.getCause() == EntityDamageEvent.DamageCause.VOID){
 					event.setCancelled(true);
-					((Player)event.getEntity()).performCommand("spawn");
+					((Player)event.getEntity()).teleport(ServerSpawn.getLocation());
 				}
 			}
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled=true)
 	public void EntityDamageByEntityEvent(EntityDamageByEntityEvent event){
 		if(event.getEntity().getWorld().getName().equalsIgnoreCase("world")){
 			if(event.getEntity() instanceof Animals){
@@ -335,10 +286,9 @@ public class Lobby implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled=true)
 	public void PlayerInteractEntityEvent(PlayerInteractEntityEvent event){
 		if(event.getHand().equals(EquipmentSlot.HAND) && event.getPlayer().getWorld().getName().equalsIgnoreCase("world")){
-			if(lobbycitizens != null && !lobbycitizens.npcRegistry.isNPC(event.getRightClicked())) event.setCancelled(true);
 			if(event.getRightClicked() instanceof Sheep){
 				this.sheepEffect((Sheep) event.getRightClicked());
 			}
@@ -387,8 +337,8 @@ public class Lobby implements Listener {
 	}
 
 	@EventHandler(priority=EventPriority.HIGHEST)
-	public void PlayerPickupItemEvent(PlayerPickupItemEvent event){
-		if(event.getPlayer().getGameMode() != GameMode.CREATIVE && event.getPlayer().getWorld().getName().equalsIgnoreCase("world") && event.getItem().getItemStack().getType() != Material.TRIPWIRE_HOOK){
+	public void EntityPickupItemEvent(EntityPickupItemEvent event){
+		if(event.getEntityType() == EntityType.PLAYER && ((Player)event.getEntity()).getGameMode() != GameMode.CREATIVE){
 			event.setCancelled(true);
 			event.getItem().remove();
 		}

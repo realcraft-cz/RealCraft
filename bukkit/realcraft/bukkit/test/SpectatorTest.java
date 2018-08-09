@@ -1,7 +1,10 @@
 package realcraft.bukkit.test;
 
-import java.util.HashMap;
-
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+import net.minecraft.server.v1_13_R1.PacketPlayOutPlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -17,15 +20,10 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-
-import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerInfo;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.ReflectionUtils;
+
+import java.util.HashMap;
 
 public class SpectatorTest implements Listener {
 

@@ -1,7 +1,5 @@
 package realcraft.bukkit.creative;
 
-import java.util.HashSet;
-
 import com.intellectualcrafters.plot.object.RegionWrapper;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.Vector2D;
@@ -14,6 +12,12 @@ import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.biome.BaseBiome;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockType;
+import com.sk89q.worldedit.world.block.BlockTypes;
+
+import java.util.HashSet;
 
 public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 
@@ -37,18 +41,19 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 	}
 
 	@Override
-	public boolean setBlock(Vector location,BaseBlock block) throws WorldEditException {
-		if(this.isBlockEqual(world.getBlock(location),block)) return false;
-		if(this.isBlockForbidden(block)) return false;
+	public boolean setBlock(Vector location,BlockStateHolder block) throws WorldEditException {
+		block.getBlockType().getName();
+		if(this.isBlockEqual(world.getBlock(location).getBlockType(),block.getBlockType())) return false;
+		if(this.isBlockForbidden(block.getBlockType())) return false;
 		if(this.blocksCount >= BLOCKS_LIMIT) return false;
-		if(this.isBlockTileEntity(block)){
+		if(this.isBlockTileEntity(block.getBlockType())){
 			if(this.tilesCount < TILES_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
 				this.tilesCount ++;
 				this.blocksCount ++;
 				return super.setBlock(location,block);
 			}
 		}
-		else if(this.isBlockCritical(block)){
+		else if(this.isBlockCritical(block.getBlockType())){
 			if(this.criticalsCount < CRITICALS_LIMIT && this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())){
 				this.criticalsCount ++;
 				this.blocksCount ++;
@@ -78,9 +83,14 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 	}
 
 	@Override
-	public BaseBlock getBlock(Vector location){
+	public BlockState getBlock(Vector location){
 		if(this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())) return super.getBlock(location);
-		return new BaseBlock(0,0);
+		return BlockTypes.AIR.getDefaultState();
+	}
+
+	@Override
+	public BaseBlock getFullBlock(Vector location){
+		return new BaseBlock(this.getBlock(location));
 	}
 
 	private boolean maskContains(HashSet<RegionWrapper> mask,int x,int y,int z){
@@ -101,13 +111,13 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 		return false;
 	}
 
-	private boolean isBlockEqual(BaseBlock current,BaseBlock block){
-		if(current.getType() == block.getType() && current.getData() == block.getData()) return true;
+	private boolean isBlockEqual(BlockType current, BlockType block){
+		if(current == block) return true;
 		return false;
 	}
 
-	private boolean isBlockForbidden(BaseBlock block){
-		switch(block.getType()){
+	private boolean isBlockForbidden(BlockType block){
+		switch(block.getLegacyId()){
 			case 52:
 			case 46:
 			case 90:
@@ -141,8 +151,8 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 		return false;
 	}
 
-	private boolean isBlockTileEntity(BaseBlock block){
-		switch(block.getType()){
+	private boolean isBlockTileEntity(BlockType block){
+		switch(block.getLegacyId()){
 			case 54:
 			case 130:
 			case 142:
@@ -183,8 +193,8 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 		return false;
 	}
 
-	private boolean isBlockCritical(BaseBlock block){
-		switch(block.getType()){
+	private boolean isBlockCritical(BlockType block){
+		switch(block.getLegacyId()){
 			case 8:
 			case 9:
 			case 10:

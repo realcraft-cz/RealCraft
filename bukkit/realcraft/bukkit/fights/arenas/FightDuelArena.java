@@ -24,10 +24,6 @@ public class FightDuelArena extends FightArena {
 		this.loadSpawns();
 	}
 
-	public int getOrder(){
-		return order;
-	}
-
 	private int getOffset(){
 		return order*Z_OFFSET;
 	}

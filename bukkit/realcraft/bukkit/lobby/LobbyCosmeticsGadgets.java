@@ -1,7 +1,5 @@
 package realcraft.bukkit.lobby;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,11 +8,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.cosmetics.Cosmetics;
-import realcraft.bukkit.cosmetics.gadgets.Gadget;
+import realcraft.bukkit.cosmetics2.Cosmetics;
+import realcraft.bukkit.cosmetics2.gadgets.Gadget;
 import realcraft.bukkit.lobby.LobbyCosmeticsMain.LobbyCosmeticsType;
+
+import java.util.ArrayList;
 
 public class LobbyCosmeticsGadgets {
 	static LobbyCosmetics lobbycosmetics;
@@ -56,12 +55,12 @@ public class LobbyCosmeticsGadgets {
 		lore = new ArrayList<String>();
 		lore.add("§7Klikni pro navrat");
 		lore.add("§7do hlavniho menu.");
-		menu.setItem(getIndex(5,3),getItem("§e§lDoplnky",Material.CHEST,(byte)0,1,lore));
+		menu.setItem(getIndex(5,3),getItem("§e§lDoplnky",Material.CHEST,1,lore));
 
 		lore = new ArrayList<String>();
 		lore.add("§7Klikni pro zruseni");
 		lore.add("§7vsech aktivnich gadgetu.");
-		menu.setItem(getIndex(5,5),getItem("§c§lOdebrat gadgety",Material.BARRIER,(byte)0,1,lore));
+		menu.setItem(getIndex(5,5),getItem("§c§lOdebrat gadgety",Material.BARRIER,1,lore));
 
 		player.openInventory(menu);
 	}
@@ -70,9 +69,8 @@ public class LobbyCosmeticsGadgets {
 		return (row*9)+column;
 	}
 
-	@SuppressWarnings("deprecation")
-	public static ItemStack getItem(String name,Material material,Byte data,int amount,ArrayList<String> lore){
-		ItemStack itemstack = new ItemStack(material,amount,(short)0,data);
+	public static ItemStack getItem(String name,Material material,int amount,ArrayList<String> lore){
+		ItemStack itemstack = new ItemStack(material,amount);
 		ItemMeta meta = itemstack.getItemMeta();
 		meta.setDisplayName(name);
 		meta.setLore(lore);
@@ -83,8 +81,8 @@ public class LobbyCosmeticsGadgets {
 	public static void setItem(Inventory menu,int index,Gadget gadget){
 		Player player = (Player) menu.getHolder();
 		int amount = gadget.getAmount(player);
-		if(amount > 0) menu.setItem(index,getItem(gadget.getType().toString(),gadget.getType().toMaterial(),gadget.getType().toData(),amount,gadget.getType().toLore()));
-		else menu.setItem(index,getItem(gadget.getType().toString(),Material.INK_SACK,(byte)8,1,gadget.getType().toLore()));
+		if(amount > 0) menu.setItem(index,getItem(gadget.getType().toString(),gadget.getType().toMaterial(),amount,gadget.getType().toLore()));
+		else menu.setItem(index,getItem(gadget.getType().toString(),Material.GRAY_DYE,1,gadget.getType().toLore()));
 	}
 
 	public static void InventoryClickEvent(InventoryClickEvent event){

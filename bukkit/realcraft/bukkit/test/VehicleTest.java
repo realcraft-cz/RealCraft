@@ -1,25 +1,24 @@
 package realcraft.bukkit.test;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 
-import net.minecraft.server.v1_12_R1.EntityArmorStand;
-import net.minecraft.server.v1_12_R1.EnumMoveType;
-import net.minecraft.server.v1_12_R1.PacketPlayInSteerVehicle;
-import net.minecraft.server.v1_12_R1.World;
+import net.minecraft.server.v1_13_R1.PacketPlayInSteerVehicle;
+import net.minecraft.server.v1_13_R1.PacketPlayOutEntityDestroy;
 import realcraft.bukkit.RealCraft;
 
 public class VehicleTest implements Listener {
@@ -31,19 +30,38 @@ public class VehicleTest implements Listener {
 			public void onPacketReceiving(PacketEvent event){
 				if(event.getPacketType() == PacketType.Play.Client.STEER_VEHICLE){
 					PacketPlayInSteerVehicle packet = (PacketPlayInSteerVehicle) event.getPacket().getHandle();
-					float sideMot = (packet.a() > 0 ? 1 : -1);
-					float forMot = (packet.b() > 0 ? 1 : -1);
-					boolean jump = packet.c();
-					if(stand != null){
-						System.out.println(stand.getBukkitEntity().getVelocity().toString());
-						stand.getBukkitEntity().setVelocity(stand.getBukkitEntity().getVelocity().add(new Vector(sideMot*0.1,0,forMot*0.1)));
-					}
+					float sideMot = (packet.b() > 0 ? 1 : -1);
+					float forMot = (packet.c() > 0 ? 1 : -1);
+					boolean jump = packet.a();
 				}
 			}
 		});
 	}
 
-	CustomArmorStand stand;
+	private Boat boat;
+
+	@EventHandler(priority=EventPriority.LOW)
+	public void PlayerMoveEvent(PlayerMoveEvent event){
+		//double speed = this.getPlayerSpeed(event.getPlayer());
+		/*double speed = event.getFrom().distance(event.getTo());
+		System.out.println("speed: "+speed);*/
+	}
+
+	private long lastCheck = 0;
+	private Location lastLocation;
+
+	private double getPlayerSpeed(Player player){
+		Location location = player.getLocation().clone();
+		location.setY(0);
+		if(lastLocation == null){
+			lastCheck = System.currentTimeMillis();
+			lastLocation = location;
+		}
+		double speed = lastLocation.distance(location)/(System.currentTimeMillis()-lastCheck*1000/20);
+		lastCheck = System.currentTimeMillis();
+		lastLocation = location;
+		return speed;
+	}
 
 	@EventHandler(priority=EventPriority.LOW)
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
@@ -52,40 +70,25 @@ public class VehicleTest implements Listener {
 		if(command.startsWith("vehtest") && player.hasPermission("group.Manazer")){
 			event.setCancelled(true);
 
-			stand = new CustomArmorStand(((CraftWorld)player.getWorld()).getHandle());
-			stand.setPositionRotation(player.getLocation().getX(),player.getLocation().getY(),player.getLocation().getZ(),player.getLocation().getYaw(),player.getLocation().getPitch());
-	    	((CraftLivingEntity) stand.getBukkitEntity()).setRemoveWhenFarAway(false);
-	    	((CraftWorld)player.getWorld()).getHandle().addEntity(stand,SpawnReason.CUSTOM);
-	    	stand.getBukkitEntity().setPassenger(player);
-		}
-	}
+			boat = (Boat) player.getWorld().spawnEntity(player.getLocation(),EntityType.BOAT);
+			boat.addPassenger(player);
 
-	public class CustomArmorStand extends EntityArmorStand {
-
-		public CustomArmorStand(World world){
-			super(world);
-			this.setSmall(true);
-		}
-
-		@Override
-		public void a(float sideMot,float forMot,float f2){
-			if(this.isNoGravity()){
-				move(EnumMoveType.SELF,motX,motY,motZ);
-			} else {
-				super.a(sideMot,forMot,f2);
+			for(Player player2 : Bukkit.getOnlinePlayers()){
+				if(player2.getEntityId() != player.getEntityId()){
+					PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(boat.getEntityId());
+					((CraftPlayer)player2).getHandle().playerConnection.sendPacket(packet);
+				}
 			}
 		}
-
-		@Override
-		public void n(){
-			if(this.isNoGravity()){
-				double motX = this.motX, motY = this.motY, motZ = this.motZ;
-				super.n();
-				this.motX = motX;
-				this.motY = motY;
-				this.motZ = motZ;
-			}
-			else super.n();
+		if(command.startsWith("vehtp1") && player.hasPermission("group.Manazer")){
+			event.setCancelled(true);
+			boat.teleport(boat.getLocation().add(3.0,0,3.0));
+		}
+		if(command.startsWith("vehtp2") && player.hasPermission("group.Manazer")){
+			event.setCancelled(true);
+			boat.removePassenger(player);
+			boat.teleport(boat.getLocation().add(3.0,0,3.0));
+			boat.addPassenger(player);
 		}
 	}
 }

@@ -1,40 +1,38 @@
 package realcraft.bukkit.cosmetics.gadgets;
 
-import java.util.Random;
-
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
+import realcraft.bukkit.utils.RandomUtil;
 
 public class GadgetFirework extends Gadget {
 
-	static Random random = new Random();
-
-	public GadgetFirework(GadgetType type){
+	public GadgetFirework(CosmeticType type){
 		super(type);
 	}
 
 	@Override
-	public void onClick(final Player player){
-		this.setRunning(player,false);
+	public void trigger(Player player){
+		this.setGadgetRunning(player,false);
 		Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
-        FireworkMeta fwm = fw.getFireworkMeta();
+		FireworkMeta fwm = fw.getFireworkMeta();
 
-        int rt = random.nextInt(5);
-        FireworkEffect.Type type = FireworkEffect.Type.values()[rt];
+		int rt = RandomUtil.getRandomInteger(0,4);
+		FireworkEffect.Type type = FireworkEffect.Type.values()[rt];
 
-        Color c1 = Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        Color c2 = Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+		Color c1 = Color.fromRGB(RandomUtil.getRandomInteger(0,255),RandomUtil.getRandomInteger(0,255),RandomUtil.getRandomInteger(0,255));
+		Color c2 = Color.fromRGB(RandomUtil.getRandomInteger(0,255),RandomUtil.getRandomInteger(0,255),RandomUtil.getRandomInteger(0,255));
 
-        FireworkEffect effect = FireworkEffect.builder().flicker(random.nextBoolean())
-                .withColor(c1).withFade(c2).with(type)
-                .trail(random.nextBoolean()).build();
+		FireworkEffect effect = FireworkEffect.builder().flicker(RandomUtil.getRandomBoolean())
+				.withColor(c1).withFade(c2).with(type)
+				.trail(RandomUtil.getRandomBoolean()).build();
 
-        fwm.addEffect(effect);
-        fwm.setPower(random.nextInt(3));
-        fw.setFireworkMeta(fwm);
+		fwm.addEffect(effect);
+		fwm.setPower(RandomUtil.getRandomInteger(0,2));
+		fw.setFireworkMeta(fwm);
 	}
 }

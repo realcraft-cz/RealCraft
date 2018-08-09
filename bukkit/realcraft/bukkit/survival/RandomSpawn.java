@@ -1,47 +1,41 @@
 package realcraft.bukkit.survival;
 
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-
-import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.chat.ChatCommandSpy;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import realcraft.bukkit.utils.AbstractCommand;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.RandomUtil;
 
-public class RandomSpawn implements Listener {
+import java.util.HashMap;
+import java.util.List;
+
+public class RandomSpawn extends AbstractCommand {
 
 	private static final int RANDOM_LIMIT = 60*1000;
 	private static final int RANDOM_SIZE = 5000;
 	private HashMap<Player,Long> lastRandomSpawn = new HashMap<Player,Long>();
 
 	public RandomSpawn(){
-		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
+		super("priroda","nature","warp rs");
 	}
 
-	@EventHandler(priority=EventPriority.LOW)
-	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
-		Player player = event.getPlayer();
-		String command = event.getMessage().substring(1).toLowerCase();
-		if(command.equalsIgnoreCase("priroda") || command.equalsIgnoreCase("warp rs")){
-			event.setCancelled(true);
-			if(lastRandomSpawn.containsKey(player) && lastRandomSpawn.get(player)+RANDOM_LIMIT >= System.currentTimeMillis()){
-				player.sendMessage("§cNahodny spawn do prirody muzete znovu pouzit za "+(((lastRandomSpawn.get(player)+RANDOM_LIMIT)-System.currentTimeMillis())/1000)+" sekund.");
-				return;
-			}
-			lastRandomSpawn.put(player,System.currentTimeMillis());
-			player.teleport(this.getRandomLocation(Bukkit.getWorld("world")),TeleportCause.PLUGIN);
-			ChatCommandSpy.sendCommandMessage(player,command);
+	@Override
+	public void perform(Player player,String[] args){
+		if(lastRandomSpawn.containsKey(player) && lastRandomSpawn.get(player)+RANDOM_LIMIT >= System.currentTimeMillis()){
+			player.sendMessage("§cNahodny spawn do prirody muzete znovu pouzit za "+(((lastRandomSpawn.get(player)+RANDOM_LIMIT)-System.currentTimeMillis())/1000)+" sekund.");
+			return;
 		}
+		lastRandomSpawn.put(player,System.currentTimeMillis());
+		player.teleport(this.getRandomLocation(Bukkit.getWorld("world")),PlayerTeleportEvent.TeleportCause.PLUGIN);
+	}
+
+	@Override
+	public List<String> onTabComplete(Player player,String[] args){
+		return null;
 	}
 
 	public Location getRandomLocation(World world){

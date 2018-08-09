@@ -70,7 +70,7 @@ public class FightPublics implements Runnable, Listener {
 				if(startTime == 0) this.startArena();
 				else if(startTime <= 3){
 					for(FightPlayer fPlayer : Fights.getFightPlayers(FightType.PUBLIC)){
-						fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_HAT,1f,1f);
+						fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_BLOCK_HAT,1f,1f);
 						Title.showTitle(fPlayer.getPlayer(),Fights.NUMBERS[startTime-1],0,1.2,0);
 					}
 				}
@@ -89,7 +89,7 @@ public class FightPublics implements Runnable, Listener {
 				else {
 					if(endTime <= 5){
 						for(FightPlayer fPlayer : Fights.getFightPlayers(FightType.PUBLIC)){
-							fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_HAT,1f,1f);
+							fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_BLOCK_HAT,1f,1f);
 							Title.showTitle(fPlayer.getPlayer(),"§c§lKonec hry",0,1.2,0);
 							Title.showSubTitle(fPlayer.getPlayer(),"§fZmena mapy za §e"+endTime+"s",0,1.2,0);
 						}
@@ -311,6 +311,14 @@ public class FightPublics implements Runnable, Listener {
 				else killer.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
 				FightPlayer fKiller = Fights.getFightPlayer(killer);
 				fKiller.getData().addKill();
+				fPlayer.getData().addDeath();
+				if(fKiller.getRank() != null && fPlayer.getRank() != null){
+					int score = FightRank.getFFAScore(fKiller.getRank(),fPlayer.getRank());
+					fKiller.getData().addScore(score);
+					Title.sendActionBar(fKiller.getPlayer(),"§a+"+score+" bodu");
+					fPlayer.getData().addScore(-score);
+					Title.sendActionBar(fPlayer.getPlayer(),"§c-"+score+" bodu");
+				}
 			} else {
 				FightPublics.sendMessageInside("§c\u271E §b"+player.getName()+" §7zemrel");
 				fPlayer.getData().addDeath();

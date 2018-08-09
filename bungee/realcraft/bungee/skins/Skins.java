@@ -1,18 +1,8 @@
 package realcraft.bungee.skins;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.connection.InitialHandler;
 import net.md_5.bungee.connection.LoginResult;
@@ -21,12 +11,20 @@ import realcraft.bungee.RealCraftBungee;
 import realcraft.bungee.skins.exceptions.SkinsLimitException;
 import realcraft.bungee.skins.exceptions.SkinsNotFoundException;
 import realcraft.bungee.skins.utils.ReflectionUtil;
+import realcraft.bungee.sockets.SocketData;
+import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.Users;
 import realcraft.share.skins.Skin;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Skins {
 
 	public static RealCraftBungee plugin;
+	public static final String CHANNEL_SKIN_RESET = "bungeeSkinReset";
 	private static final int SKIN_LIMIT = 30;
 	private static final String SKIN_API = "https://www.realcraft.cz/api/skin/";
 
@@ -64,22 +62,14 @@ public class Skins {
 	}
 
 	public static void sendResetRequest(ProxiedPlayer player){
-		try {
-            final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(bytes);
-            out.writeUTF("ResetRequest");
-            out.writeUTF(player.getUniqueId().toString());
-            final ServerInfo server = player.getServer().getInfo();
-            plugin.getProxy().getScheduler().runAsync(plugin,new Runnable(){
-				@Override
-				public void run(){
-					server.sendData("RealCraftSkins",bytes.toByteArray());
-				}
-            });
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+		plugin.getProxy().getScheduler().runAsync(plugin,new Runnable(){
+			@Override
+			public void run(){
+				SocketData data = new SocketData(CHANNEL_SKIN_RESET);
+				data.setString("uuid",player.getUniqueId().toString());
+				SocketManager.sendToAll(data);
+			}
+		});
 	}
 
 	public static Skin getSkin(String name){

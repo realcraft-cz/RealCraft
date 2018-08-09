@@ -1,12 +1,12 @@
 package realcraft.share.sockets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SocketData {
 
@@ -14,8 +14,8 @@ public abstract class SocketData {
 
 	public SocketData(String channel,String server){
 		objects = new JsonObject();
-		objects.addProperty("channel",channel);
-		objects.addProperty("server",server);
+		objects.addProperty("_channel",channel);
+		objects.addProperty("_server",server);
 	}
 
 	public SocketData(String channel,String server,String data){
@@ -56,11 +56,11 @@ public abstract class SocketData {
 	}
 
 	public String getServer(){
-		return (objects.has("server") ? objects.get("server").getAsString() : null);
+		return (objects.has("_server") ? objects.get("_server").getAsString() : null);
 	}
 
 	public String getChannel(){
-		return (objects.has("channel") ? objects.get("channel").getAsString() : null);
+		return (objects.has("_channel") ? objects.get("_channel").getAsString() : null);
 	}
 
 	public int getInt(String key){

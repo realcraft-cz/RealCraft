@@ -1,16 +1,15 @@
 package realcraft.bukkit.anticheat;
 
-import java.util.HashMap;
-
+import net.minecraft.server.v1_13_R1.EntityPlayer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import net.minecraft.server.v1_12_R1.EntityPlayer;
 import realcraft.bukkit.anticheat.checks.Check.CheckType;
 import realcraft.bukkit.anticheat.checks.CheckClickAura.HitFrequency;
 import realcraft.bukkit.anticheat.checks.CheckKillAura.GhostFrequency;
 import realcraft.bukkit.anticheat.checks.CheckSneakHack.SneakFrequency;
 import realcraft.bukkit.anticheat.utils.Utils;
+
+import java.util.HashMap;
 
 public class AntiCheatPlayer {
 

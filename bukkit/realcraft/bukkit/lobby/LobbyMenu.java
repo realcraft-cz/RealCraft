@@ -1,10 +1,8 @@
 package realcraft.bukkit.lobby;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,15 +22,15 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Glow;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 	RealCraft plugin;
@@ -171,7 +169,6 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 				index,
 				plugin.config.getInt("lobby.menu.slots."+idx+".max-players"),
 				Material.getMaterial(plugin.config.getString("lobby.menu.slots."+idx+".material")),
-				plugin.config.getInt("lobby.menu.slots."+idx+".data"),
 				plugin.config.getStringList("lobby.menu.slots."+idx+".info")
 			);
 		}
@@ -195,14 +192,13 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 		int maxplayers = 0;
 		int index = 0;
 
-		@SuppressWarnings("deprecation")
-		public MenuItem(String server,String name,int index,int maxplayers,Material material,int data,List<String> info){
+		public MenuItem(String server,String name,int index,int maxplayers,Material material,List<String> info){
 			this.name = ChatColor.translateAlternateColorCodes('&',name);
 			this.server = server;
 			this.index = index;
 			this.maxplayers = maxplayers;
 			this.info = info;
-			this.itemstack = new ItemStack(material,1,(short)0,(byte)data);
+			this.itemstack = new ItemStack(material);
 			menuItems.put(this.index,this);
 		}
 
@@ -233,8 +229,8 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 			meta.setDisplayName(this.name);
 			meta.setLore(lore);
-			if(this.players > 0) meta.addEnchant(new Glow(255),1,true);
-			else meta.removeEnchant(new Glow(255));
+			if(this.players > 0) meta.addEnchant(Glow.getGlow(),1,true);
+			else meta.removeEnchant(Glow.getGlow());
 			itemstack.setItemMeta(meta);
 		}
 

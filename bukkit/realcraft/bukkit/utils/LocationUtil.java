@@ -1,21 +1,17 @@
 package realcraft.bukkit.utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
+import java.util.*;
 
 public class LocationUtil {
 
@@ -25,57 +21,56 @@ public class LocationUtil {
 
 	static {
 		HOLLOW_MATERIALS.add(Material.AIR);
-		HOLLOW_MATERIALS.add(Material.SAPLING);
+		HOLLOW_MATERIALS.add(Material.OAK_SAPLING);
 		HOLLOW_MATERIALS.add(Material.POWERED_RAIL);
 		HOLLOW_MATERIALS.add(Material.DETECTOR_RAIL);
-		HOLLOW_MATERIALS.add(Material.LONG_GRASS);
+		HOLLOW_MATERIALS.add(Material.LEGACY_LONG_GRASS);
 		HOLLOW_MATERIALS.add(Material.DEAD_BUSH);
-		HOLLOW_MATERIALS.add(Material.YELLOW_FLOWER);
-		HOLLOW_MATERIALS.add(Material.RED_ROSE);
+		HOLLOW_MATERIALS.add(Material.LEGACY_YELLOW_FLOWER);
+		HOLLOW_MATERIALS.add(Material.LEGACY_RED_ROSE);
 		HOLLOW_MATERIALS.add(Material.BROWN_MUSHROOM);
 		HOLLOW_MATERIALS.add(Material.RED_MUSHROOM);
 		HOLLOW_MATERIALS.add(Material.TORCH);
 		HOLLOW_MATERIALS.add(Material.FIRE);
 		HOLLOW_MATERIALS.add(Material.REDSTONE_WIRE);
-		HOLLOW_MATERIALS.add(Material.CROPS);
+		HOLLOW_MATERIALS.add(Material.LEGACY_CROPS);
 		HOLLOW_MATERIALS.add(Material.LADDER);
-		HOLLOW_MATERIALS.add(Material.RAILS);
+		HOLLOW_MATERIALS.add(Material.LEGACY_RAILS);
 		HOLLOW_MATERIALS.add(Material.LEVER);
-		HOLLOW_MATERIALS.add(Material.REDSTONE_TORCH_OFF);
-		HOLLOW_MATERIALS.add(Material.REDSTONE_TORCH_ON);
+		HOLLOW_MATERIALS.add(Material.LEGACY_REDSTONE_TORCH_OFF);
+		HOLLOW_MATERIALS.add(Material.LEGACY_REDSTONE_TORCH_ON);
 		HOLLOW_MATERIALS.add(Material.STONE_BUTTON);
 		HOLLOW_MATERIALS.add(Material.SNOW);
-		HOLLOW_MATERIALS.add(Material.SUGAR_CANE_BLOCK);
-		HOLLOW_MATERIALS.add(Material.PORTAL);
-		HOLLOW_MATERIALS.add(Material.DIODE_BLOCK_OFF);
-		HOLLOW_MATERIALS.add(Material.DIODE_BLOCK_ON);
+		HOLLOW_MATERIALS.add(Material.LEGACY_SUGAR_CANE_BLOCK);
+		HOLLOW_MATERIALS.add(Material.NETHER_PORTAL);
+		HOLLOW_MATERIALS.add(Material.LEGACY_DIODE_BLOCK_OFF);
+		HOLLOW_MATERIALS.add(Material.LEGACY_DIODE_BLOCK_ON);
 		HOLLOW_MATERIALS.add(Material.PUMPKIN_STEM);
 		HOLLOW_MATERIALS.add(Material.MELON_STEM);
 		HOLLOW_MATERIALS.add(Material.VINE);
-		HOLLOW_MATERIALS.add(Material.WATER_LILY);
-		HOLLOW_MATERIALS.add(Material.NETHER_WARTS);
-		HOLLOW_MATERIALS.add(Material.ENDER_PORTAL);
+		HOLLOW_MATERIALS.add(Material.LEGACY_WATER_LILY);
+		HOLLOW_MATERIALS.add(Material.LEGACY_NETHER_WARTS);
+		HOLLOW_MATERIALS.add(Material.LEGACY_ENDER_PORTAL);
 		HOLLOW_MATERIALS.add(Material.COCOA);
 		HOLLOW_MATERIALS.add(Material.TRIPWIRE_HOOK);
 		HOLLOW_MATERIALS.add(Material.TRIPWIRE);
 		HOLLOW_MATERIALS.add(Material.FLOWER_POT);
 		HOLLOW_MATERIALS.add(Material.CARROT);
 		HOLLOW_MATERIALS.add(Material.POTATO);
-		HOLLOW_MATERIALS.add(Material.WOOD_BUTTON);
-		HOLLOW_MATERIALS.add(Material.SKULL);
-		HOLLOW_MATERIALS.add(Material.REDSTONE_COMPARATOR_OFF);
-		HOLLOW_MATERIALS.add(Material.REDSTONE_COMPARATOR_ON);
+		HOLLOW_MATERIALS.add(Material.LEGACY_WOOD_BUTTON);
+		HOLLOW_MATERIALS.add(Material.LEGACY_SKULL);
+		HOLLOW_MATERIALS.add(Material.LEGACY_REDSTONE_COMPARATOR_OFF);
+		HOLLOW_MATERIALS.add(Material.LEGACY_REDSTONE_COMPARATOR_ON);
 		HOLLOW_MATERIALS.add(Material.ACTIVATOR_RAIL);
-		HOLLOW_MATERIALS.add(Material.CARPET);
-		HOLLOW_MATERIALS.add(Material.DOUBLE_PLANT);
-		HOLLOW_MATERIALS.add(Material.SEEDS);
-		HOLLOW_MATERIALS.add(Material.SIGN_POST);
-		HOLLOW_MATERIALS.add(Material.WOODEN_DOOR);
+		HOLLOW_MATERIALS.add(Material.LEGACY_DOUBLE_PLANT);
+		HOLLOW_MATERIALS.add(Material.LEGACY_SEEDS);
+		HOLLOW_MATERIALS.add(Material.LEGACY_SIGN_POST);
+		HOLLOW_MATERIALS.add(Material.LEGACY_WOODEN_DOOR);
 		HOLLOW_MATERIALS.add(Material.WALL_SIGN);
-		HOLLOW_MATERIALS.add(Material.STONE_PLATE);
-		HOLLOW_MATERIALS.add(Material.IRON_DOOR_BLOCK);
-		HOLLOW_MATERIALS.add(Material.WOOD_PLATE);
-		HOLLOW_MATERIALS.add(Material.FENCE_GATE);
+		HOLLOW_MATERIALS.add(Material.STONE_PRESSURE_PLATE);
+		HOLLOW_MATERIALS.add(Material.LEGACY_IRON_DOOR_BLOCK);
+		HOLLOW_MATERIALS.add(Material.LEGACY_WOOD_PLATE);
+		HOLLOW_MATERIALS.add(Material.LEGACY_FENCE_GATE);
 	}
 
 	public static class Vector3D {
@@ -118,6 +113,16 @@ public class LocationUtil {
 		return new Location(world,x,y,z,yaw,pitch);
 	}
 
+	public static Location getConfigLocation(ConfigurationSection section,String path){
+		double x = (section.getDouble(path+".x"));
+		double y = (section.getDouble(path+".y"));
+		double z = (section.getDouble(path+".z"));
+		float yaw = (float)(section.getDouble(path+".yaw",0));
+		float pitch = (float)(section.getDouble(path+".pitch",0));
+		World world = Bukkit.getServer().getWorld(section.getString(path+".world"));
+		return new Location(world,x,y,z,yaw,pitch);
+	}
+
 	public static float normalAngle(float angle) {
         while (angle <= -180) angle += 360;
         while (angle > 180) angle -= 360;
@@ -139,7 +144,7 @@ public class LocationUtil {
 	}
 
 	public static BlockFace yawToFace (float yaw) {
-        return yawToFace(yaw, true);
+        return yawToFace(yaw, false);
     }
     public static BlockFace yawToFace(float yaw, boolean useSubCardinalDirections) {
         yaw = normalAngle(yaw);
@@ -199,9 +204,13 @@ public class LocationUtil {
     public static float faceToYaw(BlockFace face, boolean useSubCardinalDirections){
     	if(useSubCardinalDirections){
     		switch(face){
+	    		case NORTH: return 0f;
 		    	case NORTH_EAST: return 45f;
+		    	case EAST: return 90f;
 		    	case SOUTH_EAST: return 135f;
+		    	case SOUTH: return 180f;
 		    	case SOUTH_WEST: return 225f;
+		    	case WEST: return 270f;
 		    	case NORTH_WEST: return 315f;
 				default: break;
 	    	}
@@ -277,18 +286,30 @@ public class LocationUtil {
     }
     public static boolean isBlockDamaging(final World world, final int x, final int y, final int z) {
     	final Block below = world.getBlockAt(x, y - 1, z);
-    	if (below.getType() == Material.LAVA || below.getType() == Material.STATIONARY_LAVA) {
+    	if (below.getType() == Material.LAVA || below.getType() == Material.LEGACY_STATIONARY_LAVA) {
     		return true;
     	}
     	if (below.getType() == Material.FIRE) {
     		return true;
     	}
-    	if (below.getType() == Material.BED_BLOCK) {
+    	if (below.getType() == Material.LEGACY_BED_BLOCK) {
     		return true;
     	}
-    	if (world.getBlockAt(x, y, z).getType() == Material.PORTAL) {
+    	if (world.getBlockAt(x, y, z).getType() == Material.NETHER_PORTAL) {
     		return true;
     	}
     	return (!HOLLOW_MATERIALS.contains(world.getBlockAt(x, y, z).getType())) || (!HOLLOW_MATERIALS.contains(world.getBlockAt(x, y + 1, z).getType()));
     }
+
+    public static Block getBedNeighbor(Block head){
+		if (MaterialUtil.isBed(head.getRelative(BlockFace.EAST).getType())){
+			return head.getRelative(BlockFace.EAST);
+		} else if (MaterialUtil.isBed(head.getRelative(BlockFace.WEST).getType())){
+			return head.getRelative(BlockFace.WEST);
+		} else if (MaterialUtil.isBed(head.getRelative(BlockFace.SOUTH).getType())){
+			return head.getRelative(BlockFace.SOUTH);
+		} else {
+			return head.getRelative(BlockFace.NORTH);
+		}
+	}
 }

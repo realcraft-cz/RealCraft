@@ -1,17 +1,6 @@
 package realcraft.bukkit.lobby;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,13 +13,18 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.coins.Coins;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.FireworkUtil;
 import realcraft.bukkit.utils.LocationUtil;
+import realcraft.bukkit.utils.MaterialUtil;
 import realcraft.bukkit.utils.Title;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Random;
 
 public class LobbyAutoParkour implements Listener, Runnable {
 	RealCraft plugin;
@@ -107,7 +101,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 	public void PlayerInteractEvent(PlayerInteractEvent event){
 		if(event.getAction() == Action.PHYSICAL && plateLocation != null){
 			Block block = event.getClickedBlock();
-			if(block != null && (block.getType() == Material.STONE_PLATE || block.getType() == Material.WOOD_PLATE)
+			if(block != null && (block.getType() == Material.STONE_PRESSURE_PLATE || block.getType() == Material.OAK_PRESSURE_PLATE)
 					&& block.getLocation().getBlockX() == plateLocation.getBlockX() && block.getLocation().getBlockY() == plateLocation.getBlockY() && block.getLocation().getBlockZ() == plateLocation.getBlockZ()){
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 					@Override
@@ -147,7 +141,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 			teleport.setPitch(player.getLocation().getPitch());
 			teleport.setYaw(player.getLocation().getYaw());
 			player.teleport(teleport.add(0.5,1,0.5));
-			player.getWorld().playSound(teleport,Sound.ENTITY_ENDERMEN_TELEPORT,1f,1f);
+			player.getWorld().playSound(teleport,Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f);
 		}
 	}
 
@@ -216,14 +210,11 @@ public class LobbyAutoParkour implements Listener, Runnable {
 			Title.showTitle(player,"Parkour Challenge",0,5.2,0.6);
 		}
 
-		@SuppressWarnings("deprecation")
 		public void setLocations(Location base,Location destination){
 			this.base = base;
 			this.destination = destination;
-			this.base.getBlock().setType(Material.STAINED_CLAY);
-			this.base.getBlock().setData(color.getWoolData());
-			this.destination.getBlock().setType(Material.WOOL);
-			this.destination.getBlock().setData(color.getWoolData());
+			this.base.getBlock().setType(MaterialUtil.getTerracotta(color));
+			this.destination.getBlock().setType(MaterialUtil.getWool(color));
 			this.time = this.maxTime;
 			this.jumps ++;
 			player.setExp((this.time/(this.maxTime+0f)));
@@ -290,7 +281,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 
 		public void clearBase(){
 			if(this.getBase() != null) this.getBase().getBlock().setType(Material.AIR);
-			player.playSound(player.getLocation(),Sound.ENTITY_ENDERDRAGON_FLAP,1,2);
+			player.playSound(player.getLocation(),Sound.ENTITY_ENDER_DRAGON_FLAP,1,2);
 		}
 
 		public void cancel(){

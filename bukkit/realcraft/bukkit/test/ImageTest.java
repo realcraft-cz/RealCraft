@@ -56,7 +56,6 @@ public class ImageTest implements Listener {
 						location2.setY(vector.getBlockY());
 						location2.setZ(vector.getBlockZ());
 					}
-
 					vector = selector.getRegion().getMaximumPoint();
 					if(vec.getBlockX() == vector.getBlockX() && vec.getBlockZ() == vector.getBlockZ()){
 						location1.setX(vector.getBlockX());

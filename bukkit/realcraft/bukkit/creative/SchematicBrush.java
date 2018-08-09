@@ -1,44 +1,9 @@
 package realcraft.bukkit.creative;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
-
 import com.sk89q.minecraft.util.commands.CommandsManager;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.EmptyClipboardException;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.blocks.BaseBlock;
-import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.command.tool.BrushTool;
 import com.sk89q.worldedit.command.tool.InvalidToolBindException;
@@ -49,18 +14,30 @@ import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.function.mask.BlockMask;
-import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.session.PasteBuilder;
 import com.sk89q.worldedit.util.Direction;
+import com.sk89q.worldedit.util.HandSide;
 import com.sk89q.worldedit.util.io.file.FilenameException;
-import com.sk89q.worldedit.world.registry.WorldData;
-
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import realcraft.bukkit.RealCraft;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 //https://github.com/mikeprimm/SchematicBrush/wiki
 public class SchematicBrush implements Listener, CommandExecutor {
@@ -281,12 +258,12 @@ public class SchematicBrush implements Listener, CommandExecutor {
             ppos = pos.subtract(ppos);
 
             if (!replaceall) {
-                editsession.setMask(new BlockMask(editsession, new BaseBlock(BlockID.AIR, -1)));
+                //editsession.setMask(new BlockMask(editsession, new BaseBlock(BlockID.AIR, -1)));
             }
-            PasteBuilder pb = cliph.createPaste(editsession, editsession.getWorld().getWorldData()).to(ppos)
+            /*PasteBuilder pb = cliph.createPaste(editsession, editsession.getWorld().getWorldData()).to(ppos)
                     .ignoreAirBlocks(skipair);
             Operations.completeLegacy(pb.build());
-            player.print("Applied '" + schfilename + "', flip=" + flip.name() + ", rot=" + rot.deg + ", place=" + place.name());
+            player.print("Applied '" + schfilename + "', flip=" + flip.name() + ", rot=" + rot.deg + ", place=" + place.name());*/
         }
     }
 
@@ -468,7 +445,7 @@ public class SchematicBrush implements Listener, CommandExecutor {
         // Get brush tool
         BrushTool tool;
         try {
-            tool = session.getBrushTool(player.getItemInHand());
+            tool = session.getBrushTool(player.getItemInHand(HandSide.MAIN_HAND).getType());
             tool.setBrush(sbi, "schematicbrush.brush.use");
             player.print("Schematic brush set");
         } catch (InvalidToolBindException e) {
@@ -1009,7 +986,7 @@ public class SchematicBrush implements Listener, CommandExecutor {
             }
             // Figure out format to use
             if (format.equals("schematic")) {
-                ClipboardFormat fmt = ClipboardFormat.findByFile(f);
+                ClipboardFormat fmt = null;//ClipboardFormat.findByFile(f);
 
                 if (fmt == null) {
                     player.printError("Schematic '" + name + "' format not found");
@@ -1029,7 +1006,7 @@ public class SchematicBrush implements Listener, CommandExecutor {
                     BufferedInputStream bis = new BufferedInputStream(fis);
                     ClipboardReader reader = fmt.getReader(bis);
 
-                    WorldData worldData = player.getWorld().getWorldData();
+                    /*WorldData worldData = player.getWorld().getWorldData();
                     Clipboard cc = reader.read(player.getWorld().getWorldData());
                     if (cc != null) {
                         Region reg = cc.getRegion();
@@ -1047,15 +1024,15 @@ public class SchematicBrush implements Listener, CommandExecutor {
                         bottomY[0] = minY;
                         sess.setClipboard(new ClipboardHolder(cc, worldData));
                         rslt = true;
-                    }
+                    }*/
                 }
             }
             // Else if BO2 file
             else if (format.equals("bo2")) {
                 Clipboard cc = loadBOD2File(f);
                 if (cc != null) {
-                    WorldData worldData = player.getWorld().getWorldData();
-                    sess.setClipboard(new ClipboardHolder(cc, worldData));
+                    //WorldData worldData = player.getWorld().getWorldData();
+                    //sess.setClipboard(new ClipboardHolder(cc, worldData));
                     rslt = true;
                     bottomY[0] = 0; // Always zero for these: we compact things to bottom
                 }

@@ -1,14 +1,9 @@
 package realcraft.bukkit.lobby;
 
-import java.util.HashMap;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -23,12 +18,13 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Particles;
 import realcraft.bukkit.utils.RandomUtil;
+
+import java.util.HashMap;
 
 public class LobbyFunGun implements Listener {
 	RealCraft plugin;
@@ -98,8 +94,8 @@ public class LobbyFunGun implements Listener {
 	}
 
 	private void fireFunGun(Player player){
-		if(!lastShotByFunGun.containsKey(player.getName()) || lastShotByFunGun.get(player.getName())+2000 < System.currentTimeMillis()){
-			for(int i=0;i<3;i++){
+		if(!lastShotByFunGun.containsKey(player.getName()) || lastShotByFunGun.get(player.getName())+1000 < System.currentTimeMillis()){
+			/*for(int i=0;i<3;i++){
 				Snowball snowball = (Snowball) player.getWorld().spawnEntity(player.getEyeLocation(),EntityType.SNOWBALL);
 				snowball.setShooter(player);
 				snowball.setCustomName("fungun");
@@ -109,7 +105,14 @@ public class LobbyFunGun implements Listener {
 	            vector.setY(vector.getY() + RandomUtil.getRandomDouble(-0.01,0.01));
 	            vector.setZ(vector.getZ() + RandomUtil.getRandomDouble(-0.01,0.01));
 	            snowball.setVelocity(vector.multiply(2));
-			}
+			}*/
+			ShulkerBullet spit = (ShulkerBullet)player.getWorld().spawnEntity(player.getEyeLocation(),EntityType.SHULKER_BULLET);
+			spit.setShooter(player);
+			Vector vector = player.getLocation().getDirection().clone();
+			vector.setX(vector.getX() + RandomUtil.getRandomDouble(-0.01,0.01));
+			vector.setY(vector.getY() + RandomUtil.getRandomDouble(-0.01,0.01));
+			vector.setZ(vector.getZ() + RandomUtil.getRandomDouble(-0.01,0.01));
+			spit.setVelocity(vector.multiply(1.5));
 			lastShotByFunGun.put(player.getName(),System.currentTimeMillis());
 		}
 	}

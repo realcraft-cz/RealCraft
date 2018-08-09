@@ -33,16 +33,16 @@ public class CancelGrow implements Listener {
 	@EventHandler
 	public void PlayerInteractEvent(PlayerInteractEvent event){
 		if(event.getAction() == Action.PHYSICAL){
-			if(event.getClickedBlock().getType() == Material.SOIL){
+			if(event.getClickedBlock().getType() == Material.FARMLAND){
 				event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
 				event.setCancelled(true);
 			}
 		}
 		else if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-			if(item != null && item.getType() == Material.INK_SACK && item.getData() instanceof Dye && ((Dye)item.getData()).getColor() == DyeColor.WHITE){
+			if(item != null && item.getType() == Material.INK_SAC && item.getData() instanceof Dye && ((Dye)item.getData()).getColor() == DyeColor.WHITE){
 				Block block = event.getClickedBlock();
-				if(block.getType() != Material.SAPLING && block.getType() != Material.LONG_GRASS){
+				if(block.getType() != Material.ACACIA_SAPLING && block.getType() != Material.TALL_GRASS){
 					bonemealInteractions.put(block,System.currentTimeMillis());
 				}
 			}
@@ -51,7 +51,7 @@ public class CancelGrow implements Listener {
 
 	@EventHandler
 	public void BlockGrowEvent(BlockGrowEvent event){
-		if(event.getNewState().getType() == Material.LONG_GRASS || event.getNewState().getType() == Material.RED_ROSE || event.getNewState().getType() == Material.YELLOW_FLOWER) return;
+		if(event.getNewState().getType() == Material.TALL_GRASS || event.getNewState().getType() == Material.POPPY || event.getNewState().getType() == Material.DANDELION) return;
 		if(!bonemealInteractions.containsKey(event.getBlock()) || bonemealInteractions.get(event.getBlock())+1000 < System.currentTimeMillis()){
 			event.setCancelled(true);
 		}
@@ -64,7 +64,7 @@ public class CancelGrow implements Listener {
 
 	@EventHandler
 	public void BlockFadeEvent(BlockFadeEvent event){
-		if(event.getBlock().getType() == Material.SOIL) event.setCancelled(true);
+		if(event.getBlock().getType() == Material.FARMLAND) event.setCancelled(true);
 	}
 
 	@EventHandler

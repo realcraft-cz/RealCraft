@@ -1,7 +1,5 @@
 package realcraft.bukkit.survival;
 
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -12,52 +10,21 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.chat.ChatCommandSpy;
+
+import java.util.HashMap;
 
 public class PassiveMode implements Listener {
 
 	private static final int TRIGGER_TIMEOUT = 60*1000;
 	private static HashMap<Player,PlayerPassiveMode> passives = new HashMap<Player,PlayerPassiveMode>();
-	//private Scoreboard scoreboard;
 
 	public PassiveMode(){
-		/*scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-		Team team = scoreboard.getTeam("teamVisible");
-		if(team == null){
-			team = scoreboard.registerNewTeam("teamVisible");
-			team.setCanSeeFriendlyInvisibles(true);
-		}*/
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
-		/*ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Server.ENTITY_METADATA){
-			@Override
-			public void onPacketSending(PacketEvent event){
-				if(event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA){
-					if(event.getPlayer().getEntityId() == event.getPacket().getIntegers().read(0)){
-						List<WrappedWatchableObject> watchableObjectList = event.getPacket().getWatchableCollectionModifier().read(0);
-						for(WrappedWatchableObject metadata : watchableObjectList){
-							if(metadata.getIndex() == 0){
-								byte value = (byte)metadata.getValue();
-								if(value >= 30) value -= 30;
-								else if(value == -96) value = -128;
-								metadata.setValue(value);
-							}
-						}
-						event.getPacket().getWatchableCollectionModifier().write(0,watchableObjectList);
-					}
-					if(PassiveMode.getPassiveMode(event.getPlayer()).isEnabled()){
-						if(!((CraftPlayer)event.getPlayer()).getHandle().isInvisible()){
-							((CraftPlayer)event.getPlayer()).getHandle().setInvisible(true);
-						}
-					}
-				}
-			}
-		});*/
 	}
 
 	public static PlayerPassiveMode getPassiveMode(Player player){
@@ -68,20 +35,6 @@ public class PassiveMode implements Listener {
 	@EventHandler
 	public void PlayerJoinEvent(PlayerJoinEvent event){
 		passives.put(event.getPlayer(),new PlayerPassiveMode(event.getPlayer()));
-		/*event.getPlayer().setScoreboard(scoreboard);
-		Team team = scoreboard.getPlayerTeam(event.getPlayer());
-        if(team == null){
-        	scoreboard.getTeam("teamVisible").addPlayer(event.getPlayer());
-        }*/
-	}
-
-	@EventHandler
-	public void PlayerChangedWorldEvent(PlayerChangedWorldEvent event){
-		/*event.getPlayer().setScoreboard(scoreboard);
-		Team team = scoreboard.getPlayerTeam(event.getPlayer());
-        if(team == null){
-        	scoreboard.getTeam("teamVisible").addPlayer(event.getPlayer());
-        }*/
 	}
 
 	@EventHandler
@@ -178,10 +131,7 @@ public class PassiveMode implements Listener {
 			}
 			enabled = !enabled;
 			lastTrigger = System.currentTimeMillis();
-			if(enabled){
-				//((CraftPlayer)player).getHandle().setInvisible(true);
-			} else {
-				//((CraftPlayer)player).getHandle().setInvisible(false);
+			if(!enabled){
 				if(player.getAllowFlight()) player.setAllowFlight(false);
 			}
 		}

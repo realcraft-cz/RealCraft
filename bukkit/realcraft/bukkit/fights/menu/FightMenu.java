@@ -1,7 +1,5 @@
 package realcraft.bukkit.fights.menu;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,7 +15,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.fights.FightPlayer;
 import realcraft.bukkit.fights.FightPlayer.FightPlayerState;
@@ -27,6 +24,8 @@ import realcraft.bukkit.fights.events.FightPlayerJoinLobbyEvent;
 import realcraft.bukkit.utils.BungeeMessages;
 import realcraft.share.ServerType;
 import realcraft.share.utils.StringUtil;
+
+import java.util.ArrayList;
 
 public class FightMenu implements Listener, Runnable {
 
@@ -54,7 +53,7 @@ public class FightMenu implements Listener, Runnable {
 
 	private ItemStack getMenuItem(){
 		if(menuItem == null){
-			menuItem = new ItemStack(Material.WATCH);
+			menuItem = new ItemStack(Material.CLOCK);
 			ItemMeta meta = menuItem.getItemMeta();
 			meta.setDisplayName("§b§l"+INVENTORY_NAME);
 			menuItem.setItemMeta(meta);
@@ -186,7 +185,7 @@ public class FightMenu implements Listener, Runnable {
 
 		public Material getMaterial(){
 			switch(this){
-				case PUBLICS: return Material.GOLD_CHESTPLATE;
+				case PUBLICS: return Material.GOLDEN_CHESTPLATE;
 				case DUELS: return Material.DIAMOND_CHESTPLATE;
 			}
 			return Material.AIR;

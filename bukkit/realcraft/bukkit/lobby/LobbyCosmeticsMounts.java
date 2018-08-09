@@ -1,7 +1,5 @@
 package realcraft.bukkit.lobby;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,11 +8,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.cosmetics.Cosmetics;
-import realcraft.bukkit.cosmetics.mounts.Mount;
+import realcraft.bukkit.cosmetics2.Cosmetics;
+import realcraft.bukkit.cosmetics2.mounts.Mount;
 import realcraft.bukkit.lobby.LobbyCosmeticsMain.LobbyCosmeticsType;
+
+import java.util.ArrayList;
 
 public class LobbyCosmeticsMounts {
 	static LobbyCosmetics lobbycosmetics;
@@ -36,8 +35,8 @@ public class LobbyCosmeticsMounts {
 	public static void openMenu(Player player){
 		Inventory menu = Bukkit.createInventory(player,6*9,LobbyCosmeticsMain.LobbyCosmeticsType.MOUNTS.toInventoryName());
 
-		//setItem(menu,getIndex(1,2),Cosmetics.getMount(Mount.MountType.INFERNALHORROR));
-		//setItem(menu,getIndex(1,3),Cosmetics.getMount(Mount.MountType.WALKINGDEAD));
+		setItem(menu,getIndex(1,2),Cosmetics.getMount(Mount.MountType.INFERNALHORROR));
+		setItem(menu,getIndex(1,3),Cosmetics.getMount(Mount.MountType.WALKINGDEAD));
 		setItem(menu,getIndex(1,4),Cosmetics.getMount(Mount.MountType.GLACIALSTEED));
 		setItem(menu,getIndex(1,5),Cosmetics.getMount(Mount.MountType.SNAKE));
 		setItem(menu,getIndex(1,6),Cosmetics.getMount(Mount.MountType.NYANSHEEP));
@@ -50,12 +49,12 @@ public class LobbyCosmeticsMounts {
 		lore = new ArrayList<String>();
 		lore.add("§7Klikni pro navrat");
 		lore.add("§7do hlavniho menu.");
-		menu.setItem(getIndex(5,3),getItem("§e§lDoplnky",Material.CHEST,(byte)0,1,lore));
+		menu.setItem(getIndex(5,3),getItem("§e§lDoplnky",Material.CHEST,1,lore));
 
 		lore = new ArrayList<String>();
 		lore.add("§7Klikni pro zruseni");
 		lore.add("§7vsech aktivnich efektu.");
-		menu.setItem(getIndex(5,5),getItem("§c§lOdebrat jezdecka zvirata",Material.BARRIER,(byte)0,1,lore));
+		menu.setItem(getIndex(5,5),getItem("§c§lOdebrat jezdecka zvirata",Material.BARRIER,1,lore));
 
 		player.openInventory(menu);
 	}
@@ -64,9 +63,8 @@ public class LobbyCosmeticsMounts {
 		return (row*9)+column;
 	}
 
-	@SuppressWarnings("deprecation")
-	public static ItemStack getItem(String name,Material material,Byte data,int amount,ArrayList<String> lore){
-		ItemStack itemstack = new ItemStack(material,amount,(short)0,data);
+	public static ItemStack getItem(String name,Material material,int amount,ArrayList<String> lore){
+		ItemStack itemstack = new ItemStack(material,amount);
 		ItemMeta meta = itemstack.getItemMeta();
 		meta.setDisplayName(name);
 		meta.setLore(lore);
@@ -77,8 +75,8 @@ public class LobbyCosmeticsMounts {
 	public static void setItem(Inventory menu,int index,Mount effect){
 		Player player = (Player) menu.getHolder();
 		boolean enabled = effect.isEnabled(player);
-		if(enabled) menu.setItem(index,getItem(effect.getType().toString(),effect.getType().toMaterial(),effect.getType().toData(),1,effect.getType().toLore()));
-		else menu.setItem(index,getItem(effect.getType().toString(),Material.INK_SACK,(byte)8,1,effect.getType().toLore()));
+		if(enabled) menu.setItem(index,getItem(effect.getType().toString(),effect.getType().toMaterial(),1,effect.getType().toLore()));
+		else menu.setItem(index,getItem(effect.getType().toString(),Material.GRAY_DYE,1,effect.getType().toLore()));
 	}
 
 	public static void InventoryClickEvent(InventoryClickEvent event){

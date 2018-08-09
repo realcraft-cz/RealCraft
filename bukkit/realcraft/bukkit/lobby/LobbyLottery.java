@@ -1,13 +1,8 @@
 package realcraft.bukkit.lobby;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,20 +14,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.coins.Coins;
 import realcraft.bukkit.users.Users;
-import realcraft.bukkit.utils.Glow;
-import realcraft.bukkit.utils.ItemUtil;
-import realcraft.bukkit.utils.LocationUtil;
-import realcraft.bukkit.utils.StringUtil;
-import realcraft.bukkit.utils.Title;
+import realcraft.bukkit.utils.*;
 import realcraft.share.database.DB;
 import ru.beykerykt.lightapi.LightAPI;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class LobbyLottery implements Listener {
 
@@ -70,7 +61,7 @@ public class LobbyLottery implements Listener {
 		Player player = event.getPlayer();
 		if((event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && player.getWorld().getName().equalsIgnoreCase("world")){
 			Block block = event.getClickedBlock();
-			if(block != null && block.getType() == Material.ENCHANTMENT_TABLE && LocationUtil.isSimilar(block.getLocation(),location) && Users.getUser(player).isLogged()){
+			if(block != null && block.getType() == Material.ENCHANTING_TABLE && LocationUtil.isSimilar(block.getLocation(),location) && Users.getUser(player).isLogged()){
 				event.setCancelled(true);
 				this.openMenu(player);
 			}
@@ -161,7 +152,6 @@ public class LobbyLottery implements Listener {
 			this.update();
 		}
 
-		@SuppressWarnings("deprecation")
 		public void update(){
 			inventory.clear();
 			ItemStack item;
@@ -170,11 +160,11 @@ public class LobbyLottery implements Listener {
 
 			int winnumberindex = 0;
 			for(int i=0;i<numbers.length;i++){
-				if(this.isRunning()) item = new ItemStack(Material.STAINED_GLASS_PANE,i+1,(short)0,(randoms[i] ? (currentRun >= i ? (byte)5 : (byte)7) : (currentRun == i ? (byte)0 : (byte)7)));
-				else item = new ItemStack(Material.STAINED_GLASS_PANE,i+1,(short)0,(byte)7);
+				if(this.isRunning()) item = new ItemStack(MaterialUtil.getStainedGlassPane((randoms[i] ? (currentRun >= i ? DyeColor.LIME : DyeColor.GRAY) : (currentRun == i ? DyeColor.WHITE : DyeColor.GRAY))),i+1);
+				else item = new ItemStack(MaterialUtil.getStainedGlassPane(DyeColor.GRAY),i+1);
 				meta = item.getItemMeta();
 				lore = new ArrayList<String>();
-				if(numbers[i]) meta.addEnchant(new Glow(255),1,true);
+				if(numbers[i]) meta.addEnchant(Glow.getGlow(),1,true);
 				meta.setDisplayName("§f§lCislo "+(i+1));
 				lore.add("§7Klikni pro oznaceni pole");
 				meta.setLore(lore);
@@ -192,7 +182,7 @@ public class LobbyLottery implements Listener {
 
 			if(this.isRunning()){
 				for(int i=45+winnumberindex;i<=53;i++){
-					item = new ItemStack(Material.STAINED_GLASS_PANE,1,(short)0,(byte)14);
+					item = new ItemStack(MaterialUtil.getStainedGlassPane(DyeColor.RED));
 					inventory.setItem(i,item);
 				}
 			}

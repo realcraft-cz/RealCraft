@@ -1,13 +1,11 @@
 package realcraft.bukkit.utils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.UUID;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -15,16 +13,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class ItemUtil {
 
-	private static final String ITEMS_NAMES = "http://minecraft-ids.grahamedgecombe.com/items.json";
+	private static final String ITEMS_NAMES = "https://minecraft-ids.grahamedgecombe.com/items.json";
 	private static HashMap<String,String> names = new HashMap<String,String>();
 
 	public static void init(){
@@ -53,28 +53,15 @@ public class ItemUtil {
 	}
 
 	public static ItemStack getHead(String url){
-		ItemStack head = new ItemStack(Material.SKULL_ITEM,1,(short)3);
-		SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-		GameProfile profile = new GameProfile(UUID.randomUUID(),null);
-		profile.getProperties().put("textures",new Property("textures",url));
-		Field profileField = null;
-		try {
-			profileField = headMeta.getClass().getDeclaredField("profile");
-			profileField.setAccessible(true);
-			profileField.set(headMeta,profile);
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e1) {
-			e1.printStackTrace();
-		}
-		head.setItemMeta(headMeta);
-		return head;
+		return ItemUtil.getHead(null,url);
 	}
 
 	public static ItemStack getHead(String name,String url){
-		ItemStack head = new ItemStack(Material.SKULL_ITEM,1,(short)3);
+		ItemStack head = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta headMeta = (SkullMeta) head.getItemMeta();
 		GameProfile profile = new GameProfile(UUID.randomUUID(),null);
 		profile.getProperties().put("textures",new Property("textures",url));
-		Field profileField = null;
+		Field profileField;
 		try {
 			profileField = headMeta.getClass().getDeclaredField("profile");
 			profileField.setAccessible(true);
@@ -82,7 +69,7 @@ public class ItemUtil {
 		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e1) {
 			e1.printStackTrace();
 		}
-		headMeta.setDisplayName(name);
+		if(name != null) headMeta.setDisplayName(name);
 		head.setItemMeta(headMeta);
 		return head;
 	}
@@ -120,5 +107,11 @@ public class ItemUtil {
 		LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
 		meta.setColor(Color.fromRGB(Integer.valueOf(color.substring(1,3),16),Integer.valueOf(color.substring(3,5),16),Integer.valueOf(color.substring(5,7),16)));
 		item.setItemMeta(meta);
+	}
+
+	public static ArrayList<String> getLores(String... lines){
+		ArrayList<String> lores = new ArrayList<>();
+		for(String line : lines) lores.add(line);
+		return lores;
 	}
 }

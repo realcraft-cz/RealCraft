@@ -1,16 +1,12 @@
 package realcraft.bukkit.utils;
 
-import java.util.ArrayList;
-
+import com.google.gson.*;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import java.util.ArrayList;
 
 public class JsonUtil {
 
@@ -90,23 +86,20 @@ public class JsonUtil {
 		return array.toString();
 	}
 
-	@SuppressWarnings("deprecation")
 	public static ItemStack getJSONItem(String value){
 		JsonElement element = new JsonParser().parse(value);
 		if(!element.isJsonObject()) return null;
 		JsonObject json = element.getAsJsonObject();
-		int id = json.get("id").getAsInt();
-		int data = json.get("data").getAsInt();
+		Material type = Material.getMaterial(json.get("id").getAsString());
+		if(type == null) return null;
 		int amount = json.get("amount").getAsInt();
-		return new ItemStack(id,amount,(short)0,(byte)data);
+		return new ItemStack(type,amount);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String toJSONItem(ItemStack item){
 		if(item == null) return "";
 		JsonObject json = new JsonObject();
-		json.addProperty("id",item.getType().getId());
-		json.addProperty("data",item.getData().getData());
+		json.addProperty("id",item.getType().toString());
 		json.addProperty("amount",item.getAmount());
 		return json.toString();
 	}

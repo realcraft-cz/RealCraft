@@ -1,12 +1,20 @@
 package realcraft.bukkit;
 
-import java.lang.reflect.Field;
-
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
+import com.earth2me.essentials.Essentials;
+import net.minecraft.server.v1_13_R1.IChatBaseComponent;
+import net.minecraft.server.v1_13_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_13_R1.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_13_R1.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_12_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,41 +24,25 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import com.earth2me.essentials.Essentials;
-
-import net.minecraft.server.v1_12_R1.IChatBaseComponent;
-import net.minecraft.server.v1_12_R1.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_12_R1.PacketPlayOutMapChunk;
-import net.minecraft.server.v1_12_R1.PacketPlayOutPlayerListHeaderFooter;
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.antispam.AntiSpam;
 import realcraft.bukkit.auth.Auth;
 import realcraft.bukkit.banmanazer.BanManazer;
-import realcraft.bukkit.chat.ChatAdmin;
-import realcraft.bukkit.chat.ChatAdvert;
-import realcraft.bukkit.chat.ChatCommandSpy;
-import realcraft.bukkit.chat.ChatFormat;
-import realcraft.bukkit.chat.ChatLog;
-import realcraft.bukkit.chat.ChatNotice;
-import realcraft.bukkit.chat.ChatPrivate;
-import realcraft.bukkit.chat.ChatTips;
+import realcraft.bukkit.chat.*;
 import realcraft.bukkit.coins.Coins;
 import realcraft.bukkit.config.Config;
+import realcraft.bukkit.cosmetics.Cosmetics;
 import realcraft.bukkit.creative.CancelGrow;
 import realcraft.bukkit.creative.DisableSpectator;
 import realcraft.bukkit.creative.PlotSquaredWorldEdit;
 import realcraft.bukkit.creative.SchematicBrush;
 import realcraft.bukkit.database.DB;
+import realcraft.bukkit.develop.LampControl;
 import realcraft.bukkit.develop.LocationsSaver;
 import realcraft.bukkit.develop.WorldTeleporter;
 import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.friends.Friends;
+import realcraft.bukkit.gameparty.GameParty;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
 import realcraft.bukkit.mapcrafter.MapCrafter;
@@ -58,28 +50,30 @@ import realcraft.bukkit.minihry.EventCmds;
 import realcraft.bukkit.minihry.GamesReminder;
 import realcraft.bukkit.mute.Mute;
 import realcraft.bukkit.nicks.NickManager;
-import realcraft.bukkit.parkour.Parkour;
-import realcraft.bukkit.quiz.Quiz;
 import realcraft.bukkit.report.Report;
 import realcraft.bukkit.residences.CheckResidences;
 import realcraft.bukkit.residences.ResidenceSigns;
 import realcraft.bukkit.restart.Restart;
-import realcraft.bukkit.schema.Schema;
-import realcraft.bukkit.shops.ShopManager;
+import realcraft.bukkit.sitting.Sitting;
 import realcraft.bukkit.skins.Skins;
 import realcraft.bukkit.sockets.SocketManager;
+import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.spectator.Spectator;
 import realcraft.bukkit.survival.PassiveMode;
 import realcraft.bukkit.survival.RandomSpawn;
+import realcraft.bukkit.survival.economy.Economy;
+import realcraft.bukkit.survival.sells.Sells;
+import realcraft.bukkit.survival.trading.Trading;
 import realcraft.bukkit.teleport.TeleportRequests;
 import realcraft.bukkit.test.Test;
-import realcraft.bukkit.trading.Trading;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.Glow;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.webshop.WebShop;
 import realcraft.share.ServerType;
 import realcraft.share.users.UserRank;
+
+import java.lang.reflect.Field;
 
 public class RealCraft extends JavaPlugin implements Listener {
 	private static RealCraft instance;
@@ -113,12 +107,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 	public Lobby lobby;
 	public AntiCheat anticheat;
 	public GamesReminder gamesreminder;
-	private Schema schema;
 	private Trading trading;
 	private MapCrafter mapcrafter;
-	private Parkour parkour;
 	public Skins skins;
-	private Quiz quiz;
 	private Fights fights;
 	private SocketManager socketmanager;
 
@@ -166,19 +157,26 @@ public class RealCraft extends JavaPlugin implements Listener {
 		chatcommandspy = new ChatCommandSpy(this);
 		teleportrequests = new TeleportRequests(this);
 		report = new Report(this);
-		skins = new Skins(this);
+		skins = new Skins();
 		gamesreminder = new GamesReminder(this);
-		quiz = new Quiz(this);
 		new SchematicBrush();
 		new WebShop();
 		new NickManager();
 		new Coins();
 		new Friends();
+		new GameParty();
+		new Cosmetics();
+		new ServerSpawn();
 		if(serverName.equalsIgnoreCase("lobby")){
 			auth = new Auth(this);
 			eventcmds = new EventCmds(this);
 			cancelgrow = new CancelGrow(this);
 			lobby = new Lobby(this);
+			new Sitting();
+			if(TESTSERVER){
+				new Economy();
+				new Sells();
+			}
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
 			checkresidences = new CheckResidences(this);
@@ -187,8 +185,11 @@ public class RealCraft extends JavaPlugin implements Listener {
 			mapcrafter = new MapCrafter(this);
 			new PassiveMode();
 			new RandomSpawn();
-			new ShopManager();
+			//new ShopManager();//TODO: uncomment
+			new Sells();
+			new Economy();
 			lobby = new Lobby(this);
+			new Sitting();
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||
@@ -196,6 +197,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 				serverName.equalsIgnoreCase("ragemode") ||
 				serverName.equalsIgnoreCase("paintball") ||
 				serverName.equalsIgnoreCase("dominate") ||
+				serverName.equalsIgnoreCase("races") ||
 				serverName.equalsIgnoreCase("uhc")){
 			cancelgrow = new CancelGrow(this);
 		}
@@ -204,19 +206,13 @@ public class RealCraft extends JavaPlugin implements Listener {
 			cancelgrow = new CancelGrow(this);
 			new PlotSquaredWorldEdit();
 			lobby = new Lobby(this);
+			new Sitting();
 		}
 		else if(serverName.equalsIgnoreCase("fights")){
 			fights = new Fights();
 		}
 		restart = new Restart(this);
-		//votes = new Votes(this);
-		schema = new Schema(this);
 		Glow.registerGlow();
-		if(serverName.equalsIgnoreCase("parkour")){
-			parkour = new Parkour(this);
-			eventcmds = new EventCmds(this);
-			lobby = new Lobby(this);
-		}
 		socketmanager = new SocketManager();
 		new TabList();
 		new PacketListener();
@@ -224,6 +220,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new CosmeticHeads(this);
 		new LocationsSaver();
 		new WorldTeleporter();
+		new LampControl();
 		this.getServer().getPluginManager().registerEvents(this,this);
 		this.updateWorldRules();
 	}
@@ -267,7 +264,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 						int view = Bukkit.getViewDistance();
 						for(int x=-view;x<=view;x++){
 							for(int z=-view;z<=view;z++){
-								net.minecraft.server.v1_12_R1.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
+								net.minecraft.server.v1_13_R1.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
 								PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(chunk,20);
 								((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 							}

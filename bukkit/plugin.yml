@@ -1,0 +1,85 @@
+name: RealCraft
+main: realcraft.bukkit.RealCraft
+version: 1.0
+api-version: 1.13
+author: RealCraft.cz
+
+commands:
+  realcraft:
+    description: realcraft
+    usage: realcraft
+  mod:
+    description: moderator format color
+    usage: realcraft
+  ban:
+    description: ban player
+    usage: ban
+  mute:
+    description: mute player
+    usage: mute
+  unmute:
+    description: unmute player
+    usage: unmute
+  restart:
+    description: restart server
+    usage: restart
+  msg:
+    description: private messages
+    usage: msg
+    aliases: [pm,w,m,t,tell,etell,emsg,epm,whisper,ewhisper]
+  reply:
+    description: quick reply private messages
+    usage: reply
+    aliases: [r,er,ereply]
+  report:
+    description: report hacker
+    usage: report
+  ac:
+    description: admin chat
+    usage: ac
+  spec:
+    description: spectate
+    usage: spec
+  specoff:
+    description: spectate disable
+    usage: specoff
+  rpos:
+    description: rpos
+    usage: rpos
+  chunk:
+    description: chunk
+    usage: chunk
+  glow:
+    description: glow
+    usage: glow
+  schema:
+    usage: schema
+  trade:
+    description: trade
+  shop:
+    aliases: [chestshop,obchod]
+    description: shop
+  join:
+    description: join
+  sound:
+    description: sound
+  efekt:
+    description: efekt
+  coins:
+    description: coins
+    usage: coins
+    aliases: [coin]
+  friend:
+    description: friend
+    usage: friend
+    aliases: [f,fr,friends,frends,party]
+  fight:
+    description: fight
+    usage: fight
+    aliases: [fights,duel]
+  /schbr:
+    description: Set brush to schematic brush.
+  /schset:
+    description: Define a schematic set (same format as //schbr command)
+  /schlist:
+    description: List schematics available

@@ -1,7 +1,5 @@
 package realcraft.bukkit.lobby;
 
-import java.util.Random;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,16 +13,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
-import realcraft.bukkit.cosmetics.Cosmetics;
-import realcraft.bukkit.cosmetics.hats.Hat;
-import realcraft.bukkit.cosmetics.mounts.Mount;
-import realcraft.bukkit.cosmetics.particleeffects.ParticleEffect;
-import realcraft.bukkit.cosmetics.pets.Pet;
-import realcraft.bukkit.cosmetics.suits.Suit;
+import realcraft.bukkit.cosmetics2.Cosmetics;
+import realcraft.bukkit.cosmetics2.hats.Hat;
+import realcraft.bukkit.cosmetics2.mounts.Mount;
+import realcraft.bukkit.cosmetics2.particleeffects.ParticleEffect;
+import realcraft.bukkit.cosmetics2.pets.Pet;
+import realcraft.bukkit.cosmetics2.suits.Suit;
 import realcraft.bukkit.users.Users;
+
+import java.util.Random;
 
 public class LobbyCosmetics implements Listener {
 	RealCraft plugin;
@@ -112,24 +111,6 @@ public class LobbyCosmetics implements Listener {
 				else return suit.giveReward(player);
 			default: return Cosmetics.getRandomGadget().giveRandomReward(player);
 		}
-		/*switch(random){
-			case 1:
-			case 2:
-				ParticleEffect effect = Cosmetics.getRandomParticleEffect(player,0);
-				if(effect == null) return Cosmetics.getRandomGadget().giveRandomReward(player);
-				else return effect.giveReward(player);
-			case 3:
-			case 4:
-				Hat.HatType hat = Cosmetics.getRandomHat(player,0);
-				if(hat == null) return Cosmetics.getRandomGadget().giveRandomReward(player);
-				else return hat.giveReward(player);
-			case 5:
-			case 6:
-				Suit suit = Cosmetics.getRandomSuit(player,0);
-				if(suit == null) return Cosmetics.getRandomGadget().giveRandomReward(player);
-				else return suit.giveReward(player);
-			default: return Cosmetics.getRandomGadget().giveRandomReward(player);
-		}*/
 	}
 
 	public int getRandomNumber(int min, int max){

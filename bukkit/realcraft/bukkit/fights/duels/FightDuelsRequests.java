@@ -24,7 +24,7 @@ public class FightDuelsRequests {
 		accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Klikni pro prijmuti vyzvy").create()));
 		message.addExtra(accept);
 		recipient.getPlayer().spigot().sendMessage(message);
-		recipient.getPlayer().playSound(recipient.getPlayer().getLocation(),Sound.BLOCK_NOTE_PLING,1f,1f);
+		recipient.getPlayer().playSound(recipient.getPlayer().getLocation(),Sound.BLOCK_NOTE_BLOCK_PLING,1f,1f);
 	}
 
 	public static void acceptRequest(FightDuelRequest request){

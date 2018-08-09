@@ -71,7 +71,7 @@ public class FriendList implements Listener {
 			FriendPlayer fPlayer = Friends.getFriendPlayer((Player)event.getWhoClicked());
 			if(event.getInventory().getName().equalsIgnoreCase(INVENTORY_NAME)){
 				event.setCancelled(true);
-				if(event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.SKULL_ITEM){
+				if(event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.PLAYER_HEAD){
 					for(FriendPlayer friend : fPlayer.getFriends()){
 						if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(friend.getItemStack(fPlayer).getItemMeta().getDisplayName())){
 							this.clickFriend(fPlayer,friend);

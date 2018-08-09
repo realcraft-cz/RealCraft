@@ -1,19 +1,12 @@
 package realcraft.bukkit.fights;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.earth2me.essentials.Essentials;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-
-import com.earth2me.essentials.Essentials;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.fights.FightPlayer.FightPlayerState;
 import realcraft.bukkit.fights.commands.FightCommands;
@@ -24,6 +17,11 @@ import realcraft.bukkit.lobby.LobbyAutoParkour;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.share.users.User;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Fights {
 

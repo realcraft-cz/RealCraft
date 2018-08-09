@@ -1,9 +1,7 @@
 package realcraft.bukkit.lobby;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.UUID;
-
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -13,14 +11,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.cosmetics.Cosmetics;
-import realcraft.bukkit.cosmetics.hats.Hat;
+import realcraft.bukkit.cosmetics2.Cosmetics;
+import realcraft.bukkit.cosmetics2.hats.Hat;
 import realcraft.bukkit.lobby.LobbyCosmeticsMain.LobbyCosmeticsType;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class LobbyCosmeticsHats {
 	static LobbyCosmetics lobbycosmetics;
@@ -115,7 +113,7 @@ public class LobbyCosmeticsHats {
 	}
 
 	public static ItemStack getHead(String name,String url){
-		ItemStack head = new ItemStack(Material.SKULL_ITEM,1,(short)3);
+		ItemStack head = new ItemStack(Material.PLAYER_HEAD,1,(short)3);
 		SkullMeta headMeta = (SkullMeta) head.getItemMeta();
 		GameProfile profile = new GameProfile(UUID.randomUUID(),null);
 		profile.getProperties().put("textures",new Property("textures",url));
@@ -152,7 +150,7 @@ public class LobbyCosmeticsHats {
 		if(enabled){
 			menu.setItem(index,hat.toItemStack());
 		}
-		else menu.setItem(index,getItem(hat.toString(),Material.INK_SACK,(byte)8,1,null));
+		else menu.setItem(index,getItem(hat.toString(),Material.INK_SAC,(byte)8,1,null));
 	}
 
 	public static void InventoryClickEvent(InventoryClickEvent event){

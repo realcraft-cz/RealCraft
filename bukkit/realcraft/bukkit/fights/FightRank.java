@@ -5,10 +5,10 @@ import org.bukkit.Material;
 
 public enum FightRank {
 
-	BRONZE_IV		( 1, 1000, ChatColor.RED, Material.CLAY_BRICK),
-	BRONZE_III		( 2, 1100, ChatColor.RED, Material.CLAY_BRICK),
-	BRONZE_II		( 3, 1200, ChatColor.RED, Material.CLAY_BRICK),
-	BRONZE_I		( 4, 1300, ChatColor.RED, Material.CLAY_BRICK),
+	BRONZE_IV		( 1, 1000, ChatColor.RED, Material.BRICK),
+	BRONZE_III		( 2, 1100, ChatColor.RED, Material.BRICK),
+	BRONZE_II		( 3, 1200, ChatColor.RED, Material.BRICK),
+	BRONZE_I		( 4, 1300, ChatColor.RED, Material.BRICK),
 	SILVER_IV		( 5, 1400, ChatColor.GRAY, Material.IRON_INGOT),
 	SILVER_III		( 6, 1500, ChatColor.GRAY, Material.IRON_INGOT),
 	SILVER_II		( 7, 1600, ChatColor.GRAY, Material.IRON_INGOT),
@@ -28,6 +28,7 @@ public enum FightRank {
 
 	private static final int MATCH_SCORE = 30;
 	private static final double RANK_MOD = MATCH_SCORE/(double)FightRank.values().length;
+	private static final double FFA_MOD = 0.333;
 	private static FightRank[] values = FightRank.values();
 
 	public static final String CHAR_UP = "\u2B06";
@@ -101,6 +102,11 @@ public enum FightRank {
 		else if(winner != null && loser == null) return (winner.getMinScore()+200)/10;
 		else if(winner == null && loser == null) return 150;
 		return MATCH_SCORE-(int)Math.round((winner.getId()-loser.getId())*RANK_MOD);
+	}
+
+	public static int getFFAScore(FightRank winner,FightRank loser){
+		int score = (int)Math.round(FightRank.getMatchScore(winner,loser)*FFA_MOD);
+		return (score < 1 ? 1 : score);
 	}
 
 	public static FightRank fromScore(int score){

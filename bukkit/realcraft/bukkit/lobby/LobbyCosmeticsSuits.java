@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.cosmetics.Cosmetics;
-import realcraft.bukkit.cosmetics.suits.Suit;
+import realcraft.bukkit.cosmetics2.Cosmetics;
+import realcraft.bukkit.cosmetics2.suits.Suit;
 import realcraft.bukkit.lobby.LobbyCosmeticsMain.LobbyCosmeticsType;
 
 public class LobbyCosmeticsSuits {
@@ -74,7 +74,7 @@ public class LobbyCosmeticsSuits {
 		Player player = (Player) menu.getHolder();
 		boolean enabled = suit.isEnabled(player);
 		if(enabled) menu.setItem(index,getItem(suit.getType().toString(),suit.getType().toMaterial(),suit.getType().toData(),1,suit.getType().toLore()));
-		else menu.setItem(index,getItem(suit.getType().toString(),Material.INK_SACK,(byte)8,1,suit.getType().toLore()));
+		else menu.setItem(index,getItem(suit.getType().toString(),Material.INK_SAC,(byte)8,1,suit.getType().toLore()));
 	}
 
 	public static void InventoryClickEvent(InventoryClickEvent event){

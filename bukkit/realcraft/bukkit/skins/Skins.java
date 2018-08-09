@@ -1,38 +1,32 @@
 package realcraft.bukkit.skins;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.sockets.SocketData;
+import realcraft.bukkit.sockets.SocketDataEvent;
+
 import java.util.UUID;
 
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.messaging.PluginMessageListener;
+public class Skins implements Listener {
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
+	public static final String CHANNEL_SKIN_RESET = "bungeeSkinReset";
 
-import realcraft.bukkit.RealCraft;
+	SkinHandler_v1_13_R1 skinhandler;
 
-public class Skins implements PluginMessageListener {
-	RealCraft plugin;
-	SkinFactory factory;
-
-	public Skins(RealCraft realcraft){
-		plugin = realcraft;
-		plugin.getServer().getMessenger().registerIncomingPluginChannel(plugin,"RealCraftSkins",this);
-		factory = new SkinFactory();
+	public Skins(){
+		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
+		skinhandler = new SkinHandler_v1_13_R1();
 	}
 
-	@Override
-	public void onPluginMessageReceived(String channel, Player player, byte[] message){
-		if(!channel.equals("RealCraftSkins")) return;
-		ByteArrayDataInput in = ByteStreams.newDataInput(message);
-		String subchannel = in.readUTF();
-		if(subchannel.equals("ResetRequest")){
-			UUID uuid = UUID.fromString(in.readUTF());
-			if(uuid != null){
-				player = plugin.getServer().getPlayer(uuid);
-				if(player != null){
-					factory.updateSkin(player);
-				}
-			}
+	@EventHandler
+	public void SocketDataEvent(SocketDataEvent event){
+		SocketData data = event.getData();
+		if(data.getChannel().equalsIgnoreCase(CHANNEL_SKIN_RESET)){
+			Player player = Bukkit.getPlayer(UUID.fromString(data.getString("uuid")));
+			if(player.isOnline()) skinhandler.updateSkin(player);
 		}
 	}
 }

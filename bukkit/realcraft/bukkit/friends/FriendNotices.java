@@ -50,7 +50,7 @@ public class FriendNotices implements Listener {
 		message.addExtra(deny);
 		message.addExtra("§7 do "+request.getExpireText()+".");
 		fPlayer.getPlayer().spigot().sendMessage(message);
-		fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_PLING,1f,1f);
+		fPlayer.getPlayer().playSound(fPlayer.getPlayer().getLocation(),Sound.BLOCK_NOTE_BLOCK_PLING,1f,1f);
 	}
 
 	public static void showRequestAcceptToSender(FriendPlayer fPlayer,FriendsRequest request){

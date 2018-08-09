@@ -1,106 +1,88 @@
 package realcraft.bukkit.cosmetics.hats;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import realcraft.bukkit.cosmetics.cosmetic.Cosmetic;
+import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
+import realcraft.bukkit.utils.ItemUtil;
 
-import realcraft.bukkit.cosmetics.Cosmetic.CosmeticCategory;
-import realcraft.bukkit.cosmetics.utils.ItemFactory;
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
+public class Hat extends Cosmetic {
 
-public class Hat {
-	public enum HatType {
-		ASTRONAUT("M2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0", "Astronaut", "&7&oHouston, we have got a problem."),
-	    SCARED("NjM2ZTI2YzQ0NjU5ZTgxNDhlZDU4YWE3OWU0ZDYwZGI1OTVmNDI2NDQyMTE2ZjgxYjU0MTVjMjQ0NmVkOCJ9fX0", "Scared", "&7&oOh gawd, that scared me!"),
-	    ANGEL("M2UxZGViYzczMjMxZjhlZDRiNjlkNWMzYWMxYjFmMThmMzY1NmE4OTg4ZTIzZjJlMWJkYmM0ZTg1ZjZkNDZhIn19fQ=", "Angel", "&7&oDid it hurt when you fell from heaven?"),
-	    EMBARASSED("ZjcyMGRmOTExYzA1MjM3NzA2NTQwOGRiNzhhMjVjNjc4Zjc5MWViOTQ0YzA2MzkzNWFlODZkYmU1MWM3MWIifX19", "Embarassed", "&7&oI am kinda embarassed by that."),
-	    KISSY("NTQ1YmQxOGEyYWFmNDY5ZmFkNzJlNTJjZGU2Y2ZiMDJiZmJhYTViZmVkMmE4MTUxMjc3Zjc3OWViY2RjZWMxIn19fQ=", "Kissy", "&7&oWanna kiss?"),
-	    SAD("MTQ5NjhhYzVhZjMxNDY4MjZmYTJiMGQ0ZGQxMTRmZGExOTdmOGIyOGY0NzUwNTUzZjNmODg4MzZhMjFmYWM5In19fQ=", "Sad", "&7&oI am so sad."),
-	    COOL("ODY4ZjRjZWY5NDlmMzJlMzNlYzVhZTg0NWY5YzU2OTgzY2JlMTMzNzVhNGRlYzQ2ZTViYmZiN2RjYjYifX19", "Cool", "&7&oI am such a cool guy."),
-	    SURPRISED("YmMyYjliOWFlNjIyYmQ2OGFkZmY3MTgwZjgyMDZlYzQ0OTRhYmJmYTEzMGU5NGE1ODRlYzY5MmU4OTg0YWIyIn19fQ=", "Surprised", "&7&oWow, did not expect that!"),
-	    DEAD("YjM3MWU0ZTFjZjZhMWEzNmZkYWUyNzEzN2ZkOWI4NzQ4ZTYxNjkyOTk5MjVmOWFmMmJlMzAxZTU0Mjk4YzczIn19fQ=", "Dead", "&7&ogot rekt"),
-	    CRYING("MWYxYjg3NWRlNDljNTg3ZTNiNDAyM2NlMjRkNDcyZmYyNzU4M2ExZjA1NGYzN2U3M2ExMTU0YjViNTQ5OCJ9fX0", "Crying", "&7&oi cri evrytiem"),
-	    BIGSMILE("NTA1OWQ1OWViNGU1OWMzMWVlY2Y5ZWNlMmY5Y2YzOTM0ZTQ1YzBlYzQ3NmZjODZiZmFlZjhlYTkxM2VhNzEwIn19fQ=", "BigSmile", "&7&oUh, because I am really happy!"),
-	    WINK("ZjRlYTJkNmY5MzlmZWZlZmY1ZDEyMmU2M2RkMjZmYThhNDI3ZGY5MGIyOTI4YmMxZmE4OWE4MjUyYTdlIn19fQ=", "Wink", "&7&oYou know what I mean ;)"),
-	    DERP("M2JhYWJlNzI0ZWFlNTljNWQxM2Y0NDJjN2RjNWQyYjFjNmI3MGMyZjgzMzY0YTQ4OGNlNTk3M2FlODBiNGMzIn19fQ=", "Derp", "&7&oDerp Derp Derping all around"),
-	    SMILE("NTJlOTgxNjVkZWVmNGVkNjIxOTUzOTIxYzFlZjgxN2RjNjM4YWY3MWMxOTM0YTQyODdiNjlkN2EzMWY2YjgifX19", "Smile", "&7&oUh, because I am happy"),
-	    IRON("YmJhODQ1OTE0NWQ4M2ZmYzQ0YWQ1OGMzMjYwZTc0Y2E1YTBmNjM0YzdlZWI1OWExYWQzMjM0ODQ5YzkzM2MifX19", "Iron", "&7&oAs hard as iron!"),
-	    GOLD("YjZkMWNlNjk3ZTlkYmFhNGNjZjY0MjUxNmFhYTU5ODEzMzJkYWMxZDMzMWFmZWUyZWUzZGNjODllZmRlZGIifX19", "Gold", "&7&oMy precious!"),
-	    DIAMOND("YzAxNDYxOTczNjM0NTI1MTk2ZWNjNzU3NjkzYjE3MWFkYTRlZjI0YWE5MjgzNmY0MmVhMTFiZDc5YzNhNTAyZCJ9fX0", "Diamond", "&7&oThis is really strong!"),
-	    PISTON("YWE4NjhjZTkxN2MwOWFmOGU0YzM1MGE1ODA3MDQxZjY1MDliZjJiODlhY2E0NWU1OTFmYmJkN2Q0YjExN2QifX19", "Piston", "&7&oHave you got the redstone?"),
-	    COMMANDBLOCK("ODUxNGQyMjViMjYyZDg0N2M3ZTU1N2I0NzQzMjdkY2VmNzU4YzJjNTg4MmU0MWVlNmQ4YzVlOWNkM2JjOTE0In19fQ=", "CommandBlock", "&7&oControl the world with it!"),
-	    MUSIC("NGNlZWI3N2Q0ZDI1NzI0YTljYWYyYzdjZGYyZDg4Mzk5YjE0MTdjNmI5ZmY1MjEzNjU5YjY1M2JlNDM3NmUzIn19fQ=", "Music", "&7&oYou are so musical."),
-	    SQUID("MDE0MzNiZTI0MjM2NmFmMTI2ZGE0MzRiODczNWRmMWViNWIzY2IyY2VkZTM5MTQ1OTc0ZTljNDgzNjA3YmFjIn19fQ=", "Squid", "&7&oBloop Bloop!"),
-	    CHICKEN("MTYzODQ2OWE1OTljZWVmNzIwNzUzNzYwMzI0OGE5YWIxMWZmNTkxZmQzNzhiZWE0NzM1YjM0NmE3ZmFlODkzIn19fQ=", "Chicken", "&7&oBwwaaaaaaaaaaaakkkkk!"),
-	    PIG("NjIxNjY4ZWY3Y2I3OWRkOWMyMmNlM2QxZjNmNGNiNmUyNTU5ODkzYjZkZjRhNDY5NTE0ZTY2N2MxNmFhNCJ9fX0", "Pig", "&7&oOink Oink!"),
-	    BLAZE("Yjc4ZWYyZTRjZjJjNDFhMmQxNGJmZGU5Y2FmZjEwMjE5ZjViMWJmNWIzNWE0OWViNTFjNjQ2Nzg4MmNiNWYwIn19fQ=", "Blaze", "&7&oWatch out for the fire!"),
-	    SHEEP("ZjMxZjljY2M2YjNlMzJlY2YxM2I4YTExYWMyOWNkMzNkMThjOTVmYzczZGI4YTY2YzVkNjU3Y2NiOGJlNzAifX19", "Sheep", "&7&oBaaaa, baa"),
-	    GOLEM("ODkwOTFkNzllYTBmNTllZjdlZjk0ZDdiYmE2ZTVmMTdmMmY3ZDQ1NzJjNDRmOTBmNzZjNDgxOWE3MTQifX19", "Golem", "&7&oI am your guard."),
-	    ENDERMAN("N2E1OWJiMGE3YTMyOTY1YjNkOTBkOGVhZmE4OTlkMTgzNWY0MjQ1MDllYWRkNGU2YjcwOWFkYTUwYjljZiJ9fX0", "Enderman", "&7&oNow I am here, now I am there."),
-	    MARIO("ZGJhOGQ4ZTUzZDhhNWE3NTc3MGI2MmNjZTczZGI2YmFiNzAxY2MzZGU0YTliNjU0ZDIxM2Q1NGFmOTYxNSJ9fX0", "Mario", "&7&oIt is me! Mario!"),
-	    LUIGI("ZmYxNTMzODcxZTQ5ZGRhYjhmMWNhODJlZGIxMTUzYTVlMmVkMzc2NGZkMWNlMDI5YmY4MjlmNGIzY2FhYzMifX19", "Luigi", "&7&oLuigi time!"),
-	    BATMAN("ZjI1NmY3MTczNWVmNDU4NTgxYzlkYWNmMzk0MTg1ZWVkOWIzM2NiNmVjNWNkNTk0YTU3MTUzYThiNTY2NTYwIn19fQ=", "Batman", "&7&oI am batman!"),
-	    CHEST("NmY2OGQ1MDliNWQxNjY5Yjk3MWRkMWQ0ZGYyZTQ3ZTE5YmNiMWIzM2JmMWE3ZmYxZGRhMjliZmM2ZjllYmYifX19", "Chest", "&7&oOpen, and close"),
-	    SKULL("MTFmNTRmZjliYjQyODUxOTEyYWE4N2ExYmRhNWI3Y2Q5ODE0Y2NjY2ZiZTIyNWZkZGE4ODdhZDYxODBkOSJ9fX0", "Skull", "&7&oWho iss headless now?"),
-	    GHOST("NjhkMjE4MzY0MDIxOGFiMzMwYWM1NmQyYWFiN2UyOWE5NzkwYTU0NWY2OTE2MTllMzg1NzhlYTRhNjlhZTBiNiJ9fX0", "Ghost", "&7&o2spooky4u"),
-	    JACKOLANTERN("MDI4OWQ0YjRjOTYyOTU5MTVmMDY4Yjk5YzI3ZDM5NDI3M2Y5ZjI2NGZjOTY4YzVkNWM0N2RmMmY1YmUyIn19fQ=", "JackOLantern", "&7&oA little pumkin"),
-	    SCARYCLOW("ODZkYmMxZGViYzU3NDM4YTVkZTRiYTkxNTE1MTM4MmFiYzNkOGYxMzE4ZTJhMzVlNzhkZmIzMGYwNGJjNDY3In19fQ=", "ScaryClown", "&7&oHope you are not scared of clowns."),
-	    SANTA("MmQ2MWNjYmZkY2RmODk0MWFkYWY3NmM2YzBlMDE4MmQyYzhiYmI1ZGMxOGYzNzQ4OTU2NTJiYzY2MWI2ZWQifX19", "Santa", "&7&oOh oh oh! Merry Christmas!"),
-	    SNOWMAN("OThlMzM0ZTRiZWUwNDI2NDc1OWE3NjZiYzE5NTVjZmFmM2Y1NjIwMTQyOGZhZmVjOGQ0YmYxYmIzNmFlNiJ9fX0", "Snowman", "&7&oI don't have a skull.. or bones"),
-	    PRESENT("ZjBhZmE0ZmZmZDEwODYzZTc2YzY5OGRhMmM5YzllNzk5YmNmOWFiOWFhMzdkODMxMjg4MTczNDIyNWQzY2EifX19", "Present", "&7&oFrom Santa, to you!"),
-	    ELF("ODJhYjZjNzljNjNiODMzNGIyYzAzYjZmNzM2YWNmNjFhY2VkNWMyNGYyYmE3MmI3NzdkNzdmMjhlOGMifX19", "Elf", "&7&oI work for Santa!");
+	public Hat(CosmeticType type){
+		super(type);
+	}
 
-		ItemStack itemStack;
-		String name;
-		String permission;
+	@Override
+	public void run(Player player){
+		player.getInventory().setHelmet(this.getItemStack());
+	}
 
-		private HatType(String url, String name, String defaultDesc){
-			this.permission = "cosmetics.hats."+name.toLowerCase();
-			this.name = "§e§l"+name;
-	        this.itemStack = ItemFactory.createSkull(url,this.name);
-	    }
+	@Override
+	public void clear(Player player){
+		player.getInventory().setHelmet(null);
+	}
 
-		public void equip(Player player){
-			if(!this.isEnabled(player)){
-				player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
-				return;
-			}
-			player.closeInventory();
-			player.getInventory().setHelmet(itemStack);
+	@Override
+	public ItemStack getItemStack(){
+		ItemStack item = ItemUtil.getHead(this.getTexture());
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(this.getType().getName());
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	private String getTexture(){
+		switch(this.getType()){
+			case HAT_CAKE:             return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDU2MWRlZDhkODM4NWI5MTNhMDkxYWVmNDc4M2ZjY2JmZDNkMzhlZGQ5MGIyZTg5YjcyM2I1YTU3NDM0YmY0In19fQ==";
+			case HAT_COOKIE:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjU5MmNmOWY0MmE1YThjOTk1OTY4NDkzZmRkMWIxMWUwYjY5YWFkNjQ3M2ZmNDUzODRhYmU1OGI3ZmM3YzcifX19";
+			case HAT_PIE:              return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjQ4MzkxMmZiMmEzMGQ3MzM2MWMwMzg0NDYxMTc3NWIxYzMzMjE4YjNhNTZiZGVkNmFlNzkyYzJlNDM5ODgxIn19fQ==";
+			case HAT_HAM:              return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjYzMzZmNWJiOTk3NWJmNTdlMTRkYjY2MTVjMTg5NmM1YzRiOWMzOWFhZDE3YjE3ZTRlZTIwYjIzMWNmNiJ9fX0=";
+			case HAT_COMPUTER1:        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGFlNTJhZThjOThhYzE5ZmQwNzYzN2E0NjlmZmEyNTZhYjBiM2IxMGVjZTYyNDMxODYxODhiYTM4ZGYxNTQifX19";
+			case HAT_COMPUTER2:        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTNkYTM5ZTU1NmM5Mjc5OTAzODRmYWExZmViM2I4MjUyNTJkYWM3OGNkMjg4Nzc5Y2RlMTExN2MzN2E4In19fQ==";
+			case HAT_MONITOR1:         return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQxZTk5NzkyODlmMDMwOTlhN2M1ODdkNTJkNDg4ZTI2ZTdiYjE3YWI1OTRiNjlmOTI0MzhkNzdlYWJjIn19fQ==";
+			case HAT_SECURITYCAMERA:   return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmYxNTlhMWNiZTE3M2Q5MjczOTJmYTY1ZmNmZTc4NTUzZDgxYWE1ZGMyOTQ5NWI5ZmJiYWRlMzYyZjhiZjkifX19";
+			case HAT_EYE:              return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmNlZjg3NzcyYWZkODViNDY4ZjRjN2ZiOTU3MWUzMTQzNWVmNzY1YWQ0MTNmZTQ2MDI2MjE1MDQyM2UyMDIxIn19fQ==";
+			case HAT_LIGHTSPACEHELMET: return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U4YWFkNjczMTU3YzkyMzE3YTg4YjFmODZmNTI3MWYxY2Q3Mzk3ZDdmYzhlYzMyODFmNzMzZjc1MTYzNCJ9fX0=";
+			case HAT_DARKSPACEHELMET:  return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzAyZTIyZjY1MDNjMzYzZGY2OWJmOWU5NDQ4ZmU4OWQyZjA1YmFlMzA1MzRiOGJiMTlkMjY4ZjA5ODliOTYifX19";
+			case HAT_FOOTBALLHELMET:   return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ3YjYyYWNhMjg0NDViOGUxMWVhMTc1MGVlYWNkOTc5MzJmYTM3YmE3NDQ3Njg1NzNlOGRjNThhNmFmMSJ9fX0";
+			case HAT_WILSON:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTk4ZDRmZTUxNzZhM2FjY2RlYmIxYzNmYjBiMjZjZjNhMTgxZmZmYzE2MGVhNTJhMDI4Y2I0MWYzNGNmZTEifX19";
+			case HAT_SKULL:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWFlMzg1NWY5NTJjZDRhMDNjMTQ4YTk0NmUzZjgxMmE1OTU1YWQzNWNiY2I1MjYyN2VhNGFjZDQ3ZDMwODEifX19";
+			case HAT_MISSINGTEXTURE:   return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTllYjlkYTI2Y2YyZDMzNDEzOTdhN2Y0OTEzYmEzZDM3ZDFhZDEwZWFlMzBhYjI1ZmEzOWNlYjg0YmMifX19";
+			case HAT_REDDIT:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ5YmQ0YjJmYThkYTgyNDdhODJjM2QxZmEyNDY3MTVmOWI2ZDk4Yzc3ODM3NGRhNmVmYzEwYzg5Y2Q2NCJ9fX0=";
+			case HAT_DIAMONDSTEVE:     return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTBiOGViMzMzNjIyYWU3ZGU5YjUzYjM2MDJmNDFmNjNkYjljMjUyOGI1YmUyMzFhYzk2NTE2NjExZmIxYSJ9fX0=";
+			case HAT_GOLDSTEVE:        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjkzN2UxYzQ1YmI4ZGEyOWIyYzU2NGRkOWE3ZGE3ODBkZDJmZTU0NDY4YTVkZmI0MTEzYjRmZjY1OGYwNDNlMSJ9fX0=";
+			case HAT_EMERALDSTEVE:     return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjViNjU2ZGE2NjZkMjc1OWU4MTk1NjQyMTQyZTExOWU2NTg1ODUyYzY2MTllMmFkNzlhZTJhZDE4MTQ2NSJ9fX0=";
+			case HAT_LUCKYBLOCK:       return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGI5MmNiNDMzMzNhYTYyMWM3MGVlZjRlYmYyOTliYTQxMmI0NDZmZTEyZTM0MWNjYzU4MmYzMTkyMTg5In19fQ";
+			case HAT_CROWN:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzJiYWYwYzU4OWE2YjU4MzUxMWQ4M2MyNjgyNDA4NDJkMzM2NDc3NGVjOWY1NjZkMWZkNGQzNDljZjQyZmIifX19";
+			case HAT_ENDERPORTAL:      return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTRhMzE5ZGVhZmVmZDZhZGIzN2YyMTQ0OWVhNTZkM2VhNWE4Mzg1N2ZiOTYxNmZhN2Q0ZjllYTYyNTE3NyJ9fX0=";
+			case HAT_SPONGE:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTYxM2ZkYWI0M2Q3NjgzOGI3YjhjMTkyNDQxNjNmMTc2NWRiODc0YmRmMTUxNjk2YmRjYjY1NGViMmU1MiJ9fX0=";
+			case HAT_DISPENSER:        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTgyZTZhYTk1MDExNzM4NGViNGJmNTUyMTcyODNhNzhmNTdiOGM4NWMwODlhYWQwM2JhYzVjYWE4M2MzMDIwIn19fQ==";
+			case HAT_YOSHI:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjcxZWJjMTFiZGQxNTE0MTBkYTcwZDkzMTI1OWM0ZTk2OTUyOGU2ZjU4ODllOWM0YmIyZGQ3NjNiOWVhZmQifX19";
+			case HAT_LUIGI:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmYxNTMzODcxZTQ5ZGRhYjhmMWNhODJlZGIxMTUzYTVlMmVkMzc2NGZkMWNlMDI5YmY4MjlmNGIzY2FhYzMifX19";
+			case HAT_MARIO:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmY3ZWI3NWU1NTQyY2M0OTM3YWFhZDViYjg2NTczOTNlYWYwMjY1MDA2ZWFjMWRjOTY2OTFmMzJlMTY0MzcifX19";
+			case HAT_BATMAN:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjI1NmY3MTczNWVmNDU4NTgxYzlkYWNmMzk0MTg1ZWVkOWIzM2NiNmVjNWNkNTk0YTU3MTUzYThiNTY2NTYwIn19fQ==";
+			case HAT_MASTERCHIEF:      return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjU0ODg0NGM0OGIwODJkZjU3Y2I0YWFkYzZiMjNhNGFmNDllM2JlMDI4ZjIxNmM2MmVmNTM5YWI4NGNjYmMwIn19fQ==";
+			case HAT_PORTALCORE:       return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjY4NGY0YTZlZDE0Mjg2NWRiMDkzOGU0ODc2NzY4NDlhNTRkNjQzNzhlMmU5ZTdmNzEzYjliMWU5ZDA0MSJ9fX0=";
+			case HAT_ORANGECORE:       return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODVjNGVmZmJhNGQ5OWY0MzczMTRjOGE4NzU1ODU2NzEzZmQ4NWRjZDE1YjM2OTBjNzQ5Y2UxZTQ0NDc0In19fQ==";
+			case HAT_GREENCORE:        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM1YTIxZDk1ZTg1OTc3NTlmYjI1OWM5NTFlYTY4ZTFhZDMzNzRjYTQxZTU2ZWYxMjZmZmFiZmUwM2MxZTAifX19";
+			case HAT_GOOMBA:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGU2MjE3MTI4Yzk4NzgzOTBlNTNjOTZiODEzNzAxMjI0OWE3Y2E2ODk2YzMwM2M1ZmI3ODJhY2U1OWQ5ZTRhIn19fQ==";
+			case HAT_DARTHVADER:       return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzFjM2UxZjIyNGI0NDZjY2FjNmE2Y2MzY2Q5ODkxMDE5YTEyMmY5OTY5MWMzOTA3OTkyYTNhZjk5YTIxYjAifX19";
+			case HAT_R2D2:             return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2NlYmM5Nzc5OGMyZTM2MDU1MWNhYjNkZDVkYjZkNTM0OTdmZTYzMDQwOTQxYzlhYzQ5MWE1OWNiZjM4M2E3YSJ9fX0=";
+			case HAT_CLONETROOPER:     return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzdlMGQ3MmNmNDQxY2NlOTRjY2UzY2IzYmNjZWM2ZmVjNWY4YWMyZDc5YmM5NjNkOGI3NGQ1NGEyMDYyIn19fQ==";
+			case HAT_STORMTROOPER:     return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTMyYzMzNmRhODRhN2JhNjEwYzg4MWFhOTk1Zjk2NjRmMTlkYzJjNDBiZDExNDQ5ZTIwYzZjM2EzZTc1MSJ9fX0=";
+			case HAT_GROOT:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjNjNzFhODVlZWIzY2Q2NDQ5MTU5Njc1YWE4OTI3OGEyYTFkNTg3YjRkMGI3NjgxNzRmYzJlMTVjOWJlNGQifX19";
+			case HAT_MANGLE:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGUxMTU5ZTFhYWQyMzk1OTdkZWE5ODYyOWUwOTQ2NTQwMTVjNmRkYjljZWQyYzliMGYzYmMxMmQ5ZTYzYWY4In19fQ==";
+			case HAT_FOXY:             return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjI4MTJhYWE5NTQ3NzNmMmFkYTVhMmY3N2UzMmJhMmY3ZDhkMWY1ZDFiYjRhMzBmODYyNzk2NDJkM2Q4YmI4In19fQ==";
+			case HAT_ZOIDBERG:         return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODIzOGMxMTRiMjdjYTlmZmQ2ZTc3NTRmZWM1ODJjN2UzNjk5MjgyODNiMmQ3ZmNlMTQ5ZWFhMzEyYmQyIn19fQ==";
+			case HAT_EWOK:             return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjMzZWNhNjk5Mzg0ZjNkMWZjNmNkMWQxZWQ1YThiOGMzNDc5OGM2NTY4ZWIxODQ0ZTUzY2JkYzM1OTgifX19";
+			case HAT_PATRICK:          return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk3MWI5Mjc3MjljNmVhY2UxNjU5M2IzM2E5ODZkNjE5NDNkNjJmNjk2MWRlNmRiNTk5YTgxOGIyYWYzMiJ9fX0=";
+			case HAT_SAMUS:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2E4ZDMxNGNjMzFjYThhZGYyZWU5OWJlMzliMzI3MzJiZTZkNmJlODUxMGJhOGVkNGFmMWI4ZmFiMmVmMGY5In19fQ==";
+			case HAT_GANONDORF:        return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2I3ODU0MzY5MTRkNDQ4ODg2Zjg3NmJlMGY0ODdjZjRjMzMyZDY5NmY2NjU3MGE4NGU4NmY4ZmE2N2YifX19";
+			case HAT_BENDER:           return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmUyM2Q2MDdlOTJlNzI5YWY5NjY0YmZhMjZiZTk1OGI0YjJmOWYzZTAxMmVlZDgzM2Y5YTM1ZWE0YzRiMCJ9fX0=";
+			case HAT_GHOST:            return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjhkMjE4MzY0MDIxOGFiMzMwYWM1NmQyYWFiN2UyOWE5NzkwYTU0NWY2OTE2MTllMzg1NzhlYTRhNjlhZTBiNiJ9fX0";
+			case HAT_ENDERDRAGON:      return "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzRlY2MwNDA3ODVlNTQ2NjNlODU1ZWYwNDg2ZGE3MjE1NGQ2OWJiNGI3NDI0YjczODFjY2Y5NWIwOTVhIn19fQ==";
 		}
-
-		public String toString(){
-			return this.name;
-		}
-
-		public ItemStack toItemStack(){
-			return this.itemStack;
-		}
-
-		public String toPermission(){
-			return this.permission;
-		}
-
-		public boolean isEnabled(Player player){
-			PermissionUser user = PermissionsEx.getUser(player);
-			String option = user.getOption(this.toPermission());
-			if(player.hasPermission("group.iVIP") || player.hasPermission("group.gVIP") || player.hasPermission("group.dVIP")) return true;
-			return (option != null ? Boolean.valueOf(option) : false);
-		}
-
-		public void setEnabled(Player player,boolean enabled){
-			PermissionUser user = PermissionsEx.getUser(player);
-			user.setOption(this.toPermission(),""+enabled);
-		}
-
-		public String giveReward(Player player){
-			this.setEnabled(player,true);
-			return CosmeticCategory.HAT.toString()+" > "+this.name();
-		}
-
-		public static HatType getRandom(){
-			return values()[(int) (Math.random() * values().length)];
-		}
+		return null;
 	}
 }

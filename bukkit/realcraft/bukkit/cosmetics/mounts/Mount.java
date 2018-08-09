@@ -1,233 +1,154 @@
 package realcraft.bukkit.cosmetics.mounts;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import net.minecraft.server.v1_13_R1.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftCreature;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-
-import net.minecraft.server.v1_12_R1.EntityCreature;
+import org.spigotmc.event.entity.EntityDismountEvent;
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.cosmetics.Cosmetic;
+import realcraft.bukkit.cosmetics.CosmeticPlayer;
 import realcraft.bukkit.cosmetics.Cosmetics;
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
+import realcraft.bukkit.cosmetics.cosmetic.Cosmetic;
+import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
 
-public abstract class Mount extends Cosmetic {
+import java.util.HashMap;
 
-	private MountType type;
+public abstract class Mount extends Cosmetic implements Listener {
 
-	HashMap<String,Entity> petEntity = new HashMap<String,Entity>();
+	private HashMap<CosmeticPlayer,Entity> entities = new HashMap<>();
 
-	public Mount(MountType type){
-		super(type.toString(),CosmeticCategory.MOUNT);
-		this.type = type;
-		BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run(){
-            	for(Player player : Bukkit.getServer().getOnlinePlayers()){
-            		if(isRunning(player) && getEntity(player) != null){
-            			if(player.getVehicle() == getEntity(player)) onUpdate(player,getEntity(player));
-            			else clearCosmetic(player);
-            		}
-            	}
-            }
-        };
-        runnable.runTaskTimerAsynchronously(RealCraft.getInstance(),0,type.toRepeatDelay());
+	public Mount(CosmeticType type){
+		super(type);
+		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
+		Bukkit.getScheduler().runTaskTimerAsynchronously(RealCraft.getInstance(),new Runnable(){
+			@Override
+			public void run(){
+				for(Player player : Bukkit.getServer().getOnlinePlayers()){
+					if(Mount.this.isRunning(player)){
+						Mount.this.effect(player,entities.get(Cosmetics.getCosmeticPlayer(player)));
+					}
+				}
+			}
+		},0,this.getRepeatDelay());
 	}
-
-	public MountType getType(){
-		return this.type;
-	}
-
-	public Entity getEntity(Player player){
-		return petEntity.get(player.getName());
-	}
-
-	public void setEntity(Player player,Entity entity){
-		petEntity.put(player.getName(),entity);
-	}
-
-	public abstract void onCreate(Player player);
-	public abstract void onClear(Player player);
-	public abstract void onUpdate(Player player,Entity entity);
 
 	@Override
-	public void clearCosmetic(Player player){
-		this.setRunning(player,false);
-		this.onClear(player);
+	public void run(Player player){
+		entities.put(Cosmetics.getCosmeticPlayer(player),this.create(player));
 	}
 
-	public void equip(Player player){
-		if(!this.isEnabled(player)){
-			player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
-			return;
+	@Override
+	public void clear(Player player){
+		if(entities.containsKey(Cosmetics.getCosmeticPlayer(player))){
+			entities.get(Cosmetics.getCosmeticPlayer(player)).remove();
+			entities.remove(Cosmetics.getCosmeticPlayer(player));
 		}
-		if(player.getLocation().getBlockY() < 60){
-			player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
-			return;
-		}
-		player.closeInventory();
-		Cosmetics.clearMounts(player);
-		this.setRunning(player,true);
-		this.onCreate(player);
 	}
 
-	public boolean isEnabled(Player player){
-		PermissionUser user = PermissionsEx.getUser(player);
-		String option = user.getOption(type.toPermission());
-		if(player.hasPermission("group.iVIP") || player.hasPermission("group.gVIP") || player.hasPermission("group.dVIP")) return true;
-		return (option != null ? Boolean.valueOf(option) : false);
-	}
-
-	public void setEnabled(Player player,boolean enabled){
-		PermissionUser user = PermissionsEx.getUser(player);
-		user.setOption(type.toPermission(),""+enabled);
-	}
-
-	public String giveReward(Player player){
-		this.setEnabled(player,true);
-		return this.getCategory().toString()+" > "+type.toString();
-	}
-
-	public void move(Player player){
-		Vector vel = player.getLocation().getDirection().setY(0).normalize().multiply(4);
-        Location loc = player.getLocation().add(vel);
-        try {
-        	Mount.move((Creature)this.getEntity(player),loc);
-        } catch (Exception e){
-        	this.clearCosmetic(player);
-        }
-	}
-
-	public static void move(Creature entity,Location loc){
-        if(entity == null) return;
-        EntityCreature ec = ((CraftCreature) (entity)).getHandle();
-        ec.P = 1;
-        if(loc == null) return;
-        ec.getNavigation().a(loc.getX(), loc.getY(), loc.getZ(), (1.0D + 2.0D * 0.5d) * 1.0D);
-    }
+	public abstract Entity create(Player player);
+	public abstract void effect(Player player,Entity entity);
 
 	@EventHandler
-    public void teleportEvent(PlayerTeleportEvent event){
+	public void PlayerTeleportEvent(PlayerTeleportEvent event){
 		Player player = event.getPlayer();
-		if(this.getEntity(player) != null){
-			if ((event.getFrom().getBlockX() != event.getTo().getBlockX()
-	                || event.getFrom().getBlockY() != event.getTo().getBlockY()
-	                || event.getFrom().getBlockZ() != event.getTo().getBlockZ()
-	                || !event.getFrom().getWorld().getName().equalsIgnoreCase(event.getTo().getWorld().getName()))){
-				this.clearCosmetic(player);
+		if(Mount.this.isRunning(player)){
+			if((event.getFrom().getBlockX() != event.getTo().getBlockX()
+					|| event.getFrom().getBlockY() != event.getTo().getBlockY()
+					|| event.getFrom().getBlockZ() != event.getTo().getBlockZ()
+					|| !event.getFrom().getWorld().getName().equalsIgnoreCase(event.getTo().getWorld().getName()))){
+				Mount.this.setEnabled(player,false);
 			}
 		}
 	}
 
 	@EventHandler
-    public void VehicleExitEvent(VehicleExitEvent event){
-        if(event.getVehicle() != null && event.getExited() != null && event.getExited() instanceof Player){
-        	Player player = (Player) event.getExited();
-        	if(this.getEntity(player) != null){
-        		this.clearCosmetic(player);
-        	}
-        }
-    }
+	public void EntityDismountEvent(EntityDismountEvent event){
+		if(event.getEntity().getType() != EntityType.PLAYER) return;
+		Player player = (Player)event.getEntity();
+		if(Mount.this.isRunning(player) && event.getDismounted().equals(entities.get(Cosmetics.getCosmeticPlayer(player)))){
+			Mount.this.setEnabled(player,false);
+		}
+	}
 
-	public enum MountType {
-		INFERNALHORROR, WALKINGDEAD, GLACIALSTEED, SNAKE, NYANSHEEP, PIG, SPIDER, SLIME;
+	private int getRepeatDelay(){
+		switch(this.getType()){
+			case MOUNT_GLACIALSTEED: return 4;
+		}
+		return 2;
+	}
 
-		public String toString(){
-			switch(this){
-				case INFERNALHORROR: return "§4§lInfernal Horror";
-				case WALKINGDEAD: return "§2§lWalking Dead";
-				case GLACIALSTEED: return "§b§lGlacial Steed";
-				case SNAKE: return "§6§lSnake";
-				case NYANSHEEP: return "§4§lNy§6§la§e§ln §a§lSh§b§lee§d§lp";
-				case PIG: return "§d§lPiggy";
-				case SPIDER: return "§c§lSpider";
-				case SLIME: return "§a§lSlime";
+	public void moveOnLand(EntityLiving creature,float strafe,float vertical,float forward,float speed) {
+		creature.o((forward != 0 || strafe != 0 ? 0.2F : 0F));
+		double gravity = 0.08D;
+		if (creature.motY <= 0.0D && creature.hasEffect(MobEffects.SLOW_FALLING)) {
+			gravity = 0.01D;
+			creature.fallDistance = 0.0F;
+		}
+		BlockPosition.b blockposition_b = BlockPosition.b.d(creature.locX, creature.getBoundingBox().b - 1.0D, creature.locZ);
+		Throwable throwable = null;
+		try {
+			float blockFriction = creature.onGround ? creature.world.getType(blockposition_b).getBlock().n() * 0.91F : 0.91F;
+			float friction = 0.16277137F / (blockFriction * blockFriction * blockFriction);
+			creature.a(strafe, vertical, forward, (creature.onGround ? creature.cK() * friction : creature.aU) * speed); // moveRelative
+			blockFriction = creature.onGround ? creature.world.getType(blockposition_b.e(creature.locX, creature.getBoundingBox().b - 1.0D, creature.locZ)).getBlock().n() * 0.91F : 0.91F;
+			if (creature.z_()) { // isOnLadder
+				creature.motX = MathHelper.a(creature.motX, -0.15D, 0.15D);
+				creature.motZ = MathHelper.a(creature.motZ, -0.15D, 0.15D);
+				creature.fallDistance = 0.0F;
+				if (creature.motY < -0.15D) {
+					creature.motY = -0.15D;
+				}
 			}
-			return null;
-		}
-
-		public String toPermission(){
-			return "cosmetics.mounts."+this.name().toLowerCase();
-		}
-
-		public Material toMaterial(){
-			switch(this){
-				case INFERNALHORROR: return Material.BONE;
-				case WALKINGDEAD: return Material.ROTTEN_FLESH;
-				case GLACIALSTEED: return Material.PACKED_ICE;
-				case SNAKE: return Material.SEEDS;
-				case NYANSHEEP: return Material.STAINED_GLASS;
-				case PIG: return Material.PORK;
-				case SPIDER: return Material.WEB;
-				case SLIME: return Material.SLIME_BALL;
+			creature.move(EnumMoveType.SELF, creature.motX, creature.motY, creature.motZ);
+			if (creature.positionChanged && creature.z_()) { // isOnLadder
+				creature.motY = 0.2D;
 			}
-			return Material.AIR;
+			MobEffect levitation = creature.getEffect(MobEffects.LEVITATION);
+			if (levitation != null) {
+				creature.motY += (0.05D * (double) (levitation.getAmplifier() + 1) - creature.motY) * 0.2D;
+				creature.fallDistance = 0.0F;
+			} else {
+				blockposition_b.e(creature.locX, 0.0D, creature.locZ);
+				if (creature.world.isClientSide && (!creature.world.isLoaded(blockposition_b) || !creature.world.getChunkAtWorldCoords(blockposition_b).y())) {
+					creature.motY = creature.locY > 0.0D ? -0.1D : 0.0D;
+				} else if (!creature.isNoGravity()) {
+					creature.motY -= gravity;
+				}
+			}
+
+			creature.motY *= 0.98D;
+			creature.motX *= (double) blockFriction;
+			creature.motZ *= (double) blockFriction;
+		} catch (Throwable throwable1) {
+			throwable = throwable1;
+			throw throwable1;
+		} finally {
+			if (blockposition_b != null) {
+				if (throwable != null) {
+					try {
+						blockposition_b.close();
+					} catch (Throwable throwable2) {
+						throwable.addSuppressed(throwable2);
+					}
+				} else {
+					blockposition_b.close();
+				}
+			}
+
 		}
 
-		public Byte toData(){
-			switch(this){
-				case INFERNALHORROR: return (byte)0;
-				case WALKINGDEAD: return (byte)0;
-				case GLACIALSTEED: return (byte)0;
-				case SNAKE: return (byte)0;
-				case NYANSHEEP: return (byte)9;
-				case PIG: return (byte)0;
-				case SPIDER: return (byte)0;
-				case SLIME: return (byte)0;
-			}
-			return (byte)0;
+		creature.aI = creature.aJ; // prevLimbSwingAmount = limbSwingAmount;
+		double d0 = creature.locX - creature.lastX;
+		double d2 = creature.locZ - creature.lastZ;
+		float f3 = MathHelper.sqrt(d0 * d0 + d2 * d2) * 4.0F;
+		if (f3 > 1.0F) {
+			f3 = 1.0F;
 		}
-
-		public int toRepeatDelay(){
-			switch(this){
-				case INFERNALHORROR: return 2;
-				case WALKINGDEAD: return 2;
-				case GLACIALSTEED: return 2;
-				case SNAKE: return 2;
-				case NYANSHEEP: return 1;
-				case PIG: return 2;
-				case SPIDER: return 20;
-				case SLIME: return 20;
-			}
-			return 1;
-		}
-
-		public EntityType toEntityType(){
-			switch(this){
-				case INFERNALHORROR: return EntityType.SKELETON_HORSE;
-				case WALKINGDEAD: return EntityType.ZOMBIE_HORSE;
-				case GLACIALSTEED: return EntityType.HORSE;
-				case SNAKE: return EntityType.SHEEP;
-				case NYANSHEEP: return EntityType.SHEEP;
-				case PIG: return EntityType.PIG;
-				case SPIDER: return EntityType.SPIDER;
-				case SLIME: return EntityType.SLIME;
-			}
-			return null;
-		}
-
-		public ArrayList<String> toLore(){
-			ArrayList<String> lore = new ArrayList<String>();
-			switch(this){
-			default:
-				break;
-			}
-			lore.clear();
-			return lore;
-		}
+		creature.aJ += (f3 - creature.aJ) * 0.4F; // limbSwingAmount
+		creature.aK += creature.aJ; // limbSwing += limbSwingAmount
 	}
 }

@@ -1,11 +1,5 @@
 package realcraft.bukkit.heads;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,10 +13,15 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.share.ServerType;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CosmeticHeads implements Listener {
 
@@ -192,7 +191,7 @@ public class CosmeticHeads implements Listener {
 				}
 			}
 
-			item = new ItemStack(Material.SKULL_ITEM);
+			item = new ItemStack(Material.SKELETON_SKULL);
 			meta = item.getItemMeta();
 			meta.setDisplayName("§e§lCosmetic Heads");
 			ArrayList<String> lores = new ArrayList<String>();

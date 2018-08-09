@@ -10,6 +10,7 @@ public class Test {
 		new ChunkTest();
 		new ImageTest();
 		new PokemonTest();
+		new TitleTest();
 		if(RealCraft.isTestServer()){
 			//new SignTest();
 			//new KickTest();

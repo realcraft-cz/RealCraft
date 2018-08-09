@@ -1,14 +1,14 @@
 package realcraft.share.users;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.UUID;
-
 import realcraft.bungee.users.auth.UsersAuthentication.UserLoginAttempts;
 import realcraft.share.ServerType;
 import realcraft.share.database.DB;
 import realcraft.share.skins.Skin;
 import realcraft.share.skins.SkinUtil;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.UUID;
 
 public class User {
 
@@ -38,7 +38,8 @@ public class User {
 
 	private int coins;
 	private int coinsboost;
-	private int lobbyKeys;
+
+	private int money;
 
 	private long lastPlayTime;
 
@@ -183,19 +184,18 @@ public class User {
 		return coins;
 	}
 
-	public int getLobbyKeys(){
-		return lobbyKeys;
+	public void addMoney(int money){
+		this.money += money;
+		DB.update("UPDATE "+Users.USERS+" SET user_money = '"+this.money+"' WHERE user_id = '"+this.getId()+"'");
 	}
 
-	public void giveLobbyKeys(int keys){
-		lobbyKeys += keys;
-		if(lobbyKeys < 0) lobbyKeys = 0;
-		DB.update("UPDATE "+Users.USERS+" SET user_lobby_keys = '"+lobbyKeys+"' WHERE user_id = '"+this.getId()+"'");
+	public int getMoney(){
+		return money;
 	}
 
 	public void reload(){
 		skin = null;
-		ResultSet rs = DB.query("SELECT user_uuid,user_name,user_rank,user_password,user_ip,user_premium,user_skin,user_avatar,user_logged,user_registered,user_firstlogin,user_lastlogin,user_last_skinned,user_server,user_coins,user_coinsboost,user_lobby_keys FROM "+Users.USERS+" WHERE user_id = '"+this.getId()+"'");
+		ResultSet rs = DB.query("SELECT user_uuid,user_name,user_rank,user_password,user_ip,user_premium,user_skin,user_avatar,user_logged,user_registered,user_firstlogin,user_lastlogin,user_last_skinned,user_server,user_coins,user_coinsboost,user_money FROM "+Users.USERS+" WHERE user_id = '"+this.getId()+"'");
 		try {
 			if(rs.next()){
 				uuid = UUID.fromString(rs.getString("user_uuid"));
@@ -213,7 +213,7 @@ public class User {
 				lastSkinned = rs.getLong("user_last_skinned");
 				coins = rs.getInt("user_coins");
 				coinsboost = rs.getInt("user_coinsboost");
-				lobbyKeys = rs.getInt("user_lobby_keys");
+				money = rs.getInt("user_money");
 				server = ServerType.getByName(rs.getString("user_server"));
 			}
 			rs.close();

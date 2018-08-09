@@ -1,16 +1,12 @@
 package realcraft.bukkit.lobby;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import net.minecraft.server.v1_13_R1.BlockPosition;
+import net.minecraft.server.v1_13_R1.TileEntitySkull;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,15 +16,13 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import net.minecraft.server.v1_12_R1.TileEntitySkull;
 import realcraft.bukkit.RealCraft;
 import ru.beykerykt.lightapi.LightAPI;
 import ru.beykerykt.lightapi.chunks.ChunkInfo;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.UUID;
 
 public class LobbyLanterns implements Listener {
 	RealCraft plugin;
@@ -68,7 +62,7 @@ public class LobbyLanterns implements Listener {
 				player.sendMessage("/"+args[0]+" [1-2]");
 				return;
 			}
-			ItemStack head = new ItemStack(Material.SKULL_ITEM,1,(short)3);
+			ItemStack head = new ItemStack(Material.PLAYER_HEAD);
 			SkullMeta headMeta = (SkullMeta) head.getItemMeta();
 			GameProfile profile = new GameProfile(UUID.randomUUID(),null);
 			if(type == 2) profile.getProperties().put("textures",new Property("textures",lanternTexture2));
@@ -105,7 +99,7 @@ public class LobbyLanterns implements Listener {
 	}
 
 	public boolean isBlockLantern(Block block){
-		if(block.getType() == Material.SKULL){
+		if(block.getType() == Material.PLAYER_HEAD){
 			Location location = block.getLocation();
 			TileEntitySkull skullTile = (TileEntitySkull)((CraftWorld)block.getWorld()).getHandle().getTileEntity(new BlockPosition(location.getBlockX(),location.getBlockY(),location.getBlockZ()));
 			if(skullTile != null){

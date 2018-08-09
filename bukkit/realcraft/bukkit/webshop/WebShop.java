@@ -1,23 +1,18 @@
 package realcraft.bukkit.webshop;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import com.earth2me.essentials.Essentials;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-
-import com.earth2me.essentials.Essentials;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.users.Users;
 import realcraft.share.ServerType;
+import realcraft.share.database.DB;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class WebShop implements Listener, Runnable {
 
@@ -44,15 +39,15 @@ public class WebShop implements Listener, Runnable {
 	}
 
 	public void checkPlayerPayments(Player player){
-		ResultSet rs = RealCraft.getInstance().db.query("SELECT * FROM "+PAYMENTS+" WHERE payment_finished = '0' AND user_id = '"+Users.getUser(player).getId()+"' AND ("+(RealCraft.getServerType() == ServerType.SURVIVAL ? "payment_type = '"+TYPE_VIP+"' OR payment_type = '"+TYPE_ITEM+"'" : "payment_type = '"+TYPE_VIP+"'")+") LIMIT 1");
+		ResultSet rs = DB.query("SELECT * FROM "+PAYMENTS+" WHERE payment_finished = '0' AND user_id = '"+Users.getUser(player).getId()+"' AND ("+(RealCraft.getServerType() == ServerType.SURVIVAL ? "payment_type = '"+TYPE_VIP+"' OR payment_type = '"+TYPE_ITEM+"'" : "payment_type = '"+TYPE_VIP+"'")+") LIMIT 1");
 		try {
 			while(rs.next()){
 				if(rs.getInt("payment_type") == TYPE_VIP){
 					this.processVIPPayment(player,rs.getInt("payment_id"),rs.getInt("payment_amount"));
 				}
-				else if(rs.getInt("payment_type") == TYPE_ITEM){
+				/*else if(rs.getInt("payment_type") == TYPE_ITEM){
 					this.processItemPayment(player,rs.getInt("payment_id"),rs.getInt("payment_meta1"),rs.getInt("payment_meta2"),rs.getInt("payment_amount"));
-				}
+				}*/
 			}
 			rs.close();
 		} catch (SQLException e){
@@ -61,7 +56,7 @@ public class WebShop implements Listener, Runnable {
 	}
 
 	public void processVIPPayment(Player player,int payment,int days){
-		RealCraft.getInstance().db.update("UPDATE "+PAYMENTS+" SET payment_finished = '"+(System.currentTimeMillis()/1000)+"' WHERE payment_id = '"+payment+"'");
+		DB.update("UPDATE "+PAYMENTS+" SET payment_finished = '"+(System.currentTimeMillis()/1000)+"' WHERE payment_id = '"+payment+"'");
 		int time = PermissionsEx.getPermissionManager().getUser(player).getOptionInteger("group-dVIP-until",null,0);
 		if(time > System.currentTimeMillis()/1000) time = (time-((int)(System.currentTimeMillis()/1000)));
 		if(days > 0) PermissionsEx.getPermissionManager().getUser(player).addGroup("dVIP",null,days*86400+time);
@@ -80,8 +75,7 @@ public class WebShop implements Listener, Runnable {
 		player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
 	}
 
-	@SuppressWarnings("deprecation")
-	public void processItemPayment(Player player,int payment,int id,int data,int amount){
+	/*public void processItemPayment(Player player,int payment,int id,int data,int amount){
 		if(player.getInventory().firstEmpty() != -1){
 			RealCraft.getInstance().db.update("UPDATE "+PAYMENTS+" SET payment_finished = '"+(System.currentTimeMillis()/1000)+"' WHERE payment_id = '"+payment+"'");
 
@@ -104,5 +98,5 @@ public class WebShop implements Listener, Runnable {
 			player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
 			player.getInventory().addItem(item);
 		}
-	}
+	}*/
 }

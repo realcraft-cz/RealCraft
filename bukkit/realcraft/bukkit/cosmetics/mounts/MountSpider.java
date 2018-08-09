@@ -1,129 +1,130 @@
 package realcraft.bukkit.cosmetics.mounts;
 
-import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
+import net.minecraft.server.v1_13_R1.*;
+import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.entity.Spider;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
 
-import net.minecraft.server.v1_12_R1.DamageSource;
-import net.minecraft.server.v1_12_R1.EntityHuman;
-import net.minecraft.server.v1_12_R1.EntityInsentient;
-import net.minecraft.server.v1_12_R1.EntitySpider;
-import net.minecraft.server.v1_12_R1.MathHelper;
-import net.minecraft.server.v1_12_R1.World;
-import realcraft.bukkit.cosmetics.nms.WrapperEntityHuman;
-import realcraft.bukkit.cosmetics.nms.WrapperEntityInsentient;
-import realcraft.bukkit.cosmetics.utils.EntityRegister;
+import java.lang.reflect.Field;
 
 public class MountSpider extends Mount {
 
-    public MountSpider(MountType type){
-        super(type);
-        EntityRegister.register("Spider",this.getType().toEntityType(),CustomSpider.class);
-    }
+	public MountSpider(CosmeticType type){
+		super(type);
+	}
 
-    @Override
-    public void onCreate(Player player){
-    	CustomSpider spider = new CustomSpider(((CraftWorld)player.getWorld()).getHandle());
-    	spider.setPositionRotation(player.getLocation().getX(),player.getLocation().getY(),player.getLocation().getZ(),player.getLocation().getYaw(),player.getLocation().getPitch());
-    	((CraftLivingEntity) spider.getBukkitEntity()).setRemoveWhenFarAway(false);
-    	((CraftWorld)player.getWorld()).getHandle().addEntity(spider,SpawnReason.CUSTOM);
-    	spider.getBukkitEntity().setPassenger(player);
-    	this.setEntity(player,spider.getBukkitEntity());
-    }
+	@Override
+	public Entity create(Player player){
+		CustomEntity cEntity = new CustomEntity(((CraftWorld)player.getLocation().getWorld()).getHandle());
+		cEntity.setLocation(player.getLocation().getX(),player.getLocation().getY(),player.getLocation().getZ(),player.getLocation().getPitch(),player.getLocation().getYaw());
+		((CraftWorld)player.getLocation().getWorld()).getHandle().addEntity(cEntity,CreatureSpawnEvent.SpawnReason.CUSTOM);
+		Spider entity = (Spider)cEntity.getBukkitEntity();
+		entity.setNoDamageTicks(Integer.MAX_VALUE);
+		entity.setInvulnerable(true);
+		entity.addPassenger(player);
+		return entity;
+	}
 
-    @Override
-    public void onClear(Player player){
-    	Entity entity = this.getEntity(player);
-    	if(entity != null){
-    		entity.remove();
-    		this.setEntity(player,null);
-    	}
-    }
+	@Override
+	public void effect(Player player,Entity entity){
+	}
 
-    @Override
-    public void onUpdate(Player player,Entity entity){
-    }
+	private class CustomEntity extends EntitySpider {
 
-    public class CustomSpider extends EntitySpider {
-    	public CustomSpider(World world){
-    		super(world);
-    		setNoAI(true);
-    	}
+		private Field jumping;
+		private boolean isJumping = false;
 
-    	@Override
-    	public void a(float sideMot, float forMot, float f2){
-    		EntityHuman passenger = null;
-    		if(!bF().isEmpty()){
-    			passenger = (EntityHuman) bF().get(0);
-    		}
-    		ride(sideMot,forMot,passenger,this);
-    	}
+		public CustomEntity(World world){
+			super(world);
 
-    	public float getSpeed(){
-    		return 1;
-    	}
+			if (jumping == null) {
+				try {
+					jumping = EntityLiving.class.getDeclaredField("bg");
+					jumping.setAccessible(true);
+				} catch (NoSuchFieldException ignore) {
+				}
+			}
+		}
 
-    	@Override
-    	public boolean damageEntity(DamageSource source,float f){
-    		return false;
-    	}
+		@Override
+		protected boolean isTypeNotPersistent() {
+			return false;
+		}
 
-    	public void ride(float sideMot, float forMot, EntityHuman passenger, EntityInsentient entity){
-    		WrapperEntityInsentient wEntity = new WrapperEntityInsentient(entity);
-            WrapperEntityHuman wPassenger = new WrapperEntityHuman(passenger);
+		@Override
+		public void a(float f, float f1, float f2) {
+			EntityPlayer rider = getRider();
+			if (rider != null) {
 
-            if(passenger != null) {
-                entity.lastYaw = entity.yaw = passenger.yaw % 360f;
-                entity.pitch = (passenger.pitch * 0.5F) % 360f;
 
-                wEntity.setRenderYawOffset(entity.yaw);
-                wEntity.setRotationYawHead(entity.yaw);
+				// do not target anything while being ridden
+				setGoalTarget(null, null, false);
 
-                sideMot = wPassenger.getMoveStrafing() * 0.25f;
-                forMot = wPassenger.getMoveForward() * 0.5f;
+				// eject rider if in water or lava
+				if (isInWater() || ax()) {
+					ejectPassengers();
+					rider.stopRiding();
+					return;
+				}
 
-                if(forMot <= 0.0F)
-                    forMot *= 0.25F;
+				// rotation
+				setYawPitch(lastYaw = yaw = rider.yaw, pitch = rider.pitch * 0.5F);
+				aS = aQ = yaw;
 
-                wEntity.setJumping(wPassenger.isJumping());
+				// controls
+				float forward = rider.bj;
+				float strafe = rider.bh * 0.5F;
+				if (forward <= 0.0F) {
+					forward *= 0.25F;
+				}
 
-                if(wPassenger.isJumping() && (entity.onGround)) {
-                    entity.motY = 0.4D;
+				if (jumping != null && !isJumping) {
+					try {
+						isJumping = jumping.getBoolean(rider);
+					} catch (IllegalAccessException ignore) {
+					}
+				}
 
-                    float f2 = MathHelper.sin(entity.yaw * 0.017453292f);
-                    float f3 = MathHelper.cos(entity.yaw * 0.017453292f);
-                    entity.motX += -0.4f * f2;
-                    entity.motZ += 0.4f * f3;
-                }
+				if (isJumping && onGround) { // !isJumping
+					motY = (double) 0.5f;
+					MobEffect jump = getEffect(MobEffects.JUMP);
+					if (jump != null) {
+						motY += (double) ((float) (jump.getAmplifier() + 1) * 0.1F);
+					}
+					impulse = true;
+					if (forward > 0.0F) {
+						motX += (double) (-0.4F * MathHelper.sin(yaw * 0.017453292F) * 0.5f);
+						motZ += (double) (0.4F * MathHelper.cos(yaw * 0.017453292F) * 0.5f);
+					}
+				}
 
-                wEntity.setStepHeight(1.0f);
-                wEntity.setJumpMovementFactor(wEntity.getMoveSpeed() * 0.1f);
+				// move
+				moveOnLand(this, strafe, f1, forward, 1f);
 
-                wEntity.setRotationYawHead(entity.yaw);
+				if (onGround) {
+					isJumping = false;
+				}
+				return;
+			}
+			super.a(f, f1, f2);
+		}
 
-                wEntity.setMoveSpeed(0.35f);
-                super.g(sideMot, forMot);
+		private EntityPlayer getRider(){
+			if(passengers != null && !passengers.isEmpty()){
+				net.minecraft.server.v1_13_R1.Entity entity = passengers.get(0);
+				if(entity instanceof EntityPlayer){
+					return (EntityPlayer)entity;
+				}
+			}
+			return null;
+		}
 
-                wEntity.setPrevLimbSwingAmount(wEntity.getLimbSwingAmount());
-
-                double dx = entity.locX - entity.lastX;
-                double dz = entity.locZ - entity.lastZ;
-
-                float f4 = MathHelper.sqrt(dx * dx + dz * dz) * 4;
-
-                if(f4 > 1)
-                    f4 = 1;
-
-                wEntity.setLimbSwingAmount(wEntity.getLimbSwingAmount() + (f4 - wEntity.getLimbSwingAmount()) * 0.4f);
-                wEntity.setLimbSwing(wEntity.getLimbSwing() + wEntity.getLimbSwingAmount());
-            } else {
-                wEntity.setStepHeight(0.5f);
-                wEntity.setJumpMovementFactor(0.02f);
-
-                super.g(sideMot, forMot);
-            }
-    	}
-    }
+		@Override
+		public NBTTagCompound save(NBTTagCompound nbttagcompound){
+			return null;
+		}
+	}
 }

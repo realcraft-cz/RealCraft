@@ -1,8 +1,5 @@
 package realcraft.bukkit.lobby;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,10 +10,12 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.users.Users;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class LobbyScoreboard implements Listener, Runnable {
 	Lobby lobby;
@@ -77,35 +76,17 @@ public class LobbyScoreboard implements Listener, Runnable {
 			objective.unregister();
 		}
 
-		objective = scoreboard.registerNewObjective("lobby","dummy");
+		objective = scoreboard.registerNewObjective("lobby","dummy","§e§lRealCraft.cz");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-		objective.setDisplayName("§e§lRealCraft.cz");
 
 		this.resetLines();
 
-		/*if(!RealCraft.isTestServer()){
-			this.addLine(" ");
-			this.addLine("§a§lPripojeno");
-			this.addLine("§f"+lobby.lobbymenu.getAllPlayersCount()+"/100");
-			this.addLine(" ");
-			this.addLine("§b§lKlice k truhle");
-			this.addLine("§f"+lobby.lobbychests.getPlayerKeys(player)+" ");
-			this.addLine(" ");
-			this.addLine("§3§lUlomky klicu");
-			this.addLine("§f"+lobby.lobbychests.getPlayerKeyFragments(player)+"/10");
-			this.addLine(" ");
-			this.addLine("§d§lWeb");
-			this.addLine("§fwww.realcraft.cz");
-		}*/
 		this.addLine(" ");
 		this.addLine("§7§lPripojeno");
 		this.addLine("§f"+LobbyMenu.getAllPlayersCount()+"/100");
 		this.addLine(" ");
 		this.addLine("§a§lCoins");
 		this.addLine("§f"+Users.getUser(player).getCoins());
-		this.addLine(" ");
-		this.addLine("§b§lMagicke klice");
-		this.addLine("§f"+Users.getUser(player).getLobbyKeys()+" ");
 		this.addLine(" ");
 		this.addLine("§c§lWeb");
 		this.addLine("§fwww.realcraft.cz");

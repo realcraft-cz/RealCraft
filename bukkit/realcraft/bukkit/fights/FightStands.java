@@ -205,8 +205,8 @@ public class FightStands implements Listener, Runnable {
 		private void equip(){
 			if(type == FightType.PUBLIC){
 				stand.getEquipment().setHelmet(ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk3ZWRlNDlmNTJlMjVhZGVhYTU4YjFkNzgxNmZjY2UyMjI5ZmQ4ZjI0ZWI1ZjA2NWIyM2YzNzY1ODk0NGUifX19"));
-				stand.getEquipment().setChestplate(new ItemStack(Material.GOLD_CHESTPLATE));
-				stand.getEquipment().setLeggings(new ItemStack(Material.GOLD_LEGGINGS));
+				stand.getEquipment().setChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE));
+				stand.getEquipment().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS));
 				stand.getEquipment().setBoots(new ItemStack(Material.CHAINMAIL_BOOTS));
 				stand.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD));
 			}

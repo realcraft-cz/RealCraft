@@ -1,12 +1,5 @@
 package realcraft.bukkit.anticheat.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,6 +11,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 	public static final int lagMaxTicks = 80;
@@ -206,6 +206,7 @@ public class Utils {
 				player.hasPotionEffect(PotionEffectType.JUMP) ||
 				player.isFlying() ||
 				player.isInsideVehicle() ||
+				player.isSwimming() ||
 				player.isGliding());
 	}
 
@@ -213,7 +214,6 @@ public class Utils {
      * Determine whether or not a player can stand in a given location,
      * and do so correctly
      *
-     * @param theBlock The block to be checked
      * @return true if the player should be unable to stand here
      */
     public static boolean cantStandAtBetter(Block block)
@@ -321,7 +321,6 @@ public class Utils {
     /**
      * Determine if a player has a given Enchantment type
      *
-     * @param The name of the enchantment
      * @return the level, -1 if not contained
      */
     public static int getLevelForEnchantment(Player player, String enchantment)
@@ -490,7 +489,7 @@ public class Utils {
      * @param block block to check
      * @return true if slab
      */
-    public static boolean isSlab(Block block) {
+    /*public static boolean isSlab(Block block) {
         Material type = block.getType();
         switch (type) {
             case STEP:
@@ -501,7 +500,7 @@ public class Utils {
             default:
                 return false;
         }
-    }
+    }*/
 
     /**
      * Determine whether a block is a stair
@@ -509,7 +508,7 @@ public class Utils {
      * @param block block to check
      * @return true if stair
      */
-    public static boolean isStair(Block block) {
+    /*public static boolean isStair(Block block) {
         Material type = block.getType();
         switch (type) {
             case WOOD_STAIRS:
@@ -525,7 +524,7 @@ public class Utils {
             default:
                 return false;
         }
-    }
+    }*/
 
     /**
      * Determine whether a player can interact with this material
@@ -553,12 +552,12 @@ public class Utils {
      * @param player player to check
      * @return true if on lily pad
      */
-    public static boolean isOnLilyPad(Player player) {
+    /*public static boolean isOnLilyPad(Player player) {
         Block block = player.getLocation().getBlock();
         Material lily = Material.WATER_LILY;
         // TODO: Can we fix X this?
         return block.getType() == lily || block.getRelative(BlockFace.NORTH).getType() == lily || block.getRelative(BlockFace.SOUTH).getType() == lily || block.getRelative(BlockFace.EAST).getType() == lily || block.getRelative(BlockFace.WEST).getType() == lily;
-    }
+    }*/
 
     /**
      * Determine whether a player is fully submersed in liquid
@@ -587,7 +586,7 @@ public class Utils {
      * @return true if in web
      */
     public static boolean isInWeb(Player player) {
-        return player.getLocation().getBlock().getType() == Material.WEB || player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.WEB || player.getLocation().getBlock().getRelative(BlockFace.UP).getType() == Material.WEB;
+        return player.getLocation().getBlock().getType() == Material.COBWEB || player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.COBWEB || player.getLocation().getBlock().getRelative(BlockFace.UP).getType() == Material.COBWEB;
     }
 
     /**
@@ -597,7 +596,7 @@ public class Utils {
      * @return true if climbable
      */
     public static boolean isClimbableBlock(Block block) {
-        return block.getType() == Material.VINE || block.getType() == Material.LADDER || block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER;
+        return block.getType() == Material.VINE || block.getType() == Material.LADDER || block.getType() == Material.WATER;
     }
 
     /**
@@ -767,7 +766,7 @@ public class Utils {
     }
 
 
-    static {
+    /*sstatic {
         // START INSTANT BREAK MATERIALS
         INSTANT_BREAK.add(Material.RED_MUSHROOM);
         INSTANT_BREAK.add(Material.RED_ROSE);
@@ -827,5 +826,5 @@ public class Utils {
         COMBO.put(Material.STONE_SWORD, Material.WEB);
         COMBO.put(Material.WOOD_SWORD, Material.WEB);
         // END COMBOS
-    }
+    }*/
 }

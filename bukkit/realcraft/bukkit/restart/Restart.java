@@ -1,7 +1,5 @@
 package realcraft.bukkit.restart;
 
-import java.time.LocalDateTime;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,9 +11,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.Glow;
+
+import java.time.LocalDateTime;
 
 public class Restart implements Runnable, CommandExecutor {
 	RealCraft plugin;
@@ -119,7 +118,7 @@ public class Restart implements Runnable, CommandExecutor {
 				ItemStack item = player.getInventory().getItemInMainHand();
 				if(item != null && item.getType() != Material.AIR){
 					ItemMeta meta = item.getItemMeta();
-					meta.addEnchant(new Glow(255),1,true);
+					meta.addEnchant(Glow.getGlow(),1,true);
 					item.setItemMeta(meta);
 					player.getInventory().setItemInMainHand(item);
 				}

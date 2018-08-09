@@ -1,14 +1,19 @@
 package realcraft.bukkit.utils;
 
-import java.lang.reflect.Field;
-
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
+import realcraft.bukkit.RealCraft;
+
+import java.lang.reflect.Field;
 
 public class Glow extends Enchantment {
-	public Glow(int id){
-		super(id);
+
+	private static Glow glow;
+
+	public Glow(NamespacedKey key){
+		super(key);
 	}
 
 	@Override
@@ -61,7 +66,7 @@ public class Glow extends Enchantment {
 		    e.printStackTrace();
 		}
 		try {
-		    Glow glow = new Glow(255);
+		    Glow glow = new Glow(new NamespacedKey(RealCraft.getInstance(),"glow"));
 		    Enchantment.registerEnchantment(glow);
 		}
 		catch (IllegalArgumentException e){
@@ -69,5 +74,10 @@ public class Glow extends Enchantment {
 		catch(Exception e){
 		    e.printStackTrace();
 		}
+	}
+
+	public static Glow getGlow(){
+		if(glow == null) glow = new Glow(new NamespacedKey(RealCraft.getInstance(),"glow"));
+		return glow;
 	}
 }

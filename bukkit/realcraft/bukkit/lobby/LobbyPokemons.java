@@ -1,50 +1,6 @@
 package realcraft.bukkit.lobby;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
-
 import com.google.common.collect.Sets;
-
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
@@ -57,19 +13,50 @@ import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.api.util.YamlStorage;
 import net.citizensnpcs.npc.skin.SkinnableEntity;
 import net.citizensnpcs.trait.LookClose;
-import net.minecraft.server.v1_12_R1.EntityInsentient;
-import net.minecraft.server.v1_12_R1.PathEntity;
-import net.minecraft.server.v1_12_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_13_R1.EntityInsentient;
+import net.minecraft.server.v1_13_R1.PathEntity;
+import net.minecraft.server.v1_13_R1.PathfinderGoalSelector;
+import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.Particles;
-import realcraft.bukkit.utils.Particles.OrdinaryColor;
 import realcraft.bukkit.utils.RandomUtil;
 import realcraft.share.database.DB;
 import ru.beykerykt.lightapi.LightAPI;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class LobbyPokemons implements Listener {
 
@@ -133,7 +120,7 @@ public class LobbyPokemons implements Listener {
 	@SuppressWarnings("deprecation")
 	public ItemStack getItem(){
 		if(item == null){
-			item = new ItemStack(Material.MONSTER_EGG,1,(short)0,(byte)98);
+			item = new ItemStack(Material.OCELOT_SPAWN_EGG);
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName("§e§l"+pokedexName);
 			item.setItemMeta(meta);
@@ -190,7 +177,7 @@ public class LobbyPokemons implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void PlayerDropItemEvent(PlayerDropItemEvent event){
-		if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world") && event.getItemDrop().getItemStack().getType() == Material.MONSTER_EGG){
+		if(event.getPlayer().getWorld().getName().equalsIgnoreCase("world") && event.getItemDrop().getItemStack().getType() == Material.OCELOT_SPAWN_EGG){
 			event.setCancelled(true);
 		}
 	}
@@ -533,7 +520,7 @@ public class LobbyPokemons implements Listener {
 		}
 
 		private void clearPathfinders(org.bukkit.entity.Entity entity){
-			net.minecraft.server.v1_12_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+			net.minecraft.server.v1_13_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 			try {
 				Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
 				bField.setAccessible(true);
@@ -553,7 +540,7 @@ public class LobbyPokemons implements Listener {
 			if(entity == null || entity.isDead()) return;
 			if(state != LobbyPokemonState.SITTING){
 				Particles.SNOW_SHOVEL.display(0.1f,0f,0.1f,0f,4,entity.getLocation().add(0,0.7,0),64);
-				if(mode == LobbyPokemonMode.HOSTILE) Particles.SPELL_MOB.display(new OrdinaryColor(170,0,0),entity.getLocation().add(0,0.7,0),64);
+				if(mode == LobbyPokemonMode.HOSTILE) Particles.SPELL_MOB.display(Color.fromRGB(170,0,0),entity.getLocation().add(0,0.7,0),64);
 			}
 		}
 
@@ -951,7 +938,7 @@ public class LobbyPokemons implements Listener {
 		}
 
 		public void openMenu(Player player){
-			player.playSound(player.getLocation(),Sound.ENTITY_VILLAGER_TRADING,1f,1f);
+			player.playSound(player.getLocation(),Sound.ENTITY_VILLAGER_TRADE,1f,1f);
 			this.openMenu(player,1);
 		}
 
