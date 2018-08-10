@@ -45,23 +45,24 @@ import realcraft.bukkit.friends.Friends;
 import realcraft.bukkit.gameparty.GameParty;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
-import realcraft.bukkit.mapcrafter.MapCrafter;
 import realcraft.bukkit.minihry.EventCmds;
 import realcraft.bukkit.minihry.GamesReminder;
 import realcraft.bukkit.mute.Mute;
 import realcraft.bukkit.nicks.NickManager;
+import realcraft.bukkit.others.VipComamnd;
 import realcraft.bukkit.report.Report;
-import realcraft.bukkit.residences.CheckResidences;
-import realcraft.bukkit.residences.ResidenceSigns;
 import realcraft.bukkit.restart.Restart;
 import realcraft.bukkit.sitting.Sitting;
 import realcraft.bukkit.skins.Skins;
 import realcraft.bukkit.sockets.SocketManager;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.spectator.Spectator;
+import realcraft.bukkit.survival.MapCrafter;
 import realcraft.bukkit.survival.PassiveMode;
 import realcraft.bukkit.survival.RandomSpawn;
 import realcraft.bukkit.survival.economy.Economy;
+import realcraft.bukkit.survival.residences.CheckResidences;
+import realcraft.bukkit.survival.residences.ResidenceSigns;
 import realcraft.bukkit.survival.sells.Sells;
 import realcraft.bukkit.survival.trading.Trading;
 import realcraft.bukkit.teleport.TeleportRequests;
@@ -173,10 +174,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 			cancelgrow = new CancelGrow(this);
 			lobby = new Lobby(this);
 			new Sitting();
-			if(TESTSERVER){
-				new Economy();
-				new Sells();
-			}
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
 			checkresidences = new CheckResidences(this);
@@ -221,6 +218,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new LocationsSaver();
 		new WorldTeleporter();
 		new LampControl();
+		new VipComamnd();
 		this.getServer().getPluginManager().registerEvents(this,this);
 		this.updateWorldRules();
 	}

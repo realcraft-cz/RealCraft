@@ -11,8 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -140,12 +141,23 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 				}
 			}
 		}
-		else if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world") && event.getSlotType() == SlotType.QUICKBAR && event.getCurrentItem().getType() == Material.COMPASS){
-			event.setCancelled(true);
-			Player player = (Player) event.getWhoClicked();
-			if(Users.getUser(player).isLogged()){
-				this.openMenu(player);
+		else if(event.getWhoClicked() instanceof Player){
+			Player player = (Player)event.getWhoClicked();
+			ItemStack item = event.getCurrentItem();
+			if(event.getClick() == ClickType.NUMBER_KEY) item = player.getInventory().getItem(event.getHotbarButton());
+			if(item != null && item.getType() == Material.COMPASS){
+				event.setCancelled(true);
+				if(Users.getUser(player).isLogged()){
+					this.openMenu(player);
+				}
 			}
+		}
+	}
+
+	@EventHandler
+	public void InventoryDragEvent(InventoryDragEvent event){
+		if(event.getWhoClicked() instanceof Player && event.getOldCursor().getType() == Material.COMPASS){
+			event.setCancelled(true);
 		}
 	}
 

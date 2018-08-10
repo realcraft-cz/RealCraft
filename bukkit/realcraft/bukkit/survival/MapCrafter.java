@@ -1,20 +1,18 @@
-package realcraft.bukkit.mapcrafter;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+package realcraft.bukkit.survival;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.users.Users;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class MapCrafter {
 	RealCraft plugin;

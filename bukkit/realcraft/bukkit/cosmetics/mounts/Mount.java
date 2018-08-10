@@ -79,6 +79,10 @@ public abstract class Mount extends Cosmetic implements Listener {
 	private int getRepeatDelay(){
 		switch(this.getType()){
 			case MOUNT_GLACIALSTEED: return 4;
+			case MOUNT_INFERNALHORROR: return 4;
+			case MOUNT_WALKINGDEAD: return 4;
+			case MOUNT_POLAERBEAR: return 4;
+			case MOUNT_NYANSHEEP: return 2;
 		}
 		return 0;
 	}

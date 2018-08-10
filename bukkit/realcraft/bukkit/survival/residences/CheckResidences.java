@@ -1,12 +1,11 @@
-package realcraft.bukkit.residences;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
+package realcraft.bukkit.survival.residences;
 
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-
 import realcraft.bukkit.RealCraft;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class CheckResidences {
 	RealCraft plugin;

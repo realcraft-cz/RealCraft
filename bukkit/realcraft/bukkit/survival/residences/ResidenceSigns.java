@@ -1,4 +1,4 @@
-package realcraft.bukkit.residences;
+package realcraft.bukkit.survival.residences;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;

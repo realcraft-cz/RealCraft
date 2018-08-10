@@ -78,7 +78,7 @@ public class LobbyLightsOff implements Listener {
 		System.out.println("Lamps ===========");
 		for(int i=0;i<SIZE_Y;i++){
 			for(int a=0;a<SIZE_X;a++){
-				if(RandomUtil.getRandomInteger(1,10) >= 7){
+				if(RandomUtil.getRandomInteger(1,10) >= 8){
 					System.out.println("Lamps reset: ["+(a+1)+";"+(i+1)+"]");
 					this.clickLamp(a,i);
 				}
@@ -138,7 +138,7 @@ public class LobbyLightsOff implements Listener {
 	private boolean isFinished(){
 		for(int i=0;i<SIZE_Y;i++){
 			for(int a=0;a<SIZE_X;a++){
-				if(lamps[i][a] == true) return false;
+				if(lamps[i][a]) return false;
 			}
 		}
 		return true;
@@ -181,7 +181,6 @@ public class LobbyLightsOff implements Listener {
 				int z = location1.getBlockZ();
 				while(zDiff ? z <= location2.getBlockZ() : z >= location2.getBlockZ()){
 					Location location = new Location(location1.getWorld(),x,y,z);
-					//location.getBlock().setType((LobbyLightsOff.this.getLamp(ix,iy) ? Material.REDSTONE_LAMP_ON : Material.REDSTONE_LAMP_OFF),false);
 					LampControl.switchLamp(location.getBlock(),LobbyLightsOff.this.getLamp(ix,iy));
 					ix ++;
 					if(ix == SIZE_X){

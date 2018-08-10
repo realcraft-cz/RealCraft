@@ -48,7 +48,6 @@ public class Lobby implements Listener {
 	public LobbyLanterns lobbylanterns = null;
 	public LobbyAutoParkour lobbyautoparkour = null;
 	public LobbySpawn lobbyspawn = null;
-	public LobbyLottery lobbylottery = null;
 	public LobbyStands lobbystands = null;
 
 	private boolean isLobby = false;
@@ -60,7 +59,7 @@ public class Lobby implements Listener {
 			enabled = true;
 			if(plugin.config.getBoolean("lobby.menu.enabled",false)) lobbymenu = new LobbyMenu(plugin);
 			if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
-				lobbyfungun = new LobbyFunGun(plugin);
+				lobbyfungun = new LobbyFunGun();
 				lobbylanterns = new LobbyLanterns(plugin);
 				lobbyautoparkour = new LobbyAutoParkour(plugin);
 				lobbyspawn = new LobbySpawn(plugin);
@@ -72,13 +71,6 @@ public class Lobby implements Listener {
 					new LobbyCanvas();
 					//new LobbyPlayerRider(plugin);
 					lobbystands = new LobbyStands(plugin);
-					Bukkit.getScheduler().scheduleSyncRepeatingTask(RealCraft.getInstance(),new Runnable(){
-						@Override
-						public void run(){
-							World world = Bukkit.getServer().getWorld("world");
-							if(world.getTime() >= 13000 && world.getTime() <= 24000) world.setFullTime(world.getFullTime()+10);
-						}
-					},10,10);
 				}
 			}
 			if(plugin.serverName.equalsIgnoreCase("parkour")) lobbyspawn = new LobbySpawn(plugin);
