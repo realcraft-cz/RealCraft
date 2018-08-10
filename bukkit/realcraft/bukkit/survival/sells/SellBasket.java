@@ -53,7 +53,7 @@ public class SellBasket {
 	public int getPrice(){
 		int price = 0;
 		for(BasketItem item : items){
-			price += (int)Math.ceil((item.getItem().getPrice()/(item.getItem().getAmount()*1.0))*item.getAmount());
+			price += (int)Math.floor((item.getItem().getPrice()/(item.getItem().getAmount()*1.0))*item.getAmount());
 		}
 		return price;
 	}
@@ -106,8 +106,10 @@ public class SellBasket {
 		}
 	}
 
-	public void checkout(){
-		Users.getUser(player).addMoney(-this.getPrice());
+	public void checkout() throws EmptyBasketException {
+		if(this.getItems().size() < 1) throw new EmptyBasketException();
+		if(this.getPrice() < 1) throw new EmptyBasketException();
+		Users.getUser(player).addMoney(this.getPrice());
 		for(BasketItem item : items){
 			ItemUtil.removeItems(player.getInventory(),new ItemStack(item.getItem().getType()),item.getAmount());
 		}
@@ -137,6 +139,9 @@ public class SellBasket {
 	}
 
 	public class FullBasketException extends Exception {
+	}
+
+	public class EmptyBasketException extends Exception {
 	}
 
 	public class NotEnoughtItemsException extends Exception {

@@ -29,6 +29,7 @@ import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.cosmetics2.utils.CustomPathFinderGoalPanic;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.spectator.Spectator;
+import realcraft.bukkit.utils.BorderUtil;
 import realcraft.bukkit.utils.MaterialUtil;
 import realcraft.bukkit.utils.Particles;
 import realcraft.share.ServerType;
@@ -99,6 +100,9 @@ public class Lobby implements Listener {
 		player.getInventory().clear();
 		player.setGameMode(GameMode.ADVENTURE);
 		player.setWalkSpeed(0.2f);
+		if(RealCraft.getServerType() == ServerType.LOBBY){
+			BorderUtil.setBorder(player,ServerSpawn.getLocation(),256);
+		}
 		new LobbyScoreboard(this,player);
 	}
 
@@ -127,7 +131,10 @@ public class Lobby implements Listener {
 		Player player = event.getPlayer();
 		if(player.getWorld().getName().equalsIgnoreCase("world")){
 			player.setGameMode(GameMode.ADVENTURE);
-			if(RealCraft.getServerType() == ServerType.LOBBY) player.setWalkSpeed(0.2f);
+			if(RealCraft.getServerType() == ServerType.LOBBY){
+				player.setWalkSpeed(0.2f);
+				BorderUtil.setBorder(player,ServerSpawn.getLocation(),256);
+			}
 		}
 	}
 

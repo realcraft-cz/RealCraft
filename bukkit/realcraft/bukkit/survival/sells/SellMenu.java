@@ -134,16 +134,17 @@ public class SellMenu implements Listener {
 				SellMenu.updateMenu(player);
 			}
 			else if(event.getRawSlot() == 52){
-				if(basket.getItems().size() < 1){
+				try {
+					basket.checkout();
+					player.closeInventory();
+					Sells.sendMessage(player,"Ziskal jsi §a"+Economy.format(basket.getPrice())+"§r prodejem surovin");
+					player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
+					player.closeInventory();
+				} catch (SellBasket.EmptyBasketException e){
 					Sells.sendMessage(player,"§cKosik je prazdny.");
 					player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
 					return;
 				}
-				basket.checkout();
-				player.closeInventory();
-				Sells.sendMessage(player,"Ziskal jsi §a"+Economy.format(basket.getPrice())+"§r prodejem surovin");
-				player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-				player.closeInventory();
 			}
 			else if(event.getRawSlot() == 53){
 				player.closeInventory();

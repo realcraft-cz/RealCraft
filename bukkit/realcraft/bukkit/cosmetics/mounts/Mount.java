@@ -24,16 +24,18 @@ public abstract class Mount extends Cosmetic implements Listener {
 	public Mount(CosmeticType type){
 		super(type);
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
-		Bukkit.getScheduler().runTaskTimerAsynchronously(RealCraft.getInstance(),new Runnable(){
-			@Override
-			public void run(){
-				for(Player player : Bukkit.getServer().getOnlinePlayers()){
-					if(Mount.this.isRunning(player)){
-						Mount.this.effect(player,entities.get(Cosmetics.getCosmeticPlayer(player)));
+		if(this.getRepeatDelay() != 0){
+			Bukkit.getScheduler().runTaskTimerAsynchronously(RealCraft.getInstance(),new Runnable() {
+				@Override
+				public void run(){
+					for(Player player : Bukkit.getServer().getOnlinePlayers()){
+						if(Mount.this.isRunning(player)){
+							Mount.this.effect(player,entities.get(Cosmetics.getCosmeticPlayer(player)));
+						}
 					}
 				}
-			}
-		},0,this.getRepeatDelay());
+			},0,this.getRepeatDelay());
+		}
 	}
 
 	@Override
@@ -78,7 +80,7 @@ public abstract class Mount extends Cosmetic implements Listener {
 		switch(this.getType()){
 			case MOUNT_GLACIALSTEED: return 4;
 		}
-		return 2;
+		return 0;
 	}
 
 	public void moveOnLand(EntityLiving creature,float strafe,float vertical,float forward,float speed) {

@@ -2,6 +2,7 @@ package realcraft.bukkit.lobby;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -11,17 +12,15 @@ import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.MapUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class LobbyCanvas {
 
-	private Location minLoc;
-	private Location maxLoc;
+	private ArrayList<LobbyCanvasImage> images = new ArrayList<>();
 
 	private FileConfiguration config;
 
 	public LobbyCanvas(){
-		minLoc = LocationUtil.getConfigLocation(this.getConfig(),"minLoc");
-		maxLoc = LocationUtil.getConfigLocation(this.getConfig(),"maxLoc");
 		new AbstractCommand("updatecanvas"){
 			@Override
 			public void perform(Player player,String[] args){
@@ -36,6 +35,7 @@ public class LobbyCanvas {
 				LobbyCanvas.this.update();
 			}
 		},20);
+		this.loadImages();
 	}
 
 	private FileConfiguration getConfig(){
@@ -53,11 +53,43 @@ public class LobbyCanvas {
 		return config;
 	}
 
-	private File getCanvasFile(){
-		return new File(RealCraft.getInstance().getDataFolder() + "/canvas/image.png");
+	private void update(){
+		for(LobbyCanvasImage image : images){
+			MapUtil.pasteMap(image.getCanvasFile(),image.getMinLoc(),image.getMaxLoc());
+		}
 	}
 
-	private void update(){
-		MapUtil.pasteMap(this.getCanvasFile(),minLoc,maxLoc);
+	private void loadImages(){
+		for(String key : this.getConfig().getKeys(false)){
+			ConfigurationSection section = this.getConfig().getConfigurationSection(key);
+			Location minLoc = LocationUtil.getConfigLocation(section,"minLoc");
+			Location maxLoc = LocationUtil.getConfigLocation(section,"maxLoc");
+			images.add(new LobbyCanvasImage(section.getString("image"),minLoc,maxLoc));
+		}
+	}
+
+	private class LobbyCanvasImage {
+
+		private String name;
+		private Location minLoc;
+		private Location maxLoc;
+
+		public LobbyCanvasImage(String name,Location minLoc,Location maxLoc){
+			this.name = name;
+			this.minLoc = minLoc;
+			this.maxLoc = maxLoc;
+		}
+
+		public Location getMinLoc(){
+			return minLoc;
+		}
+
+		public Location getMaxLoc(){
+			return maxLoc;
+		}
+
+		private File getCanvasFile(){
+			return new File(RealCraft.getInstance().getDataFolder() + "/canvas/"+name);
+		}
 	}
 }

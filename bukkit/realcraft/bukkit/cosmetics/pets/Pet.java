@@ -406,7 +406,7 @@ public class Pet extends Cosmetic {
 			if(damager instanceof Player && damager.equals(player) && this.getDistanceToOwner() < 3*3){
 				player.getWorld().playSound(player.getLocation(),Sound.ENTITY_ITEM_PICKUP,1f,1f);
 				Particles.SPELL_WITCH.display(0.2f,0.2f,0.2f,0.5f,8,entity.getLocation().add(0f,0.9f,0f),64);
-				Pet.this.setRunning(player,false);
+				Pet.this.setEnabled(player,false);
 			}
 		}
 	}

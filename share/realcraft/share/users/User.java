@@ -186,6 +186,7 @@ public class User {
 
 	public void addMoney(int money){
 		this.money += money;
+		if(this.money < 0) this.money = 0;
 		DB.update("UPDATE "+Users.USERS+" SET user_money = '"+this.money+"' WHERE user_id = '"+this.getId()+"'");
 	}
 
