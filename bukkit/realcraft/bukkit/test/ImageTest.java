@@ -26,7 +26,7 @@ public class ImageTest implements Listener {
 	@EventHandler(priority=EventPriority.LOW)
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
-		String command = event.getMessage().substring(1).toLowerCase();
+		String command = event.getMessage().substring(1);
 		if(command.startsWith("image") && (player.hasPermission("group.Manazer") || player.hasPermission("group.Admin"))){
 			event.setCancelled(true);
 			String[] args = command.split(" ");

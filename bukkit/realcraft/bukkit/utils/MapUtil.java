@@ -18,7 +18,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -30,13 +29,13 @@ public class MapUtil {
 
 	public static void pasteMap(File file,Location location1,Location location2){
 		ItemStack[] items = MapUtil.getMapItems(location1.getWorld(),file);
-		if(items.length == 0) return;
+		if(items == null || items.length == 0) return;
 		pasteMap(items,location1,location2);
 	}
 
 	public static void pasteMap(String url,Location location1,Location location2){
 		ItemStack[] items = MapUtil.getMapItems(location1.getWorld(),url);
-		if(items.length == 0) return;
+		if(items == null || items.length == 0) return;
 		pasteMap(items,location1,location2);
 	}
 
@@ -86,7 +85,6 @@ public class MapUtil {
 		return images.get(hash);
 	}
 
-	@Deprecated
 	public static ItemStack[] getMapItems(World world,BufferedImage origImage){
 		int width = origImage.getWidth();
 		int height = origImage.getHeight();
@@ -138,8 +136,6 @@ public class MapUtil {
 	private static BufferedImage loadImage(String url){
 		try {
 			return ImageIO.read(new URL(url));
-		} catch (MalformedURLException e){
-			e.printStackTrace();
 		} catch (IOException e){
 			e.printStackTrace();
 		}
@@ -149,8 +145,6 @@ public class MapUtil {
 	private static BufferedImage loadImage(File file){
 		try {
 			return ImageIO.read(file);
-		} catch (MalformedURLException e){
-			e.printStackTrace();
 		} catch (IOException e){
 			e.printStackTrace();
 		}

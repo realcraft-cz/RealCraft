@@ -1,12 +1,13 @@
 package realcraft.bukkit.fights.arenas;
 
 import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.blocks.BaseBlock;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.world.block.BaseBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -61,7 +62,7 @@ public class FightArenaRegion {
 			WE = WorldEdit.getInstance();
 			this.location = location;
 			try {
-				BuiltInClipboardFormat format = BuiltInClipboardFormat.MCEDIT_SCHEMATIC;
+				BuiltInClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 				FileInputStream fis = new FileInputStream(file);
 	            BufferedInputStream bis = new BufferedInputStream(fis);
 	            ClipboardReader reader = format.getReader(bis);
@@ -72,6 +73,7 @@ public class FightArenaRegion {
 				e.printStackTrace();
 			}
 			editSession = WE.getEditSessionFactory().getEditSession(new BukkitWorld(location.getWorld()),-1);
+			editSession.disableQueue();
 		}
 
 		public void pasteBlocks(){
@@ -118,12 +120,12 @@ public class FightArenaRegion {
 							for(Chunk chunk : location.getWorld().getLoadedChunks()) chunk.unload();
 						}
 					});
-				} catch (InterruptedException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e){
+				} catch (InterruptedException | SecurityException | IllegalArgumentException e){
 					e.printStackTrace();
 				}
 			}
 
-			private void startStage(int stage) throws InterruptedException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+			private void startStage(int stage) throws InterruptedException, SecurityException, IllegalArgumentException {
 				int maxBlocksPerRun = 16 * 16 * schema.getDimensions().getBlockY();
 				for(int x=schema.getRegion().getMinimumPoint().getBlockX();x<=schema.getRegion().getMaximumPoint().getBlockX();x++){
 					for(int y=schema.getRegion().getMinimumPoint().getBlockY();y<=schema.getRegion().getMaximumPoint().getBlockY();y++){
@@ -131,9 +133,9 @@ public class FightArenaRegion {
 							BlockVector pt = new BlockVector(x,y,z);
 							BaseBlock block = schema.getFullBlock(pt);
 							boolean place = false;
-							if(stage == 1 && !shouldPlaceLast(Material.getMaterial(block.getBlockType().getName())) && !shouldPlaceFinal(Material.getMaterial(block.getBlockType().getName()))) place = true;
-							else if(stage == 2 && shouldPlaceLast(Material.getMaterial(block.getBlockType().getName()))) place = true;
-							else if(stage == 3 && shouldPlaceFinal(Material.getMaterial(block.getBlockType().getName()))) place = true;
+							if(stage == 1 && !shouldPlaceLast(BukkitAdapter.adapt(block.getBlockType())) && !shouldPlaceFinal(BukkitAdapter.adapt(block.getBlockType()))) place = true;
+							else if(stage == 2 && shouldPlaceLast(BukkitAdapter.adapt(block.getBlockType()))) place = true;
+							else if(stage == 3 && shouldPlaceFinal(BukkitAdapter.adapt(block.getBlockType()))) place = true;
 							if(place){
 								Vector pos = pt.add(-schema.getRegion().getMinimumPoint().getBlockX(),-schema.getRegion().getMinimumPoint().getBlockY(),-schema.getRegion().getMinimumPoint().getBlockZ());
 								pos = pos.add(location.getBlockX(),location.getBlockY(),location.getBlockZ());
@@ -157,17 +159,18 @@ public class FightArenaRegion {
 			private void nextPaste(){
 				build = true;
 				Bukkit.getScheduler().callSyncMethod(RealCraft.getInstance(),new Callable<Void>(){
-					@SuppressWarnings("deprecation")
 					@Override
 					public Void call(){
 						for(Entry<Vector,BaseBlock> map : blocks.entrySet()){
-							/*if(!map.getValue().hasNbtData()){
-								location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setTypeIdAndData(map.getValue().getId(),(byte)map.getValue().getData(),false);
-							} else {*/
-							try {
-								editSession.setBlock(map.getKey(),map.getValue());
-							} catch (MaxChangedBlocksException e){
-								e.printStackTrace();
+							if(!map.getValue().hasNbtData()){
+								location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setType(BukkitAdapter.adapt(map.getValue().getBlockType()),false);
+								location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setBlockData(BukkitAdapter.adapt(map.getValue()),false);
+							} else {
+								try {
+									editSession.setBlock(map.getKey(),map.getValue());
+								} catch (MaxChangedBlocksException e){
+									e.printStackTrace();
+								}
 							}
 						}
 						blocks.clear();
@@ -203,8 +206,6 @@ public class FightArenaRegion {
         shouldPlaceLast.add(Material.RED_BED);
         shouldPlaceLast.add(Material.WHITE_BED);
         shouldPlaceLast.add(Material.YELLOW_BED);
-        shouldPlaceLast.add(Material.POWERED_RAIL);
-        shouldPlaceLast.add(Material.DETECTOR_RAIL);
         shouldPlaceLast.add(Material.GRASS);
         shouldPlaceLast.add(Material.TALL_GRASS);
         shouldPlaceLast.add(Material.DEAD_BUSH);
@@ -222,7 +223,6 @@ public class FightArenaRegion {
         shouldPlaceLast.add(Material.DETECTOR_RAIL);
         shouldPlaceLast.add(Material.POWERED_RAIL);
         shouldPlaceLast.add(Material.LEVER);
-        shouldPlaceLast.add(Material.STONE_PRESSURE_PLATE);
         shouldPlaceLast.add(Material.ACACIA_PRESSURE_PLATE);
         shouldPlaceLast.add(Material.BIRCH_PRESSURE_PLATE);
         shouldPlaceLast.add(Material.DARK_OAK_PRESSURE_PLATE);
@@ -234,7 +234,6 @@ public class FightArenaRegion {
         shouldPlaceLast.add(Material.STONE_PRESSURE_PLATE);
         shouldPlaceLast.add(Material.REDSTONE_TORCH);
         shouldPlaceLast.add(Material.REDSTONE_WALL_TORCH);
-        shouldPlaceLast.add(Material.STONE_BUTTON);
         shouldPlaceLast.add(Material.SNOW);
         shouldPlaceLast.add(Material.END_PORTAL);
         shouldPlaceLast.add(Material.NETHER_PORTAL);
@@ -337,12 +336,10 @@ public class FightArenaRegion {
         shouldPlaceFinal.add(Material.BLACK_WALL_BANNER);
     }
 
-    @SuppressWarnings("deprecation")
 	public static boolean shouldPlaceLast(Material type){
 		return shouldPlaceLast.contains(type);
     }
 
-	@SuppressWarnings("deprecation")
 	public static boolean shouldPlaceFinal(Material type){
 		return shouldPlaceFinal.contains(type);
     }

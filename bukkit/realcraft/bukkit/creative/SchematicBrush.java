@@ -3,19 +3,16 @@ package realcraft.bukkit.creative;
 import com.sk89q.minecraft.util.commands.CommandsManager;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.command.tool.BrushTool;
 import com.sk89q.worldedit.command.tool.InvalidToolBindException;
 import com.sk89q.worldedit.command.tool.brush.Brush;
 import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.extension.platform.Actor;
-import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.math.transform.AffineTransform;
-import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.Direction;
@@ -31,8 +28,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import realcraft.bukkit.RealCraft;
 
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -1029,7 +1028,7 @@ public class SchematicBrush implements Listener, CommandExecutor {
             }
             // Else if BO2 file
             else if (format.equals("bo2")) {
-                Clipboard cc = loadBOD2File(f);
+                Clipboard cc = null;// = loadBOD2File(f);
                 if (cc != null) {
                     //WorldData worldData = player.getWorld().getWorldData();
                     //sess.setClipboard(new ClipboardHolder(cc, worldData));
@@ -1049,7 +1048,7 @@ public class SchematicBrush implements Listener, CommandExecutor {
         return (rslt)?name:null;
     }
 
-    private Clipboard loadBOD2File(File f) throws IOException {
+    /*private Clipboard loadBOD2File(File f) throws IOException {
         Clipboard cc = null;
 
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(f), Charset.forName("US-ASCII")));
@@ -1145,5 +1144,5 @@ public class SchematicBrush implements Listener, CommandExecutor {
 
 
         return cc;
-    }
+    }*/
 }

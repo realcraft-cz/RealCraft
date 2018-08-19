@@ -1,9 +1,11 @@
-package realcraft.share;
+package realcraft.bukkit.mapmanager.map;
 
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
+import realcraft.share.ServerType;
 
-public enum ServerType {
-	BUNGEE, LOBBY, SURVIVAL, CREATIVE, BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE, FIGHTS, RACES, MAPS;
+public enum MapType {
+
+	BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE, FIGHTS, RACES;
 
 	public static ServerType getByName(String name){
 		return ServerType.valueOf(name.toUpperCase());
@@ -13,12 +15,21 @@ public enum ServerType {
 		return this.name().toLowerCase();
 	}
 
+	public int getId(){
+		switch(this){
+			case BEDWARS: return 3;
+			case HIDENSEEK: return 4;
+			case BLOCKPARTY: return 5;
+			case RAGEMODE: return 6;
+			case PAINTBALL: return 7;
+			case DOMINATE: return 10;
+			case RACES: return 12;
+		}
+		return 0;
+	}
+
 	public String getName(){
 		switch(this){
-			case BUNGEE: return "Bungee";
-			case LOBBY: return "Lobby";
-			case SURVIVAL: return "Survival";
-			case CREATIVE: return "Creative";
 			case BEDWARS: return "BedWars";
 			case HIDENSEEK: return "Hide & Seek";
 			case BLOCKPARTY: return "BlockParty";
@@ -27,17 +38,12 @@ public enum ServerType {
 			case DOMINATE: return "Dominate";
 			case FIGHTS: return "Fights";
 			case RACES: return "Races";
-			case MAPS: return "Maps";
 		}
 		return "unknown";
 	}
 
 	public String getColor(){
 		switch(this){
-			case BUNGEE: return ChatColor.WHITE.toString();
-			case LOBBY: return ChatColor.YELLOW.toString();
-			case SURVIVAL: return ChatColor.AQUA.toString();
-			case CREATIVE: return ChatColor.GREEN.toString();
 			case BEDWARS: return ChatColor.RED.toString();
 			case HIDENSEEK: return ChatColor.BLUE.toString();
 			case BLOCKPARTY: return ChatColor.LIGHT_PURPLE.toString();
@@ -46,27 +52,7 @@ public enum ServerType {
 			case DOMINATE: return ChatColor.YELLOW.toString();
 			case FIGHTS: return ChatColor.AQUA.toString();
 			case RACES: return ChatColor.DARK_AQUA.toString();
-			case MAPS: return ChatColor.GRAY.toString();
 		}
 		return ChatColor.WHITE.toString();
-	}
-
-	public int getPortOrder(){
-		switch(this){
-			case BUNGEE: return 100;
-			case LOBBY: return 0;
-			case SURVIVAL: return 1;
-			case CREATIVE: return 2;
-			case BEDWARS: return 3;
-			case HIDENSEEK: return 4;
-			case BLOCKPARTY: return 5;
-			case RAGEMODE: return 6;
-			case PAINTBALL: return 7;
-			case DOMINATE: return 10;
-			case FIGHTS: return 11;
-			case RACES: return 12;
-			case MAPS: return 8;
-		}
-		return 0;
 	}
 }

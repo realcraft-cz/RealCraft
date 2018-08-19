@@ -1,9 +1,5 @@
 package realcraft.bukkit.utils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Color;
@@ -13,44 +9,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class ItemUtil {
-
-	private static final String ITEMS_NAMES = "https://minecraft-ids.grahamedgecombe.com/items.json";
-	private static HashMap<String,String> names = new HashMap<String,String>();
-
-	public static void init(){
-		try {
-			HttpURLConnection request = (HttpURLConnection) new URL(ITEMS_NAMES).openConnection();
-			request.setConnectTimeout(5000);
-			request.setReadTimeout(5000);
-			request.setDoOutput(true);
-			String line;
-			StringBuilder output = new StringBuilder();
-			BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream()));
-			while((line = in.readLine()) != null) output.append(line);
-			in.close();
-			JsonElement element = new JsonParser().parse(output.toString());
-			if(element.isJsonArray()){
-				JsonArray array = element.getAsJsonArray();
-				for(int i=0;i<array.size();i++){
-					JsonObject data = array.get(i).getAsJsonObject();
-					String index = data.get("type").getAsString()+";"+data.get("meta").getAsString();
-					names.put(index,data.get("name").getAsString());
-				}
-			}
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
 
 	public static ItemStack getHead(String url){
 		return ItemUtil.getHead(null,url);
@@ -98,9 +62,8 @@ public class ItemUtil {
         }
     }
 
-	@SuppressWarnings("deprecation")
 	public static String getItemName(ItemStack item){
-		return names.get(item.getType().getId()+";"+item.getData().getData());
+		return MaterialUtil.getName(item.getType());
 	}
 
 	public static void setLetherColor(ItemStack item,String color){
@@ -110,8 +73,6 @@ public class ItemUtil {
 	}
 
 	public static ArrayList<String> getLores(String... lines){
-		ArrayList<String> lores = new ArrayList<>();
-		for(String line : lines) lores.add(line);
-		return lores;
+		return new ArrayList<>(Arrays.asList(lines));
 	}
 }
