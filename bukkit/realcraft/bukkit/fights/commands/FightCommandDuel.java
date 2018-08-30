@@ -1,20 +1,19 @@
 package realcraft.bukkit.fights.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.entity.Player;
-
 import realcraft.bukkit.fights.FightPlayer;
 import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.fights.duels.FightDuelsRequests;
 import realcraft.bukkit.fights.duels.FightDuelsRequests.FightDuelRequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FightCommandDuel extends FightCommand {
 
 	public FightCommandDuel(){
 		super("duel");
-	}
+}
 
 	@Override
 	public void perform(Player player,String[] args){

@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.ItemFactory;
+import realcraft.bukkit.cosmetics.utils.ItemFactory;
 import realcraft.bukkit.utils.FireworkUtil;
 import realcraft.bukkit.utils.RandomUtil;
 
@@ -65,7 +65,7 @@ public class GadgetMelonThrower extends Gadget {
 
 	@EventHandler
 	public void EntityPickupItemEvent(EntityPickupItemEvent event){
-		if(event.getEntityType() == EntityType.PLAYER && event.getItem().getItemStack().getType() == Material.MELON_SLICE && event.getItem().getTicksLived() < 10*20){
+		if(this.getType().getCategory().isAvailable(event.getEntity().getWorld()) && event.getEntityType() == EntityType.PLAYER && event.getItem().getItemStack().getType() == Material.MELON_SLICE && event.getItem().getTicksLived() < 10*20){
 			Player player = (Player)event.getEntity();
 			event.setCancelled(true);
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,20*20,2));

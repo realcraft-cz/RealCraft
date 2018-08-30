@@ -246,6 +246,10 @@ public class CosmeticCrystals implements Listener, Runnable {
 					player.sendMessage("§cLucky Crystal prave nekdo otevira!");
 					return;
 				}
+				if(Cosmetics.getCosmeticPlayer(player).getUser().getCoins() < CRYSTAL_PRICE){
+					player.sendMessage("§cNemas dostatek coinu.");
+					return;
+				}
 				crystal.open(player);
 			}
 			else if(event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.REDSTONE_BLOCK){
@@ -416,6 +420,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 						}
 					}
 					else if(step == 3){
+						step = 4;
 						CosmeticPlayer cPlayer = Cosmetics.getCosmeticPlayer(player);
 						int amount = 1;
 						if(cosmetic.getType().getCategory() == CosmeticCategory.GADGET) amount = ((Gadget)cosmetic).getRandomAmount();
@@ -425,12 +430,14 @@ public class CosmeticCrystals implements Listener, Runnable {
 						CosmeticCrystals.this.update();
 						hologramReward.insertTextLine(0,"§e"+cosmetic.getType().getCategory().getName());
 						hologramReward.insertTextLine(1,cosmetic.getType().getName()+(amount > 1 ? "§r §7("+amount+")" : ""));
-						hologramReward.insertItemLine(2,cosmetic.getItemStack());
+						try {
+							hologramReward.insertItemLine(2,cosmetic.getItemStack());
+						} catch(IllegalArgumentException e){
+						}
 						Particles.VILLAGER_HAPPY.display(0.7f,0.7f,0.7f,0f,14,location.clone().add(0.0,1.0,0.0),64);
 						location.getWorld().playSound(location,Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
 						stand.remove();
 						stand = null;
-						step = 4;
 					}
 					else if(step >= 4){
 						step ++;

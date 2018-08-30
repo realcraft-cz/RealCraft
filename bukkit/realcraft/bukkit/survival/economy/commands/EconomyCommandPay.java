@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.survival.economy.Economy;
 import realcraft.bukkit.users.Users;
-import realcraft.bukkit.utils.AbstractCommand;
+import realcraft.bukkit.others.AbstractCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class EconomyCommandPay extends AbstractCommand {
 			return;
 		}
 		Player target = Bukkit.getPlayer(args[0]);
-		if(target == null || player.getName().equalsIgnoreCase(target.getDisplayName())){
+		if(target == null || player.getName().equalsIgnoreCase(target.getName())){
 			player.sendMessage("§cHrac nenalezen.");
 			return;
 		}
@@ -45,7 +45,7 @@ public class EconomyCommandPay extends AbstractCommand {
 	}
 
 	@Override
-	public List<String> onTabComplete(Player player,String[] args){
+	public List<String> tabCompleter(Player player,String[] args){
 		if(args.length == 2) return new ArrayList<>();
 		return this.getPlayersCompletions();
 	}

@@ -22,12 +22,15 @@ import realcraft.bukkit.develop.LampControl;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.share.utils.RandomUtil;
+import realcraft.share.utils.StringUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LobbyLightsOff implements Listener {
 
+	private static final int PLAY_TIMEOUT = 600*1000;
 	private static final int REWARD = 100;
 	private static final int SIZE_X = 5;
 	private static final int SIZE_Y = 4;
@@ -37,6 +40,8 @@ public class LobbyLightsOff implements Listener {
 	private boolean[][] lamps = new boolean[SIZE_Y][SIZE_X];
 	private boolean running = true;
 	private long lastClick;
+
+	private HashMap<String,Long> lastPlayed = new HashMap<>();
 
 	public LobbyLightsOff(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
@@ -111,9 +116,15 @@ public class LobbyLightsOff implements Listener {
 
 	private void clickLamp(Player player,int x,int y){
 		if(!running) return;
+		if(lastPlayed.containsKey(player.getName()) && lastPlayed.get(player.getName())+PLAY_TIMEOUT > System.currentTimeMillis()){
+			int minutes = (int)Math.ceil(((lastPlayed.get(player.getName())+PLAY_TIMEOUT)-(System.currentTimeMillis()))/1000/60f);
+			player.sendMessage("§cHrat znovu muzes za "+minutes+" "+StringUtil.inflect(minutes,new String[]{"minutu","minuty","minut"}));
+			return;
+		}
 		this.clickLamp(x,y);
 		if(this.isFinished()){
 			running = false;
+			lastPlayed.put(player.getName(),System.currentTimeMillis());
 			this.runFinish();
 			int coins = Users.getUser(player).giveCoins(REWARD,false);
 			Bukkit.broadcastMessage("§d[Lampy] §6"+player.getName()+" §fzhasnul vsechny lampy a ziskava §a+"+coins+" coins");

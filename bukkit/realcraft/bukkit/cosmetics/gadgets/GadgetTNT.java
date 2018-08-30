@@ -14,7 +14,7 @@ import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
+import realcraft.bukkit.cosmetics.utils.UtilParticles;
 import realcraft.bukkit.utils.Particles;
 
 import java.util.ArrayList;

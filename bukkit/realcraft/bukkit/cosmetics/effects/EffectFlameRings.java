@@ -3,8 +3,8 @@ package realcraft.bukkit.cosmetics.effects;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.MathUtils;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
+import realcraft.bukkit.cosmetics.utils.MathUtils;
+import realcraft.bukkit.cosmetics.utils.UtilParticles;
 import realcraft.bukkit.utils.Particles;
 
 import java.util.HashMap;

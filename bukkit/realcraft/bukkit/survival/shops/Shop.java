@@ -34,6 +34,9 @@ public class Shop {
 	private boolean inStock = true;
 	private int sales;
 
+	@Deprecated
+	private boolean valid;
+
 	public Shop(int id){
 		this.id = id;
 		ResultSet rs = DB.query("SELECT t1.*,t2.user_name,(SELECT COUNT(*) FROM "+ShopManager.TRANSACTIONS+" WHERE shop_id = '"+this.getId()+"') AS shop_sales FROM "+ShopManager.SHOPS+" t1 INNER JOIN authme t2 USING(user_id) WHERE shop_id = '"+this.id+"'");
@@ -50,14 +53,25 @@ public class Shop {
 					hologram = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.5,2,0.5));
 					hologram.insertTextLine(0,"§e"+this.getItemName());
 					hologram.insertTextLine(1,"§a"+Economy.format(this.getPrice()));
-					hologram.insertItemLine(2,this.getItem());
-					if(this.exists()) this.update();
+					try {
+						hologram.insertItemLine(2,this.getItem());
+						valid = true;
+						if(this.exists()) this.update();
+					} catch(IllegalArgumentException e){
+						valid = false;
+						hologram.delete();
+					}
 				}
 			}
 			rs.close();
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+	}
+
+	@Deprecated
+	public boolean isValid(){
+		return valid;
 	}
 
 	public int getId(){
@@ -110,16 +124,10 @@ public class Shop {
 		return chest.getBlockInventory();
 	}
 
-	public Inventory getChestInventory(){
-		Chest chest = (Chest) location.getBlock().getState();
-		return chest.getInventory();
-	}
-
-	@SuppressWarnings("deprecation")
 	public int getStock(){
 		int stock = 0;
 		for(ItemStack item : this.getInventory().getContents()){
-			if(item != null && item.getType() == this.getItem().getType() && item.getData().getData() == this.getItem().getData().getData()){
+			if(item != null && item.getType() == this.getItem().getType()){
 				stock += item.getAmount();
 			}
 		}

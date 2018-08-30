@@ -3,7 +3,10 @@ package realcraft.bukkit.cosmetics.gadgets;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Bat;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.potion.PotionEffect;
@@ -11,8 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.ItemFactory;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
+import realcraft.bukkit.cosmetics.utils.ItemFactory;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.Particles;
 import realcraft.share.utils.RandomUtil;
@@ -52,7 +54,7 @@ public class GadgetGhostParty extends Gadget {
 			public void run(){
 				if (!bats.isEmpty()) {
 					for (Bat bat : bats.keySet())
-						if(!bat.isDead()) UtilParticles.display(Particles.CLOUD, 0.05f, 0.05f, 0.05f, bat.getLocation().add(0, 1.5, 0), 1);
+						if(!bat.isDead()) Particles.CLOUD.display(0.05f, 0.05f, 0.05f, 0f, 1, bat.getLocation().add(0, 1.5, 0));
 				}
 			}
 		};
@@ -87,6 +89,6 @@ public class GadgetGhostParty extends Gadget {
 
 	@EventHandler
 	public void onPlayerInteractGhost(PlayerInteractAtEntityEvent event) {
-		if(event.getRightClicked() != null && event.getRightClicked().getVehicle() != null && event.getRightClicked().getType() == EntityType.ARMOR_STAND) event.setCancelled(true);
+		if(this.getType().getCategory().isAvailable(event.getPlayer().getWorld()) && event.getRightClicked() != null && event.getRightClicked().getVehicle() != null && event.getRightClicked().getType() == EntityType.ARMOR_STAND) event.setCancelled(true);
 	}
 }

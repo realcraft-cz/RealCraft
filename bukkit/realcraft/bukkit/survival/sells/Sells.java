@@ -12,6 +12,7 @@ public class Sells {
 
 	public Sells(){
 		new SellMenu();
+		new SellTrader();
 		register(Material.GRASS_BLOCK,16,8);
 		register(Material.DIRT,16,4);
 		register(Material.GRAVEL,16,8);
@@ -34,14 +35,14 @@ public class Sells {
 		register(Material.GLASS,16,16);
 		register(Material.CLAY,16,20);
 		register(Material.MYCELIUM,4,12);
-		register(Material.OBSIDIAN,4,80);
+		register(Material.OBSIDIAN,4,40);
 		register(Material.NETHERRACK,16,8);
 		register(Material.GLOWSTONE,4,40);
-		register(Material.SOUL_SAND,4,20);
-		register(Material.NETHER_BRICKS,4,40);
+		register(Material.SOUL_SAND,16,16);
+		register(Material.NETHER_BRICKS,16,32);
 		register(Material.END_STONE,16,16);
 		register(Material.END_STONE_BRICKS,4,16);
-		register(Material.PRISMARINE,2,80);
+		register(Material.PRISMARINE,2,40);
 	}
 
 	public static HashMap<Integer,SellItem> getItems(){
@@ -51,21 +52,6 @@ public class Sells {
 	public static SellItem getItem(int index){
 		return items.get(index);
 	}
-
-	/*private FileConfiguration getConfig(){
-		if(config == null){
-			File file = new File(RealCraft.getInstance().getDataFolder() + "/sells.yml");
-			if(file.exists()){
-				config = new YamlConfiguration();
-				try {
-					config.load(file);
-				} catch (Exception e){
-					e.printStackTrace();
-				}
-			}
-		}
-		return config;
-	}*/
 
 	private int idx;
 	private void register(Material type,int amount,int price){

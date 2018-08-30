@@ -6,15 +6,15 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.earth2me.essentials.Essentials;
-import net.minecraft.server.v1_13_R1.IChatBaseComponent;
-import net.minecraft.server.v1_13_R1.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_13_R1.PacketPlayOutMapChunk;
-import net.minecraft.server.v1_13_R1.PacketPlayOutPlayerListHeaderFooter;
+import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_13_R2.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_13_R2.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_13_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.CraftChunk;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,18 +37,19 @@ import realcraft.bukkit.creative.DisableSpectator;
 import realcraft.bukkit.creative.PlotSquaredWorldEdit;
 import realcraft.bukkit.creative.SchematicBrush;
 import realcraft.bukkit.database.DB;
-import realcraft.bukkit.develop.LampControl;
-import realcraft.bukkit.develop.LocationsSaver;
-import realcraft.bukkit.develop.WorldTeleporter;
+import realcraft.bukkit.develop.*;
 import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.friends.Friends;
 import realcraft.bukkit.gameparty.GameParty;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
+import realcraft.bukkit.mapmanager.MapManager;
 import realcraft.bukkit.minihry.EventCmds;
 import realcraft.bukkit.minihry.GamesReminder;
 import realcraft.bukkit.mute.Mute;
 import realcraft.bukkit.nicks.NickManager;
+import realcraft.bukkit.others.Canvas;
+import realcraft.bukkit.others.MapServerTeleport;
 import realcraft.bukkit.others.VipComamnd;
 import realcraft.bukkit.report.Report;
 import realcraft.bukkit.restart.Restart;
@@ -64,17 +65,14 @@ import realcraft.bukkit.survival.economy.Economy;
 import realcraft.bukkit.survival.residences.CheckResidences;
 import realcraft.bukkit.survival.residences.ResidenceSigns;
 import realcraft.bukkit.survival.sells.Sells;
+import realcraft.bukkit.survival.shops.ShopManager;
 import realcraft.bukkit.survival.trading.Trading;
 import realcraft.bukkit.teleport.TeleportRequests;
 import realcraft.bukkit.test.Test;
 import realcraft.bukkit.users.Users;
-import realcraft.bukkit.utils.Glow;
-import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.webshop.WebShop;
 import realcraft.share.ServerType;
 import realcraft.share.users.UserRank;
-
-import java.lang.reflect.Field;
 
 public class RealCraft extends JavaPlugin implements Listener {
 	private static RealCraft instance;
@@ -135,7 +133,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 		serverName = getServer().getServerName();
 		serverType = ServerType.getByName(serverName);
 		essentials = (Essentials) this.getServer().getPluginManager().getPlugin("Essentials");
-		ItemUtil.init();
 		config = new Config(this);
 		TESTSERVER = config.getBoolean("testserver",false);
 		if(config.getBoolean("lobby.maintenance."+serverName,false)){
@@ -174,6 +171,11 @@ public class RealCraft extends JavaPlugin implements Listener {
 			cancelgrow = new CancelGrow(this);
 			lobby = new Lobby(this);
 			new Sitting();
+			if(RealCraft.isTestServer()){
+				new Economy();
+				new ShopManager();
+				new Sells();
+			}
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
 			checkresidences = new CheckResidences(this);
@@ -182,7 +184,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			mapcrafter = new MapCrafter(this);
 			new PassiveMode();
 			new RandomSpawn();
-			//new ShopManager();//TODO: uncomment
+			new ShopManager();
 			new Sells();
 			new Economy();
 			lobby = new Lobby(this);
@@ -205,11 +207,17 @@ public class RealCraft extends JavaPlugin implements Listener {
 			lobby = new Lobby(this);
 			new Sitting();
 		}
+		else if(serverName.equalsIgnoreCase("maps")){
+			cancelgrow = new CancelGrow(this);
+			new MapManager();
+		}
 		else if(serverName.equalsIgnoreCase("fights")){
 			fights = new Fights();
 		}
+		if(RealCraft.getServerType() != ServerType.MAPS){
+			new MapServerTeleport();
+		}
 		restart = new Restart(this);
-		Glow.registerGlow();
 		socketmanager = new SocketManager();
 		new TabList();
 		new PacketListener();
@@ -218,7 +226,10 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new LocationsSaver();
 		new WorldTeleporter();
 		new LampControl();
+		new ChunkGenerator();
+		new Schema();
 		new VipComamnd();
+		new Canvas();
 		this.getServer().getPluginManager().registerEvents(this,this);
 		this.updateWorldRules();
 	}
@@ -262,7 +273,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 						int view = Bukkit.getViewDistance();
 						for(int x=-view;x<=view;x++){
 							for(int z=-view;z<=view;z++){
-								net.minecraft.server.v1_13_R1.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
+								net.minecraft.server.v1_13_R2.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
 								PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(chunk,20);
 								((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 							}
@@ -271,6 +282,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 				}
 			},20);
 		}
+
 	}
 
 	@EventHandler(priority=EventPriority.NORMAL,ignoreCancelled = false)
@@ -300,7 +312,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 
 	private void updateWorldRules(){
 		for(World world : Bukkit.getWorlds()){
-			world.setGameRuleValue("announceAdvancements","false");
+			world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
 		}
 	}
 
@@ -330,24 +342,8 @@ public class RealCraft extends JavaPlugin implements Listener {
 
 		private void setPlayerHeaderFooter(Player player,String header,String footer){
 			PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-			try {
-				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+header+"\"}");
-				Field field = packet.getClass().getDeclaredField("a");
-				field.setAccessible(true);
-				field.set(packet,component);
-				field.setAccessible(false);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-			try {
-				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+footer+"\"}");
-				Field field = packet.getClass().getDeclaredField("b");
-				field.setAccessible(true);
-				field.set(packet,component);
-				field.setAccessible(false);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
+			packet.header = ChatSerializer.a("{\"text\":\""+header+"\"}");
+			packet.footer = ChatSerializer.a("{\"text\":\""+footer+"\"}");
 			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 		}
 	}

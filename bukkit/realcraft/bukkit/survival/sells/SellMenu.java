@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.survival.economy.Economy;
 import realcraft.bukkit.survival.sells.SellBasket.BasketItem;
-import realcraft.bukkit.utils.AbstractCommand;
+import realcraft.bukkit.others.AbstractCommand;
 import realcraft.bukkit.utils.Glow;
 import realcraft.bukkit.utils.ItemUtil;
 
@@ -23,15 +23,15 @@ import java.util.Map;
 
 public class SellMenu implements Listener {
 
-	public static final String INV_NAME = "Prodejna surovin";
+	public static final String INV_NAME = "Vykupna surovin";
 	private static HashMap<Player,SellBasket> baskets = new HashMap<>();
 
 	public SellMenu(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
-		new AbstractCommand("sell"){
+		new AbstractCommand("sell","sells","vykupna"){
 			@Override
 			public void perform(Player player,String[] args){
-				SellMenu.openMenu(player);
+				player.performCommand("warp vykupna");
 			}
 		};
 	}
@@ -143,7 +143,6 @@ public class SellMenu implements Listener {
 				} catch (SellBasket.EmptyBasketException e){
 					Sells.sendMessage(player,"§cKosik je prazdny.");
 					player.playSound(player.getLocation(),Sound.ENTITY_ITEM_BREAK,1f,1f);
-					return;
 				}
 			}
 			else if(event.getRawSlot() == 53){

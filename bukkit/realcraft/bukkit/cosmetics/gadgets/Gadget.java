@@ -43,7 +43,6 @@ public abstract class Gadget extends Cosmetic implements Listener {
 	@Override
 	public void clear(Player player){
 		player.getInventory().remove(this.getItemStack(player));
-		player.getInventory().remove(this.getType().getMaterial());
 	}
 
 	public boolean isGadgetRunning(Player player){

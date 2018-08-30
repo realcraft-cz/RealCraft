@@ -1,13 +1,13 @@
 package realcraft.bungee.motd;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
-
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import realcraft.bungee.RealCraftBungee;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 public class ServerMotd implements Listener, Runnable {
 
@@ -52,7 +52,7 @@ public class ServerMotd implements Listener, Runnable {
 						e.printStackTrace();
 					}
 					if(plugin.testServer){
-						title = RealCraftBungee.parseColors("&7&lRealCraft.cz&r &7&l|&r &7verze &l1.11");
+						title = RealCraftBungee.parseColors("&7&lRealCraft.cz&r &7&l|&r &7verze &l1.13");
 						description = RealCraftBungee.parseColors("&cTestovaci server");
 					}
 				}

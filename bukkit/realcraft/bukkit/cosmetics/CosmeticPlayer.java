@@ -1,12 +1,14 @@
 package realcraft.bukkit.cosmetics;
 
 import org.bukkit.entity.Player;
+import realcraft.bukkit.cosmetics.CosmeticCrystals.CosmeticCrystal;
+import realcraft.bukkit.cosmetics.cosmetic.Cosmetic;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticCategory;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics.CosmeticCrystals.CosmeticCrystal;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.users.Users;
 import realcraft.share.users.User;
+import realcraft.share.users.UserRank;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -109,6 +111,13 @@ public class CosmeticPlayer {
 			rs.close();
 		} catch (SQLException e){
 			e.printStackTrace();
+		}
+		if(this.getUser().getRank().isMinimum(UserRank.VIP)){
+			for(Cosmetic cosmetic : Cosmetics.getCosmetics()){
+				if(!this.hasCosmetic(cosmetic.getType()) && cosmetic.getType().getCategory() != CosmeticCategory.GADGET){
+					cosmetics.put(cosmetic.getType(),new CosmeticData(cosmetic.getType(),false,1));
+				}
+			}
 		}
 	}
 

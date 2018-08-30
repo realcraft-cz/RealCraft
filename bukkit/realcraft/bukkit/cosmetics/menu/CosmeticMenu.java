@@ -17,7 +17,7 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.cosmetics.Cosmetics;
 import realcraft.bukkit.users.Users;
-import realcraft.bukkit.utils.AbstractCommand;
+import realcraft.bukkit.others.AbstractCommand;
 
 public class CosmeticMenu implements Listener {
 
@@ -56,9 +56,14 @@ public class CosmeticMenu implements Listener {
 	}
 
 	@EventHandler
+	public void PlayerJoinEvent(PlayerJoinEvent event){
+		Cosmetics.getCosmeticPlayer(event.getPlayer()).reload();
+	}
+
+	@EventHandler
 	public void AuthLoginEvent(AuthLoginEvent event){
 		Player player = event.getPlayer();
-		if(Cosmetics.isAvailable(player.getWorld())){
+		if(Cosmetics.isHotbarAvailable(player.getWorld())){
 			this.giveHotbarItem(player);
 			Cosmetics.loadCosmetics(player);
 		}
@@ -67,7 +72,7 @@ public class CosmeticMenu implements Listener {
 	@EventHandler
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		Player player = event.getPlayer();
-		if(Users.getUser(player).isLogged() && Cosmetics.isAvailable(player.getWorld())){
+		if(Users.getUser(player).isLogged() && Cosmetics.isHotbarAvailable(player.getWorld())){
 			this.giveHotbarItem(player);
 		}
 	}
@@ -75,7 +80,7 @@ public class CosmeticMenu implements Listener {
 	@EventHandler
 	public void PlayerChangedWorldEvent(PlayerChangedWorldEvent event){
 		Player player = event.getPlayer();
-		if(Cosmetics.isAvailable(player.getWorld())){
+		if(Cosmetics.isHotbarAvailable(player.getWorld())){
 			this.giveHotbarItem(player);
 			Cosmetics.loadCosmetics(player);
 		} else {

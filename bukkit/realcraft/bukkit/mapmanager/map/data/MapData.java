@@ -15,6 +15,7 @@ public class MapData {
 	public MapData(String data){
 		JsonElement element = new JsonParser().parse(data);
 		if(element.isJsonObject()) objects = element.getAsJsonObject();
+		else objects = new JsonObject();
 	}
 
 	public boolean containsKey(String key){

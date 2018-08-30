@@ -2,7 +2,7 @@ package realcraft.bukkit.survival.economy;
 
 import realcraft.bukkit.survival.economy.commands.EconomyCommandBalance;
 import realcraft.bukkit.survival.economy.commands.EconomyCommandPay;
-import realcraft.bukkit.utils.AbstractCommand;
+import realcraft.bukkit.others.AbstractCommand;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;

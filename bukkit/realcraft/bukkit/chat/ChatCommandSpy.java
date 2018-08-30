@@ -1,17 +1,19 @@
 package realcraft.bukkit.chat;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.others.AbstractCommand;
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-public class ChatCommandSpy implements Listener {
+import java.util.List;
+
+public class ChatCommandSpy extends AbstractCommand implements Listener {
 	RealCraft plugin;
 
 	boolean enabled = false;
@@ -19,6 +21,7 @@ public class ChatCommandSpy implements Listener {
 	private String [] blockedCommands;
 
 	public ChatCommandSpy(RealCraft realcraft){
+		super("commandspy");
 		plugin = realcraft;
 		if(plugin.config.getBoolean("commandspy.enabled")){
 			enabled = true;
@@ -58,7 +61,10 @@ public class ChatCommandSpy implements Listener {
 		String commandMessage = getCommandMessage(sender,command);
 		for(Player player : Bukkit.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin")){
-				player.sendMessage(commandMessage);
+				String option = PermissionsEx.getUser(player).getOption("commandspy");
+				if(Boolean.valueOf(option)){
+					player.sendMessage(commandMessage);
+				}
 			}
 		}
 		RealCraft.getInstance().chatlog.onPlayerCommand(sender,command);
@@ -69,5 +75,20 @@ public class ChatCommandSpy implements Listener {
 		result = result.replaceAll("%player%",player.getName());
 		result = result.replaceAll("%command%",command);
 		return RealCraft.parseColors(result);
+	}
+
+	@Override
+	public void perform(Player player,String[] args){
+		if(player.hasPermission("group.Admin")){
+			PermissionUser user = PermissionsEx.getUser(player);
+			String option = user.getOption("commandspy");
+			if(Boolean.valueOf(option)){
+				user.setOption("commandspy","false");
+				player.sendMessage("§6CommandSpy §cvypnut");
+			} else {
+				user.setOption("commandspy","true");
+				player.sendMessage("§6CommandSpy §azapnut");
+			}
+		}
 	}
 }

@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.users.Users;
-import realcraft.bukkit.utils.AbstractCommand;
 import realcraft.share.users.UserRank;
 
 public class VipComamnd extends AbstractCommand {

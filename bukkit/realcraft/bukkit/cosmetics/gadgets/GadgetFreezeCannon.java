@@ -8,8 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.BlockUtils;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
+import realcraft.bukkit.cosmetics.utils.BlockUtils;
+import realcraft.bukkit.cosmetics.utils.UtilParticles;
 import realcraft.bukkit.utils.Particles;
 
 public class GadgetFreezeCannon extends Gadget {

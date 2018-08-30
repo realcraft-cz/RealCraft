@@ -19,5 +19,6 @@ public abstract class MapDataEntry {
 	}
 
 	public abstract JsonElement getData();
+	public abstract void loadData(MapData data);
 	public abstract boolean equals(Object object);
 }

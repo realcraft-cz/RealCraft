@@ -16,6 +16,7 @@ import realcraft.bukkit.sockets.SocketData;
 import realcraft.bukkit.sockets.SocketDataEvent;
 import realcraft.bukkit.sockets.SocketManager;
 import realcraft.bukkit.users.Users;
+import realcraft.share.ServerType;
 
 import java.util.HashMap;
 
@@ -40,8 +41,11 @@ public class AntiCheat implements Listener {
 		new CheckSneakHack();
 		new CheckClickAura();
 		new CheckKillAura();
-		if(plugin.serverName.equalsIgnoreCase("survival") || plugin.serverName.equalsIgnoreCase("creative")){
+		if(RealCraft.getServerType() == ServerType.SURVIVAL || RealCraft.getServerType() == ServerType.CREATIVE){
 			new CheckEnchant();
+		}
+		if(RealCraft.getServerType() == ServerType.SURVIVAL){
+			new CheckXRay();
 		}
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		if(RealCraft.isTestServer()){

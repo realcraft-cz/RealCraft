@@ -1,16 +1,10 @@
 package realcraft.bukkit.lobby;
 
-import com.google.common.collect.Sets;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityCreature;
-import net.minecraft.server.v1_13_R1.EntityInsentient;
-import net.minecraft.server.v1_13_R1.PathfinderGoalSelector;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,7 +20,6 @@ import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.AntiCheat;
 import realcraft.bukkit.auth.AuthLoginEvent;
-import realcraft.bukkit.cosmetics2.utils.CustomPathFinderGoalPanic;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.spectator.Spectator;
 import realcraft.bukkit.utils.BorderUtil;
@@ -34,7 +27,6 @@ import realcraft.bukkit.utils.MaterialUtil;
 import realcraft.bukkit.utils.Particles;
 import realcraft.share.ServerType;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -68,7 +60,6 @@ public class Lobby implements Listener {
 					new LobbySpleef();
 					new LobbyLottery(plugin);
 					new LobbyLightsOff();
-					new LobbyCanvas();
 					//new LobbyPlayerRider(plugin);
 					lobbystands = new LobbyStands(plugin);
 				}
@@ -93,7 +84,12 @@ public class Lobby implements Listener {
 		player.setGameMode(GameMode.ADVENTURE);
 		player.setWalkSpeed(0.2f);
 		if(RealCraft.getServerType() == ServerType.LOBBY){
-			BorderUtil.setBorder(player,ServerSpawn.getLocation(),256);
+			Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+				@Override
+				public void run(){
+					BorderUtil.setBorder(player,ServerSpawn.getLocation(),1024);
+				}
+			},20);
 		}
 		new LobbyScoreboard(this,player);
 	}
@@ -125,7 +121,12 @@ public class Lobby implements Listener {
 			player.setGameMode(GameMode.ADVENTURE);
 			if(RealCraft.getServerType() == ServerType.LOBBY){
 				player.setWalkSpeed(0.2f);
-				BorderUtil.setBorder(player,ServerSpawn.getLocation(),256);
+				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+					@Override
+					public void run(){
+						BorderUtil.setBorder(player,ServerSpawn.getLocation(),1024);
+					}
+				},20);
 			}
 		}
 	}
@@ -365,27 +366,6 @@ public class Lobby implements Listener {
             },120);*/
 		}
 	}
-
-	public void clearPathfinders(org.bukkit.entity.Entity entity) {
-        Entity nmsEntity = ((CraftEntity) entity).getHandle();
-        try {
-            Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
-            bField.setAccessible(true);
-            Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
-            cField.setAccessible(true);
-            bField.set(((EntityInsentient) nmsEntity).goalSelector, Sets.newLinkedHashSet());
-            bField.set(((EntityInsentient) nmsEntity).targetSelector, Sets.newLinkedHashSet());
-            cField.set(((EntityInsentient) nmsEntity).goalSelector, Sets.newLinkedHashSet());
-            cField.set(((EntityInsentient) nmsEntity).targetSelector, Sets.newLinkedHashSet());
-        } catch (Exception exc) {
-            exc.printStackTrace();
-        }
-    }
-
-	public void makePanic(org.bukkit.entity.Entity entity) {
-        EntityInsentient insentient = (EntityInsentient) ((CraftEntity) entity).getHandle();
-        insentient.goalSelector.a(3, new CustomPathFinderGoalPanic((EntityCreature) insentient, 0.4d));
-    }
 
 	private HashMap<Player,Long> throwedPlayers = new HashMap<Player,Long>();
 	public void throwPlayerForward(Player player){

@@ -46,7 +46,7 @@ public class ShopPlayer {
 		if(amount < 1) amount = 1;
 		else if(amount > 64) amount = 64;
 		if(price < 1) price = 1;
-		else if(price > 999) price = 999;
+		else if(price > 9999) price = 9999;
 		this.command = ShopPlayerCommand.CREATE;
 		this.commandExpire = System.currentTimeMillis()+ShopManager.COMMAND_TIMEOUT;
 		this.item = this.getPlayer().getInventory().getItemInMainHand().clone();

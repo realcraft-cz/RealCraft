@@ -77,6 +77,14 @@ commands:
     description: fight
     usage: fight
     aliases: [fights,duel]
+  balance:
+    description: balance
+    usage: balance
+    aliases: [bal,ebal,ebalance,money,emoney,penize]
+  pay:
+    aliases: [epay]
+  sell:
+    aliases: [sells,vykupna]
   /schbr:
     description: Set brush to schematic brush.
   /schset:

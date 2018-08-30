@@ -1,13 +1,13 @@
 package realcraft.bukkit.cosmetics.pets;
 
 import com.google.common.collect.Sets;
-import net.minecraft.server.v1_13_R1.*;
+import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -156,11 +156,11 @@ public class Pet extends Cosmetic {
 			location.setPitch(0f);
 			location.add(location.getDirection().setY(0).normalize().multiply(1.5));
 			CustomPetEntity zombie = new CustomPetEntity(((CraftWorld)location.getWorld()).getHandle());
+			zombie.setLocation(location.getX(),location.getY(),location.getZ(),location.getPitch(),location.getYaw());
 			((CraftWorld)location.getWorld()).getHandle().addEntity(zombie,CreatureSpawnEvent.SpawnReason.CUSTOM);
 			entity = (Zombie)zombie.getBukkitEntity();
-			entity.teleport(location);
-			entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_VEX_CHARGE,1f,1f);
 			if(entity != null){
+				entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_VEX_CHARGE,1f,1f);
 				entity.setSilent(true);
 				entity.setBaby(true);
 				entity.getEquipment().clear();
@@ -310,7 +310,7 @@ public class Pet extends Cosmetic {
 		}
 
 		private void clearPathfinders(org.bukkit.entity.Entity entity){
-			net.minecraft.server.v1_13_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+			net.minecraft.server.v1_13_R2.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 			try {
 				Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
 				bField.setAccessible(true);

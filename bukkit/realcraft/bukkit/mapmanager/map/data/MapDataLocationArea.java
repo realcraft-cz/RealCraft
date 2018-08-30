@@ -34,11 +34,21 @@ public class MapDataLocationArea extends MapDataEntry {
 		return maxLoc;
 	}
 
+	@Override
 	public JsonObject getData(){
 		JsonObject object = new JsonObject();
 		object.add("from",minLoc.getData());
 		object.add("to",maxLoc.getData());
 		return object;
+	}
+
+	@Override
+	public void loadData(MapData data){
+		if(data.containsKey(this.getName())){
+			MapDataLocationArea tmp = new MapDataLocationArea(data.getElement(this.getName()));
+			minLoc = tmp.getMinLocation();
+			maxLoc = tmp.getMaxLocation();
+		}
 	}
 
 	@Override

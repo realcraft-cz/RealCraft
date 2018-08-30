@@ -1,8 +1,8 @@
 package realcraft.bukkit.cosmetics.mounts;
 
-import net.minecraft.server.v1_13_R1.*;
+import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.DyeColor;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Llama;
 import org.bukkit.entity.Player;
@@ -49,6 +49,7 @@ public class MountLlama extends Mount {
 
 		public CustomEntity(World world){
 			super(world);
+
 
 			if (jumping == null) {
 				try {
@@ -99,6 +100,7 @@ public class MountLlama extends Mount {
 				}
 
 				if (isJumping && onGround) { // !isJumping
+					//this.a(rider,1f);
 					motY = (double) 0.5f;
 					MobEffect jump = getEffect(MobEffects.JUMP);
 					if (jump != null) {
@@ -124,7 +126,7 @@ public class MountLlama extends Mount {
 
 		private EntityPlayer getRider(){
 			if(passengers != null && !passengers.isEmpty()){
-				net.minecraft.server.v1_13_R1.Entity entity = passengers.get(0);
+				net.minecraft.server.v1_13_R2.Entity entity = passengers.get(0);
 				if(entity instanceof EntityPlayer){
 					return (EntityPlayer)entity;
 				}
@@ -132,11 +134,7 @@ public class MountLlama extends Mount {
 			return null;
 		}
 
-		public boolean di() {
-			return bO() instanceof EntityLiving;
-		}
-
-		public boolean dW() {
+		public boolean dY() {
 			return true;
 		}
 
@@ -148,14 +146,14 @@ public class MountLlama extends Mount {
 			return getRider() != null || super.isLeashed();
 		}
 
-		public net.minecraft.server.v1_13_R1.Entity getLeashHolder() {
+		public net.minecraft.server.v1_13_R2.Entity getLeashHolder() {
 			EntityPlayer rider = getRider();
 			return rider != null ? rider : super.getLeashHolder();
 		}
 
 		// hasCaravan
-		public boolean en() {
-			return (getRider() != null) || super.en();
+		public boolean em() {
+			return (getRider() != null) || super.em();
 		}
 
 		@Override

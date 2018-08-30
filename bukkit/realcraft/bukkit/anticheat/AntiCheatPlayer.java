@@ -1,6 +1,6 @@
 package realcraft.bukkit.anticheat;
 
-import net.minecraft.server.v1_13_R1.EntityPlayer;
+import net.minecraft.server.v1_13_R2.EntityPlayer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.anticheat.checks.Check.CheckType;

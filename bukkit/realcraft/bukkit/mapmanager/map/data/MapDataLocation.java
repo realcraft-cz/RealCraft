@@ -13,6 +13,10 @@ public class MapDataLocation extends MapDataEntry {
 		this(null,location);
 	}
 
+	public MapDataLocation(String name){
+		this(name,null);
+	}
+
 	public MapDataLocation(String name,Location location){
 		super(name);
 		this.location = location;
@@ -20,26 +24,39 @@ public class MapDataLocation extends MapDataEntry {
 
 	public MapDataLocation(JsonElement element){
 		JsonObject json = element.getAsJsonObject();
-		double x = json.get("x").getAsDouble();
-		double y = json.get("y").getAsDouble();
-		double z = json.get("z").getAsDouble();
-		float yaw = json.get("yaw").getAsFloat();
-		float pitch = json.get("pitch").getAsFloat();
-		this.location = new Location(MapManager.getWorld(),x,y,z,yaw,pitch);
+		if(json.has("x")){
+			double x = json.get("x").getAsDouble();
+			double y = json.get("y").getAsDouble();
+			double z = json.get("z").getAsDouble();
+			float yaw = json.get("yaw").getAsFloat();
+			float pitch = json.get("pitch").getAsFloat();
+			this.location = new Location(MapManager.getWorld(),x,y,z,yaw,pitch);
+		}
 	}
 
 	public Location getLocation(){
 		return location;
 	}
 
+	@Override
 	public JsonObject getData(){
 		JsonObject json = new JsonObject();
-		json.addProperty("x",location.getX());
-		json.addProperty("y",location.getY());
-		json.addProperty("z",location.getZ());
-		json.addProperty("yaw",location.getYaw());
-		json.addProperty("pitch",location.getPitch());
+		if(location != null){
+			json.addProperty("x",location.getX());
+			json.addProperty("y",location.getY());
+			json.addProperty("z",location.getZ());
+			json.addProperty("yaw",location.getYaw());
+			json.addProperty("pitch",location.getPitch());
+		}
 		return json;
+	}
+
+	@Override
+	public void loadData(MapData data){
+		if(data.containsKey(this.getName())){
+			MapDataLocation tmp = new MapDataLocation(data.getElement(this.getName()));
+			location = tmp.getLocation();
+		}
 	}
 
 	@Override

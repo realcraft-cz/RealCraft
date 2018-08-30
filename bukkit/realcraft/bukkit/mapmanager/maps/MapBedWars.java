@@ -1,20 +1,30 @@
 package realcraft.bukkit.mapmanager.maps;
 
+import org.bukkit.ChatColor;
 import realcraft.bukkit.mapmanager.map.Map;
+import realcraft.bukkit.mapmanager.map.MapRenderer;
+import realcraft.bukkit.mapmanager.map.MapRenderer.MapRendererLocation;
+import realcraft.bukkit.mapmanager.map.MapRenderer.MapRendererLocationDirection;
+import realcraft.bukkit.mapmanager.map.MapScoreboard;
 import realcraft.bukkit.mapmanager.map.MapType;
 import realcraft.bukkit.mapmanager.map.data.*;
+import realcraft.share.users.User;
 
 public class MapBedWars extends Map {
 
-	private MapDataMap<MapDataLocation> spawns = new MapDataMap<>("spawns");
-	private MapDataMap<MapDataLocation> beds = new MapDataMap<>("beds");
-	private MapDataList<MapDataLocation> traders = new MapDataList<>("traders");
-	private MapDataList<MapDataLocation> bronze = new MapDataList<>("bronze");
-	private MapDataList<MapDataLocation> silver = new MapDataList<>("silver");
-	private MapDataList<MapDataLocation> gold = new MapDataList<>("gold");
+	private MapDataMap<MapDataLocation> spawns = new MapDataMap<>("spawns",MapDataLocation.class,4,4);
+	private MapDataMap<MapDataLocation> beds = new MapDataMap<>("beds",MapDataLocation.class,4,4);
+	private MapDataList<MapDataLocation> traders = new MapDataList<>("traders",MapDataLocation.class,4,4);
+	private MapDataList<MapDataLocation> bronze = new MapDataList<>("bronze",MapDataLocation.class,4,8);
+	private MapDataList<MapDataLocation> iron = new MapDataList<>("iron",MapDataLocation.class,4,8);
+	private MapDataList<MapDataLocation> gold = new MapDataList<>("gold",MapDataLocation.class,4,5);
 
 	public MapBedWars(int id){
-		super(id,MapType.BEDWARS);
+		super(id);
+	}
+
+	public MapBedWars(User user){
+		super(user,MapType.BEDWARS);
 	}
 
 	public MapDataMap<MapDataLocation> getSpawns(){
@@ -34,7 +44,7 @@ public class MapBedWars extends Map {
 	}
 
 	public MapDataList<MapDataLocation> getSilver(){
-		return silver;
+		return iron;
 	}
 
 	public MapDataList<MapDataLocation> getGold(){
@@ -48,7 +58,7 @@ public class MapBedWars extends Map {
 		data.addProperty(beds);
 		data.addProperty(traders);
 		data.addProperty(bronze);
-		data.addProperty(silver);
+		data.addProperty(iron);
 		data.addProperty(gold);
 		return data;
 	}
@@ -59,8 +69,46 @@ public class MapBedWars extends Map {
 		beds.loadData(data);
 		traders.loadData(data);
 		bronze.loadData(data);
-		silver.loadData(data);
+		iron.loadData(data);
 		gold.loadData(data);
+	}
+
+	@Override
+	public void updateScoreboard(MapScoreboard scoreboard){
+		scoreboard.addLine("§fSpawns: "+spawns.getValidColor()+spawns.size());
+		scoreboard.addLine("§fBeds: "+beds.getValidColor()+beds.size());
+		scoreboard.addLine("§fTraders: "+traders.getValidColor()+traders.size());
+		scoreboard.addLine("");
+		scoreboard.addLine("§fBronze: "+bronze.getValidColor()+bronze.size());
+		scoreboard.addLine("§fSilver: "+iron.getValidColor()+iron.size());
+		scoreboard.addLine("§fGold: "+gold.getValidColor()+gold.size());
+	}
+
+	@Override
+	public void updateRenderer(MapRenderer renderer){
+		for(java.util.Map.Entry<String,MapDataLocation> entry : spawns.getValues().entrySet()){
+			renderer.addEntry(new MapRendererLocationDirection(entry.getValue(),ChatColor.YELLOW+spawns.getName().toUpperCase(),MapTeam.getByName(entry.getKey()).getColor()+entry.getKey().toUpperCase()));
+		}
+		for(java.util.Map.Entry<String,MapDataLocation> entry : beds.getValues().entrySet()){
+			renderer.addEntry(new MapRendererLocation(entry.getValue(),ChatColor.LIGHT_PURPLE+beds.getName().toUpperCase(),MapTeam.getByName(entry.getKey()).getColor()+entry.getKey().toUpperCase()));
+		}
+		for(MapDataLocation location : traders.getValues()){
+			renderer.addEntry(new MapRendererLocationDirection(location,ChatColor.WHITE+traders.getName().toUpperCase()));
+		}
+		for(MapDataLocation location : bronze.getValues()){
+			renderer.addEntry(new MapRendererLocation(location,ChatColor.DARK_RED+bronze.getName().toUpperCase()));
+		}
+		for(MapDataLocation location : iron.getValues()){
+			renderer.addEntry(new MapRendererLocation(location,ChatColor.GRAY+iron.getName().toUpperCase()));
+		}
+		for(MapDataLocation location : gold.getValues()){
+			renderer.addEntry(new MapRendererLocation(location,ChatColor.GOLD+gold.getName().toUpperCase()));
+		}
+	}
+
+	@Override
+	public boolean isValid(){
+		return (spawns.isValid() && beds.isValid() && traders.isValid() && bronze.isValid() && iron.isValid() && gold.isValid());
 	}
 
 	private enum MapTeam {
@@ -72,6 +120,16 @@ public class MapBedWars extends Map {
 
 		public String toString(){
 			return this.name().toLowerCase();
+		}
+
+		public ChatColor getColor(){
+			switch(this){
+				case RED: return ChatColor.RED;
+				case BLUE: return ChatColor.BLUE;
+				case YELLOW: return ChatColor.YELLOW;
+				case GREEN: return ChatColor.GREEN;
+			}
+			return ChatColor.WHITE;
 		}
 	}
 }

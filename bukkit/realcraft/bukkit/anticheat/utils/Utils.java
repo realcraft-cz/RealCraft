@@ -207,7 +207,8 @@ public class Utils {
 				player.isFlying() ||
 				player.isInsideVehicle() ||
 				player.isSwimming() ||
-				player.isGliding());
+				player.isGliding() ||
+				(player.getInventory().getChestplate() != null && player.getInventory().getChestplate().getType() == Material.ELYTRA));
 	}
 
     /**

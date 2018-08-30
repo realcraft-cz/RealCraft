@@ -1,15 +1,14 @@
 package realcraft.bukkit.cosmetics.mounts;
 
-import net.minecraft.server.v1_13_R1.*;
+import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.PolarBear;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
 import realcraft.bukkit.utils.Particles;
 
 import java.lang.reflect.Field;
@@ -35,7 +34,7 @@ public class MountPolarBear extends Mount {
 
 	@Override
 	public void effect(Player player,Entity entity){
-		UtilParticles.display(Particles.CLOUD, 0.5f, 0.2f, 0.5f, entity.getLocation().clone().add(0, 1, 0), 5);
+		Particles.CLOUD.display(0.5f, 0.2f, 0.5f, 0f, 5, entity.getLocation().clone().add(0, 1, 0));
 	}
 
 	private class CustomEntity extends EntityPolarBear {
@@ -129,7 +128,7 @@ public class MountPolarBear extends Mount {
 
 		private EntityPlayer getRider() {
 			if (passengers != null && !passengers.isEmpty()) {
-				net.minecraft.server.v1_13_R1.Entity entity = passengers.get(0);
+				net.minecraft.server.v1_13_R2.Entity entity = passengers.get(0);
 				if (entity instanceof EntityPlayer) {
 					return (EntityPlayer) entity;
 				}
@@ -138,7 +137,7 @@ public class MountPolarBear extends Mount {
 		}
 
 		private boolean isStanding() {
-			return dA();
+			return dz();
 		}
 
 		private void setStanding(boolean standing){

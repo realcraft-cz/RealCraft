@@ -178,16 +178,15 @@ public class User {
 	public int giveCoins(int coins,boolean boost){
 		coins = (this.hasCoinsBoost() && boost && coins > 0 ? coins*2 : coins);
 		this.coins += coins;
-		DB.update("UPDATE "+Users.USERS+" SET user_coins = ? WHERE user_id = '"+this.getId()+"'",
-			this.getCoins()
-		);
+		if(this.coins < 0) this.coins = 0;
+		DB.update("UPDATE "+Users.USERS+" SET user_coins = '"+this.getCoins()+"' WHERE user_id = '"+this.getId()+"'");
 		return coins;
 	}
 
 	public void addMoney(int money){
 		this.money += money;
 		if(this.money < 0) this.money = 0;
-		DB.update("UPDATE "+Users.USERS+" SET user_money = '"+this.money+"' WHERE user_id = '"+this.getId()+"'");
+		DB.update("UPDATE "+Users.USERS+" SET user_money = '"+this.getMoney()+"' WHERE user_id = '"+this.getId()+"'");
 	}
 
 	public int getMoney(){
@@ -257,9 +256,11 @@ public class User {
 	}
 
 	public void updatePlayTime(){
-		int playtime = (int)((System.currentTimeMillis()-lastPlayTime)/1000);
-		lastPlayTime = System.currentTimeMillis();
-		DB.update("UPDATE "+Users.USERS+" SET user_playtime = user_playtime + "+playtime+" WHERE user_id = '"+this.getId()+"'");
+		if(lastPlayTime != 0){
+			int playtime = (int)((System.currentTimeMillis()-lastPlayTime)/1000);
+			lastPlayTime = System.currentTimeMillis();
+			DB.update("UPDATE "+Users.USERS+" SET user_playtime = user_playtime + "+playtime+" WHERE user_id = '"+this.getId()+"'");
+		}
 	}
 
 	@Override

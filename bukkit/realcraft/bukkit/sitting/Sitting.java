@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import realcraft.bukkit.RealCraft;
@@ -81,5 +82,10 @@ public class Sitting implements Listener {
 	public void EntityDismountEvent(EntityDismountEvent event){
 		if(event.getEntity().getType() != EntityType.PLAYER || event.getDismounted().getType() != EntityType.ARMOR_STAND) return;
 		this.setSitting((Player)event.getEntity(),event.getDismounted().getLocation(),false);
+	}
+
+	@EventHandler
+	public void PlayerQuitEvent(PlayerQuitEvent event){
+		this.setSitting(event.getPlayer(),event.getPlayer().getLocation(),false);
 	}
 }

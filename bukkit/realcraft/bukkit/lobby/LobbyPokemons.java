@@ -13,11 +13,11 @@ import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.api.util.YamlStorage;
 import net.citizensnpcs.npc.skin.SkinnableEntity;
 import net.citizensnpcs.trait.LookClose;
-import net.minecraft.server.v1_13_R1.EntityInsentient;
-import net.minecraft.server.v1_13_R1.PathEntity;
-import net.minecraft.server.v1_13_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.PathEntity;
+import net.minecraft.server.v1_13_R2.PathfinderGoalSelector;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -520,7 +520,7 @@ public class LobbyPokemons implements Listener {
 		}
 
 		private void clearPathfinders(org.bukkit.entity.Entity entity){
-			net.minecraft.server.v1_13_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+			net.minecraft.server.v1_13_R2.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 			try {
 				Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
 				bField.setAccessible(true);

@@ -12,7 +12,7 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.BlockUtils;
+import realcraft.bukkit.cosmetics.utils.BlockUtils;
 import realcraft.bukkit.utils.MaterialUtil;
 import realcraft.bukkit.utils.RandomUtil;
 

@@ -123,4 +123,9 @@ public class Cosmetics {
 		else if(world.getName().equalsIgnoreCase("world")) return true;
 		return false;
 	}
+
+	public static boolean isHotbarAvailable(World world){
+		if(RealCraft.getServerType() == ServerType.LOBBY) return true;
+		return false;
+	}
 }

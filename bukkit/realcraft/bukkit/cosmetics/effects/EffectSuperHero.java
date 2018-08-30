@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
+import realcraft.bukkit.cosmetics.utils.UtilParticles;
 import realcraft.bukkit.utils.Particles;
 
 import java.util.HashMap;

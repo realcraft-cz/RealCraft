@@ -1,15 +1,13 @@
 package realcraft.bukkit.mapmanager.map;
 
 import org.bukkit.ChatColor;
-import realcraft.share.ServerType;
+import org.bukkit.Material;
+
+import static realcraft.bukkit.mapmanager.map.MapDimension.MapDimensionDefault;
 
 public enum MapType {
 
 	BEDWARS, HIDENSEEK, BLOCKPARTY, RAGEMODE, PAINTBALL, DOMINATE, FIGHTS, RACES;
-
-	public static ServerType getByName(String name){
-		return ServerType.valueOf(name.toUpperCase());
-	}
 
 	public String toString(){
 		return this.name().toLowerCase();
@@ -54,5 +52,43 @@ public enum MapType {
 			case RACES: return ChatColor.DARK_AQUA.toString();
 		}
 		return ChatColor.WHITE.toString();
+	}
+
+	public Material getMaterial(){
+		switch(this){
+			case BEDWARS: return Material.RED_BED;
+			case HIDENSEEK: return Material.BOOKSHELF;
+			case BLOCKPARTY: return Material.MUSIC_DISC_WAIT;
+			case RAGEMODE: return Material.BOW;
+			case PAINTBALL: return Material.SNOWBALL;
+			case DOMINATE: return Material.BEACON;
+			case FIGHTS: return Material.DIAMOND_SWORD;
+			case RACES: return Material.SADDLE;
+		}
+		return Material.AIR;
+	}
+
+	public MapDimension getDimension(){
+		switch(this){
+			case BEDWARS: return new MapDimensionDefault();
+			case HIDENSEEK: return new MapDimensionDefault();
+			case BLOCKPARTY: return new MapDimension(31,6,31);
+			case RAGEMODE: return new MapDimensionDefault();
+			case PAINTBALL: return new MapDimensionDefault();
+			case DOMINATE: return new MapDimensionDefault();
+			case RACES: return new MapDimensionDefault();
+		}
+		return new MapDimensionDefault();
+	}
+
+	public static MapType getByName(String name){
+		return MapType.valueOf(name.toUpperCase());
+	}
+
+	public static MapType getById(int id){
+		for(MapType type : MapType.values()){
+			if(type.getId() == id) return type;
+		}
+		return null;
 	}
 }

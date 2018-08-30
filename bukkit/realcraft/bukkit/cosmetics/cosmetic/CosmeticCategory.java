@@ -8,7 +8,7 @@ import realcraft.share.ServerType;
 public enum CosmeticCategory {
 
 	HAT     (100, "Hlavy",            Material.DIAMOND_HELMET),
-	SUIT    (200, "Brneni",           Material.LEATHER_CHESTPLATE),
+	//SUIT    (200, "Brneni",           Material.LEATHER_CHESTPLATE),
 	GADGET  (300, "Gadgety",          Material.ENDER_PEARL),
 	EFFECT  (400, "Efekty",           Material.NETHER_STAR),
 	PET     (500, "Mazlikove",        Material.NAME_TAG),
@@ -41,7 +41,7 @@ public enum CosmeticCategory {
 		else if(this == HAT) return true;
 		else if(this == EFFECT) return true;
 		else if(this == PET) return true;
-		else if(this == SUIT && RealCraft.getServerType() != ServerType.SURVIVAL && world.getName().equalsIgnoreCase("world")) return true;
+		//else if(this == SUIT && RealCraft.getServerType() != ServerType.SURVIVAL && world.getName().equalsIgnoreCase("world")) return true;
 		else if(this == GADGET && RealCraft.getServerType() != ServerType.SURVIVAL && world.getName().equalsIgnoreCase("world")) return true;
 		return false;
 	}

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.survival.economy.Economy;
+import realcraft.bukkit.survival.shops.market.ShopMarket;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.JsonUtil;
 
@@ -24,7 +25,7 @@ public class ShopManager implements Runnable {
 	public static final String WORLD = "world";
 	public static final String PREFIX = "§e[ChestShop]§r ";
 	public static final int COMMAND_TIMEOUT = 10*1000;
-	public static final int SHOP_FEE = 10;
+	public static final int SHOP_FEE = 20;
 
 	private static HashMap<Location,Shop> shops = new HashMap<Location,Shop>();
 	private static HashMap<Player,ShopPlayer> players = new HashMap<Player,ShopPlayer>();
@@ -55,7 +56,8 @@ public class ShopManager implements Runnable {
 			while(rs.next()){
 				int id = rs.getInt("shop_id");
 				Shop shop = new Shop(id);
-				shops.put(shop.getLocation(),shop);
+				if(shop.isValid()) shops.put(shop.getLocation(),shop);
+				else ShopManager.removeShop(shop);
 			}
 			rs.close();
 		} catch (SQLException e){
@@ -74,7 +76,7 @@ public class ShopManager implements Runnable {
 	}
 
 	public static ArrayList<Shop> getShops(){
-		return new ArrayList<Shop>(shops.values());
+		return new ArrayList<>(shops.values());
 	}
 
 	public static void removeShop(Shop shop){
@@ -109,10 +111,15 @@ public class ShopManager implements Runnable {
 			if(rs.next()){
 				int id = rs.getInt(1);
 				Shop shop = new Shop(id);
-				shops.put(shop.getLocation(),shop);
-				ShopManager.sendMessage(player,"§aObchod vytvoren: §e"+shop.getItemName()+"§f za §a"+Economy.format(shop.getPrice()));
-				player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-				Users.getUser(player).addMoney(-SHOP_FEE);
+				if(shop.isValid()){
+					shops.put(shop.getLocation(),shop);
+					ShopManager.sendMessage(player,"§aObchod vytvoren: §e"+shop.getItemName()+"§f za §a"+Economy.format(shop.getPrice()));
+					player.playSound(player.getLocation(),Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
+					Users.getUser(player).addMoney(-SHOP_FEE);
+				} else {
+					ShopManager.removeShop(shop);
+					ShopManager.sendMessage(player,"§cItem §e"+shop.getItem().getType()+"§c nelze docasne pouzit (1.13 bug)");
+				}
 			}
 		} catch (SQLException e){
 			e.printStackTrace();

@@ -67,7 +67,7 @@ public class GadgetChickenator extends Gadget {
 
 	@EventHandler
 	public void EntityPickupItemEvent(EntityPickupItemEvent event){
-		if(event.getEntityType() == EntityType.PLAYER && event.getItem().getItemStack().getType() == Material.COOKED_CHICKEN && event.getItem().getTicksLived() < 10*20){
+		if(this.getType().getCategory().isAvailable(event.getEntity().getWorld()) && event.getEntityType() == EntityType.PLAYER && event.getItem().getItemStack().getType() == Material.COOKED_CHICKEN && event.getItem().getTicksLived() < 10*20){
 			Player player = (Player)event.getEntity();
 			event.setCancelled(true);
 			player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,30*20,7));

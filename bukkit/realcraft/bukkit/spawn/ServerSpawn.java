@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.utils.AbstractCommand;
+import realcraft.bukkit.others.AbstractCommand;
 import realcraft.bukkit.utils.LocationUtil;
 
 import java.io.File;
@@ -22,11 +22,11 @@ public class ServerSpawn extends AbstractCommand {
 
 	@Override
 	public void perform(Player player,String[] args){
-		if(getLocation() != null) player.teleport(getLocation(),PlayerTeleportEvent.TeleportCause.PLUGIN);
+		if(ServerSpawn.getLocation() != null) player.teleport(ServerSpawn.getLocation(),PlayerTeleportEvent.TeleportCause.COMMAND);
 	}
 
 	@Override
-	public List<String> onTabComplete(Player player,String[] args){
+	public List<String> tabCompleter(Player player,String[] args){
 		return null;
 	}
 

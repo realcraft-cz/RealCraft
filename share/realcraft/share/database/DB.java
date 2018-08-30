@@ -1,16 +1,12 @@
 package realcraft.share.database;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import org.bukkit.configuration.file.FileConfiguration;
-
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
+import java.sql.*;
 
 public class DB {
 
@@ -100,11 +96,11 @@ public class DB {
 	public static ResultSet insert(String query,Object... params){
 		if(!connected) return null;
 		try {
-			PreparedStatement stmt = conn.prepareStatement(query);
+			PreparedStatement stmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 			for(int i=0;i<params.length;i++){
 				if(params[i] != null) stmt.setObject(i+1,params[i]);
 			}
-			stmt.executeUpdate(query);
+			stmt.executeUpdate();
 			return stmt.getGeneratedKeys();
 		}
 		catch(Exception e){

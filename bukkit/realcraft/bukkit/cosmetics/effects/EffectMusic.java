@@ -2,7 +2,7 @@ package realcraft.bukkit.cosmetics.effects;
 
 import org.bukkit.entity.Player;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.MathUtils;
+import realcraft.bukkit.cosmetics.utils.MathUtils;
 import realcraft.bukkit.utils.Particles;
 
 public class EffectMusic extends Effect {

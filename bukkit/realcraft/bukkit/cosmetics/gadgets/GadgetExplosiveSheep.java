@@ -1,24 +1,24 @@
 package realcraft.bukkit.cosmetics.gadgets;
 
 import com.google.common.collect.Sets;
-import net.minecraft.server.v1_13_R1.Entity;
-import net.minecraft.server.v1_13_R1.EntityCreature;
-import net.minecraft.server.v1_13_R1.EntityInsentient;
-import net.minecraft.server.v1_13_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_13_R2.Entity;
+import net.minecraft.server.v1_13_R2.EntityCreature;
+import net.minecraft.server.v1_13_R2.EntityInsentient;
+import net.minecraft.server.v1_13_R2.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.CustomPathFinderGoalPanic;
-import realcraft.bukkit.cosmetics2.utils.MathUtils;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
+import realcraft.bukkit.cosmetics.utils.CustomPathFinderGoalPanic;
+import realcraft.bukkit.cosmetics.utils.MathUtils;
+import realcraft.bukkit.cosmetics.utils.UtilParticles;
 import realcraft.bukkit.utils.Particles;
 
 import java.lang.reflect.Field;

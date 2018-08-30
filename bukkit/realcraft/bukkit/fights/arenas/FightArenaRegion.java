@@ -31,7 +31,7 @@ public class FightArenaRegion {
 
 	public FightArenaRegion(FightArena arena){
 		File file = new File(RealCraft.getInstance().getDataFolder()+"/fights/"+arena.getType().toString()+"/"+arena.getName()+"/"+"region.schematic");
-		if(file.exists()) schema = new Schema(file,arena.getBasicLocation());
+		//if(file.exists()) schema = new Schema(file,arena.getBasicLocation());
 	}
 
 	public void reset(){
@@ -173,6 +173,7 @@ public class FightArenaRegion {
 								}
 							}
 						}
+						editSession.commit();
 						blocks.clear();
 						build = false;
 						return null;

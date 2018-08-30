@@ -1,5 +1,6 @@
 package realcraft.bukkit.cosmetics.hats;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,7 +21,7 @@ public class Hat extends Cosmetic {
 
 	@Override
 	public void clear(Player player){
-		player.getInventory().setHelmet(null);
+		if(player.getInventory().getHelmet() != null && player.getInventory().getHelmet().getType() == Material.PLAYER_HEAD && player.getInventory().getHelmet().hasItemMeta()) player.getInventory().setHelmet(null);
 	}
 
 	@Override

@@ -5,10 +5,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.gameparty.GameParty;
+import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.users.Users;
+import realcraft.bukkit.utils.BorderUtil;
 
 public class RandomTest implements Listener {
 
@@ -42,6 +43,9 @@ public class RandomTest implements Listener {
 		else if(command.equals("test2") && player.hasPermission("group.Manazer")){
 			GameParty.chooseNextServer();
 			System.out.println("GameParty.chooseNextServer()");
+		}
+		else if(command.equals("bordertest") && player.hasPermission("group.Manazer")){
+			BorderUtil.setBorder(player,ServerSpawn.getLocation(),64);
 		}
 	}
 }

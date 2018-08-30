@@ -30,7 +30,7 @@ public class CosmeticMenuMain implements Listener {
 		items.put(getIndex(1,4),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.GADGET));
 		items.put(getIndex(1,6),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.EFFECT));
 		items.put(getIndex(3,2),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.HAT));
-		items.put(getIndex(3,4),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.SUIT));
+		//items.put(getIndex(3,4),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.SUIT));
 		items.put(getIndex(3,6),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.MOUNT));
 		items.put(getIndex(5,4),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CLEAR));
 	}

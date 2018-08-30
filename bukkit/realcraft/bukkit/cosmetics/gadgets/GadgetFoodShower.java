@@ -10,7 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.MathUtils;
+import realcraft.bukkit.cosmetics.utils.MathUtils;
 import realcraft.bukkit.utils.RandomUtil;
 
 import java.util.ArrayList;

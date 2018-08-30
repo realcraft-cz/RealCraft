@@ -292,9 +292,6 @@ public class LocationUtil {
     	if (below.getType() == Material.FIRE) {
     		return true;
     	}
-    	if (below.getType() == Material.LEGACY_BED_BLOCK) {
-    		return true;
-    	}
     	if (world.getBlockAt(x, y, z).getType() == Material.NETHER_PORTAL) {
     		return true;
     	}

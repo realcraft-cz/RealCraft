@@ -1,14 +1,15 @@
 package realcraft.bukkit.cosmetics.mounts;
 
-import net.minecraft.server.v1_13_R1.*;
+import net.minecraft.server.v1_13_R2.*;
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics2.utils.UtilParticles;
+import realcraft.bukkit.utils.Particles;
 import realcraft.bukkit.utils.RandomUtil;
 
 import java.lang.reflect.Field;
@@ -51,7 +52,7 @@ public class MountNyanSheep extends Mount {
 		float y = 1.2f;
 		for (RGBColor rgbColor : colors) {
 			for (int i = 0; i < 10; i++){
-				UtilParticles.display(rgbColor.getRed(),rgbColor.getGreen(),rgbColor.getBlue(),entity.getLocation().add(entity.getLocation().getDirection().normalize().multiply(-1).multiply(1.4)).add(0,y,0));
+				Particles.REDSTONE.display(Color.fromRGB(rgbColor.getRed(),rgbColor.getGreen(),rgbColor.getBlue()),entity.getLocation().add(entity.getLocation().getDirection().normalize().multiply(-1).multiply(1.4)).add(0,y,0),64f);
 			}
 			y -= 0.2;
 		}
@@ -164,7 +165,7 @@ public class MountNyanSheep extends Mount {
 
 		private EntityPlayer getRider(){
 			if(passengers != null && !passengers.isEmpty()){
-				net.minecraft.server.v1_13_R1.Entity entity = passengers.get(0);
+				net.minecraft.server.v1_13_R2.Entity entity = passengers.get(0);
 				if(entity instanceof EntityPlayer){
 					return (EntityPlayer)entity;
 				}

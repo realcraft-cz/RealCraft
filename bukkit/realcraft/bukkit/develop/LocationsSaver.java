@@ -1,10 +1,5 @@
 package realcraft.bukkit.develop;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,9 +7,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.LocationUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LocationsSaver implements Listener {
 
@@ -28,7 +27,7 @@ public class LocationsSaver implements Listener {
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
 		String command = event.getMessage().substring(1).toLowerCase();
-		if(command.startsWith("loc") && player.hasPermission("group.Manazer")){
+		if(command.startsWith("loc ") && player.hasPermission("group.Manazer")){
 			event.setCancelled(true);
 			String[] args = command.split(" ");
 			if(args.length < 2){

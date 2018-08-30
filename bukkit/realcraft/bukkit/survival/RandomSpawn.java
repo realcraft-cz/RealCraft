@@ -6,7 +6,7 @@ import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import realcraft.bukkit.utils.AbstractCommand;
+import realcraft.bukkit.others.AbstractCommand;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.RandomUtil;
 
@@ -34,7 +34,7 @@ public class RandomSpawn extends AbstractCommand {
 	}
 
 	@Override
-	public List<String> onTabComplete(Player player,String[] args){
+	public List<String> tabCompleter(Player player,String[] args){
 		return null;
 	}
 
@@ -46,11 +46,25 @@ public class RandomSpawn extends AbstractCommand {
 
 	public boolean isLocationInOcean(Location location){
 		return (
-			location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()) == Biome.OCEAN || location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()) == Biome.DEEP_OCEAN ||
-			location.getWorld().getBiome(location.getBlockX()+1,location.getBlockZ()) == Biome.OCEAN || location.getWorld().getBiome(location.getBlockX()+1,location.getBlockZ()) == Biome.DEEP_OCEAN ||
-			location.getWorld().getBiome(location.getBlockX()-1,location.getBlockZ()) == Biome.OCEAN || location.getWorld().getBiome(location.getBlockX()-1,location.getBlockZ()) == Biome.DEEP_OCEAN ||
-			location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()+1) == Biome.OCEAN || location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()+1) == Biome.DEEP_OCEAN ||
-			location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()-1) == Biome.OCEAN || location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()-1) == Biome.DEEP_OCEAN
+			isBiomeOcean(location.getWorld().getBiome(location.getBlockX(),location.getBlockZ())) ||
+			isBiomeOcean(location.getWorld().getBiome(location.getBlockX()+1,location.getBlockZ())) ||
+			isBiomeOcean(location.getWorld().getBiome(location.getBlockX()-1,location.getBlockZ())) ||
+			isBiomeOcean(location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()+1)) ||
+			isBiomeOcean(location.getWorld().getBiome(location.getBlockX(),location.getBlockZ()-1))
+		);
+	}
+
+	public boolean isBiomeOcean(Biome biome){
+		return (biome == Biome.OCEAN ||
+				biome == Biome.DEEP_OCEAN ||
+				biome == Biome.COLD_OCEAN ||
+				biome == Biome.FROZEN_OCEAN ||
+				biome == Biome.LUKEWARM_OCEAN ||
+				biome == Biome.WARM_OCEAN ||
+				biome == Biome.DEEP_FROZEN_OCEAN ||
+				biome == Biome.DEEP_LUKEWARM_OCEAN ||
+				biome == Biome.DEEP_COLD_OCEAN ||
+				biome == Biome.DEEP_WARM_OCEAN
 		);
 	}
 }
