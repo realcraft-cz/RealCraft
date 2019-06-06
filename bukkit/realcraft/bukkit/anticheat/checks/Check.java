@@ -30,10 +30,10 @@ public abstract class Check implements Listener, Runnable {
 		FLYHACK, SPEEDHACK, SNEAKHACK, CLICKAURA, KILLAURA, ENCHANT, FASTBREAK, XRAY;
 
 		public static CheckType getByName(String name){
-			return CheckType.valueOf(name.toUpperCase());
+			return CheckType.valueOf(name);
 		}
 
-		public String toString(){
+		public String getName(){
 			switch(this){
 				case FLYHACK: return "FlyHack";
 				case SPEEDHACK: return "SpeedHack";
@@ -42,7 +42,7 @@ public abstract class Check implements Listener, Runnable {
 				case KILLAURA: return "KillAura";
 				case ENCHANT: return "SuperEnchant";
 				case FASTBREAK: return "FastBreak";
-				case XRAY: return "X-Ray";
+				case XRAY: return "X-Ray (test)";
 			}
 			return null;
 		}
@@ -65,6 +65,7 @@ public abstract class Check implements Listener, Runnable {
 			switch(this){
 				case FLYHACK: return 20;
 				case SPEEDHACK: return 10;
+				case XRAY: return 60*20;
 				default:break;
 			}
 			return 0;

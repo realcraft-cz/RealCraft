@@ -77,9 +77,9 @@ public class MapManager {
 		return null;
 	}
 
-	public static Map getMap(String name){
+	public static Map getMap(String name,MapType type){
 		for(Map map : maps){
-			if(map.getName().equalsIgnoreCase(name)) return map;
+			if(map.getType() == type && map.getName().equalsIgnoreCase(name)) return map;
 		}
 		return null;
 	}
@@ -127,7 +127,7 @@ public class MapManager {
 	}
 
 	private static void loadMaps(){
-		ResultSet rs = DB.query("SELECT * FROM "+MAPS);
+		ResultSet rs = DB.query("SELECT * FROM "+MAPS+" ORDER BY map_id ASC");
 		try {
 			while(rs.next()){
 				int id = rs.getInt("map_id");

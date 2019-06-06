@@ -41,7 +41,7 @@ public class SellBasket {
 	private int getInventoryAmount(Material type){
 		int amount = 0;
 		for(ItemStack item : player.getInventory().getContents()){
-			if(item != null && item.getType() == type) amount += item.getAmount();
+			if(item != null && item.getType() == type && !item.hasItemMeta()) amount += item.getAmount();
 		}
 		return amount;
 	}

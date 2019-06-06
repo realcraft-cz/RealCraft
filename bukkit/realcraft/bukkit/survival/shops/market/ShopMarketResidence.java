@@ -1,6 +1,5 @@
 package realcraft.bukkit.survival.shops.market;
 
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,7 +67,7 @@ public class ShopMarketResidence {
 
 	public ItemStack getItemStack(){
 		if(item == null){
-			item = new ItemStack(Material.CHEST);
+			item = ItemUtil.getHead(this.getUser().getSkin().getValue());
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName("§9§l"+this.getResidence());
 			meta.setLore(ItemUtil.getLores(

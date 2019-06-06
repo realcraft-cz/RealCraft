@@ -1,22 +1,17 @@
 package realcraft.bukkit.creative;
 
-import java.util.HashMap;
-
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dye;
-
 import realcraft.bukkit.RealCraft;
+
+import java.util.HashMap;
 
 public class CancelGrow implements Listener {
 	private RealCraft plugin;
@@ -51,7 +46,7 @@ public class CancelGrow implements Listener {
 
 	@EventHandler
 	public void BlockGrowEvent(BlockGrowEvent event){
-		if(event.getNewState().getType() == Material.TALL_GRASS || event.getNewState().getType() == Material.POPPY || event.getNewState().getType() == Material.DANDELION) return;
+		if(event.getNewState().getType() == Material.GRASS || event.getNewState().getType() == Material.TALL_GRASS || event.getNewState().getType() == Material.POPPY || event.getNewState().getType() == Material.DANDELION) return;
 		if(!bonemealInteractions.containsKey(event.getBlock()) || bonemealInteractions.get(event.getBlock())+1000 < System.currentTimeMillis()){
 			event.setCancelled(true);
 		}

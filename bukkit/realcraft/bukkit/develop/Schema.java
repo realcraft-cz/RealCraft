@@ -43,9 +43,16 @@ public class Schema extends AbstractCommand implements Listener {
 
 	@Override
 	public void perform(Player player,String[] args){
+		if(!player.hasPermission("worldedit.clipboard.paste") || !player.hasPermission("worldedit.schematic.load")){
+			return;
+		}
 		if(args.length == 0){
-			player.sendMessage("Paste a schematic");
-			player.sendMessage("/schema <filename>");
+			player.sendMessage("Paste a schematic asynchronously");
+			player.sendMessage("/schema <filename> [-center]");
+			return;
+		}
+		if(args.length >= 2 && !args[1].equalsIgnoreCase("-center")){
+			player.sendMessage("§cWrong argument.");
 			return;
 		}
 		File file = new File(WE.getDataFolder().getPath()+"/schematics/"+args[0]+".schem");
@@ -53,7 +60,8 @@ public class Schema extends AbstractCommand implements Listener {
 			player.sendMessage("§cSchematic file doesn't exists.");
 			return;
 		}
-		SchemaPaste schema = new SchemaPaste(file,player,player.getLocation());
+		boolean center = (args.length >= 2 && args[1].equalsIgnoreCase("-center"));
+		SchemaPaste schema = new SchemaPaste(file,player,player.getLocation(),center);
 		player.sendMessage("§7Pasting "+schema.getName()+" schema");
 		schema.pasteBlocks();
 		schema.pasteEntities();
@@ -71,19 +79,21 @@ public class Schema extends AbstractCommand implements Listener {
 
 		private String name;
 		private Location location;
+		private boolean fromCenter;
 		private Player player;
 
 		private boolean build = false;
 		private HashMap<Vector,BaseBlock> blocks = new HashMap<>();
-		private EditSession editSession = null;
+		private EditSession editSession;
 
 		private static final int SLEEP_TIME = 20;
 
-		public SchemaPaste(File file,Player player,Location location){
+		public SchemaPaste(File file,Player player,Location location,boolean fromCenter){
 			WE = WorldEdit.getInstance();
 			this.name = file.getName();
 			this.player = player;
 			this.location = location;
+			this.fromCenter = fromCenter;
 			try {
 				BuiltInClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 				FileInputStream fis = new FileInputStream(file);
@@ -95,7 +105,8 @@ public class Schema extends AbstractCommand implements Listener {
 			} catch (IOException e){
 				e.printStackTrace();
 			}
-			editSession = WE.getEditSessionFactory().getEditSession(new BukkitWorld(location.getWorld()),-1);
+			WorldEditPlugin wep = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+			editSession = WE.getEditSessionFactory().getEditSession(new BukkitWorld(location.getWorld()),-1,wep.wrapPlayer(player));
 		}
 
 		public String getName(){
@@ -110,6 +121,7 @@ public class Schema extends AbstractCommand implements Listener {
 			for(Entity entity : schema.getEntities()){
 				Vector pos = entity.getLocation().toVector().add(-schema.getRegion().getMinimumPoint().getBlockX(),-schema.getRegion().getMinimumPoint().getBlockY(),-schema.getRegion().getMinimumPoint().getBlockZ());
 				pos = pos.add(location.getBlockX(),location.getBlockY(),location.getBlockZ());
+				if(fromCenter) pos = pos.subtract(schema.getRegion().getCenter());
 				com.sk89q.worldedit.util.Location location = new com.sk89q.worldedit.util.Location(entity.getLocation().getExtent(),pos);
 				editSession.createEntity(location,entity.getState());
 			}
@@ -152,6 +164,8 @@ public class Schema extends AbstractCommand implements Listener {
 							if(place){
 								Vector pos = pt.add(-schema.getRegion().getMinimumPoint().getBlockX(),-schema.getRegion().getMinimumPoint().getBlockY(),-schema.getRegion().getMinimumPoint().getBlockZ());
 								pos = pos.add(location.getBlockX(),location.getBlockY(),location.getBlockZ());
+								if(!fromCenter) pos = pos.add(schema.getRegion().getMinimumPoint().subtract(schema.getOrigin()));
+								else pos = pos.add(schema.getRegion().getMinimumPoint().subtract(schema.getRegion().getCenter()));
 								blocks.put(pos,block);
 								if(blocks.size() >= maxBlocksPerRun){
 									nextPaste();
@@ -175,15 +189,14 @@ public class Schema extends AbstractCommand implements Listener {
 					@Override
 					public Void call(){
 						for(Map.Entry<Vector,BaseBlock> map : blocks.entrySet()){
-							if(!map.getValue().hasNbtData()){
+							/*if(!map.getValue().hasNbtData()){
 								location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setType(BukkitAdapter.adapt(map.getValue().getBlockType()),false);
 								location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setBlockData(BukkitAdapter.adapt(map.getValue()),false);
-							} else {
-								try {
-									editSession.setBlock(map.getKey(),map.getValue());
-								} catch (MaxChangedBlocksException e){
-									e.printStackTrace();
-								}
+							} else {*/
+							try {
+								editSession.setBlock(map.getKey(),map.getValue());
+							} catch (MaxChangedBlocksException e){
+								e.printStackTrace();
 							}
 						}
 						editSession.commit();
@@ -348,6 +361,7 @@ public class Schema extends AbstractCommand implements Listener {
 		shouldPlaceFinal.add(Material.GREEN_WALL_BANNER);
 		shouldPlaceFinal.add(Material.RED_WALL_BANNER);
 		shouldPlaceFinal.add(Material.BLACK_WALL_BANNER);
+		shouldPlaceFinal.add(Material.ITEM_FRAME);
 	}
 
 	public static boolean shouldPlaceLast(Material type){

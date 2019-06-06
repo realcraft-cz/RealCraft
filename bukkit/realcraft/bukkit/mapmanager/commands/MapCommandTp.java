@@ -6,17 +6,17 @@ import realcraft.bukkit.mapmanager.map.Map;
 
 import java.util.List;
 
-public class MapCommandJoin extends MapCommand {
+public class MapCommandTp extends MapCommand {
 
-	public MapCommandJoin(){
-		super("join");
+	public MapCommandTp(){
+		super("tp","join");
 	}
 
 	@Override
 	public void perform(Player player,String[] args){
 		if(args.length == 0){
 			player.sendMessage("Pripojit se do mapy");
-			player.sendMessage("§6/map join §e<id>");
+			player.sendMessage("§6/map tp §e<id>");
 			return;
 		}
 		int id;

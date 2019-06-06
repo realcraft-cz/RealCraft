@@ -4,16 +4,15 @@ import org.bukkit.entity.Player;
 import realcraft.bukkit.mapmanager.MapManager;
 import realcraft.bukkit.mapmanager.MapPlayer;
 import realcraft.bukkit.mapmanager.commands.MapCommand;
-import realcraft.bukkit.mapmanager.exceptions.MapInvalidNameException;
-import realcraft.bukkit.mapmanager.exceptions.MapNameExistsException;
 import realcraft.bukkit.mapmanager.map.MapPermission;
+import realcraft.bukkit.mapmanager.map.MapState;
 
 import java.util.List;
 
-public class MapCommandName extends MapCommand {
+public class MapCommandReady extends MapCommand {
 
-	public MapCommandName(){
-		super("name");
+	public MapCommandReady(){
+		super("ready");
 	}
 
 	@Override
@@ -23,21 +22,13 @@ public class MapCommandName extends MapCommand {
 			player.sendMessage("§cNemas opravneni spravovat tuto mapu.");
 			return;
 		}
-		if(args.length == 0){
-			player.sendMessage("Nastaveni nazvu");
-			player.sendMessage("§6/map name §e<name>");
+		if(!mPlayer.getMap().isValid()){
+			player.sendMessage("§cNastaveni mapy neni validni.");
 			return;
 		}
-		try {
-			mPlayer.getMap().setName(args[0]);
-		} catch (MapInvalidNameException e){
-			player.sendMessage("§cNazev obsahuje nepovolene znaky [a-zA-Z0-9] (max 32 znaku).");
-			return;
-		} catch (MapNameExistsException e){
-			player.sendMessage("§cZadany nazev jiz existuje.");
-			return;
-		}
-		MapManager.sendMessage(player,"§dNazev mapy zmenen na §f§l"+args[0]);
+		mPlayer.getMap().setState((mPlayer.getMap().getState() == MapState.BUILD ? MapState.READY : MapState.BUILD));
+		mPlayer.getMap().save();
+		MapManager.sendMessage(player,"§dStav mapy zmenen na "+mPlayer.getMap().getState().getColor()+mPlayer.getMap().getState().getName());
 	}
 
 	@Override

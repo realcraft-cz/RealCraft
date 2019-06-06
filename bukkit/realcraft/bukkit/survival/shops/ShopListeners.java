@@ -272,6 +272,10 @@ public class ShopListeners extends AbstractCommand implements Listener, CommandE
 				ShopManager.sendMessage(player,"§cTento item nemuzes pridat do obchodu.");
 				return;
 			}
+			if(player.getInventory().getItemInMainHand().hasItemMeta()){
+				ShopManager.sendMessage(player,"§cTento item nemuzes pridat do obchodu.");
+				return;
+			}
 			if(args.length < 3){
 				player.sendMessage("");
 				player.sendMessage("Vytvorit obchod:");

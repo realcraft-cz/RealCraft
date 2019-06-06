@@ -2,6 +2,7 @@ package realcraft.bukkit.mapmanager.map.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import realcraft.bukkit.mapmanager.MapManager;
 
@@ -38,15 +39,19 @@ public class MapDataLocation extends MapDataEntry {
 		return location;
 	}
 
+	public void setLocation(Location location){
+		this.location = location;
+	}
+
 	@Override
 	public JsonObject getData(){
 		JsonObject json = new JsonObject();
 		if(location != null){
-			json.addProperty("x",location.getX());
-			json.addProperty("y",location.getY());
-			json.addProperty("z",location.getZ());
-			json.addProperty("yaw",location.getYaw());
-			json.addProperty("pitch",location.getPitch());
+			json.addProperty("x",this.round(location.getX(),1));
+			json.addProperty("y",this.round(location.getY(),1));
+			json.addProperty("z",this.round(location.getZ(),1));
+			json.addProperty("yaw",this.round(location.getYaw(),1));
+			json.addProperty("pitch",this.round(location.getPitch(),1));
 		}
 		return json;
 	}
@@ -69,5 +74,19 @@ public class MapDataLocation extends MapDataEntry {
 			);
 		}
 		return false;
+	}
+
+	public boolean isValid(){
+		return (location != null);
+	}
+
+	public ChatColor getValidColor(){
+		if(!this.isValid()) return ChatColor.RED;
+		return ChatColor.GREEN;
+	}
+
+	public double round(double amount,int places){
+		int factor = (int)Math.pow(10,places);
+		return (double)Math.round((amount*factor))/factor;
 	}
 }

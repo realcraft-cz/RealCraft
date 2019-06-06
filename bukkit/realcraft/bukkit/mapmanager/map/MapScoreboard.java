@@ -6,6 +6,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.utils.DateUtil;
 
 import java.util.HashMap;
 
@@ -62,6 +63,8 @@ public class MapScoreboard implements Runnable {
 		this.addLine("§7Stav: "+map.getState().getColor()+"§l"+map.getState().getName());
 		this.addLine("");
 		map.updateScoreboard(this);
+		this.addLine("");
+		this.addLine("§7"+DateUtil.lastTime(map.getUpdated()));
 		this.update();
 	}
 }

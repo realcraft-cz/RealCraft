@@ -137,9 +137,9 @@ public abstract class FightArena {
 		this.getWorld().setAutoSave(true);
 		this.getWorld().setFullTime(this.getTime());
 		this.getWorld().setMonsterSpawnLimit(0);
-		this.getWorld().setGameRuleValue("doDaylightCycle","false");
-		this.getWorld().setGameRuleValue("doWeatherCycle","false");
-		this.getWorld().setGameRuleValue("doMobSpawning","false");
+		this.getWorld().setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
+		this.getWorld().setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+		this.getWorld().setGameRule(GameRule.DO_MOB_SPAWNING,false);
 	}
 
 	public Location getBasicLocation(){

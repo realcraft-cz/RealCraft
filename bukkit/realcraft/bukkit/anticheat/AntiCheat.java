@@ -50,6 +50,7 @@ public class AntiCheat implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		if(RealCraft.isTestServer()){
 			DEBUG = true;
+			if(RealCraft.getServerType() == ServerType.LOBBY) new CheckXRay();
 		}
 	}
 
@@ -111,7 +112,7 @@ public class AntiCheat implements Listener {
 		for(Player player : plugin.getServer().getOnlinePlayers()){
 			if(player.hasPermission("group.Admin")){
 				CheckType type = CheckType.getByName(_type);
-				player.sendMessage("§c[AC | §7"+server+"§c] §f"+name+" §7| "+type.toString()+" [§f"+checks+"/"+type.getBanLimit()+"§7]");
+				player.sendMessage("§c[AC | §7"+server+"§c] §f"+name+" §7| "+type.getName()+" [§f"+checks+"/"+type.getBanLimit()+"§7]");
 				player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_PLING,1f,1f);
 			}
 		}

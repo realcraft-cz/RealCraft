@@ -1,5 +1,6 @@
 package realcraft.bukkit.chat;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,29 +36,12 @@ public class ChatFormat implements Listener {
 		String message = event.getMessage();
 		if(player.hasPermission("essentials.chat.magic")) message = RealCraft.parseColors(message);
 		String chatMessage = "# "+player.getDisplayName()+": "+message;
-		/*TextComponent chatMessage = new TextComponent("# ");
-		TextComponent chatUser = new TextComponent(player.getDisplayName());
-		chatUser.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-				new ComponentBuilder(
-						player.getDisplayName()+"\n"+
-						"§7XP level:§r "+player.getLevel()+"\n"+
-						"§7Ping:§r "+((CraftPlayer)player).getHandle().ping+" ms"
-				).create()
-		));
-		chatUser.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,"/msg "+player.getName()+" "));
-		chatMessage.addExtra(chatUser);
-		chatMessage.addExtra(new TextComponent(": "));
-		for(BaseComponent component : TextComponent.fromLegacyText(message)){
-			Matcher matcher = StringUtil.URL_PATTERN.matcher(component.toPlainText());
-			if(matcher.find()){
-				String urlString = matcher.group();
-				component.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,urlString.startsWith( "http" ) ? urlString : "http://" + urlString));
-				component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("Klikni pro otevreni odkazu").create()));
-			}
-			chatMessage.addExtra(component);
-		}*/
 		event.setCancelled(true);
 		for(Player user : plugin.getServer().getOnlinePlayers()){
+			if(RealCraft.getInstance().essentials.getUser(user).isIgnoredPlayer(RealCraft.getInstance().essentials.getUser(player))){
+				user.sendMessage("§7# "+ChatColor.stripColor(player.getDisplayName())+":");
+				continue;
+			}
 			user.sendMessage(chatMessage);
 		}
 	}

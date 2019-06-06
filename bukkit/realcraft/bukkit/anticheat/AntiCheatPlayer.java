@@ -42,10 +42,6 @@ public class AntiCheatPlayer {
 	public EntityPlayer ghostPlayer;
 	public long lastGhost = 0;
 
-	/** FASTBREAK */
-	public long fastBreakBreakTime = 0;
-	public int fastBreakChecks = 0;
-
 	public AntiCheatPlayer(Player player){
 		this.player = player;
 	}
@@ -90,9 +86,6 @@ public class AntiCheatPlayer {
 
 		ghostChecks = 0;
 		ghostFrequency = new GhostFrequency(50*5);
-
-		fastBreakBreakTime = 0;
-		fastBreakChecks = 0;
 
 		typeChecks = new HashMap<CheckType,PlayerCheck>();
 	}

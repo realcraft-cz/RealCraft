@@ -1,7 +1,7 @@
 package realcraft.bukkit.mapmanager.commands.map;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.block.Biome;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.mapmanager.MapManager;
 import realcraft.bukkit.mapmanager.MapPlayer;
@@ -11,10 +11,10 @@ import realcraft.bukkit.mapmanager.map.MapPermission;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapCommandBiome extends MapCommand {
+public class MapCommandEnvironment extends MapCommand {
 
-	public MapCommandBiome(){
-		super("biome");
+	public MapCommandEnvironment(){
+		super("env");
 	}
 
 	@Override
@@ -25,27 +25,27 @@ public class MapCommandBiome extends MapCommand {
 			return;
 		}
 		if(args.length == 0){
-			player.sendMessage("Nastaveni biomu");
-			player.sendMessage("§6/map biome §e<biome>");
+			player.sendMessage("Nastaveni prostredi");
+			player.sendMessage("§6/map env §e<environment>");
 			return;
 		}
-		Biome biome;
+		Environment environment;
 		try {
-			biome = Biome.valueOf(args[0].toUpperCase());
+			environment = Environment.valueOf(args[0].toUpperCase());
 		} catch (IllegalArgumentException e){
-			player.sendMessage("§cNeplatny biome.");
-			player.sendMessage("§7Biomes: "+StringUtils.join(Biome.values(),", ").toUpperCase());
+			player.sendMessage("§cNeplatne prostredi.");
+			player.sendMessage("§7Environments: "+StringUtils.join(Environment.values(),", ").toUpperCase());
 			return;
 		}
-		mPlayer.getMap().getBiome().setBiome(biome);
-		MapManager.sendMessage(player,"§dBiome nastaven na §f"+biome.toString());
+		mPlayer.getMap().getEnvironment().setEnvironment(environment);
+		MapManager.sendMessage(player,"§7Prostredi nastaveno na §f"+environment.toString());
 	}
 
 	@Override
 	public List<String> tabCompleter(Player player,String[] args){
 		ArrayList<String> list = new ArrayList<>();
-		for(Biome biome : Biome.values()){
-			if(args.length == 0 || biome.toString().startsWith(args[0].toUpperCase())) list.add(biome.toString().toUpperCase());
+		for(Environment environment : Environment.values()){
+			if(args.length == 0 || environment.toString().startsWith(args[0].toUpperCase())) list.add(environment.toString().toUpperCase());
 		}
 		return list;
 	}

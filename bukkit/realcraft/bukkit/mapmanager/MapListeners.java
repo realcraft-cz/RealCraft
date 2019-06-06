@@ -24,8 +24,10 @@ import org.bukkit.event.world.StructureGrowEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.anticheat.AntiCheat;
+import realcraft.bukkit.mapmanager.commands.MapCommandList;
 import realcraft.bukkit.mapmanager.events.MapPlayerJoinMapEvent;
 import realcraft.bukkit.mapmanager.events.MapPlayerLeaveMapEvent;
+import realcraft.bukkit.mapmanager.events.MapRegionLoadEvent;
 import realcraft.bukkit.mapmanager.map.Map;
 import realcraft.bukkit.mapmanager.map.MapPermission;
 import realcraft.bukkit.others.AbstractCommand;
@@ -70,6 +72,7 @@ public class MapListeners implements Listener {
 					return;
 				}
 				event.setExtent(mPlayer.getMap().getRegion().getExtent(event.getExtent()));
+				mPlayer.getMap().getRegion().setToSave(true);
 			}
 		}
 	}
@@ -99,6 +102,8 @@ public class MapListeners implements Listener {
 	public void PlayerJoinEvent(PlayerJoinEvent event){
 		Player player = event.getPlayer();
 		player.getInventory().clear();
+		player.getInventory().setItem(0,MapCommandList.getHotbarItem());
+		player.getInventory().setHeldItemSlot(0);
 		player.setFlying(false);
 	}
 
@@ -163,12 +168,19 @@ public class MapListeners implements Listener {
 	}
 
 	@EventHandler
+	public void MapRegionLoadEvent(MapRegionLoadEvent event){
+		MapManager.sendMessage("§7Nacteni mapy §e"+event.getMap().getName()+" §7[#"+event.getMap().getId()+"] dokonceno");
+	}
+
+	@EventHandler
 	public void BlockBreakEvent(BlockBreakEvent event){
 		MapPlayer mPlayer = MapManager.getMapPlayer(event.getPlayer());
 		if(mPlayer.getMap() == null || mPlayer.isWEByPass()) return;
 		if(!mPlayer.getMap().getRegion().isLocationInside(event.getBlock().getLocation()) || !mPlayer.getMap().getPermission(mPlayer).isMinimum(MapPermission.BUILD)){
 			event.setCancelled(true);
+			return;
 		}
+		mPlayer.getMap().getRegion().setToSave(true);
 	}
 
 	@EventHandler
@@ -177,7 +189,9 @@ public class MapListeners implements Listener {
 		if(mPlayer.getMap() == null || mPlayer.isWEByPass()) return;
 		if(!mPlayer.getMap().getRegion().isLocationInside(event.getBlock().getLocation()) || !mPlayer.getMap().getPermission(mPlayer).isMinimum(MapPermission.BUILD)){
 			event.setCancelled(true);
+			return;
 		}
+		mPlayer.getMap().getRegion().setToSave(true);
 	}
 
 	@EventHandler
@@ -196,6 +210,7 @@ public class MapListeners implements Listener {
 		for(BlockState block : toRemove){
 			event.getBlocks().remove(block);
 		}
+		map.getRegion().setToSave(true);
 	}
 
 	@EventHandler

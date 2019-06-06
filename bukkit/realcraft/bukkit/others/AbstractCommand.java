@@ -23,14 +23,6 @@ public abstract class AbstractCommand extends Command implements CommandExecutor
 
 	private void register(){
 		if(Bukkit.getPluginCommand(this.getName()) == null){
-			/*try {
-				Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-				bukkitCommandMap.setAccessible(true);
-				CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-				commandMap.register(this.getName(),this);
-			} catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
-				e.printStackTrace();
-			}*/
 			((CraftServer)Bukkit.getServer()).getCommandMap().register(this.getName(),this);
 		} else {
 			if(RealCraft.getInstance().getCommand(this.getName()) != null){

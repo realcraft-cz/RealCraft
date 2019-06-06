@@ -15,17 +15,20 @@ public class MapCommands extends AbstractCommand {
 	private MapCommand[] commands;
 
 	public MapCommands(){
-		super("map","maps");
+		super("map","maps","Map","MAP","MAPS");
 		commands = new MapCommand[]{
 				new MapCommandCreate(),
-				new MapCommandJoin(),
+				new MapCommandTp(),
 				new MapCommandInfo(),
 				new MapCommandList(),
 				new MapCommandName(),
 				new MapCommandTime(),
 				new MapCommandBiome(),
+				new MapCommandEnvironment(),
 				new MapCommandTrust(),
 				new MapCommandUnTrust(),
+				new MapCommandData(),
+				new MapCommandReady()
 		};
 	}
 
@@ -34,15 +37,19 @@ public class MapCommands extends AbstractCommand {
 		if(args.length == 0){
 			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lMaps §7§m"+StringUtils.repeat(" ",47-"Maps".length()));
 			player.sendMessage("§6/map create §e<type> §f- Vytvorit novou mapu");
-			player.sendMessage("§6/map join §e<id> §f- Pripojit se do mapy");
+			player.sendMessage("§6/map tp §e<id> §f- Pripojit se do mapy");
 			player.sendMessage("§6/map info §e[<id>] §f- Informace o mape");
 			player.sendMessage("§6/map list §f- Seznam map");
 			if(MapManager.getMapPlayer(player).getMap() != null){
 				player.sendMessage("§7---------------");
-				player.sendMessage("§6/map name §e<name> §f- Nastavit nazev mapy");
+				player.sendMessage("§6/map name §e<name> §f- Nastaveni nazvu");
 				player.sendMessage("§6/map time §e<time> §f- Nastaveni casu");
 				player.sendMessage("§6/map biome §e<biome> §f- Nastaveni biomu");
+				player.sendMessage("§6/map env §e<environment> §f- Nastaveni prostredi");
 				player.sendMessage("§6/map (un)trust §e<player> §f- (Odebrat) Pridat spoluhrace");
+				player.sendMessage("§6/map data §e<key> §f- Nastaveni dat");
+				player.sendMessage("§6/map ready§f- Dokonceni mapy");
+
 			}
 			return;
 		}

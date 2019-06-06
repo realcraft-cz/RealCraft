@@ -50,7 +50,8 @@ import realcraft.bukkit.mute.Mute;
 import realcraft.bukkit.nicks.NickManager;
 import realcraft.bukkit.others.Canvas;
 import realcraft.bukkit.others.MapServerTeleport;
-import realcraft.bukkit.others.VipComamnd;
+import realcraft.bukkit.others.VipCommand;
+import realcraft.bukkit.others.WEBlockCompleter;
 import realcraft.bukkit.report.Report;
 import realcraft.bukkit.restart.Restart;
 import realcraft.bukkit.sitting.Sitting;
@@ -87,7 +88,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 	private Mute mute;
 	private AntiSpam antispam;
 	public ChatLog chatlog;
-	private ChatNotice chatnotice;
 	private EventCmds eventcmds;
 	private Restart restart;
 	public Auth auth;
@@ -146,7 +146,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 		antispam = new AntiSpam(this);
 		anticheat = new AntiCheat(this);
 		chatlog = new ChatLog(this);
-		chatnotice = new ChatNotice(this);
 		chattips = new ChatTips(this);
 		chatprivate = new ChatPrivate(this);
 		chatadvert = new ChatAdvert(this);
@@ -171,11 +170,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 			cancelgrow = new CancelGrow(this);
 			lobby = new Lobby(this);
 			new Sitting();
-			if(RealCraft.isTestServer()){
-				new Economy();
-				new ShopManager();
-				new Sells();
-			}
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
 			checkresidences = new CheckResidences(this);
@@ -228,8 +222,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new LampControl();
 		new ChunkGenerator();
 		new Schema();
-		new VipComamnd();
+		new VipCommand();
 		new Canvas();
+		new WEBlockCompleter();
 		this.getServer().getPluginManager().registerEvents(this,this);
 		this.updateWorldRules();
 	}
@@ -345,6 +340,27 @@ public class RealCraft extends JavaPlugin implements Listener {
 			packet.header = ChatSerializer.a("{\"text\":\""+header+"\"}");
 			packet.footer = ChatSerializer.a("{\"text\":\""+footer+"\"}");
 			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+
+			/*PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
+			try {
+				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+header+"\"}");
+				Field field = packet.getClass().getDeclaredField("a");
+				field.setAccessible(true);
+				field.set(packet,component);
+				field.setAccessible(false);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			try {
+				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+footer+"\"}");
+				Field field = packet.getClass().getDeclaredField("b");
+				field.setAccessible(true);
+				field.set(packet,component);
+				field.setAccessible(false);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);*/
 		}
 	}
 

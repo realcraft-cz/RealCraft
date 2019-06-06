@@ -1,11 +1,14 @@
 package realcraft.bukkit.mapmanager.maps;
 
+import org.bukkit.entity.Player;
 import realcraft.bukkit.mapmanager.map.Map;
 import realcraft.bukkit.mapmanager.map.MapRenderer;
 import realcraft.bukkit.mapmanager.map.MapScoreboard;
 import realcraft.bukkit.mapmanager.map.MapType;
 import realcraft.bukkit.mapmanager.map.data.MapData;
 import realcraft.share.users.User;
+
+import java.util.List;
 
 public class MapBlockParty extends Map {
 
@@ -37,5 +40,14 @@ public class MapBlockParty extends Map {
 	@Override
 	public boolean isValid(){
 		return true;
+	}
+
+	@Override
+	public void performCommand(Player player,String[] args){
+	}
+
+	@Override
+	public List<String> tabCompleter(Player player,String[] args){
+		return null;
 	}
 }

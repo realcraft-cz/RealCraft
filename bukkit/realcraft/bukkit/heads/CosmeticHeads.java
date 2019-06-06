@@ -62,7 +62,7 @@ public class CosmeticHeads implements Listener {
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
 		String command = event.getMessage().substring(1).toLowerCase();
 		if(command.startsWith("heads") || command.startsWith("hlavy")){
-			if(RealCraft.getServerType() == ServerType.CREATIVE || event.getPlayer().hasPermission("group.Manazer")){
+			if(RealCraft.getServerType() == ServerType.CREATIVE || RealCraft.getServerType() == ServerType.MAPS || event.getPlayer().hasPermission("group.Manazer")){
 				this.openMenu(event.getPlayer());
 				event.setCancelled(true);
 			}

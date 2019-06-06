@@ -35,14 +35,14 @@ public class Sells {
 		register(Material.GLASS,16,16);
 		register(Material.CLAY,16,20);
 		register(Material.MYCELIUM,4,12);
-		register(Material.OBSIDIAN,4,40);
+		register(Material.OBSIDIAN,4,24);
 		register(Material.NETHERRACK,16,8);
-		register(Material.GLOWSTONE,4,40);
+		register(Material.GLOWSTONE,4,20);
 		register(Material.SOUL_SAND,16,16);
 		register(Material.NETHER_BRICKS,16,32);
 		register(Material.END_STONE,16,16);
 		register(Material.END_STONE_BRICKS,4,16);
-		register(Material.PRISMARINE,2,40);
+		register(Material.PRISMARINE,4,24);
 	}
 
 	public static HashMap<Integer,SellItem> getItems(){

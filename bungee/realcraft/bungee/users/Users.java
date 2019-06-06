@@ -1,11 +1,6 @@
 package realcraft.bungee.users;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.UUID;
-
 import com.google.common.base.Charsets;
-
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
@@ -22,6 +17,10 @@ import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.auth.UsersAuthentication;
 import realcraft.share.ServerType;
 import realcraft.share.users.User;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class Users extends realcraft.share.users.Users implements Listener {
 

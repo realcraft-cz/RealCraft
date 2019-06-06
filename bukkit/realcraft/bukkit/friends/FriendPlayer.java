@@ -1,17 +1,10 @@
 package realcraft.bukkit.friends;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import net.md_5.bungee.api.ChatColor;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.friends.FriendPlayerSettings.FriendPlayerSettingsType;
@@ -25,6 +18,12 @@ import realcraft.bukkit.utils.ItemUtil;
 import realcraft.share.ServerType;
 import realcraft.share.users.User;
 import realcraft.share.users.UserRank;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class FriendPlayer {
 
@@ -198,7 +197,7 @@ public class FriendPlayer {
 
 	public void teleportToFriend(FriendPlayer friend){
 		if(friend.getPlayer() == null){
-			if((friend.getUser().getServer() == ServerType.LOBBY || friend.getUser().getServer() == ServerType.SURVIVAL || friend.getUser().getServer() == ServerType.CREATIVE) && friend.getSettings().getValue(FriendPlayerSettingsType.TELEPORTS)){
+			if((friend.getUser().getServer() == ServerType.LOBBY || friend.getUser().getServer() == ServerType.SURVIVAL || friend.getUser().getServer() == ServerType.CREATIVE || friend.getUser().getServer() == ServerType.MAPS) && friend.getSettings().getValue(FriendPlayerSettingsType.TELEPORTS)){
 				SocketData data = new SocketData(FriendList.CHANNEL_TELEPORT);
 				data.setInt("player",this.getId());
 				data.setInt("friend",friend.getId());
@@ -212,7 +211,7 @@ public class FriendPlayer {
 			},5);
 
 		}
-		else if(RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL || RealCraft.getServerType() == ServerType.CREATIVE){
+		else if(RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL || RealCraft.getServerType() == ServerType.CREATIVE || RealCraft.getServerType() == ServerType.MAPS){
 			if(friend.getSettings().getValue(FriendPlayerSettingsType.TELEPORTS)){
 				this.getPlayer().teleport(friend.getPlayer().getLocation());
 				FriendNotices.showFriendTeleport(friend,this);

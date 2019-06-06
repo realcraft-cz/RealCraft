@@ -2,17 +2,17 @@ package realcraft.bukkit.survival;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.*;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.chat.ChatCommandSpy;
 
@@ -101,6 +101,29 @@ public class PassiveMode implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void PlayerBucketEmptyEvent(PlayerBucketEmptyEvent event){
+		if(event.getBucket() == Material.LAVA_BUCKET){
+			for(Entity entity : event.getPlayer().getWorld().getNearbyEntities(event.getPlayer().getLocation(),16,16,16)){
+				if(entity.getEntityId() != event.getPlayer().getEntityId() && entity.getType() == EntityType.PLAYER && PassiveMode.getPassiveMode((Player)entity).isEnabled()){
+					event.getPlayer().sendMessage("§6[§7PassiveMode§6] §cNemuzes polozit lavu v blizkosti hrace.");
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void PlayerFishEvent(PlayerFishEvent event){
+		if(event.getCaught() != null && event.getCaught().getType() == EntityType.PLAYER){
+			Player player = (Player) event.getCaught();
+			if(PassiveMode.getPassiveMode(player).isEnabled()){
+				event.setCancelled(true);
+			}
+		}
+	}
+
 	private static class PlayerPassiveMode {
 
 		private Player player;
@@ -137,24 +160,12 @@ public class PassiveMode implements Listener {
 		}
 	}
 
-	@SuppressWarnings("serial")
 	private static class PassiveModeTimeoutException extends Exception {
-		public PassiveModeTimeoutException(){
-			super();
-		}
 	}
 
-	@SuppressWarnings("serial")
 	private static class PassiveModeRangeException extends Exception {
-		public PassiveModeRangeException(){
-			super();
-		}
 	}
 
-	@SuppressWarnings("serial")
 	private static class PassiveModeFlyingException extends Exception {
-		public PassiveModeFlyingException(){
-			super();
-		}
 	}
 }

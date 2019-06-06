@@ -1,16 +1,15 @@
 package realcraft.bukkit.sockets;
 
+import org.bukkit.Bukkit;
+import realcraft.bukkit.RealCraft;
+import realcraft.share.ServerType;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import org.bukkit.Bukkit;
-
-import realcraft.bukkit.RealCraft;
-import realcraft.share.ServerType;
 
 public class SocketManager {
 
@@ -54,6 +53,7 @@ public class SocketManager {
 				}
 			});
 		} catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 

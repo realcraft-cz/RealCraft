@@ -69,7 +69,7 @@ public class MapPlayer {
 
 	public void joinMap(Map map){
 		this.map = map;
-		this.getPlayer().teleport(LocationUtil.getSafeDestination(map.getRegion().getCenterLocation()));
+		this.getPlayer().teleport(LocationUtil.getSafeDestination(map.getRegion().getCenterLocation().clone().add(0,1,0)));
 		this.getPlayer().setScoreboard(map.getScoreboard().getScoreboard());
 		this.getPlayer().setPlayerTime(map.getTime().getValue(),false);
 		this.updateBorder();

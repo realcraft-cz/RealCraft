@@ -38,7 +38,7 @@ public class MapCommandTime extends MapCommand {
 		mPlayer.getMap().save();
 		MapManager.sendMessage(player,"§dCas nastaven na §f"+time+"ticks");
 		for(Player player2 : Bukkit.getOnlinePlayers()){
-			if(MapManager.getMapPlayer(player).getMap().equals(mPlayer.getMap())){
+			if(mPlayer.getMap().equals(MapManager.getMapPlayer(player2).getMap())){
 				player2.setPlayerTime(mPlayer.getMap().getTime().getValue(),false);
 			}
 		}

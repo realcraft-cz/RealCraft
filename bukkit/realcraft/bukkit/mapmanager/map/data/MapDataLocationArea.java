@@ -2,6 +2,7 @@ package realcraft.bukkit.mapmanager.map.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -24,6 +25,10 @@ public class MapDataLocationArea extends MapDataEntry {
 		JsonObject json = element.getAsJsonObject();
 		this.minLoc = new MapDataLocation(json.get("from").getAsJsonObject());
 		this.maxLoc = new MapDataLocation(json.get("to").getAsJsonObject());
+	}
+
+	public MapDataLocationArea(String name){
+		super(name);
 	}
 
 	public MapDataLocation getMinLocation(){
@@ -58,5 +63,14 @@ public class MapDataLocationArea extends MapDataEntry {
 			return (toCompare.getMinLocation().equals(this.getMinLocation()) && toCompare.getMaxLocation().equals(this.getMaxLocation()));
 		}
 		return false;
+	}
+
+	public boolean isValid(){
+		return (minLoc != null && maxLoc != null);
+	}
+
+	public ChatColor getValidColor(){
+		if(!this.isValid()) return ChatColor.RED;
+		return ChatColor.GREEN;
 	}
 }

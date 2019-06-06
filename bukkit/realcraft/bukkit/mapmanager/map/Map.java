@@ -1,10 +1,13 @@
 package realcraft.bukkit.mapmanager.map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
+import org.bukkit.entity.Player;
+import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.mapmanager.MapManager;
 import realcraft.bukkit.mapmanager.MapPlayer;
@@ -12,11 +15,15 @@ import realcraft.bukkit.mapmanager.exceptions.MapInvalidNameException;
 import realcraft.bukkit.mapmanager.exceptions.MapNameExistsException;
 import realcraft.bukkit.mapmanager.map.data.*;
 import realcraft.share.users.User;
+import realcraft.share.users.UserRank;
 import realcraft.share.users.Users;
 
+import java.io.ByteArrayInputStream;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +32,7 @@ import static realcraft.bukkit.mapmanager.MapManager.MAPS;
 public abstract class Map {
 
 	private static final Pattern ALLOWED_NAME_CHARS = Pattern.compile("[a-zA-Z0-9]*");
-	private static final Pattern FORBIDDEN_NAME = Pattern.compile("Map([0-9]*)");
+	private static final Pattern FORBIDDEN_NAME = Pattern.compile("map([0-9]*)");
 
 	private int id;
 	private User user;
@@ -38,7 +45,7 @@ public abstract class Map {
 	private MapDataInteger time = new MapDataInteger("time",6000);
 	private MapDataBiome biome = new MapDataBiome("biome",Biome.FOREST);
 	private MapDataEnvironment environment = new MapDataEnvironment("environment",Environment.NORMAL);
-	private MapDataLocation spectator = new MapDataLocation("spectator");
+	private MapDataLocationSpawn spectator = new MapDataLocationSpawn("spectator");
 	private MapDataList<MapDataInteger> trusted = new MapDataList<>("trusted",MapDataInteger.class);
 
 	private MapRegion region = new MapRegion(this);
@@ -71,8 +78,8 @@ public abstract class Map {
 		Matcher matcher = ALLOWED_NAME_CHARS.matcher(name);
 		if(!matcher.matches() || name.length() > 32) throw new MapInvalidNameException();
 		matcher = FORBIDDEN_NAME.matcher(name.toLowerCase());
-		if(matcher.matches() && !name.equalsIgnoreCase("Map"+this.getId())) throw new MapNameExistsException();
-		if(MapManager.getMap(name) != null) throw new MapNameExistsException();
+		if(matcher.matches() && !name.equalsIgnoreCase("map"+this.getId())) throw new MapNameExistsException();
+		if(MapManager.getMap(name,this.getType()) != null) throw new MapNameExistsException();
 		this.name = name;
 		this.save();
 	}
@@ -109,7 +116,7 @@ public abstract class Map {
 		return environment;
 	}
 
-	public MapDataLocation getSpectator(){
+	public MapDataLocationSpawn getSpectator(){
 		return spectator;
 	}
 
@@ -130,7 +137,7 @@ public abstract class Map {
 	}
 
 	public MapPermission getPermission(MapPlayer mPlayer){
-		if(mPlayer.getUser().equals(this.getUser())) return MapPermission.OWNER;
+		if(mPlayer.getUser().equals(this.getUser()) || mPlayer.getUser().getRank() == UserRank.MANAZER) return MapPermission.OWNER;
 		else if(trusted.getValues().contains(new MapDataInteger(mPlayer.getUser().getId()))) return MapPermission.BUILD;
 		return MapPermission.NONE;
 	}
@@ -149,6 +156,7 @@ public abstract class Map {
 				id = rs.getInt(1);
 				name = "Map"+id;
 				rs.close();
+				this.getBiome().setBiome(this.getBiome().getBiome());
 				this.save();
 			}
 		} catch (SQLException e){
@@ -168,11 +176,20 @@ public abstract class Map {
 				updated = rs.getInt("map_updated");
 				state = MapState.getById(rs.getInt("map_state"));
 				this._loadData(new MapData(rs.getString("map_data")));
+				Blob blob = rs.getBlob("map_region");
+				if(blob != null){
+					byte[] bytes = blob.getBytes(1,(int)blob.length());
+					blob.free();
+					this.getRegion().load(bytes);
+				} else {
+					this.getRegion().setLoaded(true);
+				}
 			}
 			rs.close();
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+		this.getRenderer().update();
 	}
 
 	public void save(){
@@ -186,6 +203,27 @@ public abstract class Map {
 				this.getUpdated(),
 				this.getState().getId()
 		);
+		this.getRenderer().update();
+		this.saveRegion();
+	}
+
+	public void saveRegion(){
+		Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
+			@Override
+			public void run(){
+				Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
+					@Override
+					public void run(){
+						Map.this.getRegion().setToSave(false);
+						DB.update("UPDATE "+MAPS+" SET map_updated = ?,map_region = ? WHERE map_id = '"+Map.this.getId()+"'",
+								Map.this.getUpdated(),
+								new ByteArrayInputStream(Map.this.getRegion().toByteArray())
+						);
+						updated = (int)(System.currentTimeMillis()/1000);
+					}
+				});
+			}
+		},10);
 	}
 
 	private String getJsonData(){
@@ -209,9 +247,13 @@ public abstract class Map {
 
 	public abstract MapData getData();
 	public abstract void loadData(MapData data);
+	public abstract boolean isValid();
+
 	public abstract void updateScoreboard(MapScoreboard scoreboard);
 	public abstract void updateRenderer(MapRenderer renderer);
-	public abstract boolean isValid();
+
+	public abstract void performCommand(Player player,String[] args);
+	public abstract List<String> tabCompleter(Player player,String[] args);
 
 	@Override
 	public int hashCode(){

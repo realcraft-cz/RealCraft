@@ -134,7 +134,11 @@ public class MountLlama extends Mount {
 			return null;
 		}
 
-		public boolean dY() {
+		/*public boolean dY() {
+			return true;
+		}*/
+
+		public boolean dW() {
 			return true;
 		}
 

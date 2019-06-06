@@ -32,7 +32,7 @@ public class GamesReminder implements Listener {
 		message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/server "+server));
 		message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Klikni pro pripojeni do hry").create()));
 		for(Player player : Bukkit.getServer().getOnlinePlayers()){
-			if(player.getWorld().getName().equalsIgnoreCase("world") || player.getWorld().getName().equalsIgnoreCase("world_creative") || player.getWorld().getName().equalsIgnoreCase("world_parkour")){
+			if(player.getWorld().getName().equalsIgnoreCase("world") || player.getWorld().getName().equalsIgnoreCase("world_creative") || player.getWorld().getName().equalsIgnoreCase("world_maps") || player.getWorld().getName().equalsIgnoreCase("world_parkour")){
 				player.spigot().sendMessage(message);
 			}
 		}
