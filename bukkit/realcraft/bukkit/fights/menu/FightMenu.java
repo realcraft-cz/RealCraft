@@ -123,7 +123,7 @@ public class FightMenu implements Listener, Runnable {
 		if(event.getWhoClicked() instanceof Player){
 			FightPlayer fPlayer = Fights.getFightPlayer((Player)event.getWhoClicked());
 			if(fPlayer.getState() == FightPlayerState.NONE){
-				if(event.getInventory().getName().equalsIgnoreCase(INVENTORY_NAME)){
+				if(event.getView().getTitle().equalsIgnoreCase(INVENTORY_NAME)){
 					event.setCancelled(true);
 					if(event.getCurrentItem() != null){
 						if(event.getCurrentItem().getType() == FightMenuType.PUBLICS.getMaterial()){

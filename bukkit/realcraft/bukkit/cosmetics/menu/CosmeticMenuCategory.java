@@ -97,7 +97,7 @@ public class CosmeticMenuCategory implements Listener {
 		if(event.getWhoClicked() instanceof Player){
 			Player player = (Player)event.getWhoClicked();
 			CosmeticPlayer cPlayer = Cosmetics.getCosmeticPlayer(player);
-			if(cPlayer.getMenuCategory() != null && event.getInventory().getName().equalsIgnoreCase(CosmeticMenuMain.INV_NAME+" > "+cPlayer.getMenuCategory().getName())){
+			if(cPlayer.getMenuCategory() != null && event.getView().getTitle().equalsIgnoreCase(CosmeticMenuMain.INV_NAME+" > "+cPlayer.getMenuCategory().getName())){
 				event.setCancelled(true);
 				if(Cosmetics.isAvailable(player.getWorld())){
 					if(event.getRawSlot() >= 10 && event.getRawSlot() <= 34 && event.getRawSlot()%9 >= 1 && event.getRawSlot()%9 <= 7){

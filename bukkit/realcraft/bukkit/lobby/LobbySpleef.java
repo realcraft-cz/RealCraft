@@ -188,7 +188,7 @@ public class LobbySpleef implements Listener, Runnable {
 		player.getInventory().setHeldItemSlot(2);
 		Cosmetics.disableCosmetics(player,CosmeticCategory.GADGET);
 		Cosmetics.disableCosmetics(player,CosmeticCategory.PET);
-		Cosmetics.disableCosmetics(player,CosmeticCategory.MOUNT);
+		//Cosmetics.disableCosmetics(player,CosmeticCategory.MOUNT);
 	}
 
 	private void leavePlayer(Player player){

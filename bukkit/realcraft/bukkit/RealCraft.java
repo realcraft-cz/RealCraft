@@ -6,15 +6,15 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.earth2me.essentials.Essentials;
-import net.minecraft.server.v1_13_R2.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_13_R2.PacketPlayOutMapChunk;
-import net.minecraft.server.v1_13_R2.PacketPlayOutPlayerListHeaderFooter;
+import net.minecraft.server.v1_14_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_14_R1.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_13_R2.CraftChunk;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.CraftChunk;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -130,7 +130,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 
 	public void onEnable(){
 		instance = this;
-		serverName = getServer().getServerName();
+		serverName = getServer().getMotd();
 		serverType = ServerType.getByName(serverName);
 		essentials = (Essentials) this.getServer().getPluginManager().getPlugin("Essentials");
 		config = new Config(this);
@@ -268,7 +268,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 						int view = Bukkit.getViewDistance();
 						for(int x=-view;x<=view;x++){
 							for(int z=-view;z<=view;z++){
-								net.minecraft.server.v1_13_R2.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
+								net.minecraft.server.v1_14_R1.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
 								PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(chunk,20);
 								((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 							}

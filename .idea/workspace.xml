@@ -6,66 +6,86 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cad00b7c-c37a-44ea-b1fe-22b1a01af31c" name="Default Changelist" comment="More 1.13 updates, MapManager updates">
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandEnvironment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandReady.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/events/MapRegionLoadEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationBlock.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationSpawn.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/others/WEBlockCompleter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/AdvancementTest.java" afterDir="false" />
+    <list default="true" id="cad00b7c-c37a-44ea-b1fe-22b1a01af31c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/RealCraft.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/RealCraft.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/AntiCheat.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/AntiCheat.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/AntiCheatPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/AntiCheatPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/checks/Check.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/checks/Check.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/checks/CheckXRay.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/checks/CheckXRay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/chat/ChatFormat.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/chat/ChatFormat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/chat/ChatNotice.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/checks/CheckKillAura.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/checks/CheckKillAura.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/antispam/AntiSpam.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/antispam/AntiSpam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/banmanazer/BanUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/banmanazer/BanUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/CosmeticCrystals.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/CosmeticCrystals.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/cosmetic/CosmeticCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/cosmetic/CosmeticCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/cosmetic/CosmeticType.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/cosmetic/CosmeticType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/effects/EffectCrushedCandy.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/effects/EffectCrushedCandy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/gadgets/GadgetExplosiveSheep.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/gadgets/GadgetExplosiveSheep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/menu/CosmeticMenuCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/menu/CosmeticMenuCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/menu/CosmeticMenuMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/menu/CosmeticMenuMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/Mount.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/Mount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountCow.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountCow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountGlacialSteed.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountGlacialSteed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountInfernalHorror.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountInfernalHorror.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountLlama.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountLlama.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/CancelGrow.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/CancelGrow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountNyanSheep.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountNyanSheep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountPig.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountPig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountPolarBear.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountPolarBear.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountSpider.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountSpider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountTurtle.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountTurtle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountWalkingDead.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountWalkingDead.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/pets/Pet.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/pets/Pet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/utils/BlockUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/utils/BlockUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/utils/CustomPathFinderGoalPanic.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/utils/CustomPathFinderGoalPanic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/PlotSquaredWEExtent.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/PlotSquaredWEExtent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/SchematicBrush.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/SchematicBrush.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/LampControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/LampControl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/Schema.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/Schema.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArena.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/FriendPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/FriendPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightListeners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArenaRegion.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArenaRegion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/menu/FightMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/menu/FightMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/menu/FightMenuDuels.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/menu/FightMenuDuels.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/menu/FightMenuKits.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/menu/FightMenuKits.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/spectators/FightPublicSpectator.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/spectators/FightPublicSpectator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/FriendList.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/FriendList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/gameparty/GamePartySheep.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/gameparty/GamePartySheep.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/heads/CosmeticHeads.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/heads/CosmeticHeads.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyLanterns.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyLanterns.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyLottery.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyLottery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyPlayerRider.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyPlayerRider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyPokemons.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyPokemons.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbySpleef.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbySpleef.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapListeners.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/MapCommandJoin.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/MapCommandTp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/MapCommandList.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/MapCommandList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/MapCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/MapCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandBiome.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandBiome.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandName.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandName.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandTime.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/Map.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRegion.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRegion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapScoreboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapScoreboard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapType.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationArea.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapBedWars.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapBedWars.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapBlockParty.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapBlockParty.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapDominate.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapDominate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapHidenSeek.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapHidenSeek.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapPaintball.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapPaintball.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapRaces.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapRaces.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapRageMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapRageMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/minihry/GamesReminder.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/minihry/GamesReminder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationSpawn.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationSpawn.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/others/AbstractCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/others/AbstractCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/others/VipComamnd.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/others/VipCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinHandler_v1_13_R1.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinHandler_v1_13_R1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/Skins.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/Skins.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/sockets/SocketManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/sockets/SocketManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/PassiveMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/PassiveMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellBasket.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellBasket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/Sells.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/Sells.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/ShopListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/ShopListeners.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/market/ShopMarketResidence.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/market/ShopMarketResidence.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/SpectatorTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/VehicleTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/_Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/_Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bungee/realcraft/bungee/users/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/bungee/realcraft/bungee/users/Users.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellTrader.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellTrader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/market/ShopMarketMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/market/ShopMarketMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/ImageTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/ImageTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/BorderUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/BorderUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/LocationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/LocationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/MaterialUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/MaterialUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/Title.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/Title.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/RealCraftGames2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/RealCraftGames2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWarsListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWarsListeners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/specials/BedWarsSpecialSheep.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/specials/BedWarsSpecialSheep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockParty.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockParty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyFloor.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyFloor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateKit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateListeners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeekUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeekUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/races/com/races/RaceListeners.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/races/com/races/RaceListeners.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/races/com/races/RaceUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/races/com/races/RaceUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArenaRegion.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArenaRegion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GameSpectator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GameSpectator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/utils/BorderUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/utils/BorderUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/utils/EntityUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/utils/EntityUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/utils/Title.java" beforeDir="false" afterPath="$PROJECT_DIR$/../RealCraftGames2/src/com/games/utils/Title.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -87,19 +107,20 @@
     <session id="-142121886">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="139" />
+          <entry key="project.closed" value="148" />
+          <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.10" value="10" />
           <entry key="project.open.time.105" value="1" />
           <entry key="project.open.time.11" value="9" />
-          <entry key="project.open.time.12" value="7" />
+          <entry key="project.open.time.12" value="8" />
           <entry key="project.open.time.13" value="9" />
           <entry key="project.open.time.14" value="10" />
           <entry key="project.open.time.15" value="10" />
-          <entry key="project.open.time.16" value="5" />
+          <entry key="project.open.time.16" value="6" />
           <entry key="project.open.time.17" value="1" />
           <entry key="project.open.time.18" value="3" />
           <entry key="project.open.time.19" value="1" />
-          <entry key="project.open.time.2" value="23" />
+          <entry key="project.open.time.2" value="26" />
           <entry key="project.open.time.21" value="1" />
           <entry key="project.open.time.3" value="16" />
           <entry key="project.open.time.30" value="1" />
@@ -109,32 +130,32 @@
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="3" />
-          <entry key="project.open.time.9" value="20" />
-          <entry key="project.opened" value="143" />
+          <entry key="project.open.time.9" value="22" />
+          <entry key="project.opened" value="151" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="bc" value="6" />
-          <entry key="class" value="782" />
+          <entry key="class" value="827" />
           <entry key="gitignore" value="2" />
-          <entry key="iml" value="4" />
-          <entry key="java" value="6222" />
+          <entry key="iml" value="5" />
+          <entry key="java" value="6493" />
           <entry key="json" value="2" />
           <entry key="sh" value="1" />
-          <entry key="txt" value="3" />
-          <entry key="yml" value="34" />
+          <entry key="txt" value="5" />
+          <entry key="yml" value="37" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="782" />
-          <entry key="IDEA_MODULE" value="4" />
-          <entry key="JAVA" value="6222" />
+          <entry key="CLASS" value="827" />
+          <entry key="IDEA_MODULE" value="5" />
+          <entry key="JAVA" value="6493" />
           <entry key="JSON" value="2" />
-          <entry key="PLAIN_TEXT" value="6" />
+          <entry key="PLAIN_TEXT" value="8" />
           <entry key="UNKNOWN" value="6" />
-          <entry key="YAML" value="34" />
+          <entry key="YAML" value="37" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -142,7 +163,7 @@
           <entry key="class" value="13" />
           <entry key="dummy" value="106" />
           <entry key="gitignore" value="11" />
-          <entry key="java" value="135710" />
+          <entry key="java" value="137089" />
           <entry key="txt" value="105" />
           <entry key="yml" value="139" />
         </counts>
@@ -150,7 +171,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CLASS" value="13" />
-          <entry key="JAVA" value="135710" />
+          <entry key="JAVA" value="137089" />
           <entry key="PLAIN_TEXT" value="222" />
           <entry key="YAML" value="139" />
         </counts>
@@ -161,17 +182,7 @@
     <favorites_list name="RealCraft" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/PaintballListeners.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="73" column="53" lean-forward="true" selection-start-line="73" selection-start-column="53" selection-end-line="73" selection-end-column="53" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -183,103 +194,112 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>paste(</find>
-      <find>getRandomFloor</find>
-      <find>GameArenaImage</find>
-      <find>defaultfl</find>
-      <find>chooseDefaultFloor</find>
-      <find>sou</find>
-      <find>spec</find>
-      <find>clearfl</find>
-      <find>spectator</find>
-      <find>toggleSpectator</find>
-      <find>TabCompleteEvent</find>
-      <find>manager</find>
-      <find>shop</find>
-      <find>breakblo</find>
-      <find>firewo</find>
-      <find>runDisguiseCountdown</find>
-      <find>end</find>
-      <find>firework</find>
-      <find>damage</find>
-      <find>similar</find>
-      <find>hasit</find>
-      <find>getinven</find>
-      <find>getInventoryAmount</find>
-      <find>start</find>
-      <find>reg</find>
-      <find>reseting map</find>
-      <find>resetArenas</find>
-      <find>reset</find>
-      <find>setload</find>
-      <find>resetre</find>
+      <find>shouldPlaceFinal =</find>
+      <find>GameProfile</find>
+      <find>PacketPlayOutRespawn</find>
+      <find>PlayOutRespawn</find>
+      <find>POPPY</find>
+      <find>Birch Pressure Plate</find>
+      <find>ACACIA_FENCE_GATE</find>
+      <find>event.getInventory().getTitle()</find>
+      <find>cance</find>
+      <find>persi</find>
+      <find>entitysheep</find>
+      <find>ChunkUnloadEvent</find>
+      <find>GameCycleEvent</find>
+      <find>essage(winner.getType().getChatColor()+winner.getType().toName(</find>
+      <find>.getservername</find>
+      <find>serverna</find>
+      <find>getServer().getName</find>
+      <find>.getName()</find>
+      <find>clearPathfinders</find>
+      <find>petentry</find>
+      <find>onPacketReceiving</find>
+      <find>for(Vector2D coords : schema.getRegion().getChunks()){</find>
+      <find>public void clearEntities(){</find>
+      <find>int maxBlocksPerRun = 16 * 16 * clipboard.getDimensions().getBlockY();</find>
+      <find>setbio</find>
+      <find>setblock</find>
+      <find>AbstractDelegateExtent</find>
+      <find>new BlockVector</find>
+      <find>cannot</find>
+      <find>getid</find>
     </findStrings>
     <replaceStrings>
       <replace>v1_13_R2</replace>
+      <replace>import net.minecraft.server.v1_14_R1</replace>
+      <replace>org.bukkit.craftbukkit.v1_14_R1</replace>
+      <replace>net.minecraft.server.v1_14_R1</replace>
+      <replace>event.getView().getTitle()</replace>
+      <replace>POPPY</replace>
+      <replace>getServer().getMotd</replace>
     </replaceStrings>
+    <dirStrings>
+      <dir>D:\Backups\realcraft_server\source\RealCraftGames2\hidenseek</dir>
+    </dirStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../RealCraftGames2" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/ShopListeners.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/ShopManager.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/PaintballDrops.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/Paintball.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/Dominate.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/races/com/races/Races.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/ragemode/com/ragemode/RageMode.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeekArena.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/drops/PaintballDrop.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/drops/PaintballDropGrenade.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/drops/PaintballDropAmmo.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandBiome.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandEnvironment.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapManager.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/Map.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/MapCommands.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandReady.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationArea.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapRaces.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArenaRegion.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyListeners.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyFloor.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockParty.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GameType.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominatePoint.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateArena.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateEmerald.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeek.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/races/com/races/arenas/RaceArena.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/races/com/races/RaceListeners.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/others/WEBlockCompleter.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/commands/map/MapCommandTime.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/AchievementTest.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/utils/SkinUtil.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GamePodium.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/Test.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/AdvancementTest.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/RealCraft.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWarsShop.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeekUser.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GameStats.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/Lobby.java" />
-        <option value="$PROJECT_DIR$/bungee/realcraft/bungee/users/Users.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeekListeners.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellBasket.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/PaintballArena.java" />
-        <option value="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWars.java" />
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/PassiveMode.java" />
         <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/Game.java" />
         <option value="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyArena.java" />
         <option value="$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/PaintballListeners.java" />
+        <option value="$PROJECT_DIR$/share/realcraft/share/sockets/SocketData.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArena.java" />
+        <option value="$PROJECT_DIR$/share/realcraft/share/users/Users.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataLocationSpawn.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GamePodium.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/sockets/SocketManager.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/antispam/AntiSpam.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/banmanazer/BanUtils.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/menu/CosmeticMenuCategory.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyLanterns.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinFactory.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/LocationUtil.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/MaterialUtil.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateListeners.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWarsListeners.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeekUser.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinHandler_v1_13_R1.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/Skins.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/Mount.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts/MountInfernalHorror.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/cosmetic/CosmeticType.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/cosmetic/CosmeticCategory.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/gameparty/GamePartySheep.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbySpleef.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/menu/CosmeticMenuMain.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellTrader.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyPokemons.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/utils/CustomPathFinderGoalPanic.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapListeners.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/specials/BedWarsSpecialSheep.java" />
+        <option value="$PROJECT_DIR$/../RealCraftLoader/src/com/realcraftloader/BukkitLoader.java" />
+        <option value="$PROJECT_DIR$/../RealCraftLoader/src/com/realcraftloader/BungeeLoader.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/RealCraft.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/gameparty/GamePartyListeners.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/FriendPlayer.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/AntiCheat.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/pets/Pet.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/LampControl.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/test/ImageTest.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArenaRegion.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRegion.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/PlotSquaredWEExtent.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArenaRegion.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/Schema.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/SchematicBrush.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockParty.java" />
+        <option value="$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyFloor.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/utils/BlockUtils.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2114" />
+    <option name="x" value="2150" />
     <option name="y" value="-8" />
     <option name="width" value="1468" />
     <option name="height" value="863" />
@@ -301,6 +321,51 @@
           <expand>
             <path>
               <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="cosmetics" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="cosmetics" type="462c0819:PsiDirectoryNode" />
+              <item name="gadgets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="cosmetics" type="462c0819:PsiDirectoryNode" />
+              <item name="pets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="bukkit" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
               <item name="RealCraftGames2" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -317,13 +382,35 @@
             <path>
               <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
               <item name="RealCraftGames2" type="462c0819:PsiDirectoryNode" />
-              <item name="paintball" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
               <item name="RealCraftGames2" type="462c0819:PsiDirectoryNode" />
-              <item name="paintball" type="462c0819:PsiDirectoryNode" />
-              <item name="paintball" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="games" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraftGames2" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="games" type="462c0819:PsiDirectoryNode" />
+              <item name="arena" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraftGames2" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="games" type="462c0819:PsiDirectoryNode" />
+              <item name="arena" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RealCraftGames2" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="games" type="462c0819:PsiDirectoryNode" />
+              <item name="events" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -332,13 +419,17 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="TabCompleteEvent&#9;PSI&#9;JAVA://realcraft.bukkit.others.WEBlockCompleter#TabCompleteEvent&#10;worldedit&#9;PSI&#9;JAVA://realcraft.bukkit.creative.PlotSquaredWorldEdit&#10;wrapPlayer&#9;PSI&#9;JAVA://com.intellectualcrafters.plot.api.PlotAPI#wrapPlayer&#10;Schema&#9;PSI&#9;JAVA://com.games.arena.GameArenaRegion.Schema#schema&#10;getGeneratedKeys&#9;PSI&#9;JAVA://com.mysql.jdbc.StatementImpl#getGeneratedKeysInternal&#10;inside&#9;PSI&#9;JAVA://realcraft.bukkit.anticheat.utils.CollisionUtil#isInsideAABBIncludeEdges&#10;/chunk&#9;FILE&#9;file://D:/Backups/realcraft_server/source/RealCraft/bukkit/realcraft/bukkit/test/ChunkTest.java&#10;_stew&#9;PSI&#9;JAVA://org.bukkit.Material#MUSHROOM_STEW" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../CrazyAdvancementsAPI.jar!/" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="realcraft" />
+    <property name="SearchEverywhereHistoryKey" value="bukkit.cosmetics.utils.BlockUtil&#9;PSI&#9;JAVA://realcraft.bukkit.cosmetics.utils.BlockUtils&#10;TabCompleteEvent&#9;PSI&#9;JAVA://realcraft.bukkit.others.WEBlockCompleter#TabCompleteEvent&#10;worldedit&#9;PSI&#9;JAVA://realcraft.bukkit.creative.PlotSquaredWorldEdit&#10;wrapPlayer&#9;PSI&#9;JAVA://com.intellectualcrafters.plot.api.PlotAPI#wrapPlayer&#10;Schema&#9;PSI&#9;JAVA://com.games.arena.GameArenaRegion.Schema#schema&#10;getGeneratedKeys&#9;PSI&#9;JAVA://com.mysql.jdbc.StatementImpl#getGeneratedKeysInternal&#10;inside&#9;PSI&#9;JAVA://realcraft.bukkit.anticheat.utils.CollisionUtil#isInsideAABBIncludeEdges&#10;/chunk&#9;FILE&#9;file://D:/Backups/realcraft_server/source/RealCraft/bukkit/realcraft/bukkit/test/ChunkTest.java&#10;_stew&#9;PSI&#9;JAVA://org.bukkit.Material#MUSHROOM_STEW" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../worldedit-bukkit-7.0.0.jar!/" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.20888889" />
     <property name="run.code.analysis.last.selected.profile" value="aDefault" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.statistic.project.settings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -349,6 +440,7 @@
       <recent name="realcraft.bukkit.mapmanager.map.data" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Backups\realcraft_server\source\RealCraftLoader\src" />
       <recent name="D:\Backups\realcraft_server\source\RealCraftGames2\src" />
       <recent name="D:\Backups\realcraft_server\source\RealCraft\bungee" />
       <recent name="D:\Backups\realcraft_server\source\RealCraft\bukkit" />
@@ -435,7 +527,14 @@
       <option name="project" value="LOCAL" />
       <updated>1559802380708</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="More 1.13 updates, MapManager updates">
+      <created>1559802548177</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1559802548177</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView">
@@ -450,7 +549,7 @@
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4990138" visible="true" weight="0.18125" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4990138" visible="true" weight="0.18125" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" sideWeight="0.5009862" side_tool="true" weight="0.178125" />
@@ -461,12 +560,13 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32971373" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" sideWeight="0.49947917" visible="true" weight="0.3662389" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49947917" weight="0.3662389" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5005208" side_tool="true" weight="0.31786773" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.24876603" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5005208" side_tool="true" weight="0.36525172" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.38104638" />
       <window_info anchor="bottom" id="Inspection Results" order="11" weight="0.32938856" />
       <window_info anchor="bottom" id="Dependency Viewer" order="12" weight="0.32971373" />
+      <window_info anchor="bottom" id="Statistic" order="13" weight="0.42941758" />
       <window_info anchor="right" x="0" y="0" width="434" height="896" id="Documentation" order="0" side_tool="true" weight="0.3296875" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
@@ -509,368 +609,384 @@
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="1.13 update" />
     <MESSAGE value="MapManager update" />
-    <MESSAGE value="More 1.13 updates, MapManager updates" />
     <MESSAGE value="no comment" />
-    <option name="LAST_COMMIT_MESSAGE" value="no comment" />
+    <MESSAGE value="More 1.13 updates, MapManager updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="More 1.13 updates, MapManager updates" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/../bungeecord.jar!/net/md_5/bungee/api/event/PlayerDisconnectEvent.class">
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/CosmeticCrystals.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="30" column="59" lean-forward="true" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="59" />
+        <state relative-caret-position="560">
+          <caret line="72" column="17" selection-start-line="72" selection-start-column="17" selection-end-line="72" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bungee/realcraft/bungee/geoip/GeoLiteAPI.java">
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/anticheat/AntiCheat.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="35" column="77" selection-start-line="35" selection-start-column="77" selection-end-line="35" selection-end-column="77" />
+        <state relative-caret-position="325">
+          <caret line="105" column="58" selection-start-line="105" selection-start-column="58" selection-end-line="105" selection-end-column="58" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bungee/realcraft/bungee/users/auth/UsersAuthentication.java">
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/FriendPlayer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1742">
-          <caret line="45" column="31" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="31" />
+        <state relative-caret-position="197">
+          <caret line="179" column="157" selection-start-line="179" selection-start-column="157" selection-end-line="179" selection-end-column="157" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bungee/realcraft/bungee/users/Users.java">
+    <entry file="file://$PROJECT_DIR$/share/realcraft/share/ServerType.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-124">
-          <caret line="28" column="20" lean-forward="true" selection-start-line="28" selection-start-column="20" selection-end-line="28" selection-end-column="20" />
+        <state relative-caret-position="224">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/hidenseek/com/hidenseek/HidenSeekListeners.java">
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/LampControl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
-          <caret line="362" column="37" lean-forward="true" selection-start-line="362" selection-start-column="37" selection-end-line="362" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../spigot-1.13.1.jar!/org/bukkit/inventory/ItemStack.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="614">
-          <caret line="192" column="36" lean-forward="true" selection-start-line="192" selection-start-column="36" selection-end-line="192" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/shops/ShopListeners.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="277" column="13" lean-forward="true" selection-start-line="277" selection-start-column="13" selection-end-line="277" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellBasket.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="48" column="13" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/Sells.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="36" column="41" selection-start-line="36" selection-start-column="41" selection-end-line="36" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/sells/SellMenu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="115" column="31" selection-start-line="115" selection-start-column="31" selection-end-line="115" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/ItemUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="610">
-          <caret line="51" column="56" selection-start-line="51" selection-start-column="56" selection-end-line="51" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/economy/Economy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="36" column="1" lean-forward="true" selection-start-line="36" selection-start-column="1" selection-end-line="36" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapPaintball.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="302" column="79" lean-forward="true" selection-start-line="302" selection-start-column="79" selection-end-line="302" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/specials/PaintballSpecialJump.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/races/com/races/RaceCheckpoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-366">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/data/GameArenaDataLocationArea.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="11" column="11" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/races/com/races/arenas/RaceArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="81" column="59" lean-forward="true" selection-start-line="81" selection-start-column="59" selection-end-line="81" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/specials/BedWarsSpecial.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GameStats.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="59" column="9" lean-forward="true" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWars.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="60" column="45" lean-forward="true" selection-start-line="60" selection-start-column="45" selection-end-line="60" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GameVoting.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="127" column="54" lean-forward="true" selection-start-line="127" selection-start-column="54" selection-end-line="127" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/events/GameRegionLoadEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/GameListeners.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="850">
-          <caret line="465" column="20" selection-start-line="465" selection-start-column="20" selection-end-line="465" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/others/AbstractCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="30" column="89" lean-forward="true" selection-start-line="30" selection-start-column="89" selection-end-line="30" selection-end-column="89" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapListeners.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="50" column="23" selection-start-line="50" selection-start-column="23" selection-end-line="50" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/maps/MapBedWars.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-440">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/data/MapDataDouble.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_152/src.zip!/java/lang/Thread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="698" column="29" selection-start-line="698" selection-start-column="29" selection-end-line="698" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1804">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapScoreboard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-30">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="42" column="1" lean-forward="true" selection-start-line="42" selection-start-column="1" selection-end-line="42" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapPermission.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="23" column="1" lean-forward="true" selection-start-line="23" selection-start-column="1" selection-end-line="23" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapDimension.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="30" column="1" lean-forward="true" selection-start-line="30" selection-start-column="1" selection-end-line="30" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRegion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="466">
-          <caret line="170" column="46" lean-forward="true" selection-start-line="170" selection-start-column="46" selection-end-line="170" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="52" column="57" lean-forward="true" selection-start-line="52" selection-start-column="57" selection-end-line="52" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWarsArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="509">
-          <caret line="81" column="63" lean-forward="true" selection-start-line="81" selection-start-column="63" selection-end-line="81" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWarsListeners.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="611">
-          <caret line="272" column="41" selection-start-line="272" selection-start-column="41" selection-end-line="272" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/survival/PassiveMode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="121" column="41" selection-start-line="121" selection-start-column="41" selection-end-line="121" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_152/src.zip!/java/util/ArrayList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="534">
-          <caret line="176" column="11" selection-start-line="176" selection-start-column="11" selection-end-line="176" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArenaImage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="50" column="39" lean-forward="true" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyFloor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="42" column="25" lean-forward="true" selection-start-line="42" selection-start-column="25" selection-end-line="42" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArenaRegion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="122" column="5" lean-forward="true" selection-start-line="122" selection-start-column="5" selection-end-line="122" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="91" column="16" selection-start-line="91" selection-start-column="16" selection-end-line="91" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="40" column="5" lean-forward="true" selection-start-line="40" selection-start-column="5" selection-end-line="40" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockParty.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="946">
-          <caret line="307" column="31" selection-start-line="307" selection-start-column="31" selection-end-line="307" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/game/Game.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
-          <caret line="294" column="41" lean-forward="true" selection-start-line="294" selection-start-column="41" selection-end-line="294" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/Paintball.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="57" column="58" lean-forward="true" selection-start-line="57" selection-start-column="58" selection-end-line="57" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/PaintballArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+          <caret line="46" column="73" lean-forward="true" selection-start-line="46" selection-start-column="73" selection-end-line="46" selection-end-column="73" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/paintball/com/paintball/PaintballListeners.java">
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/test/ImageTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="73" column="53" lean-forward="true" selection-start-line="73" selection-start-column="53" selection-end-line="73" selection-end-column="53" />
+        <state relative-caret-position="704">
+          <caret line="44" column="40" lean-forward="true" selection-start-line="44" selection-start-column="40" selection-end-line="44" selection-end-column="40" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../spigot-1.14.2.jar!/org/bukkit/util/BlockVector.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="25" column="11" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftLoader/src/bungee.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="3" column="20" lean-forward="true" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftLoader/src/plugin.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="3" column="20" lean-forward="true" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/events/GameEndEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/player/GamePlayerSettings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#150#166#0" expanded="true" />
+            <element signature="e#231#247#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/player/GamePlayerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/player/GamePlayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="31" column="43" selection-start-line="31" selection-start-column="43" selection-end-line="31" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/events/GamePlayerJoinEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="14" column="14" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../worldedit-bukkit-7.0.0.jar!/com/sk89q/worldedit/regions/CuboidRegion.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="40" lean-forward="true" selection-start-line="40" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/PlotSquaredWEExtent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="22" column="51" lean-forward="true" selection-start-line="22" selection-start-column="51" selection-end-line="22" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/map/MapRegion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="628">
+          <caret line="220" lean-forward="true" selection-start-line="220" selection-end-line="220" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../worldedit-bukkit-7.0.0.jar!/com/sk89q/worldedit/extent/AbstractDelegateExtent.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="42" column="5" lean-forward="true" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArenaRegion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1108">
+          <caret line="147" column="69" lean-forward="true" selection-start-line="147" selection-start-column="69" selection-end-line="147" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../worldedit-bukkit-7.0.0.jar!/com/sk89q/worldedit/regions/Region.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="16" column="17" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArenaRegion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-236">
+          <caret line="179" column="36" lean-forward="true" selection-start-line="179" selection-start-column="36" selection-end-line="179" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/develop/Schema.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-342">
+          <caret line="205" column="45" lean-forward="true" selection-start-line="205" selection-start-column="45" selection-end-line="205" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../worldedit-bukkit-7.0.0.jar!/com/sk89q/worldedit/math/transform/AffineTransform.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="196" column="5" lean-forward="true" selection-start-line="196" selection-start-column="5" selection-end-line="196" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/data/GameArenaDataList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="41" column="1" lean-forward="true" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/data/GameArenaDataString.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/data/GameArenaDataLocationArea.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="47" column="1" lean-forward="true" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/data/GameArenaDataLocation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/data/GameArenaDataInteger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="18" column="26" lean-forward="true" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/src/com/games/arena/GameArena.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="30" column="58" selection-start-line="30" selection-start-column="58" selection-end-line="30" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyArena.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="736">
+          <caret line="60" lean-forward="true" selection-start-line="60" selection-end-line="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../worldedit-bukkit-7.0.0.jar!/com/sk89q/worldedit/math/BlockVector3.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="151" column="26" lean-forward="true" selection-start-line="151" selection-start-column="26" selection-end-line="151" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../worldedit-bukkit-7.0.0.jar!/com/sk89q/worldedit/math/Vector3.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="42" column="12" selection-start-line="42" selection-start-column="12" selection-end-line="42" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockPartyFloor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RealCraftGames2/blockparty/com/blockparty/BlockParty.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="529">
+          <caret line="398" column="23" lean-forward="true" selection-start-line="398" selection-start-column="23" selection-end-line="398" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/creative/SchematicBrush.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="276" column="75" selection-start-line="276" selection-start-column="75" selection-end-line="276" selection-end-column="75" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/gadgets/GadgetExplosiveSheep.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="41" column="53" lean-forward="true" selection-start-line="41" selection-start-column="53" selection-end-line="41" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyElytra.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="36" column="5" lean-forward="true" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/heads/CosmeticHeads.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="229" column="8" selection-start-line="229" selection-start-column="8" selection-end-line="229" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/cosmetics/utils/BlockUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="313" column="47" lean-forward="true" selection-start-line="313" selection-start-column="47" selection-end-line="313" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/others/AbstractCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/mapmanager/MapListeners.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="44" column="25" selection-start-line="44" selection-start-column="25" selection-end-line="44" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/share/realcraft/share/database/DB.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="58" column="35" lean-forward="true" selection-start-line="58" selection-start-column="35" selection-end-line="58" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/commands/FriendCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/friends/commands/FriendCommandAdd.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/teleport/TeleportRequests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="43" column="1" lean-forward="true" selection-start-line="43" selection-start-column="1" selection-end-line="43" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/share/realcraft/share/users/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="21" column="26" lean-forward="true" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/share/realcraft/share/users/Users.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/users/Users.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="19" column="52" selection-start-line="19" selection-start-column="52" selection-end-line="19" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/database/DB.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="50" selection-start-line="2" selection-start-column="50" selection-end-line="2" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/Particles.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/BorderUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -880,7 +996,7 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>RealCraftGames2:jar</last-edited>
+          <last-edited>RealCraftLoader:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -928,7 +1044,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>RealCraft</last-edited>
+          <last-edited>RealCraftLoader</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

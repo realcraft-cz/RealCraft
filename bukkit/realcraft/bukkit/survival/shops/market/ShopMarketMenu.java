@@ -43,7 +43,7 @@ public class ShopMarketMenu extends AbstractCommand implements Listener {
 
 	@EventHandler
 	public void InventoryClickEvent(InventoryClickEvent event){
-		if(event.getWhoClicked() instanceof Player && event.getInventory().getName().equalsIgnoreCase(INV_NAME)){
+		if(event.getWhoClicked() instanceof Player && event.getView().getTitle().equalsIgnoreCase(INV_NAME)){
 			event.setCancelled(true);
 			Player player = (Player)event.getWhoClicked();
 			if(event.getRawSlot() >= 10 && event.getRawSlot() <= 43 && event.getRawSlot()%9 >= 1 && event.getRawSlot()%9 <= 7){
@@ -65,7 +65,7 @@ public class ShopMarketMenu extends AbstractCommand implements Listener {
 
 	@EventHandler
 	public void InventoryDragEvent(InventoryDragEvent event){
-		if(event.getWhoClicked() instanceof Player && event.getInventory().getName().equalsIgnoreCase(INV_NAME)){
+		if(event.getWhoClicked() instanceof Player && event.getView().getTitle().equalsIgnoreCase(INV_NAME)){
 			event.setCancelled(true);
 		}
 	}

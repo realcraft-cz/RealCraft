@@ -1,6 +1,6 @@
 package realcraft.bukkit.cosmetics.utils;
 
-import net.minecraft.server.v1_13_R2.*;
+import net.minecraft.server.v1_14_R1.*;
 
 public class CustomPathFinderGoalPanic extends PathfinderGoal {
 
@@ -22,7 +22,7 @@ public class CustomPathFinderGoalPanic extends PathfinderGoal {
 	public CustomPathFinderGoalPanic(EntityCreature entitycreature, double d0) {
 		this.b = entitycreature;
 		this.a = d0;
-		this.a(1);
+		//this.a(1);
 	}
 
 	@Override

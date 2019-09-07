@@ -236,7 +236,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 
 	@EventHandler
 	public void InventoryClickEvent(InventoryClickEvent event){
-		if(event.getWhoClicked() instanceof Player && event.getInventory().getName().equalsIgnoreCase(CRYSTAL_INV_NAME)){
+		if(event.getWhoClicked() instanceof Player && event.getView().getTitle().equalsIgnoreCase(CRYSTAL_INV_NAME)){
 			event.setCancelled(true);
 			Player player = (Player)event.getWhoClicked();
 			if(event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.EMERALD_BLOCK){

@@ -1,13 +1,14 @@
 package realcraft.bukkit.survival.sells;
 
-import net.minecraft.server.v1_13_R2.EntityVillager;
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import net.minecraft.server.v1_13_R2.World;
+import net.minecraft.server.v1_14_R1.EntityTypes;
+import net.minecraft.server.v1_14_R1.EntityVillager;
+import net.minecraft.server.v1_14_R1.NBTTagCompound;
+import net.minecraft.server.v1_14_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -118,11 +119,11 @@ public class SellTrader implements Listener {
 	private class CustomTrader extends EntityVillager {
 
 		public CustomTrader(World world){
-			super(world);
+			super(EntityTypes.VILLAGER,world);
 		}
 
 		@Override
-		protected boolean isTypeNotPersistent(){
+		public boolean isTypeNotPersistent(double d){
 			return false;
 		}
 

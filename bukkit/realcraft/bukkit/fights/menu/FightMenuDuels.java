@@ -77,7 +77,7 @@ public class FightMenuDuels implements Listener, Runnable {
 		if(event.getWhoClicked() instanceof Player){
 			FightPlayer fPlayer = Fights.getFightPlayer((Player)event.getWhoClicked());
 			if(fPlayer.getState() == FightPlayerState.NONE){
-				if(event.getInventory().getName().equalsIgnoreCase(INVENTORY_NAME)){
+				if(event.getView().getTitle().equalsIgnoreCase(INVENTORY_NAME)){
 					event.setCancelled(true);
 					if(event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.DIAMOND_BLOCK){
 						if(items.containsKey(event.getRawSlot())){

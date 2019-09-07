@@ -1,8 +1,8 @@
 package realcraft.bukkit.banmanazer;
 
-import java.net.InetAddress;
+import org.apache.commons.lang.StringUtils;
 
-import org.apache.commons.lang3.StringUtils;
+import java.net.InetAddress;
 
 public class BanUtils {
 	

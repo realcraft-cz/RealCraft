@@ -14,11 +14,8 @@ public class Skins implements Listener {
 
 	public static final String CHANNEL_SKIN_RESET = "bungeeSkinReset";
 
-	SkinHandler_v1_13_R1 skinhandler;
-
 	public Skins(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
-		skinhandler = new SkinHandler_v1_13_R1();
 	}
 
 	@EventHandler
@@ -26,7 +23,7 @@ public class Skins implements Listener {
 		SocketData data = event.getData();
 		if(data.getChannel().equalsIgnoreCase(CHANNEL_SKIN_RESET)){
 			Player player = Bukkit.getPlayer(UUID.fromString(data.getString("uuid")));
-			if(player != null && player.isOnline()) skinhandler.updateSkin(player);
+			if(player != null && player.isOnline()) SkinHandler_v1_13_R1.updateSkin(player);
 		}
 	}
 }

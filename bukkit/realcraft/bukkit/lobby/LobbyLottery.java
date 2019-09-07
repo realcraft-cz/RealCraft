@@ -70,7 +70,7 @@ public class LobbyLottery implements Listener {
 
 	@EventHandler
 	public void InventoryClickEvent(InventoryClickEvent event){
-		if(event.getInventory().getName().equalsIgnoreCase(invName)){
+		if(event.getView().getTitle().equalsIgnoreCase(invName)){
 			if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world")){
 				event.setCancelled(true);
 				Player player = (Player) event.getWhoClicked();
@@ -87,7 +87,7 @@ public class LobbyLottery implements Listener {
 
 	@EventHandler
 	public void InventoryCloseEvent(InventoryCloseEvent event){
-		if(event.getInventory().getName().equalsIgnoreCase(invName)){
+		if(event.getView().getTitle().equalsIgnoreCase(invName)){
 			if(event.getPlayer() instanceof Player && ((Player)event.getPlayer()).getWorld().getName().equalsIgnoreCase("world")){
 				Player player = (Player) event.getPlayer();
 				if(!this.getLottery(player).isRunning()){

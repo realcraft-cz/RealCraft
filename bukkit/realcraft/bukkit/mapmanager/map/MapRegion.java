@@ -1,6 +1,9 @@
 package realcraft.bukkit.mapmanager.map;
 
-import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.entity.BaseEntity;
@@ -14,8 +17,10 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.world.biome.BaseBiome;
+import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockStateHolder;
@@ -129,13 +134,13 @@ public class MapRegion implements Runnable {
 				&& location.getBlockZ() >= this.getMinLocation().getBlockZ() && location.getBlockZ() <= this.getMaxLocation().getBlockZ());
 	}
 
-	public boolean isLocationInside(Vector vector){
+	public boolean isLocationInside(BlockVector3 vector){
 		return (vector.getBlockX() >= this.getMinLocation().getBlockX() && vector.getBlockX() <= this.getMaxLocation().getBlockX()
 				&& vector.getBlockY() >= this.getMinLocation().getBlockY() && vector.getBlockY() <= this.getMaxLocation().getBlockY()
 				&& vector.getBlockZ() >= this.getMinLocation().getBlockZ() && vector.getBlockZ() <= this.getMaxLocation().getBlockZ());
 	}
 
-	public boolean isLocationInside(Vector2D vector){
+	public boolean isLocationInside(BlockVector2 vector){
 		return (vector.getBlockX() >= this.getMinLocation().getBlockX() && vector.getBlockX() <= this.getMaxLocation().getBlockX()
 				&& vector.getBlockZ() >= this.getMinLocation().getBlockZ() && vector.getBlockZ() <= this.getMaxLocation().getBlockZ());
 	}
@@ -174,7 +179,7 @@ public class MapRegion implements Runnable {
 				}
 			}
 		}
-		CuboidRegion region = new CuboidRegion(new Vector(minX,minY,minZ),new Vector(maxX,maxY,maxZ));
+		CuboidRegion region = new CuboidRegion(BlockVector3.at(minX,minY,minZ),BlockVector3.at(maxX,maxY,maxZ));
 		BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 		EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(this.getBaseLocation().getWorld()),-1);
 		ForwardExtentCopy copy = new ForwardExtentCopy(session,region,clipboard,region.getMinimumPoint());
@@ -198,7 +203,7 @@ public class MapRegion implements Runnable {
 		}
 
 		@Override
-		public boolean setBlock(Vector location,BlockStateHolder block) throws WorldEditException{
+		public boolean setBlock(BlockVector3 location,BlockStateHolder block) throws WorldEditException{
 			if(MapRegion.this.isLocationInside(location)) return super.setBlock(location,block);
 			return false;
 		}
@@ -210,18 +215,18 @@ public class MapRegion implements Runnable {
 		}
 
 		@Override
-		public boolean setBiome(Vector2D position,BaseBiome biome){
+		public boolean setBiome(BlockVector2 position,BiomeType biome){
 			return MapRegion.this.isLocationInside(position);
 		}
 
 		@Override
-		public BlockState getBlock(Vector location){
+		public BlockState getBlock(BlockVector3 location){
 			if(MapRegion.this.isLocationInside(location)) return super.getBlock(location);
 			return BlockTypes.AIR.getDefaultState();
 		}
 
 		@Override
-		public BaseBlock getFullBlock(Vector location){
+		public BaseBlock getFullBlock(BlockVector3 location){
 			return this.getBlock(location).toBaseBlock();
 		}
 	}
@@ -235,7 +240,7 @@ public class MapRegion implements Runnable {
 		private EditSession editSession;
 
 		private boolean build = false;
-		private HashMap<Vector,BaseBlock> blocks = new HashMap<>();
+		private HashMap<BlockVector3,BaseBlock> blocks = new HashMap<>();
 
 		public SchemaStages(Clipboard clipboard,Location location){
 			this.clipboard = clipboard;
@@ -268,16 +273,16 @@ public class MapRegion implements Runnable {
 			for(int x=clipboard.getRegion().getMinimumPoint().getBlockX();x<=clipboard.getRegion().getMaximumPoint().getBlockX();x++){
 				for(int y=clipboard.getRegion().getMinimumPoint().getBlockY();y<=clipboard.getRegion().getMaximumPoint().getBlockY();y++){
 					for(int z=clipboard.getRegion().getMinimumPoint().getBlockZ();z<=clipboard.getRegion().getMaximumPoint().getBlockZ();z++){
-						BlockVector pt = new BlockVector(x,y,z);
+						BlockVector3 pt = BlockVector3.at(x,y,z);
 						BaseBlock block = clipboard.getFullBlock(pt);
 						boolean place = false;
 						if(stage == 1 && !shouldPlaceLast(BukkitAdapter.adapt(block.getBlockType())) && !shouldPlaceFinal(BukkitAdapter.adapt(block.getBlockType()))) place = true;
 						else if(stage == 2 && shouldPlaceLast(BukkitAdapter.adapt(block.getBlockType()))) place = true;
 						else if(stage == 3 && shouldPlaceFinal(BukkitAdapter.adapt(block.getBlockType()))) place = true;
 						if(place){
-							Vector pos = pt.add(-clipboard.getRegion().getMinimumPoint().getBlockX(),-clipboard.getRegion().getMinimumPoint().getBlockY(),-clipboard.getRegion().getMinimumPoint().getBlockZ());
+							BlockVector3 pos = pt.add(-clipboard.getRegion().getMinimumPoint().getBlockX(),-clipboard.getRegion().getMinimumPoint().getBlockY(),-clipboard.getRegion().getMinimumPoint().getBlockZ());
 							pos = pos.add(location.getBlockX(),location.getBlockY(),location.getBlockZ());
-							pos = pos.add(clipboard.getRegion().getMinimumPoint().subtract(new Vector(location.getBlockX(),location.getBlockY(),location.getBlockZ())));
+							pos = pos.add(clipboard.getRegion().getMinimumPoint().subtract(BlockVector3.at(location.getBlockX(),location.getBlockY(),location.getBlockZ())));
 							blocks.put(pos,block);
 							if(blocks.size() >= maxBlocksPerRun){
 								nextPaste();
@@ -300,7 +305,7 @@ public class MapRegion implements Runnable {
 			Bukkit.getScheduler().callSyncMethod(RealCraft.getInstance(),new Callable<Void>(){
 				@Override
 				public Void call(){
-					for(java.util.Map.Entry<Vector,BaseBlock> map : blocks.entrySet()){
+					for(java.util.Map.Entry<BlockVector3,BaseBlock> map : blocks.entrySet()){
 						if(!map.getValue().hasNbtData()){
 							location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setType(BukkitAdapter.adapt(map.getValue().getBlockType()),false);
 							location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setBlockData(BukkitAdapter.adapt(map.getValue()),false);
@@ -427,8 +432,18 @@ public class MapRegion implements Runnable {
 
 	private static final HashSet<Material> shouldPlaceFinal = new HashSet<Material>();
 	static {
-		shouldPlaceFinal.add(Material.SIGN);
-		shouldPlaceFinal.add(Material.WALL_SIGN);
+		shouldPlaceFinal.add(Material.ACACIA_SIGN);
+		shouldPlaceFinal.add(Material.BIRCH_SIGN);
+		shouldPlaceFinal.add(Material.DARK_OAK_SIGN);
+		shouldPlaceFinal.add(Material.JUNGLE_SIGN);
+		shouldPlaceFinal.add(Material.OAK_SIGN);
+		shouldPlaceFinal.add(Material.SPRUCE_SIGN);
+		shouldPlaceFinal.add(Material.ACACIA_WALL_SIGN);
+		shouldPlaceFinal.add(Material.BIRCH_WALL_SIGN);
+		shouldPlaceFinal.add(Material.DARK_OAK_WALL_SIGN);
+		shouldPlaceFinal.add(Material.JUNGLE_WALL_SIGN);
+		shouldPlaceFinal.add(Material.OAK_WALL_SIGN);
+		shouldPlaceFinal.add(Material.SPRUCE_WALL_SIGN);
 		shouldPlaceFinal.add(Material.PISTON_HEAD);
 		shouldPlaceFinal.add(Material.MOVING_PISTON);
 		shouldPlaceFinal.add(Material.ACACIA_DOOR);

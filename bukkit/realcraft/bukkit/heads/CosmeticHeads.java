@@ -73,7 +73,7 @@ public class CosmeticHeads implements Listener {
 	public void InventoryClickEvent(InventoryClickEvent event){
 		if(event.getWhoClicked() instanceof Player){
 			Player player = (Player) event.getWhoClicked();
-			if(event.getInventory().getName().equalsIgnoreCase(invName)){
+			if(event.getView().getTitle().equalsIgnoreCase(invName)){
 				event.setCancelled(true);
 				if(event.getRawSlot() >= 0 && event.getRawSlot() < 4*9){
 					ItemStack item = event.getCurrentItem();
@@ -88,9 +88,9 @@ public class CosmeticHeads implements Listener {
 					}
 				}
 			}
-			else if(event.getInventory().getName().startsWith(invName)){
+			else if(event.getView().getTitle().startsWith(invName)){
 				for(CosmeticCategory category : categories){
-					if(event.getInventory().getName().equalsIgnoreCase(category.getInvName())){
+					if(event.getView().getTitle().equalsIgnoreCase(category.getInvName())){
 						event.setCancelled(true);
 						if(event.getRawSlot() >= 0 && event.getRawSlot() < 6*9){
 							ItemStack item = event.getCurrentItem();

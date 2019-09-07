@@ -88,7 +88,7 @@ public class SocketManager {
 
 	public static void sendToAll(SocketData data,boolean yourself){
 		for(ServerType server : ServerType.values()){
-			if(yourself || !server.toString().equalsIgnoreCase(Bukkit.getServer().getServerName())) SocketManager.send(server,data);
+			if(yourself || !server.toString().equalsIgnoreCase(Bukkit.getServer().getMotd())) SocketManager.send(server,data);
 		}
 	}
 

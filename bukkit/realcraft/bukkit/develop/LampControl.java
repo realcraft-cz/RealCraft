@@ -1,8 +1,8 @@
 package realcraft.bukkit.develop;
 
 import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,14 +40,14 @@ public class LampControl implements Listener {
 				return;
 			}
 			World world = Bukkit.getWorld(region.getWorld().getName());
-			Vector min = region.getMinimumPoint();
-			Vector max = region.getMaximumPoint();
+			BlockVector3 min = region.getMinimumPoint();
+			BlockVector3 max = region.getMaximumPoint();
 			int affected = 0;
 			for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 				for (int y = min.getBlockY(); y <= max.getBlockY(); y++){
 					for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
 						Location loc = new Location(world, x, y, z);
-						Vector vec = new Vector(x,y,z);
+						BlockVector3 vec = BlockVector3.at(x,y,z);
 						if(region.contains(vec)){
 							Block block = world.getBlockAt(loc);
 							if(block.getType() == Material.REDSTONE_LAMP && switchLamp(block,light)){

@@ -1,16 +1,16 @@
 package realcraft.bukkit.creative;
 
 import com.intellectualcrafters.plot.object.RegionWrapper;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.Vector2D;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.entity.BaseEntity;
 import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.AbstractDelegateExtent;
 import com.sk89q.worldedit.extent.Extent;
+import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.util.Location;
 import com.sk89q.worldedit.world.World;
-import com.sk89q.worldedit.world.biome.BaseBiome;
+import com.sk89q.worldedit.world.biome.BiomeType;
 import com.sk89q.worldedit.world.block.*;
 
 import java.util.HashSet;
@@ -37,7 +37,7 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 	}
 
 	@Override
-	public boolean setBlock(Vector location,BlockStateHolder block) throws WorldEditException {
+	public boolean setBlock(BlockVector3 location,BlockStateHolder block) throws WorldEditException {
 		if(this.isBlockEqual(world.getBlock(location).getBlockType(),block.getBlockType())) return false;
 		if(this.isBlockForbidden(block.getBlockType())) return false;
 		if(this.blocksCount >= BLOCKS_LIMIT) return false;
@@ -73,18 +73,18 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 	}
 
 	@Override
-	public boolean setBiome(Vector2D position,BaseBiome biome){
+	public boolean setBiome(BlockVector2 position,BiomeType biome){
 		return this.maskContains(this.mask,position.getBlockX(),position.getBlockZ());
 	}
 
 	@Override
-	public BlockState getBlock(Vector location){
+	public BlockState getBlock(BlockVector3 location){
 		if(this.maskContains(this.mask,location.getBlockX(),location.getBlockY(),location.getBlockZ())) return super.getBlock(location);
 		return BlockTypes.AIR.getDefaultState();
 	}
 
 	@Override
-	public BaseBlock getFullBlock(Vector location){
+	public BaseBlock getFullBlock(BlockVector3 location){
 		return this.getBlock(location).toBaseBlock();
 	}
 

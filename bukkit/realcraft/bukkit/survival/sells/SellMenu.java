@@ -106,7 +106,7 @@ public class SellMenu implements Listener {
 
 	@EventHandler
 	public void InventoryClickEvent(InventoryClickEvent event){
-		if(event.getWhoClicked() instanceof Player && event.getInventory().getName().equalsIgnoreCase(INV_NAME)){
+		if(event.getWhoClicked() instanceof Player && event.getView().getTitle().equalsIgnoreCase(INV_NAME)){
 			event.setCancelled(true);
 			Player player = (Player)event.getWhoClicked();
 			SellBasket basket = SellMenu.getBasket(player);
@@ -153,7 +153,7 @@ public class SellMenu implements Listener {
 
 	@EventHandler
 	public void InventoryDragEvent(InventoryDragEvent event){
-		if(event.getWhoClicked() instanceof Player && event.getInventory().getName().equalsIgnoreCase(INV_NAME)){
+		if(event.getWhoClicked() instanceof Player && event.getView().getTitle().equalsIgnoreCase(INV_NAME)){
 			event.setCancelled(true);
 		}
 	}

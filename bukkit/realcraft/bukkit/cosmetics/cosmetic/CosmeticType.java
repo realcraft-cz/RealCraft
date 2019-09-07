@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import realcraft.bukkit.cosmetics.effects.*;
 import realcraft.bukkit.cosmetics.gadgets.*;
 import realcraft.bukkit.cosmetics.hats.Hat;
-import realcraft.bukkit.cosmetics.mounts.*;
 import realcraft.bukkit.cosmetics.pets.Pet;
 
 public enum CosmeticType {
@@ -24,7 +23,7 @@ public enum CosmeticType {
 	GADGET_GOLDSHOWER    	(13, CosmeticCategory.GADGET, GadgetGoldShower.class,       "§e§lZlata sprcha",        Material.GOLD_INGOT),
 	GADGET_FOODSHOWER    	(14, CosmeticCategory.GADGET, GadgetFoodShower.class,       "§2§lJidlova sprcha",      Material.APPLE),
 
-	MOUNT_GLACIALSTEED      (1,  CosmeticCategory.MOUNT,  MountGlacialSteed.class,      "§b§lGlacial Steed",                   Material.PACKED_ICE),
+	/*MOUNT_GLACIALSTEED      (1,  CosmeticCategory.MOUNT,  MountGlacialSteed.class,      "§b§lGlacial Steed",                   Material.PACKED_ICE),
 	MOUNT_INFERNALHORROR    (2,  CosmeticCategory.MOUNT,  MountInfernalHorror.class,    "§4§lInfernal Horror",                 Material.BONE),
 	MOUNT_WALKINGDEAD       (3,  CosmeticCategory.MOUNT,  MountWalkingDead.class,       "§2§lWalking Dead",                    Material.ROTTEN_FLESH),
 	MOUNT_LLAMA             (4,  CosmeticCategory.MOUNT,  MountLlama.class,             "§6§lLlama",                           Material.ORANGE_CARPET),
@@ -33,13 +32,13 @@ public enum CosmeticType {
 	MOUNT_PIG               (7,  CosmeticCategory.MOUNT,  MountPig.class,               "§d§lPiggy",                           Material.PORKCHOP),
 	MOUNT_POLAERBEAR        (8,  CosmeticCategory.MOUNT,  MountPolarBear.class,         "§f§lPolar Bear",                      Material.SNOW_BLOCK),
 	MOUNT_TURTLE            (9,  CosmeticCategory.MOUNT,  MountTurtle.class,            "§a§lTurtle",                          Material.TURTLE_HELMET),
-	MOUNT_SPIDER            (10, CosmeticCategory.MOUNT,  MountSpider.class,            "§7§lSpider",                          Material.COBWEB),
+	MOUNT_SPIDER            (10, CosmeticCategory.MOUNT,  MountSpider.class,            "§7§lSpider",                          Material.COBWEB),*/
 
 	EFFECT_RAINCLOUD       	(1,  CosmeticCategory.EFFECT, EffectRainCloud.class,        "§9§lRain Cloud",          Material.INK_SAC),
 	EFFECT_SNOWCLOUD       	(2,  CosmeticCategory.EFFECT, EffectSnowCloud.class,        "§f§lSnow Cloud",          Material.SNOWBALL),
 	EFFECT_BLOODHELIX      	(3,  CosmeticCategory.EFFECT, EffectBloodHelix.class,       "§4§lBlood Helix",         Material.REDSTONE),
 	EFFECT_FLAMERINGS		(5,  CosmeticCategory.EFFECT, EffectFlameRings.class,       "§c§lFlame Rings",         Material.BLAZE_POWDER),
-	EFFECT_INLOVE          	(6,  CosmeticCategory.EFFECT, EffectInLove.class,           "§c§lIn Love",             Material.ROSE_RED),
+	EFFECT_INLOVE          	(6,  CosmeticCategory.EFFECT, EffectInLove.class,           "§c§lIn Love",             Material.LEGACY_RED_ROSE),
 	EFFECT_GREENSPARKS     	(7,  CosmeticCategory.EFFECT, EffectGreenSparks.class,      "§a§lGreen Sparks",        Material.EMERALD),
 	EFFECT_FROZENWALK      	(8,  CosmeticCategory.EFFECT, EffectFrozenWalk.class,       "§b§lFrozen Walk",         Material.SNOWBALL),
 	EFFECT_MUSIC           	(9,  CosmeticCategory.EFFECT, EffectMusic.class,            "§9§lMusic",               Material.MUSIC_DISC_MALL),

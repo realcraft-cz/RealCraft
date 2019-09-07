@@ -2,6 +2,7 @@ package realcraft.bukkit.utils;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
 
 public class MaterialUtil {
@@ -996,8 +997,6 @@ public class MaterialUtil {
 			case CRAFTING_TABLE: return "Crafting Table";
 			case FARMLAND: return "Farmland";
 			case FURNACE: return "Furnace";
-			case SIGN: return "Sign";
-			case WALL_SIGN: return "Wall Sign";
 			case LADDER: return "Ladder";
 			case RAIL: return "Rail";
 			case POWERED_RAIL: return "Powered Rail";
@@ -1487,8 +1486,6 @@ public class MaterialUtil {
 			case MUSIC_DISC_WAIT: return "Music Disc";
 			case BONE: return "Bone";
 			case INK_SAC: return "Ink Sac";
-			case ROSE_RED: return "Rose Red";
-			case CACTUS_GREEN: return "Cactus Green";
 			case COCOA_BEANS: return "Cocoa Beans";
 			case LAPIS_LAZULI: return "Lapis Lazuli";
 			case PURPLE_DYE: return "Purple Dye";
@@ -1497,7 +1494,6 @@ public class MaterialUtil {
 			case GRAY_DYE: return "Gray Dye";
 			case PINK_DYE: return "Pink Dye";
 			case LIME_DYE: return "Lime Dye";
-			case DANDELION_YELLOW: return "Dandelion Yellow";
 			case LIGHT_BLUE_DYE: return "Light Blue Dye";
 			case MAGENTA_DYE: return "Magenta Dye";
 			case ORANGE_DYE: return "Orange Dye";

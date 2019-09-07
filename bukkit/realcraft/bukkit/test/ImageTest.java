@@ -1,19 +1,16 @@
 package realcraft.bukkit.test;
 
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.RegionSelector;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-
-import com.sk89q.worldedit.BlockVector;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.regions.RegionSelector;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.MapUtil;
 
@@ -44,8 +41,8 @@ public class ImageTest implements Listener {
 				Location location1 = player.getLocation();
 				Location location2 = player.getLocation();
 				try {
-					BlockVector vec = selector.getPrimaryPosition();
-					Vector vector;
+					BlockVector3 vec = selector.getPrimaryPosition();
+					BlockVector3 vector;
 					vector = selector.getRegion().getMinimumPoint();
 					if(vec.getBlockX() == vector.getBlockX() && vec.getBlockZ() == vector.getBlockZ()){
 						location1.setX(vector.getBlockX());

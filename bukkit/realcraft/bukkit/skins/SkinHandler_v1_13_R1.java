@@ -1,9 +1,9 @@
 package realcraft.bukkit.skins;
 
-import net.minecraft.server.v1_13_R2.*;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_13_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_14_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -19,7 +19,7 @@ public class SkinHandler_v1_13_R1 {
 		PacketPlayOutEntityMetadata metadata = new PacketPlayOutEntityMetadata(ep.getId(), ep.getDataWatcher(), true);
 		PacketPlayOutHeldItemSlot helditem = new PacketPlayOutHeldItemSlot(ep.inventory.itemInHandIndex);
 		WorldServer worldserver = (WorldServer)ep.getWorld();
-		PacketPlayOutRespawn respawn = new PacketPlayOutRespawn(worldserver.dimension, worldserver.getDifficulty(), worldserver.getWorldData().getType(), ep.playerInteractManager.getGameMode());
+		PacketPlayOutRespawn respawn = new PacketPlayOutRespawn(worldserver.worldProvider.getDimensionManager(), worldserver.getWorldData().getType(), ep.playerInteractManager.getGameMode());
 		PacketPlayOutPosition position = new PacketPlayOutPosition(ep.locX, ep.locY, ep.locZ, ep.yaw, ep.pitch, new HashSet(), 0);
 		PacketPlayOutEntityHeadRotation headrotation = new PacketPlayOutEntityHeadRotation(ep, (byte)MathHelper.d(ep.getHeadRotation() * 256.0F / 360.0F));
 		DedicatedPlayerList playerList = ((CraftServer)Bukkit.getServer()).getHandle();

@@ -266,7 +266,7 @@ public class MapListeners implements Listener {
 
 	@EventHandler
 	public void ProjectileHitEvent(ProjectileHitEvent event){
-		if(event.getEntity().getType() == EntityType.ARROW || event.getEntity().getType() == EntityType.SPECTRAL_ARROW || event.getEntity().getType() == EntityType.TIPPED_ARROW || event.getEntity().getType() == EntityType.TRIDENT){
+		if(event.getEntity().getType() == EntityType.ARROW || event.getEntity().getType() == EntityType.SPECTRAL_ARROW || event.getEntity().getType() == EntityType.TRIDENT){
 			event.getEntity().remove();
 		}
 	}

@@ -11,8 +11,8 @@ public enum CosmeticCategory {
 	//SUIT    (200, "Brneni",           Material.LEATHER_CHESTPLATE),
 	GADGET  (300, "Gadgety",          Material.ENDER_PEARL),
 	EFFECT  (400, "Efekty",           Material.NETHER_STAR),
-	PET     (500, "Mazlikove",        Material.NAME_TAG),
-	MOUNT   (600, "Jezdecka zvirata", Material.SADDLE);
+	PET     (500, "Mazlikove",        Material.NAME_TAG);
+	//MOUNT   (600, "Jezdecka zvirata", Material.SADDLE);
 
 	private int id;
 	private String name;

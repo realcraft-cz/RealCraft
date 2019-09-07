@@ -84,7 +84,7 @@ public class FightPublicSpectator extends FightSpectator {
 		if(event.getWhoClicked() instanceof Player){
 			FightPlayer fPlayer = Fights.getFightPlayer((Player)event.getWhoClicked());
 			if(fPlayer.getState() == FightPlayerState.SPECTATOR){
-				if(event.getInventory().getName().equalsIgnoreCase(INVENTORY_NAME)){
+				if(event.getView().getTitle().equalsIgnoreCase(INVENTORY_NAME)){
 					event.setCancelled(true);
 					if(items.containsKey(event.getRawSlot())){
 						FightSpectatorMenuItem item = items.get(event.getRawSlot());

@@ -1,7 +1,7 @@
 package realcraft.bukkit.cosmetics.mounts;
 
-import net.minecraft.server.v1_13_R2.*;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import net.minecraft.server.v1_14_R1.*;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Turtle;
@@ -184,7 +184,7 @@ public class MountTurtle extends Mount {
 
 		private EntityPlayer getRider(){
 			if(passengers != null && !passengers.isEmpty()){
-				net.minecraft.server.v1_13_R2.Entity entity = passengers.get(0);
+				net.minecraft.server.v1_14_R1.Entity entity = passengers.get(0);
 				if(entity instanceof EntityPlayer){
 					return (EntityPlayer)entity;
 				}

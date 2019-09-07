@@ -2,13 +2,12 @@ package realcraft.bukkit.gameparty;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import net.minecraft.server.v1_13_R2.EntitySheep;
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
-import net.minecraft.server.v1_13_R2.SoundEffect;
-import net.minecraft.server.v1_13_R2.World;
+import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.server.v1_14_R1.World;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftLivingEntity;
+import org.bukkit.Chunk;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -146,8 +145,13 @@ public class GamePartySheep implements Listener {
 	private class CustomSheep extends EntitySheep {
 
 		public CustomSheep(World world){
-			super(world);
+			super(EntityTypes.SHEEP,world);
 		}
+
+		/*public CustomSheep(World world){
+			EntityTypes<? extends EntitySheep> entitytypes = null;
+			super(entitytypes,world);
+		}*/
 
 		@Override
 		public void a(SoundEffect soundeffect,float f,float f1){

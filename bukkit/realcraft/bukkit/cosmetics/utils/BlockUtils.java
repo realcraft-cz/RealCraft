@@ -3,6 +3,7 @@ package realcraft.bukkit.cosmetics.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -158,8 +159,9 @@ public class BlockUtils {
 				if (blocksToRestore.containsKey(BLOCK.getLocation())) return;
 				Block bUp = BLOCK.getRelative(BlockFace.UP);
 				if (BLOCK.getType() != Material.AIR
-						&& BLOCK.getType() != Material.SIGN
-						&& BLOCK.getType() != Material.WALL_SIGN
+						&& !Tag.SIGNS.isTagged(BLOCK.getType())
+						&& !Tag.STANDING_SIGNS.isTagged(BLOCK.getType())
+						&& !Tag.WALL_SIGNS.isTagged(BLOCK.getType())
 						&& BLOCK.getType() != Material.CHEST
 						&& BLOCK.getType() != Material.STONE_PRESSURE_PLATE
 						&& BLOCK.getType() != Material.ACACIA_PRESSURE_PLATE
@@ -175,7 +177,7 @@ public class BlockUtils {
 						&& BLOCK.getType() != Material.GRASS
 						&& BLOCK.getType() != Material.TALL_GRASS
 						&& BLOCK.getType() != Material.DEAD_BUSH
-						&& BLOCK.getType() != Material.ROSE_RED
+						&& BLOCK.getType() != Material.POPPY
 						&& BLOCK.getType() != Material.RED_MUSHROOM
 						&& BLOCK.getType() != Material.BROWN_MUSHROOM
 						&& BLOCK.getType() != Material.TORCH
@@ -302,9 +304,7 @@ public class BlockUtils {
 						&& !isTreasureChestBlock(BLOCK)
 						&& !blocksToRestore.containsKey(BLOCK.getLocation())
 						&& BLOCK.getType().isSolid()
-						&& a(bUp)
-						&& BLOCK.getType().getId() != 43
-						&& BLOCK.getType().getId() != 44) {
+						&& a(bUp)) {
 					blocksToRestore.put(BLOCK.getLocation(), BLOCK.getType().toString() + "," + BLOCK.getData());
 					for (Player player : BLOCK.getLocation().getWorld().getPlayers())
 						player.sendBlockChange(BLOCK.getLocation(),Bukkit.createBlockData(NEW_TYPE));

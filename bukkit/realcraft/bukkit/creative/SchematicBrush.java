@@ -2,7 +2,6 @@ package realcraft.bukkit.creative;
 
 import com.sk89q.minecraft.util.commands.CommandsManager;
 import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.command.tool.BrushTool;
 import com.sk89q.worldedit.command.tool.InvalidToolBindException;
@@ -12,6 +11,7 @@ import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
@@ -200,7 +200,7 @@ public class SchematicBrush implements Listener, CommandExecutor {
         Placement place;
 
         @Override
-        public void build(EditSession editsession, Vector pos, com.sk89q.worldedit.function.pattern.Pattern mat, double size) throws MaxChangedBlocksException {
+        public void build(EditSession editsession,BlockVector3 pos,com.sk89q.worldedit.function.pattern.Pattern mat,double size) throws MaxChangedBlocksException {
             SchematicDef def = set.getRandomSchematic();    // Pick schematic from set
             if (def == null) return;
             LocalSession sess = we.getSessionManager().get(player);
@@ -239,21 +239,21 @@ public class SchematicBrush implements Listener, CommandExecutor {
 
             clip = cliph.getClipboard();
             Region region = clip.getRegion();
-            Vector clipOrigin = clip.getOrigin();
-            Vector centerOffset = region.getCenter().subtract(clipOrigin);
+            BlockVector3 clipOrigin = clip.getOrigin();
+            BlockVector3 centerOffset = region.getCenter().toBlockPoint().subtract(clipOrigin);
 
             // And apply clipboard to edit session
-            Vector ppos;
+            BlockVector3 ppos;
             if (place == Placement.DROP) {
-                ppos = new Vector(centerOffset.getX(), -def.offset - yoff - minY[0] + 1, centerOffset.getZ());
+                ppos = BlockVector3.at(centerOffset.getX(), -def.offset - yoff - minY[0] + 1, centerOffset.getZ());
             }
             else if (place == Placement.BOTTOM) {
-                ppos = new Vector(centerOffset.getX(), -def.offset -yoff + 1, centerOffset.getZ());
+                ppos = BlockVector3.at(centerOffset.getX(), -def.offset -yoff + 1, centerOffset.getZ());
             }
             else { // Else, default is CENTER (same as clipboard brush
-                ppos = new Vector(centerOffset.getX(), centerOffset.getY() - def.offset - yoff + 1, centerOffset.getZ());
+                ppos = BlockVector3.at(centerOffset.getX(), centerOffset.getY() - def.offset - yoff + 1, centerOffset.getZ());
             }
-            ppos = trans.apply(ppos);
+            ppos = trans.apply(ppos.toVector3()).toBlockPoint();
             ppos = pos.subtract(ppos);
 
             if (!replaceall) {
@@ -271,7 +271,7 @@ public class SchematicBrush implements Listener, CommandExecutor {
     }
 
     private AffineTransform flip(AffineTransform trans, Direction dir) {
-        return trans.scale(dir.toVector().positive().multiply(-2).add(1,1,1));
+        return trans.scale(dir.toVector().abs().multiply(-2).add(1,1,1));
     }
 
     /*private AffineTransform doOffset(AffineTransform trans, Vector off) {

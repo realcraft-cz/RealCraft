@@ -148,7 +148,7 @@ public class MapCommandList extends MapCommand implements Listener {
 		if(event.getWhoClicked() instanceof Player){
 			Player player = (Player)event.getWhoClicked();
 			MapPlayer mPlayer = MapManager.getMapPlayer(player);
-			if(event.getInventory().getName().equalsIgnoreCase(INV_NAME)){
+			if(event.getView().getTitle().equalsIgnoreCase(INV_NAME)){
 				event.setCancelled(true);
 				if(event.getRawSlot() >= 11 && event.getRawSlot() <= 33 && event.getRawSlot()%9 >= 2 && event.getRawSlot()%9 <= 6){
 					int idx = ((event.getRawSlot()/9)-1)*5+(event.getRawSlot()%9)-2;
@@ -157,7 +157,7 @@ public class MapCommandList extends MapCommand implements Listener {
 					MapCommandList.openCategory(player,type,1);
 				}
 			}
-			else if(mPlayer.getMenuType() != null && event.getInventory().getName().equalsIgnoreCase(INV_NAME+" > "+mPlayer.getMenuType().getName())){
+			else if(mPlayer.getMenuType() != null && event.getView().getTitle().equalsIgnoreCase(INV_NAME+" > "+mPlayer.getMenuType().getName())){
 				event.setCancelled(true);
 				if(event.getRawSlot() >= 0 && event.getRawSlot() <= 44){
 					ArrayList<Map> maps = MapManager.getSortedMaps(mPlayer.getMenuType());

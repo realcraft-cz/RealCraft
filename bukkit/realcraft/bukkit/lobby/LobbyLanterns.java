@@ -2,11 +2,11 @@ package realcraft.bukkit.lobby;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import net.minecraft.server.v1_13_R2.BlockPosition;
-import net.minecraft.server.v1_13_R2.TileEntitySkull;
+import net.minecraft.server.v1_14_R1.BlockPosition;
+import net.minecraft.server.v1_14_R1.TileEntitySkull;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -103,7 +103,7 @@ public class LobbyLanterns implements Listener {
 			Location location = block.getLocation();
 			TileEntitySkull skullTile = (TileEntitySkull)((CraftWorld)block.getWorld()).getHandle().getTileEntity(new BlockPosition(location.getBlockX(),location.getBlockY(),location.getBlockZ()));
 			if(skullTile != null){
-				GameProfile profile = skullTile.getGameProfile();
+				GameProfile profile = skullTile.gameProfile;
 				if(profile != null){
 					Collection<Property> properties = profile.getProperties().get("textures");
 					for(Property property : properties){

@@ -13,11 +13,11 @@ import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.api.util.YamlStorage;
 import net.citizensnpcs.npc.skin.SkinnableEntity;
 import net.citizensnpcs.trait.LookClose;
-import net.minecraft.server.v1_13_R2.EntityInsentient;
-import net.minecraft.server.v1_13_R2.PathEntity;
-import net.minecraft.server.v1_13_R2.PathfinderGoalSelector;
+import net.minecraft.server.v1_14_R1.EntityInsentient;
+import net.minecraft.server.v1_14_R1.PathEntity;
+import net.minecraft.server.v1_14_R1.PathfinderGoalSelector;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -184,7 +184,7 @@ public class LobbyPokemons implements Listener {
 
 	@EventHandler
 	public void InventoryClickEvent(InventoryClickEvent event){
-		if(event.getInventory().getName().equalsIgnoreCase(invName)){
+		if(event.getView().getTitle().equalsIgnoreCase(invName)){
 			if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world")){
 				event.setCancelled(true);
 				Player player = (Player) event.getWhoClicked();
@@ -210,7 +210,7 @@ public class LobbyPokemons implements Listener {
 				}
 			}
 		}
-		else if(event.getInventory().getName().equalsIgnoreCase(invBuyName)){
+		else if(event.getView().getTitle().equalsIgnoreCase(invBuyName)){
 			if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world")){
 				event.setCancelled(true);
 				Player player = (Player) event.getWhoClicked();
@@ -226,7 +226,7 @@ public class LobbyPokemons implements Listener {
 				}
 			}
 		}
-		else if(event.getInventory().getName().equalsIgnoreCase(pokedexName)){
+		else if(event.getView().getTitle().equalsIgnoreCase(pokedexName)){
 			if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world")){
 				event.setCancelled(true);
 				Player player = (Player) event.getWhoClicked();
@@ -520,7 +520,7 @@ public class LobbyPokemons implements Listener {
 		}
 
 		private void clearPathfinders(org.bukkit.entity.Entity entity){
-			net.minecraft.server.v1_13_R2.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+			net.minecraft.server.v1_14_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 			try {
 				Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
 				bField.setAccessible(true);
@@ -584,7 +584,7 @@ public class LobbyPokemons implements Listener {
 		public void ChunkUnloadEvent(ChunkUnloadEvent event){
 			for(Entity entity : event.getChunk().getEntities()){
 				if(entity.equals(this.getEntity())){
-					event.setCancelled(true);
+					event.getChunk().setForceLoaded(true);
 				}
 			}
 		}

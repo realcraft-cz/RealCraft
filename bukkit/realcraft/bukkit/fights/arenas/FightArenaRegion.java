@@ -1,12 +1,17 @@
 package realcraft.bukkit.fights.arenas;
 
-import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.math.BlockVector2;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -53,7 +58,7 @@ public class FightArenaRegion {
 		private Location location;
 
 		private boolean build = false;
-		private HashMap<Vector,BaseBlock> blocks = new HashMap<>();
+		private HashMap<BlockVector3,BaseBlock> blocks = new HashMap<>();
 		private EditSession editSession;
 
 		private static final int SLEEP_TIME = 20;
@@ -82,7 +87,7 @@ public class FightArenaRegion {
 
 		public void pasteEntities(){
 			for(Entity entity : schema.getEntities()){
-				Vector pos = entity.getLocation().toVector().add(-schema.getRegion().getMinimumPoint().getBlockX(),-schema.getRegion().getMinimumPoint().getBlockY(),-schema.getRegion().getMinimumPoint().getBlockZ());
+				Vector3 pos = entity.getLocation().toVector().add(-schema.getRegion().getMinimumPoint().getBlockX(),-schema.getRegion().getMinimumPoint().getBlockY(),-schema.getRegion().getMinimumPoint().getBlockZ());
 				pos = pos.add(location.getBlockX(),location.getBlockY(),location.getBlockZ());
 				com.sk89q.worldedit.util.Location location = new com.sk89q.worldedit.util.Location(entity.getLocation().getExtent(),pos);
 				editSession.createEntity(location,entity.getState());
@@ -90,7 +95,7 @@ public class FightArenaRegion {
 		}
 
 		public void clearEntities(){
-			for(Vector2D coords : schema.getRegion().getChunks()){
+			for(BlockVector2 coords : schema.getRegion().getChunks()){
 				coords = coords.add(-(schema.getRegion().getMinimumPoint().getBlockX() >> 4),-(schema.getRegion().getMinimumPoint().getBlockZ() >> 4));
 				coords = coords.add((location.getBlockX() >> 4),(location.getBlockZ() >> 4));
 				Chunk chunk = location.getWorld().getChunkAt(coords.getBlockX(),coords.getBlockZ());
@@ -130,14 +135,14 @@ public class FightArenaRegion {
 				for(int x=schema.getRegion().getMinimumPoint().getBlockX();x<=schema.getRegion().getMaximumPoint().getBlockX();x++){
 					for(int y=schema.getRegion().getMinimumPoint().getBlockY();y<=schema.getRegion().getMaximumPoint().getBlockY();y++){
 						for(int z=schema.getRegion().getMinimumPoint().getBlockZ();z<=schema.getRegion().getMaximumPoint().getBlockZ();z++){
-							BlockVector pt = new BlockVector(x,y,z);
+							BlockVector3 pt = BlockVector3.at(x,y,z);
 							BaseBlock block = schema.getFullBlock(pt);
 							boolean place = false;
 							if(stage == 1 && !shouldPlaceLast(BukkitAdapter.adapt(block.getBlockType())) && !shouldPlaceFinal(BukkitAdapter.adapt(block.getBlockType()))) place = true;
 							else if(stage == 2 && shouldPlaceLast(BukkitAdapter.adapt(block.getBlockType()))) place = true;
 							else if(stage == 3 && shouldPlaceFinal(BukkitAdapter.adapt(block.getBlockType()))) place = true;
 							if(place){
-								Vector pos = pt.add(-schema.getRegion().getMinimumPoint().getBlockX(),-schema.getRegion().getMinimumPoint().getBlockY(),-schema.getRegion().getMinimumPoint().getBlockZ());
+								BlockVector3 pos = pt.add(-schema.getRegion().getMinimumPoint().getBlockX(),-schema.getRegion().getMinimumPoint().getBlockY(),-schema.getRegion().getMinimumPoint().getBlockZ());
 								pos = pos.add(location.getBlockX(),location.getBlockY(),location.getBlockZ());
 								blocks.put(pos,block);
 								if(blocks.size() >= maxBlocksPerRun){
@@ -161,7 +166,7 @@ public class FightArenaRegion {
 				Bukkit.getScheduler().callSyncMethod(RealCraft.getInstance(),new Callable<Void>(){
 					@Override
 					public Void call(){
-						for(Entry<Vector,BaseBlock> map : blocks.entrySet()){
+						for(Entry<BlockVector3,BaseBlock> map : blocks.entrySet()){
 							if(!map.getValue().hasNbtData()){
 								location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setType(BukkitAdapter.adapt(map.getValue().getBlockType()),false);
 								location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setBlockData(BukkitAdapter.adapt(map.getValue()),false);
@@ -289,8 +294,18 @@ public class FightArenaRegion {
 
     private static final HashSet<Material> shouldPlaceFinal = new HashSet<Material>();
     static {
-        shouldPlaceFinal.add(Material.SIGN);
-        shouldPlaceFinal.add(Material.WALL_SIGN);
+		shouldPlaceFinal.add(Material.ACACIA_SIGN);
+		shouldPlaceFinal.add(Material.BIRCH_SIGN);
+		shouldPlaceFinal.add(Material.DARK_OAK_SIGN);
+		shouldPlaceFinal.add(Material.JUNGLE_SIGN);
+		shouldPlaceFinal.add(Material.OAK_SIGN);
+		shouldPlaceFinal.add(Material.SPRUCE_SIGN);
+		shouldPlaceFinal.add(Material.ACACIA_WALL_SIGN);
+		shouldPlaceFinal.add(Material.BIRCH_WALL_SIGN);
+		shouldPlaceFinal.add(Material.DARK_OAK_WALL_SIGN);
+		shouldPlaceFinal.add(Material.JUNGLE_WALL_SIGN);
+		shouldPlaceFinal.add(Material.OAK_WALL_SIGN);
+		shouldPlaceFinal.add(Material.SPRUCE_WALL_SIGN);
         shouldPlaceFinal.add(Material.PISTON_HEAD);
         shouldPlaceFinal.add(Material.MOVING_PISTON);
         shouldPlaceFinal.add(Material.ACACIA_DOOR);

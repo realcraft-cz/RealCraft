@@ -1,13 +1,13 @@
 package realcraft.bukkit.cosmetics.pets;
 
 import com.google.common.collect.Sets;
-import net.minecraft.server.v1_13_R2.*;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_13_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -310,7 +310,7 @@ public class Pet extends Cosmetic {
 		}
 
 		private void clearPathfinders(org.bukkit.entity.Entity entity){
-			net.minecraft.server.v1_13_R2.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+			net.minecraft.server.v1_14_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 			try {
 				Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
 				bField.setAccessible(true);
@@ -422,7 +422,7 @@ public class Pet extends Cosmetic {
 		}
 
 		@Override
-		protected boolean isTypeNotPersistent(){
+		public boolean isTypeNotPersistent(double d){
 			return false;
 		}
 

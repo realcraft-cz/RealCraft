@@ -131,7 +131,7 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 
 	@EventHandler
 	public void InventoryClickEvent(InventoryClickEvent event){
-		if(event.getInventory().getName().equalsIgnoreCase(invName)){
+		if(event.getView().getTitle().equalsIgnoreCase(invName)){
 			if(event.getWhoClicked() instanceof Player && ((Player)event.getWhoClicked()).getWorld().getName().equalsIgnoreCase("world")){
 				event.setCancelled(true);
 				Player player = (Player) event.getWhoClicked();

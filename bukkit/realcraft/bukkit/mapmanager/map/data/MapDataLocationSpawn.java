@@ -33,11 +33,13 @@ public class MapDataLocationSpawn extends MapDataLocation {
 	@Override
 	public void setLocation(Location location){
 		super.setLocation(location);
-		this.getLocation().setX(this.roundToHalf(location.getX()));
-		this.getLocation().setY(this.roundToHalf(location.getY()));
-		this.getLocation().setZ(this.roundToHalf(location.getZ()));
-		this.getLocation().setYaw(LocationUtil.faceToYaw(LocationUtil.yawToFace(this.getLocation().getYaw(),true),true));
-		this.getLocation().setPitch(LocationUtil.faceToYaw(LocationUtil.yawToFace(this.getLocation().getPitch(),true),true));
+		if(location != null){
+			this.getLocation().setX(this.roundToHalf(location.getX()));
+			this.getLocation().setY(this.roundToHalf(location.getY()));
+			this.getLocation().setZ(this.roundToHalf(location.getZ()));
+			this.getLocation().setYaw(LocationUtil.faceToYaw(LocationUtil.yawToFace(this.getLocation().getYaw(),true),true));
+			this.getLocation().setPitch(LocationUtil.faceToYaw(LocationUtil.yawToFace(this.getLocation().getPitch(),true),true));
+		}
 	}
 
 	@Override
