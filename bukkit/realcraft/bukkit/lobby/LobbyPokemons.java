@@ -372,7 +372,7 @@ public class LobbyPokemons implements Listener {
 						double speed = (distance > 3*3 ? 1.0 : 0.5);
 						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 						PathEntity path;
-						path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
+						path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ(),0);
 						if(path != null){
 							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
 							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
@@ -418,7 +418,7 @@ public class LobbyPokemons implements Listener {
 							double speed = (distance > 2*2 ? 0.7 : 0.5);
 							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 							PathEntity path;
-							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
+							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ(),0);
 							if(path != null){
 								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
 								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
@@ -488,7 +488,7 @@ public class LobbyPokemons implements Listener {
 				if(distance > 2*2){
 					((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 					PathEntity path;
-					path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
+					path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ(),0);
 					if(distance > 32*32 && player.isOnGround()){
 						((CraftEntity)entity).getHandle().setLocation(targetLocation.getBlockX(),targetLocation.getBlockY(),targetLocation.getBlockZ(),0,0);
 					}
@@ -507,7 +507,7 @@ public class LobbyPokemons implements Listener {
 							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
 							targetLocation.add(RandomUtil.getRandomDouble(-2.0,2.0),0,RandomUtil.getRandomDouble(-2.0,2.0));
 							PathEntity path;
-							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ());
+							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ(),0);
 							if(path != null){
 								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
 								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
@@ -527,8 +527,8 @@ public class LobbyPokemons implements Listener {
 				Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
 				cField.setAccessible(true);
 				((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
-				bField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
-				bField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());
+				/*bField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
+				bField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());*/
 				cField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
 				cField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());
 			} catch (Exception e){

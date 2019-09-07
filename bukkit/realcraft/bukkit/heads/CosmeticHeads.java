@@ -77,7 +77,7 @@ public class CosmeticHeads implements Listener {
 				event.setCancelled(true);
 				if(event.getRawSlot() >= 0 && event.getRawSlot() < 4*9){
 					ItemStack item = event.getCurrentItem();
-					if(item.getType() != Material.AIR && item.hasItemMeta()){
+					if(item != null && item.getType() != Material.AIR && item.hasItemMeta()){
 						for(CosmeticCategory category : categories){
 							if(item.getItemMeta().getDisplayName().equalsIgnoreCase(category.getItemStack().getItemMeta().getDisplayName())){
 								category.open(player);
@@ -94,7 +94,7 @@ public class CosmeticHeads implements Listener {
 						event.setCancelled(true);
 						if(event.getRawSlot() >= 0 && event.getRawSlot() < 6*9){
 							ItemStack item = event.getCurrentItem();
-							if(item.getType() != Material.AIR && item.hasItemMeta()){
+							if(item != null && item.getType() != Material.AIR && item.hasItemMeta()){
 								if(item.getType() == Material.PAPER){
 									if(event.getRawSlot() == 45) category.open(player,playerPage.get(player)-1);
 									else if(event.getRawSlot() == 53) category.open(player,playerPage.get(player)+1);

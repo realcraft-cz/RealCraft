@@ -40,7 +40,6 @@ import realcraft.bukkit.database.DB;
 import realcraft.bukkit.develop.*;
 import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.friends.Friends;
-import realcraft.bukkit.gameparty.GameParty;
 import realcraft.bukkit.heads.CosmeticHeads;
 import realcraft.bukkit.lobby.Lobby;
 import realcraft.bukkit.mapmanager.MapManager;
@@ -161,7 +160,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new NickManager();
 		new Coins();
 		new Friends();
-		new GameParty();
 		new Cosmetics();
 		new ServerSpawn();
 		if(serverName.equalsIgnoreCase("lobby")){

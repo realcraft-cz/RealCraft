@@ -1,7 +1,7 @@
 package realcraft.bukkit.creative;
 
-import com.intellectualcrafters.plot.PS;
-import com.intellectualcrafters.plot.object.*;
+import com.github.intellectualsites.plotsquared.plot.PlotSquared;
+import com.github.intellectualsites.plotsquared.plot.object.*;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import com.sk89q.worldedit.extent.NullExtent;
@@ -185,7 +185,7 @@ public class PlotSquaredWorldEdit implements Listener, Runnable {
 		UUID uuid = player.getUUID();
 		Location location = player.getLocation();
 		String world = location.getWorld();
-		if(!PS.get().hasPlotArea(world)){
+		if(!PlotSquared.get().hasPlotArea(world)){
 			regions.add(new RegionWrapper(Integer.MIN_VALUE,Integer.MAX_VALUE,Integer.MIN_VALUE,Integer.MAX_VALUE));
 			return regions;
 		}

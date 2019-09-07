@@ -1,6 +1,6 @@
 package realcraft.bukkit.creative;
 
-import com.intellectualcrafters.plot.object.RegionWrapper;
+import com.github.intellectualsites.plotsquared.plot.object.RegionWrapper;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.entity.BaseEntity;
 import com.sk89q.worldedit.entity.Entity;

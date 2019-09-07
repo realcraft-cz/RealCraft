@@ -66,7 +66,12 @@ public class CosmeticCrystals implements Listener, Runnable {
 					if(event.getPacket().getEntityUseActions().read(0) == EnumWrappers.EntityUseAction.ATTACK){
 						for(CosmeticCrystal crystal : crystals){
 							if(crystal.getEntityId() == event.getPacket().getIntegers().read(0)){
-								crystal.click(player);
+								Bukkit.getServer().getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
+									@Override
+									public void run(){
+										crystal.click(player);
+									}
+								});
 							}
 						}
 					}
