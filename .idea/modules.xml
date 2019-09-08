@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/RealCraft.iml" filepath="$PROJECT_DIR$/RealCraft.iml" />
       <module fileurl="file://$PROJECT_DIR$/../RealCraftGames2/RealCraftGames2.iml" filepath="$PROJECT_DIR$/../RealCraftGames2/RealCraftGames2.iml" />
       <module fileurl="file://$PROJECT_DIR$/../RealCraftLoader/RealCraftLoader.iml" filepath="$PROJECT_DIR$/../RealCraftLoader/RealCraftLoader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../RealCraftServer/RealCraftServer.iml" filepath="$PROJECT_DIR$/../RealCraftServer/RealCraftServer.iml" />
     </modules>
   </component>
 </project>
