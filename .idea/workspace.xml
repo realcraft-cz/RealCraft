@@ -8,6 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="cad00b7c-c37a-44ea-b1fe-22b1a01af31c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightStands.java" beforeDir="false" afterPath="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightStands.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,9 +30,9 @@
     <session id="-142121886">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="149" />
+          <entry key="project.closed" value="150" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.10" value="10" />
+          <entry key="project.open.time.10" value="11" />
           <entry key="project.open.time.105" value="1" />
           <entry key="project.open.time.11" value="10" />
           <entry key="project.open.time.12" value="8" />
@@ -53,30 +54,32 @@
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="3" />
           <entry key="project.open.time.9" value="22" />
-          <entry key="project.opened" value="153" />
+          <entry key="project.opened" value="154" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="bc" value="6" />
-          <entry key="class" value="843" />
+          <entry key="class" value="845" />
           <entry key="gitignore" value="2" />
-          <entry key="iml" value="5" />
-          <entry key="java" value="6688" />
-          <entry key="json" value="2" />
-          <entry key="sh" value="1" />
+          <entry key="iml" value="6" />
+          <entry key="java" value="6691" />
+          <entry key="json" value="4" />
+          <entry key="sh" value="2" />
           <entry key="txt" value="5" />
+          <entry key="xml" value="2" />
           <entry key="yml" value="37" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="843" />
-          <entry key="IDEA_MODULE" value="5" />
-          <entry key="JAVA" value="6688" />
-          <entry key="JSON" value="2" />
-          <entry key="PLAIN_TEXT" value="8" />
+          <entry key="CLASS" value="845" />
+          <entry key="IDEA_MODULE" value="6" />
+          <entry key="JAVA" value="6691" />
+          <entry key="JSON" value="4" />
+          <entry key="PLAIN_TEXT" value="9" />
           <entry key="UNKNOWN" value="6" />
+          <entry key="XML" value="2" />
           <entry key="YAML" value="37" />
         </counts>
       </usages-collector>
@@ -85,7 +88,7 @@
           <entry key="class" value="13" />
           <entry key="dummy" value="106" />
           <entry key="gitignore" value="11" />
-          <entry key="java" value="137618" />
+          <entry key="java" value="137718" />
           <entry key="txt" value="128" />
           <entry key="yml" value="139" />
         </counts>
@@ -93,7 +96,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CLASS" value="13" />
-          <entry key="JAVA" value="137618" />
+          <entry key="JAVA" value="137718" />
           <entry key="PLAIN_TEXT" value="245" />
           <entry key="YAML" value="139" />
         </counts>
@@ -104,42 +107,21 @@
     <favorites_list name="RealCraft" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/Skins.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="28" column="1" lean-forward="true" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
+    <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/test/TitleTest.java">
+        <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightStands.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="496">
-              <caret line="41" column="1" lean-forward="true" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+            <state relative-caret-position="542">
+              <caret line="81" column="43" selection-start-line="81" selection-start-column="43" selection-end-line="81" selection-end-column="43" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinHandler_v1_13_R1.java">
+        <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyStands.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
+            <state relative-caret-position="258">
+              <caret line="102" column="43" selection-start-line="102" selection-start-column="43" selection-end-line="102" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -156,8 +138,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ProtocolLibrary.getProtocolManager().addPacketListener</find>
-      <find>public void InventoryClickEvent(InventoryClickEvent event){</find>
       <find>panic</find>
       <find>d clearPathfinders</find>
       <find>class.getDeclaredField(&quot;b&quot;);</find>
@@ -186,6 +166,8 @@
       <find>regi</find>
       <find>gameparty</find>
       <find>CHANNEL_SKIN_RESET</find>
+      <find>$MODULE_DIR$</find>
+      <find>EntityDamageByEntityEvent</find>
     </findStrings>
     <replaceStrings>
       <replace>v1_13_R2</replace>
@@ -209,7 +191,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/LocationUtil.java" />
         <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/utils/MaterialUtil.java" />
         <option value="$PROJECT_DIR$/../RealCraftGames2/dominate/com/dominate/DominateListeners.java" />
         <option value="$PROJECT_DIR$/../RealCraftGames2/bedwars/com/bedwars/BedWarsListeners.java" />
@@ -260,6 +241,7 @@
         <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/RealCraft.java" />
         <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinHandler_v1_13_R1.java" />
         <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/Skins.java" />
+        <option value="$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightStands.java" />
       </list>
     </option>
   </component>
@@ -279,6 +261,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -302,14 +285,14 @@
               <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
               <item name="bukkit" type="462c0819:PsiDirectoryNode" />
               <item name="bukkit" type="462c0819:PsiDirectoryNode" />
-              <item name="skins" type="462c0819:PsiDirectoryNode" />
+              <item name="fights" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
               <item name="RealCraft" type="462c0819:PsiDirectoryNode" />
               <item name="bukkit" type="462c0819:PsiDirectoryNode" />
               <item name="bukkit" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="lobby" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="RealCraft" type="b2602c69:ProjectViewProjectNode" />
@@ -319,7 +302,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -334,7 +316,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.20888889" />
     <property name="run.code.analysis.last.selected.profile" value="aDefault" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+    <property name="settings.editor.selected.configurable" value="net.vektah.codeglance.config.ConfigEntry" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -453,7 +435,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567892793572</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Minecraft 1.14 update">
+      <created>1567892880194</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1567892880194</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TodoView">
@@ -545,62 +534,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Minecraft 1.14 update" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightKit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1868">
-          <caret line="12" column="12" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="162" column="55" lean-forward="true" selection-start-line="162" selection-start-column="55" selection-end-line="162" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightDuelArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightPublicArena.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/arenas/FightArenaRegion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="68" column="17" lean-forward="true" selection-start-line="68" selection-start-column="17" selection-end-line="68" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/nicks/NickManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="37" column="74" lean-forward="true" selection-start-line="37" selection-start-column="74" selection-end-line="37" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyAutoParkour.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3820">
-          <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/spectator/Spectator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="193" column="13" lean-forward="true" selection-start-line="193" selection-start-column="13" selection-end-line="193" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/config/Config.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-14">
@@ -633,13 +566,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
           <caret line="17" column="20" lean-forward="true" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../spigot-1.14.4.jar!/org/bukkit/event/EventHandler.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="14" column="18" selection-start-line="14" selection-start-column="18" selection-end-line="14" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -759,9 +685,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="262">
           <caret line="49" column="25" lean-forward="true" selection-start-line="49" selection-start-column="25" selection-end-line="49" selection-end-column="25" />
-          <folding>
-            <element signature="e#2581#2588#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -870,6 +793,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/test/_Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="32" column="55" lean-forward="true" selection-start-line="32" selection-start-column="55" selection-end-line="32" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RealCraft.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="26" column="45" lean-forward="true" selection-start-line="26" selection-start-column="45" selection-end-line="26" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/test/TitleTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="41" column="1" lean-forward="true" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinHandler_v1_13_R1.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="434">
@@ -880,13 +831,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/Skins.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
@@ -894,17 +838,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/test/_Test.java">
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/skins/SkinFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+        <state relative-caret-position="160">
+          <caret line="10" column="38" selection-start-line="10" selection-start-column="38" selection-end-line="10" selection-end-column="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/test/TitleTest.java">
+    <entry file="file://$PROJECT_DIR$/.vscode/settings.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="496">
-          <caret line="41" column="1" lean-forward="true" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+        <state relative-caret-position="48">
+          <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.vscode/tasks.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.vscode/export.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../spigot-1.14.4.jar!/org/bukkit/event/EventHandler.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../spigot-1.14.4.jar!/org/bukkit/event/player/PlayerArmorStandManipulateEvent.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="40" column="5" lean-forward="true" selection-start-line="40" selection-start-column="5" selection-end-line="40" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/lobby/LobbyStands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="102" column="43" selection-start-line="102" selection-start-column="43" selection-end-line="102" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bukkit/realcraft/bukkit/fights/FightStands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="542">
+          <caret line="81" column="43" selection-start-line="81" selection-start-column="43" selection-end-line="81" selection-end-column="43" />
         </state>
       </provider>
     </entry>
