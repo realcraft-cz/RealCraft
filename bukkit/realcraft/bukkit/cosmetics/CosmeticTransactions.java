@@ -22,6 +22,7 @@ public class CosmeticTransactions {
 			while(rs.next()){
 				CosmeticPlayer cPlayer = Cosmetics.getCosmeticPlayer(Users.getUser(rs.getInt("user_id")));
 				CosmeticType type = CosmeticType.fromId(rs.getInt("cosmetic_id"));
+				if (type == null) continue;
 				int amount = rs.getInt("transaction_amount");
 				int created = rs.getInt("transaction_created");
 				transactions.add(new CosmeticTransaction(cPlayer,type,created,amount));
