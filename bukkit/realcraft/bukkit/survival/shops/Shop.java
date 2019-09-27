@@ -224,7 +224,7 @@ public class Shop {
 	}
 
 	public void remove(){
-		hologram.delete();
+		if(hologram != null) hologram.delete();
 		DB.update("UPDATE "+ShopManager.SHOPS+" SET shop_deleted = '"+(int)(System.currentTimeMillis()/1000)+"' WHERE shop_id = '"+this.getId()+"'");
 	}
 }

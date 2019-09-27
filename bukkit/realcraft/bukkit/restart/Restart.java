@@ -74,7 +74,8 @@ public class Restart implements Runnable, CommandExecutor {
 			}
 		}
 		else if(command.getName().equalsIgnoreCase("rpos")){
-			if(player.hasPermission("group.Admin")){
+			/** @see D:\Backups\realcraft_server\source\RealCraft\bukkit\realcraft\bukkit\develop\ChunkGenerator.java */
+			/*if(player.hasPermission("group.Admin")){
 				if(args.length < 6){
 					player.sendMessage("/rpos <period> <distance> <minX> <minY> <maxX> <maxY>");
 					return true;
@@ -88,7 +89,7 @@ public class Restart implements Runnable, CommandExecutor {
 				currentX = minX;
 				currentZ = minZ;
 				nextRPos(player,distance,minX,minZ,maxX,maxZ,period);
-			}
+			}*/
 		}
 		else if(command.getName().equalsIgnoreCase("chunk")){
 			if(player.hasPermission("group.Admin")){

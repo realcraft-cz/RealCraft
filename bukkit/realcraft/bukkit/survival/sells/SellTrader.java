@@ -31,7 +31,7 @@ public class SellTrader implements Listener {
 
 	public SellTrader(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
-		location = new Location(Bukkit.getWorld("world"),-56.5,72.0,-282.5,180f,0f);
+		location = new Location(Bukkit.getWorld("world"),112.5,72.0,-54.5,0f,0f);
 		Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
 			@Override
 			public void run(){
