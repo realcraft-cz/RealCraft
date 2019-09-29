@@ -62,6 +62,7 @@ import realcraft.bukkit.survival.MapCrafter;
 import realcraft.bukkit.survival.PassiveMode;
 import realcraft.bukkit.survival.RandomSpawn;
 import realcraft.bukkit.survival.economy.Economy;
+import realcraft.bukkit.survival.entitytrackerfixer.EntityTrackerFixer;
 import realcraft.bukkit.survival.residences.CheckResidences;
 import realcraft.bukkit.survival.residences.ResidenceSigns;
 import realcraft.bukkit.survival.sells.Sells;
@@ -208,6 +209,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 		}
 		if(RealCraft.getServerType() != ServerType.MAPS){
 			new MapServerTeleport();
+		}
+		if(RealCraft.isTestServer() || RealCraft.getServerType() == ServerType.SURVIVAL){
+			new EntityTrackerFixer();
 		}
 		restart = new Restart(this);
 		socketmanager = new SocketManager();
