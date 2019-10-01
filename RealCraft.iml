@@ -87,15 +87,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Residence4.6.3.1DevBuild.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../../public/lobby/plugins/Residence4.6.3.1DevBuild.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="PermissionsEx-1.23.3.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../../public/lobby/plugins/PermissionsEx-1.23.3.jar!/" />
@@ -145,5 +136,6 @@
     <orderEntry type="library" name="worldedit-bukkit-7.0.1" level="project" />
     <orderEntry type="library" name="LightAPI-fork-3.3.2" level="project" />
     <orderEntry type="library" name="PlotSquared-Bukkit-4.347" level="project" />
+    <orderEntry type="library" name="Residence" level="project" />
   </component>
 </module>
