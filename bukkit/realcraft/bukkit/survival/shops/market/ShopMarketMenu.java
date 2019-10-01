@@ -3,6 +3,7 @@ package realcraft.bukkit.survival.shops.market;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,8 +55,9 @@ public class ShopMarketMenu extends AbstractCommand implements Listener {
 					if(market != null){
 						ClaimedResidence residence = Residence.getInstance().getResidenceManager().getByName(market.getResidence());
 						if(residence != null){
-							player.teleport(residence.getTeleportLocation(),PlayerTeleportEvent.TeleportCause.COMMAND);
-							player.getWorld().playSound(residence.getTeleportLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f);
+							Location location = residence.getTeleportLocation(player);
+							player.teleport(location,PlayerTeleportEvent.TeleportCause.COMMAND);
+							player.getWorld().playSound(location,Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f);
 						}
 					}
 				}
