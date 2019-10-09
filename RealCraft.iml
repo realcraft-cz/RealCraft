@@ -46,6 +46,7 @@
       <sourceFolder url="file://$MODULE_DIR$/bungee" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/share" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/bukkit/realcraft/bukkit/cosmetics/mounts" />
+      <excludeFolder url="file://$MODULE_DIR$/bukkit/realcraft/bukkit/parkour" />
       <excludeFolder url="file://$MODULE_DIR$/bukkit/realcraft/bukkit/quiz" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
