@@ -2,14 +2,25 @@ package realcraft.bukkit.falling.arena;
 
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.FallManager;
+import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
 
 public class FallArenaRegion {
 
 	public static final int ARENA_SIZE = 64;
 	public static final int ARENA_MARGIN = 128;
 	public static final int ARENA_FULLSIZE = ARENA_SIZE+(ARENA_MARGIN*2);
+
+	public static final Material[] ARENA_FLOOR = new Material[]{
+		Material.BEDROCK,
+		Material.GRANITE,
+		Material.DIORITE,
+		Material.ANDESITE,
+	};
 
 	private FallArena arena;
 	private Location minLoc;
@@ -61,6 +72,40 @@ public class FallArenaRegion {
 	public boolean isLocationInside(BlockVector2 vector){
 		return (vector.getBlockX() >= this.getMinLocation().getBlockX() && vector.getBlockX() <= this.getMaxLocation().getBlockX()
 				&& vector.getBlockZ() >= this.getMinLocation().getBlockZ() && vector.getBlockZ() <= this.getMaxLocation().getBlockZ());
+	}
+
+	public void generate(){
+		int delay = 0;
+		for(int x=0;x<ARENA_SIZE/16;x++){
+			for(int z=0;z<ARENA_SIZE/16;z++){
+				delay += 10;
+				final int chunkX = x;
+				final int chunkZ = z;
+				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
+					@Override
+					public void run(){
+						FallArenaRegion.this.generateChunk(chunkX,chunkZ);
+					}
+				},delay);
+			}
+		}
+		Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
+			@Override
+			public void run(){
+				Bukkit.getPluginManager().callEvent(new FallArenaRegionGenerateEvent(FallArenaRegion.this.getArena()));
+			}
+		},delay+10);
+	}
+
+	private void generateChunk(int chunkX,int chunkZ){
+		this.getMinLocation().clone().add(chunkX*16,0,chunkZ*16);
+		for(int x=0;x<16;x++){
+			for(int y=0;y<ARENA_FLOOR.length;y++){
+				for(int z=0;z<16;z++){
+					this.getMinLocation().clone().add(x,y,z).getBlock().setType(ARENA_FLOOR[y]);
+				}
+			}
+		}
 	}
 
 	private int[] getIndexCoords(int index){

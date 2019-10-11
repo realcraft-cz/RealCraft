@@ -1,24 +1,32 @@
 package realcraft.bukkit.falling;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import realcraft.bukkit.database.DB;
+import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.commands.FallCommands;
 import realcraft.bukkit.users.Users;
 import realcraft.share.users.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 public class FallManager {
 
+	public static final String FALL_ARENAS = "falling_arenas";
 	private static final String PREFIX = "§6[Falling]§r ";
 
 	private static World world;
 	private static HashMap<User,FallPlayer> players = new HashMap<>();
+	private static HashMap<Integer,FallArena> arenas = new HashMap<>();
 
 	public FallManager(){
 		world = Bukkit.getWorld("world_falling");
 		new FallCommands();
+		this.loadArenas();
 	}
 
 	public static World getWorld(){
@@ -32,6 +40,39 @@ public class FallManager {
 
 	public static FallPlayer getFallPlayer(Player player){
 		return FallManager.getFallPlayer(Users.getUser(player));
+	}
+
+	public static FallArena getArena(int id){
+		return arenas.get(id);
+	}
+
+	public static FallArena getArena(Location location){
+		for(FallArena arena : arenas.values()){
+			if(arena.getRegion().isLocationInside(location)) return arena;
+		}
+		return null;
+	}
+
+	public static FallArena createArena(FallPlayer fPlayer){
+		FallArena arena = new FallArena(fPlayer.getUser());
+		arena.create();
+		arenas.put(arena.getId(),arena);
+		return arena;
+	}
+
+	private void loadArenas(){
+		ResultSet rs = DB.query("SELECT * FROM "+FALL_ARENAS+" ORDER BY arena_id ASC");
+		try {
+			while(rs.next()){
+				int id = rs.getInt("arena_id");
+				FallArena arena = new FallArena(id);
+				arena.load();
+				arenas.put(arena.getId(),arena);
+			}
+			rs.close();
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	public static void sendMessage(String message){
