@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.commands.FallCommands;
@@ -12,9 +13,10 @@ import realcraft.share.users.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FallManager {
+public class FallManager implements Runnable {
 
 	public static final String FALL_ARENAS = "falling_arenas";
 	private static final String PREFIX = "§6[Falling]§r ";
@@ -25,8 +27,10 @@ public class FallManager {
 
 	public FallManager(){
 		world = Bukkit.getWorld("world_falling");
+		new FallListeners();
 		new FallCommands();
 		this.loadArenas();
+		Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(),this,5,5);
 	}
 
 	public static World getWorld(){
@@ -42,13 +46,17 @@ public class FallManager {
 		return FallManager.getFallPlayer(Users.getUser(player));
 	}
 
+	public static ArrayList<FallArena> getArenas(){
+		return new ArrayList<>(arenas.values());
+	}
+
 	public static FallArena getArena(int id){
 		return arenas.get(id);
 	}
 
 	public static FallArena getArena(Location location){
 		for(FallArena arena : arenas.values()){
-			if(arena.getRegion().isLocationInside(location)) return arena;
+			if(arena.getRegion().isLocationInsideFull(location)) return arena;
 		}
 		return null;
 	}
@@ -72,6 +80,13 @@ public class FallManager {
 			rs.close();
 		} catch (SQLException e){
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run(){
+		for(FallArena arena : FallManager.getArenas()){
+			arena.run();
 		}
 	}
 

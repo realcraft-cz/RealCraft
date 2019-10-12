@@ -5,9 +5,11 @@ import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.FallingBlock;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
+import realcraft.share.utils.RandomUtil;
 
 public class FallArenaRegion {
 
@@ -16,23 +18,29 @@ public class FallArenaRegion {
 	public static final int ARENA_FULLSIZE = ARENA_SIZE+(ARENA_MARGIN*2);
 
 	public static final Material[] ARENA_FLOOR = new Material[]{
-		Material.BEDROCK,
-		Material.GRANITE,
-		Material.DIORITE,
-		Material.ANDESITE,
+			Material.BEDROCK,
+			Material.GRANITE,
+			Material.DIORITE,
+			Material.ANDESITE,
 	};
 
 	private FallArena arena;
 	private Location minLoc;
 	private Location maxLoc;
+	private Location minLocFull;
+	private Location maxLocFull;
 	private Location centerLoc;
+	private FallArenaRegionBlocks blocks;
 
 	public FallArenaRegion(FallArena arena){
 		this.arena = arena;
-		int [] coords = this.getIndexCoords(arena.getId());
+		int[] coords = this.getIndexCoords(arena.getId());
 		this.minLoc = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_MARGIN,0,(coords[1]*ARENA_FULLSIZE)+ARENA_MARGIN);
 		this.maxLoc = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_FULLSIZE-ARENA_MARGIN,128,(coords[1]*ARENA_FULLSIZE)+ARENA_FULLSIZE-ARENA_MARGIN);
-		this.centerLoc = new Location(FallManager.getWorld(),this.getMinLocation().getBlockX()+(ARENA_SIZE/2)+0.5,this.getMinLocation().getBlockY(),this.getMinLocation().getBlockZ()+(ARENA_SIZE/2)+0.5);
+		this.minLocFull = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE),0,(coords[1]*ARENA_FULLSIZE));
+		this.maxLocFull = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_FULLSIZE,128,(coords[1]*ARENA_FULLSIZE)+ARENA_FULLSIZE);
+		this.centerLoc = new Location(FallManager.getWorld(),this.getMinLocation().getBlockX()+(ARENA_SIZE/2)+0.5,5,this.getMinLocation().getBlockZ()+(ARENA_SIZE/2)+0.5);
+		this.blocks = new FallArenaRegionBlocks(this);
 	}
 
 	public FallArena getArena(){
@@ -49,6 +57,18 @@ public class FallArenaRegion {
 
 	public Location getMaxLocation(){
 		return maxLoc;
+	}
+
+	public Location getMinLocationFull(){
+		return minLocFull;
+	}
+
+	public Location getMaxLocationFull(){
+		return maxLocFull;
+	}
+
+	public FallArenaRegionBlocks getBlocks(){
+		return blocks;
 	}
 
 	public boolean isLocationInside(Location location){
@@ -72,6 +92,12 @@ public class FallArenaRegion {
 	public boolean isLocationInside(BlockVector2 vector){
 		return (vector.getBlockX() >= this.getMinLocation().getBlockX() && vector.getBlockX() <= this.getMaxLocation().getBlockX()
 				&& vector.getBlockZ() >= this.getMinLocation().getBlockZ() && vector.getBlockZ() <= this.getMaxLocation().getBlockZ());
+	}
+
+	public boolean isLocationInsideFull(Location location){
+		return (location.getBlockX() >= this.getMinLocationFull().getBlockX() && location.getBlockX() <= this.getMaxLocationFull().getBlockX()
+				&& location.getBlockY() >= this.getMinLocationFull().getBlockY() && location.getBlockY() <= this.getMaxLocationFull().getBlockY()
+				&& location.getBlockZ() >= this.getMinLocationFull().getBlockZ() && location.getBlockZ() <= this.getMaxLocationFull().getBlockZ());
 	}
 
 	public void generate(){
@@ -108,6 +134,16 @@ public class FallArenaRegion {
 		}
 	}
 
+	public void dropBlocks(){
+		for(FallArenaRegionBlocks.FallArenaRegionBlock block : this.getBlocks().getNextBlocks()){
+			Location location = this.getMinLocation().clone();
+			location.setX(RandomUtil.getRandomInteger(this.getMinLocation().getBlockX(),this.getMaxLocation().getBlockX())+0.5);
+			location.setZ(RandomUtil.getRandomInteger(this.getMinLocation().getBlockZ(),this.getMaxLocation().getBlockZ())+0.5);
+			FallingBlock fallblock = location.getWorld().spawnFallingBlock(location,block.getRandomType(),(byte)0);
+			fallblock.setDropItem(false);
+		}
+	}
+
 	private int[] getIndexCoords(int index){
 		int dir = 1;
 		int step = 1;
@@ -117,7 +153,7 @@ public class FallArenaRegion {
 			int sideSize = ((round*8)/4)+1;
 			if(step == 1){
 				x -= 1;
-				y -= 1*2;
+				y -= 2;
 			} else {
 				if(dir == 1) x += 1;
 				else if(dir == 2) y += 1;

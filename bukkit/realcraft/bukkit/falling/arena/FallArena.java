@@ -2,7 +2,9 @@ package realcraft.bukkit.falling.arena;
 
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.falling.FallManager;
+import realcraft.bukkit.falling.FallPlayer;
 import realcraft.share.users.User;
+import realcraft.share.users.UserRank;
 import realcraft.share.users.Users;
 
 import java.sql.ResultSet;
@@ -39,6 +41,12 @@ public class FallArena {
 		return created;
 	}
 
+	public FallArenaPermission getPermission(FallPlayer fPlayer){
+		if(fPlayer.getUser().equals(this.getOwner()) || fPlayer.getUser().getRank().isMinimum(UserRank.ADMIN)) return FallArenaPermission.OWNER;
+		//else if(trusted.getValues().contains(new MapDataInteger(fPlayer.getUser().getId()))) return MapPermission.BUILD;
+		return FallArenaPermission.NONE;
+	}
+
 	public void create(){
 		created = (int)(System.currentTimeMillis()/1000);
 		try {
@@ -67,5 +75,9 @@ public class FallArena {
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+	}
+
+	public void run(){
+		this.getRegion().dropBlocks();
 	}
 }
