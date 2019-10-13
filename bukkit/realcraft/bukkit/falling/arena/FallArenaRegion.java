@@ -5,9 +5,10 @@ import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.FallingBlock;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.FallManager;
+import realcraft.bukkit.falling.arena.drops.FallArenaDrop;
+import realcraft.bukkit.falling.arena.drops.FallArenaDrops;
 import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
 import realcraft.share.utils.RandomUtil;
 
@@ -30,7 +31,7 @@ public class FallArenaRegion {
 	private Location minLocFull;
 	private Location maxLocFull;
 	private Location centerLoc;
-	private FallArenaRegionBlocks blocks;
+	private FallArenaDrops drops = new FallArenaDrops(this);
 
 	public FallArenaRegion(FallArena arena){
 		this.arena = arena;
@@ -40,7 +41,6 @@ public class FallArenaRegion {
 		this.minLocFull = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE),0,(coords[1]*ARENA_FULLSIZE));
 		this.maxLocFull = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_FULLSIZE,128,(coords[1]*ARENA_FULLSIZE)+ARENA_FULLSIZE);
 		this.centerLoc = new Location(FallManager.getWorld(),this.getMinLocation().getBlockX()+(ARENA_SIZE/2)+0.5,5,this.getMinLocation().getBlockZ()+(ARENA_SIZE/2)+0.5);
-		this.blocks = new FallArenaRegionBlocks(this);
 	}
 
 	public FallArena getArena(){
@@ -67,8 +67,8 @@ public class FallArenaRegion {
 		return maxLocFull;
 	}
 
-	public FallArenaRegionBlocks getBlocks(){
-		return blocks;
+	public FallArenaDrops getDrops(){
+		return drops;
 	}
 
 	public boolean isLocationInside(Location location){
@@ -134,13 +134,12 @@ public class FallArenaRegion {
 		}
 	}
 
-	public void dropBlocks(){
-		for(FallArenaRegionBlocks.FallArenaRegionBlock block : this.getBlocks().getNextBlocks()){
+	public void drop(){
+		for(FallArenaDrop drop : this.getDrops().getNextDrops()){
 			Location location = this.getMinLocation().clone();
 			location.setX(RandomUtil.getRandomInteger(this.getMinLocation().getBlockX(),this.getMaxLocation().getBlockX())+0.5);
 			location.setZ(RandomUtil.getRandomInteger(this.getMinLocation().getBlockZ(),this.getMaxLocation().getBlockZ())+0.5);
-			FallingBlock fallblock = location.getWorld().spawnFallingBlock(location,block.getRandomType(),(byte)0);
-			fallblock.setDropItem(false);
+			drop.drop(location);
 		}
 	}
 

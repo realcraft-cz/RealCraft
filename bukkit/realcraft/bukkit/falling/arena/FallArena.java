@@ -78,6 +78,6 @@ public class FallArena {
 	}
 
 	public void run(){
-		this.getRegion().dropBlocks();
+		this.getRegion().drop();
 	}
 }
