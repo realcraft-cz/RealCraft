@@ -1,9 +1,6 @@
 package realcraft.bukkit.gameparty;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.sockets.SocketData;
 import realcraft.bukkit.sockets.SocketManager;
@@ -11,6 +8,8 @@ import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.BungeeMessages;
 import realcraft.share.ServerType;
 import realcraft.share.users.User;
+
+import java.util.ArrayList;
 
 public class GameParty implements Runnable {
 

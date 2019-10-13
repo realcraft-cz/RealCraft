@@ -38,6 +38,7 @@ import realcraft.bukkit.creative.PlotSquaredWorldEdit;
 import realcraft.bukkit.creative.SchematicBrush;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.develop.*;
+import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.friends.Friends;
 import realcraft.bukkit.heads.CosmeticHeads;
@@ -212,6 +213,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 		}
 		if(RealCraft.isTestServer() || RealCraft.getServerType() == ServerType.SURVIVAL){
 			new EntityTrackerFixer();
+		}
+		if(RealCraft.getServerType() == ServerType.FALLING){
+			new FallManager();
 		}
 		restart = new Restart(this);
 		socketmanager = new SocketManager();

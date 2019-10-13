@@ -1,5 +1,7 @@
 package realcraft.bukkit.falling.arena;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
@@ -47,10 +49,19 @@ public class FallArena {
 		return FallArenaPermission.NONE;
 	}
 
+	public boolean hasPlayers(){
+		for(Player player : Bukkit.getOnlinePlayers()){
+			if(FallManager.getFallPlayer(player).getArena() != null && FallManager.getFallPlayer(player).getArena().equals(this)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void create(){
 		created = (int)(System.currentTimeMillis()/1000);
 		try {
-			ResultSet rs = DB.insert("INSERT INTO "+FallManager.FALL_ARENAS+" (user_id,map_created) VALUES(?,?)",
+			ResultSet rs = DB.insert("INSERT INTO "+FallManager.FALL_ARENAS+" (user_id,arena_created) VALUES(?,?)",
 					this.getOwner().getId(),
 					this.getCreated()
 			);
@@ -69,7 +80,7 @@ public class FallArena {
 		try {
 			if(rs.next()){
 				owner = Users.getUser(rs.getInt("user_id"));
-				created = rs.getInt("map_created");
+				created = rs.getInt("arena_created");
 			}
 			rs.close();
 		} catch (SQLException e){
@@ -78,6 +89,22 @@ public class FallArena {
 	}
 
 	public void run(){
-		this.getRegion().drop();
+		if(this.hasPlayers()){
+			this.getRegion().drop();
+		}
+	}
+
+	@Override
+	public int hashCode(){
+		return this.getId();
+	}
+
+	@Override
+	public boolean equals(Object object){
+		if(object instanceof FallArena){
+			FallArena toCompare = (FallArena) object;
+			return (toCompare.getId() == this.getId());
+		}
+		return false;
 	}
 }

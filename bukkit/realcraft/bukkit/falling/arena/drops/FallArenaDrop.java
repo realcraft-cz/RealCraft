@@ -8,7 +8,7 @@ public abstract class FallArenaDrop {
 	private long ticks;
 	private long lastTick;
 
-	public FallArenaDrop(int ticks){
+	public FallArenaDrop(long ticks){
 		this.ticks = ticks;
 		this.lastTick = FallManager.getWorld().getFullTime();
 	}

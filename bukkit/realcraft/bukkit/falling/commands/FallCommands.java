@@ -16,13 +16,14 @@ public class FallCommands extends AbstractCommand {
 	public FallCommands(){
 		super("ff","fall","falling");
 		commands = new FallCommand[]{
+				new FallCommandCreate(),
 		};
 	}
 
 	@Override
 	public void perform(Player player,String[] args){
 		if(args.length == 0){
-			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lFalling FallManager §7§m"+StringUtils.repeat(" ",47-"FallManager FallManager".length()));
+			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lFalling §7§m"+StringUtils.repeat(" ",47-"Falling".length()));
 			player.sendMessage("§6/ff create §e<type> §f- Vytvorit novou mapu");
 			if(FallManager.getFallPlayer(player).getArena() != null){
 				player.sendMessage("§7---------------");

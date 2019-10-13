@@ -13,8 +13,9 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.arena.FallArenaPermission;
-import realcraft.bukkit.mapmanager.commands.MapCommandList;
+import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
 import realcraft.bukkit.spawn.ServerSpawn;
+import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.LocationUtil;
 
 public class FallListeners implements Listener  {
@@ -27,7 +28,6 @@ public class FallListeners implements Listener  {
 	public void PlayerJoinEvent(PlayerJoinEvent event){
 		Player player = event.getPlayer();
 		player.getInventory().clear();
-		player.getInventory().setItem(0,MapCommandList.getHotbarItem());
 		player.getInventory().setHeldItemSlot(0);
 		player.setFlying(false);
 	}
@@ -101,5 +101,14 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void PortalCreateEvent(PortalCreateEvent event){
 		event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void FallArenaRegionGenerateEvent(FallArenaRegionGenerateEvent event){
+		Player player = Users.getPlayer(event.getArena().getOwner());
+		if(player != null && player.isOnline()){
+			FallManager.sendMessage(player, "§aOstrov vytvoren");
+			FallManager.getFallPlayer(player).joinArena(event.getArena());
+		}
 	}
 }

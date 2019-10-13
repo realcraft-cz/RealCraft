@@ -15,7 +15,7 @@ import realcraft.share.utils.RandomUtil;
 public class FallArenaRegion {
 
 	public static final int ARENA_SIZE = 64;
-	public static final int ARENA_MARGIN = 128;
+	public static final int ARENA_MARGIN = 256;
 	public static final int ARENA_FULLSIZE = ARENA_SIZE+(ARENA_MARGIN*2);
 
 	public static final Material[] ARENA_FLOOR = new Material[]{
@@ -37,7 +37,7 @@ public class FallArenaRegion {
 		this.arena = arena;
 		int[] coords = this.getIndexCoords(arena.getId());
 		this.minLoc = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_MARGIN,0,(coords[1]*ARENA_FULLSIZE)+ARENA_MARGIN);
-		this.maxLoc = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_FULLSIZE-ARENA_MARGIN,128,(coords[1]*ARENA_FULLSIZE)+ARENA_FULLSIZE-ARENA_MARGIN);
+		this.maxLoc = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_FULLSIZE-ARENA_MARGIN-1,128,(coords[1]*ARENA_FULLSIZE)+ARENA_FULLSIZE-ARENA_MARGIN-1);
 		this.minLocFull = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE),0,(coords[1]*ARENA_FULLSIZE));
 		this.maxLocFull = new Location(FallManager.getWorld(),(coords[0]*ARENA_FULLSIZE)+ARENA_FULLSIZE,128,(coords[1]*ARENA_FULLSIZE)+ARENA_FULLSIZE);
 		this.centerLoc = new Location(FallManager.getWorld(),this.getMinLocation().getBlockX()+(ARENA_SIZE/2)+0.5,5,this.getMinLocation().getBlockZ()+(ARENA_SIZE/2)+0.5);
@@ -104,7 +104,7 @@ public class FallArenaRegion {
 		int delay = 0;
 		for(int x=0;x<ARENA_SIZE/16;x++){
 			for(int z=0;z<ARENA_SIZE/16;z++){
-				delay += 10;
+				delay += 5;
 				final int chunkX = x;
 				final int chunkZ = z;
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
@@ -120,15 +120,15 @@ public class FallArenaRegion {
 			public void run(){
 				Bukkit.getPluginManager().callEvent(new FallArenaRegionGenerateEvent(FallArenaRegion.this.getArena()));
 			}
-		},delay+10);
+		},delay+5);
 	}
 
 	private void generateChunk(int chunkX,int chunkZ){
-		this.getMinLocation().clone().add(chunkX*16,0,chunkZ*16);
+		Location location = this.getMinLocation().clone().add(chunkX*16,0,chunkZ*16);
 		for(int x=0;x<16;x++){
 			for(int y=0;y<ARENA_FLOOR.length;y++){
 				for(int z=0;z<16;z++){
-					this.getMinLocation().clone().add(x,y,z).getBlock().setType(ARENA_FLOOR[y]);
+					location.clone().add(x,y,z).getBlock().setType(ARENA_FLOOR[y]);
 				}
 			}
 		}
@@ -139,6 +139,7 @@ public class FallArenaRegion {
 			Location location = this.getMinLocation().clone();
 			location.setX(RandomUtil.getRandomInteger(this.getMinLocation().getBlockX(),this.getMaxLocation().getBlockX())+0.5);
 			location.setZ(RandomUtil.getRandomInteger(this.getMinLocation().getBlockZ(),this.getMaxLocation().getBlockZ())+0.5);
+			location.setY(64);
 			drop.drop(location);
 		}
 	}

@@ -8,10 +8,12 @@ import java.util.Random;
 
 public class FallArenaDropBlock extends FallArenaDrop {
 
+	public static final double TICKS_MULTIPLIER = 2.0;
+
 	private FallArenaDropBlockType type;
 
 	public FallArenaDropBlock(FallArenaDropBlockType type){
-		super(type.getTicks());
+		super((long)(type.getTicks()*TICKS_MULTIPLIER));
 		this.type = type;
 	}
 

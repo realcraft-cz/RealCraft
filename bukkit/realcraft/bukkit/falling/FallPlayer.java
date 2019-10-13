@@ -38,6 +38,15 @@ public class FallPlayer {
 		return arena;
 	}
 
+	public FallArena getOwnArena(){
+		for(FallArena arena : FallManager.getArenas()){
+			if(arena.getOwner().equals(this.getUser())){
+				return arena;
+			}
+		}
+		return null;
+	}
+
 	public void joinArena(FallArena arena){
 		this.arena = arena;
 		this.getPlayer().teleport(LocationUtil.getSafeDestination(arena.getRegion().getCenterLocation().clone().add(0,1,0)));

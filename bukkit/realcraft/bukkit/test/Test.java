@@ -14,7 +14,7 @@ public class Test {
 		if(RealCraft.isTestServer()){
 			//new SignTest();
 			//new KickTest();
-			new FallingTest();
+			//new FallingTest();
 			new RandomTest();
 			new CombatTest();
 			new AdvancementTest();
