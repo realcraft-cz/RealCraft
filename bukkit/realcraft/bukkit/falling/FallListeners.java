@@ -1,18 +1,21 @@
 package realcraft.bukkit.falling;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.arena.FallArenaPermission;
+import realcraft.bukkit.falling.arena.FallArenaRegion;
 import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.users.Users;
@@ -109,6 +112,24 @@ public class FallListeners implements Listener  {
 		if(player != null && player.isOnline()){
 			FallManager.sendMessage(player, "§aOstrov vytvoren");
 			FallManager.getFallPlayer(player).joinArena(event.getArena());
+		}
+	}
+
+	@EventHandler
+	public void CreatureSpawnEvent(CreatureSpawnEvent event){
+		if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL){
+			if(event.getEntityType() != EntityType.SLIME && (event.getLocation().getWorld().getTime() < 13000 || event.getLocation().getWorld().getTime() > 23500)){
+				event.setCancelled(true);
+			}
+			int sameEntities = 0;
+			for(Entity entity : event.getEntity().getNearbyEntities(FallArenaRegion.MAX_SAME_ENTITIES_RANGE,FallArenaRegion.MAX_SAME_ENTITIES_RANGE,FallArenaRegion.MAX_SAME_ENTITIES_RANGE)){
+				if(entity.getType() == event.getEntityType()){
+					sameEntities ++;
+				}
+			}
+			if(sameEntities >= FallArenaRegion.MAX_SAME_ENTITIES){
+				event.setCancelled(true);
+			}
 		}
 	}
 }

@@ -26,6 +26,5 @@ public class FallArenaDropEntity extends FallArenaDrop {
 	@Override
 	public void drop(Location location){
 		location.getWorld().spawnEntity(LocationUtil.getSafeDestination(location),this.getRandomType());
-		System.out.println("FallArenaDropEntity drop");
 	}
 }
