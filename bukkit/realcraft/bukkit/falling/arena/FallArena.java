@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
+import realcraft.bukkit.falling.arena.drops.FallArenaDrops;
 import realcraft.share.users.User;
 import realcraft.share.users.UserRank;
 import realcraft.share.users.Users;
@@ -17,6 +18,7 @@ public class FallArena {
 	private int id;
 	private User owner;
 	private FallArenaRegion region = new FallArenaRegion(this);
+	private FallArenaDrops drops = new FallArenaDrops(this);
 	private int created;
 
 	public FallArena(int id){
@@ -37,6 +39,10 @@ public class FallArena {
 
 	public FallArenaRegion getRegion(){
 		return region;
+	}
+
+	public FallArenaDrops getDrops(){
+		return drops;
 	}
 
 	public int getCreated(){
@@ -90,7 +96,7 @@ public class FallArena {
 
 	public void run(){
 		if(this.hasPlayers()){
-			this.getRegion().drop();
+			this.getDrops().drop();
 		}
 	}
 

@@ -5,23 +5,15 @@ import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.FallManager;
-import realcraft.bukkit.falling.arena.drops.FallArenaDrop;
-import realcraft.bukkit.falling.arena.drops.FallArenaDrops;
 import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
-import realcraft.share.utils.RandomUtil;
 
 public class FallArenaRegion {
 
 	public static final int ARENA_SIZE = 64;
 	public static final int ARENA_MARGIN = 256;
 	public static final int ARENA_FULLSIZE = ARENA_SIZE+(ARENA_MARGIN*2);
-
-	public static final int MAX_SAME_ENTITIES = 2;
-	public static final int MAX_SAME_ENTITIES_RANGE = 32;
 
 	public static final Material[] ARENA_FLOOR = new Material[]{
 			Material.BEDROCK,
@@ -36,7 +28,6 @@ public class FallArenaRegion {
 	private Location minLocFull;
 	private Location maxLocFull;
 	private Location centerLoc;
-	private FallArenaDrops drops = new FallArenaDrops(this);
 
 	public FallArenaRegion(FallArena arena){
 		this.arena = arena;
@@ -70,10 +61,6 @@ public class FallArenaRegion {
 
 	public Location getMaxLocationFull(){
 		return maxLocFull;
-	}
-
-	public FallArenaDrops getDrops(){
-		return drops;
 	}
 
 	public boolean isLocationInside(Location location){
@@ -139,24 +126,6 @@ public class FallArenaRegion {
 		}
 	}
 
-	public void drop(){
-		for(FallArenaDrop drop : this.getDrops().getNextDrops()){
-			Location location = this.getMinLocation().clone();
-			location.setX(RandomUtil.getRandomInteger(this.getMinLocation().getBlockX(),this.getMaxLocation().getBlockX())+0.5);
-			location.setZ(RandomUtil.getRandomInteger(this.getMinLocation().getBlockZ(),this.getMaxLocation().getBlockZ())+0.5);
-			Block block = this.getHighestBlock(location);
-			if(block != null){
-				location.setY(block.getY()+48);
-				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
-					@Override
-					public void run(){
-						drop.drop(location);
-					}
-				},RandomUtil.getRandomInteger(1,20));
-			}
-		}
-	}
-
 	private int[] getIndexCoords(int index){
 		int dir = 1;
 		int step = 1;
@@ -184,17 +153,5 @@ public class FallArenaRegion {
 			step ++;
 		}
 		return new int[]{x,y};
-	}
-
-	private Block getHighestBlock(Location location){
-		int y = this.getMaxLocation().getBlockY();
-		World world = location.getWorld();
-		while(y >= 0){
-			if(world.getBlockAt(location.getBlockX(),y,location.getBlockZ()).getType() != Material.AIR){
-				return world.getBlockAt(location.getBlockX(),y,location.getBlockZ());
-			}
-			y --;
-		}
-		return null;
 	}
 }
