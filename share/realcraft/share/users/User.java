@@ -21,6 +21,7 @@ public class User {
 
 	private UserRank rank;
 	private boolean premium;
+	private boolean countryException;
 
 	private String skinName;
 	private Skin skin;
@@ -71,6 +72,10 @@ public class User {
 
 	public boolean isPremium(){
 		return premium;
+	}
+
+	public boolean isCountryException(){
+		return countryException;
 	}
 
 	public Skin getSkin(){
@@ -195,7 +200,7 @@ public class User {
 
 	public void reload(){
 		skin = null;
-		ResultSet rs = DB.query("SELECT user_uuid,user_name,user_rank,user_password,user_ip,user_premium,user_skin,user_avatar,user_logged,user_registered,user_firstlogin,user_lastlogin,user_last_skinned,user_server,user_coins,user_coinsboost,user_money FROM "+Users.USERS+" WHERE user_id = '"+this.getId()+"'");
+		ResultSet rs = DB.query("SELECT user_uuid,user_name,user_rank,user_password,user_ip,user_premium,user_skin,user_avatar,user_logged,user_registered,user_firstlogin,user_lastlogin,user_last_skinned,user_server,user_coins,user_coinsboost,user_money,user_countryexception FROM "+Users.USERS+" WHERE user_id = '"+this.getId()+"'");
 		try {
 			if(rs.next()){
 				uuid = UUID.fromString(rs.getString("user_uuid"));
@@ -204,6 +209,7 @@ public class User {
 				password = rs.getString("user_password");
 				address = rs.getString("user_ip");
 				premium = rs.getBoolean("user_premium");
+				countryException = rs.getBoolean("user_countryexception");
 				skinName = rs.getString("user_skin");
 				avatar = rs.getString("user_avatar");
 				logged = rs.getBoolean("user_logged");

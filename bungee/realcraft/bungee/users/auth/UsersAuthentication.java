@@ -1,11 +1,6 @@
 package realcraft.bungee.users.auth;
 
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Charsets;
-
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -20,6 +15,10 @@ import realcraft.bungee.sockets.SocketData;
 import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.Users;
 import realcraft.share.users.User;
+
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UsersAuthentication implements Listener {
 
@@ -43,14 +42,14 @@ public class UsersAuthentication implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if(GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
-			event.setCancelReason(TextComponent.fromLegacyText("§cZeme, ze ktere se pripojujes, je zablokovana!"));
-			event.setCancelled(true);
-			return;
-		}
 		event.getConnection().setUniqueId(UUID.nameUUIDFromBytes(("OfflinePlayer:"+event.getConnection().getName()).getBytes(Charsets.UTF_8)));
 		User user = Users.getUser(event.getConnection().getName());
 		if(user == null){
+			if(GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
+				event.setCancelReason(TextComponent.fromLegacyText("§cZeme, ze ktere se pripojujes, je zablokovana!"));
+				event.setCancelled(true);
+				return;
+			}
 			Users.createUser(
 				event.getConnection().getName(),
 				event.getConnection().getUniqueId(),
@@ -65,6 +64,12 @@ public class UsersAuthentication implements Listener {
 			user.reload();
 			user.setAddress(event.getConnection().getAddress().getAddress().getHostAddress().replace("/",""));
 			if(user.isPremium()) event.getConnection().setOnlineMode(true);
+			else {
+				if(!user.isCountryException() && GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
+					event.setCancelReason(TextComponent.fromLegacyText("§cZeme, ze ktere se pripojujes, je zablokovana!"));
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 
