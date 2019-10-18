@@ -24,7 +24,7 @@ public class FallCommands extends AbstractCommand {
 	public void perform(Player player,String[] args){
 		if(args.length == 0){
 			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lFalling §7§m"+StringUtils.repeat(" ",47-"Falling".length()));
-			player.sendMessage("§6/ff create §e<type> §f- Vytvorit novou mapu");
+			player.sendMessage("§6/ff create §f- Vytvorit novy ostrov");
 			if(FallManager.getFallPlayer(player).getArena() != null){
 				player.sendMessage("§7---------------");
 				player.sendMessage("§6/ff name §e<name> §f- Nastaveni nazvu");
@@ -35,7 +35,7 @@ public class FallCommands extends AbstractCommand {
 		args = Arrays.copyOfRange(args,1,args.length);
 		for(FallCommand command : commands){
 			if(command.match(subcommand)){
-				command.perform(player,args);
+				command.perform(FallManager.getFallPlayer(player),args);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ public class FallCommands extends AbstractCommand {
 		args = Arrays.copyOfRange(args,1,args.length);
 		for(FallCommand command : commands){
 			if(command.match(subcommand)){
-				return command.tabCompleter(player,args);
+				return command.tabCompleter(FallManager.getFallPlayer(player),args);
 			}
 		}
 		return null;

@@ -2,7 +2,7 @@ package realcraft.bukkit.falling.arena;
 
 public enum FallArenaPermission {
 
-	NONE(0), BUILD(1), OWNER(2);
+	NONE(0), TRUSTED(1), OWNER(2);
 
 	private int id;
 

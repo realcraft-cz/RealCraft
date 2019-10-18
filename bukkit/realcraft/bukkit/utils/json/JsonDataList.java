@@ -21,7 +21,6 @@ public class JsonDataList<E extends JsonDataEntry> extends JsonDataEntry {
 	}
 
 	public void add(E object){
-		values.remove(object);
 		values.add(object);
 	}
 
@@ -35,6 +34,10 @@ public class JsonDataList<E extends JsonDataEntry> extends JsonDataEntry {
 
 	public int size(){
 		return values.size();
+	}
+
+	public void addAll(ArrayList<E> arrayList){
+		values.addAll(arrayList);
 	}
 
 	@Override

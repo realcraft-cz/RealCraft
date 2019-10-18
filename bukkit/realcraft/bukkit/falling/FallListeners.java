@@ -50,7 +50,7 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void BlockBreakEvent(BlockBreakEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
-		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.BUILD)){
+		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			event.setCancelled(true);
 		}
 	}
@@ -58,7 +58,7 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void BlockPlaceEvent(BlockPlaceEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
-		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.BUILD)){
+		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			event.setCancelled(true);
 		}
 	}
@@ -67,7 +67,7 @@ public class FallListeners implements Listener  {
 	public void HangingBreakByEntityEvent(HangingBreakByEntityEvent event){
 		if(event.getRemover() instanceof Player){
 			FallPlayer fPlayer = FallManager.getFallPlayer((Player)event.getRemover());
-			if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getEntity().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.BUILD)){
+			if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getEntity().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 				event.setCancelled(true);
 			}
 		}
@@ -77,7 +77,7 @@ public class FallListeners implements Listener  {
 	public void PlayerInteractEntityEvent(PlayerInteractEntityEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		if(event.getRightClicked().getType() == EntityType.ITEM_FRAME){
-			if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getRightClicked().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.BUILD)){
+			if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getRightClicked().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 				event.setCancelled(true);
 			}
 		}
@@ -86,7 +86,7 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void PlayerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
-		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getRightClicked().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.BUILD)){
+		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getRightClicked().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			event.setCancelled(true);
 		}
 	}
@@ -94,7 +94,7 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void PlayerEggThrowEvent(PlayerEggThrowEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
-		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getEgg().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.BUILD)){
+		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getEgg().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			event.setHatching(false);
 		}
 	}

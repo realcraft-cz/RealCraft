@@ -1,6 +1,6 @@
 package realcraft.bukkit.falling.commands;
 
-import org.bukkit.entity.Player;
+import realcraft.bukkit.falling.FallPlayer;
 
 import java.util.List;
 
@@ -30,6 +30,6 @@ public abstract class FallCommand {
 		return false;
 	}
 
-	public abstract void perform(Player player,String[] args);
-	public abstract List<String> tabCompleter(Player player,String[] args);
+	public abstract void perform(FallPlayer fPlayer,String[] args);
+	public abstract List<String> tabCompleter(FallPlayer fPlayer,String[] args);
 }

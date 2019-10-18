@@ -1,6 +1,5 @@
 package realcraft.bukkit.falling.commands;
 
-import org.bukkit.entity.Player;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.FallArena;
@@ -14,19 +13,18 @@ public class FallCommandCreate extends FallCommand {
 	}
 
 	@Override
-	public void perform(Player player,String[] args){
-		FallPlayer fPlayer = FallManager.getFallPlayer(player);
+	public void perform(FallPlayer fPlayer,String[] args){
 		FallArena arena = fPlayer.getOwnArena();
 		if(arena == null){
 			FallManager.createArena(fPlayer);
-			FallManager.sendMessage(player,"§fVytvareni ostrovu, prosim vyckejte ...");
+			FallManager.sendMessage(fPlayer,"§fVytvareni ostrovu, prosim vyckejte ...");
 		} else {
-			FallManager.getFallPlayer(player).joinArena(arena);
+			fPlayer.joinArena(arena);
 		}
 	}
 
 	@Override
-	public List<String> tabCompleter(Player player,String[] args){
+	public List<String> tabCompleter(FallPlayer fPlayer,String[] args){
 		return null;
 	}
 }

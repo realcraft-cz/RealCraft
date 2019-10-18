@@ -100,7 +100,7 @@ public class FallManager implements Runnable {
 		player.sendMessage(PREFIX+message);
 	}
 
-	public static void sendMessage(FallPlayer mPlayer,String message){
-		FallManager.sendMessage(mPlayer.getPlayer(),message);
+	public static void sendMessage(FallPlayer fPlayer,String message){
+		FallManager.sendMessage(fPlayer.getPlayer(),message);
 	}
 }

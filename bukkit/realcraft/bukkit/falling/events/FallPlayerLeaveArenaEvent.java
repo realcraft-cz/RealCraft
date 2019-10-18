@@ -5,16 +5,16 @@ import realcraft.bukkit.falling.arena.FallArena;
 
 public class FallPlayerLeaveArenaEvent extends FallEvent {
 
-	private FallPlayer mPlayer;
+	private FallPlayer fPlayer;
 	private FallArena arena;
 
-	public FallPlayerLeaveArenaEvent(FallPlayer mPlayer,FallArena arena){
-		this.mPlayer = mPlayer;
+	public FallPlayerLeaveArenaEvent(FallPlayer fPlayer,FallArena arena){
+		this.fPlayer = fPlayer;
 		this.arena = arena;
 	}
 
 	public FallPlayer getPlayer(){
-		return mPlayer;
+		return fPlayer;
 	}
 
 	public FallArena getArena(){

@@ -6,12 +6,16 @@ import realcraft.bukkit.database.DB;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.drops.FallArenaDrops;
+import realcraft.bukkit.utils.json.JsonData;
+import realcraft.bukkit.utils.json.JsonDataInteger;
+import realcraft.bukkit.utils.json.JsonDataList;
 import realcraft.share.users.User;
 import realcraft.share.users.UserRank;
 import realcraft.share.users.Users;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class FallArena {
 
@@ -20,6 +24,10 @@ public class FallArena {
 	private FallArenaRegion region = new FallArenaRegion(this);
 	private FallArenaDrops drops = new FallArenaDrops(this);
 	private int created;
+	private int updated;
+
+	private ArrayList<FallPlayer> trusted = new ArrayList<>();
+	private JsonDataList<JsonDataInteger> trustedData = new JsonDataList<>("trusted",JsonDataInteger.class);
 
 	public FallArena(int id){
 		this.id = id;
@@ -45,13 +53,25 @@ public class FallArena {
 		return drops;
 	}
 
+	public ArrayList<FallPlayer> getTrusted(){
+		return trusted;
+	}
+
+	public void addTrusted(FallPlayer fPlayer){
+		trusted.add(fPlayer);
+	}
+
 	public int getCreated(){
 		return created;
 	}
 
+	public int getUpdated(){
+		return updated;
+	}
+
 	public FallArenaPermission getPermission(FallPlayer fPlayer){
 		if(fPlayer.getUser().equals(this.getOwner()) || fPlayer.getUser().getRank().isMinimum(UserRank.ADMIN)) return FallArenaPermission.OWNER;
-		//else if(trusted.getValues().contains(new MapDataInteger(fPlayer.getUser().getId()))) return MapPermission.BUILD;
+		else if(trusted.contains(fPlayer)) return FallArenaPermission.TRUSTED;
 		return FallArenaPermission.NONE;
 	}
 
@@ -87,10 +107,41 @@ public class FallArena {
 			if(rs.next()){
 				owner = Users.getUser(rs.getInt("user_id"));
 				created = rs.getInt("arena_created");
+				this.loadData(new JsonData(rs.getString("arena_data")));
 			}
 			rs.close();
 		} catch (SQLException e){
 			e.printStackTrace();
+		}
+	}
+
+	public void save(){
+		updated = (int)(System.currentTimeMillis()/1000);
+		this.putData();
+		DB.update("UPDATE "+FallManager.FALL_ARENAS+" SET user_id = ?,arena_data = ?,arena_updated = ? WHERE arena_id = '"+this.getId()+"'",
+				this.getOwner().getId(),
+				this.getJsonData(),
+				this.getUpdated()
+		);
+	}
+
+	private String getJsonData(){
+		JsonData data = new JsonData();
+		data.addProperty(trustedData);
+		return data.toString();
+	}
+
+	private void loadData(JsonData data){
+		trustedData.loadData(data);
+		for(JsonDataInteger value : trustedData.getValues()){
+			trusted.add(FallManager.getFallPlayer(Users.getUser(value.getValue())));
+		}
+	}
+
+	private void putData(){
+		trustedData.clear();
+		for(FallPlayer fPlayer : trusted){
+			trustedData.add(new JsonDataInteger(fPlayer.getUser().getId()));
 		}
 	}
 

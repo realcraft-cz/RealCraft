@@ -37,6 +37,10 @@ public class JsonDataMap<E extends MapDataEntry> extends JsonDataEntry {
 		return values.size();
 	}
 
+	public void putAll(HashMap<String,E> hashMap){
+		values.putAll(hashMap);
+	}
+
 	@Override
 	public JsonObject getData(){
 		JsonObject object = new JsonObject();

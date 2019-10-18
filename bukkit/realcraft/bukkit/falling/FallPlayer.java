@@ -67,6 +67,10 @@ public class FallPlayer {
 		}
 	}
 
+	public void sendMessage(String message){
+		this.getPlayer().sendMessage(message);
+	}
+
 	@Override
 	public int hashCode(){
 		return this.getUser().getId();
