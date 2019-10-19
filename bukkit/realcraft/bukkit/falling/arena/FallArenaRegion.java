@@ -2,7 +2,6 @@ package realcraft.bukkit.falling.arena;
 
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.entity.BaseEntity;
-import com.sk89q.worldedit.entity.Entity;
 import com.sk89q.worldedit.extent.AbstractDelegateExtent;
 import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.math.BlockVector2;
@@ -15,6 +14,8 @@ import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
@@ -167,6 +168,11 @@ public class FallArenaRegion {
 
 	private void generateChunk(int chunkX,int chunkZ){
 		Location location = this.getMinLocation().clone().add(chunkX*16,0,chunkZ*16);
+		for(Entity entity : location.getChunk().getEntities()){
+			if(entity.getType() != EntityType.PLAYER){
+				entity.remove();
+			}
+		}
 		for(int x=0;x<16;x++){
 			for(int y=0;y<256;y++){
 				for(int z=0;z<16;z++){
@@ -222,7 +228,7 @@ public class FallArenaRegion {
 		}
 
 		@Override
-		public Entity createEntity(com.sk89q.worldedit.util.Location location,BaseEntity entity){
+		public com.sk89q.worldedit.entity.Entity createEntity(com.sk89q.worldedit.util.Location location,BaseEntity entity){
 			if(FallArenaRegion.this.isLocationInside(location)) return super.createEntity(location,entity);
 			return null;
 		}

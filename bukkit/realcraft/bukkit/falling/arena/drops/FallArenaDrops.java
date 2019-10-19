@@ -55,7 +55,7 @@ public class FallArenaDrops {
 			Location location = this.getRandomDropLocation();
 			Block block = this.getHighestBlock(location);
 			if(block != null){
-				location.setY(block.getY()+48);
+				location.setY(block.getY()+64);
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
 					@Override
 					public void run(){

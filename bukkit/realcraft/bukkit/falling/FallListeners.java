@@ -5,6 +5,7 @@ import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import com.sk89q.worldedit.extent.NullExtent;
 import com.sk89q.worldedit.util.eventbus.Subscribe;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -69,7 +70,12 @@ public class FallListeners implements Listener  {
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		FallPlayer fPlayer  = FallManager.getFallPlayer(event.getPlayer());
 		if(fPlayer.getArena() != null){
-			event.setRespawnLocation(LocationUtil.getSafeDestination(fPlayer.getArena().getRegion().getCenterLocation()));
+			Location bedLocation = event.getPlayer().getBedSpawnLocation();
+			if(bedLocation != null && fPlayer.getArena().getRegion().isLocationInside(bedLocation)){
+				event.setRespawnLocation(bedLocation);
+			} else {
+				event.setRespawnLocation(LocationUtil.getSafeDestination(fPlayer.getArena().getRegion().getCenterLocation()));
+			}
 			fPlayer.updateBorder();
 		}
 	}
