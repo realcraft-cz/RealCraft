@@ -5,29 +5,24 @@ import org.bukkit.entity.Player;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.FallArena;
-import realcraft.bukkit.falling.arena.FallArenaPermission;
+import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
 import realcraft.bukkit.users.Users;
 import realcraft.share.users.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FallCommandTrust extends FallCommand {
+public class FallCommandJoin extends FallCommand {
 
-	public FallCommandTrust(){
-		super("trust");
+	public FallCommandJoin(){
+		super("join");
 	}
 
 	@Override
 	public void perform(FallPlayer fPlayer,String[] args){
-		FallArena arena = fPlayer.getOwnArena();
-		if(arena == null || arena.getPermission(fPlayer).isMinimum(FallArenaPermission.OWNER)){
-			fPlayer.sendMessage("§cNemas opravneni spravovat tento ostrov.");
-			return;
-		}
 		if(args.length == 0){
-			fPlayer.sendMessage("Pridat spoluhrace");
-			fPlayer.sendMessage("§6/ff trust §e<player>");
+			fPlayer.sendMessage("Teleport na hracuv ostrov");
+			fPlayer.sendMessage("§6/ff join §e<player>");
 			return;
 		}
 		User user = Users.getUser(args[0]);
@@ -35,13 +30,16 @@ public class FallCommandTrust extends FallCommand {
 			fPlayer.sendMessage("§cHrac nenalezen.");
 			return;
 		}
-		if(arena.getPermission(FallManager.getFallPlayer(user)).isMinimum(FallArenaPermission.TRUSTED)){
-			fPlayer.sendMessage("§cHrac je jiz pridany.");
+		FallArena arena = FallManager.getFallPlayer(user).getOwnArena();
+		if(arena == null){
+			fPlayer.sendMessage("§cHrac nema vlastni ostrov.");
 			return;
 		}
-		arena.getTrusted().add(FallManager.getFallPlayer(user));
-		arena.save();
-		FallManager.sendMessage(fPlayer,"§dSpoluhrac §f"+user.getName()+" §dpridan");
+		try {
+			fPlayer.joinArena(arena);
+		} catch (FallArenaLockedException e){
+			fPlayer.sendMessage("§cOstrov je zamknuty.");
+		}
 	}
 
 	@Override

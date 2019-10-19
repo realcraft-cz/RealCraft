@@ -3,6 +3,7 @@ package realcraft.bukkit.falling.commands;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.FallArena;
+import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
 
 import java.util.List;
 
@@ -19,7 +20,10 @@ public class FallCommandCreate extends FallCommand {
 			FallManager.createArena(fPlayer);
 			FallManager.sendMessage(fPlayer,"§fVytvareni ostrovu, prosim vyckejte ...");
 		} else {
-			fPlayer.joinArena(arena);
+			try {
+				fPlayer.joinArena(arena);
+			} catch (FallArenaLockedException e){
+			}
 		}
 	}
 

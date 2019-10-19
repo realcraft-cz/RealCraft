@@ -29,6 +29,8 @@ public class FallArenaRegion {
 	private Location maxLocFull;
 	private Location centerLoc;
 
+	private boolean generating = false;
+
 	public FallArenaRegion(FallArena arena){
 		this.arena = arena;
 		int[] coords = this.getIndexCoords(arena.getId());
@@ -92,6 +94,14 @@ public class FallArenaRegion {
 				&& location.getBlockZ() >= this.getMinLocationFull().getBlockZ() && location.getBlockZ() <= this.getMaxLocationFull().getBlockZ());
 	}
 
+	public boolean isGenerating(){
+		return generating;
+	}
+
+	public void setGenerating(boolean generating){
+		this.generating = generating;
+	}
+
 	public void generate(){
 		int delay = 0;
 		for(int x=0;x<ARENA_SIZE/16;x++){
@@ -118,9 +128,13 @@ public class FallArenaRegion {
 	private void generateChunk(int chunkX,int chunkZ){
 		Location location = this.getMinLocation().clone().add(chunkX*16,0,chunkZ*16);
 		for(int x=0;x<16;x++){
-			for(int y=0;y<ARENA_FLOOR.length;y++){
+			for(int y=0;y<256;y++){
 				for(int z=0;z<16;z++){
-					location.clone().add(x,y,z).getBlock().setType(ARENA_FLOOR[y]);
+					if(y < ARENA_FLOOR.length){
+						location.clone().add(x,y,z).getBlock().setType(ARENA_FLOOR[y]);
+					} else {
+						location.clone().add(x,y,z).getBlock().setType(Material.AIR);
+					}
 				}
 			}
 		}

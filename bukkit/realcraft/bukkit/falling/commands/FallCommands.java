@@ -17,6 +17,12 @@ public class FallCommands extends AbstractCommand {
 		super("ff","fall","falling");
 		commands = new FallCommand[]{
 				new FallCommandCreate(),
+				new FallCommandRegen(),
+				new FallCommandJoin(),
+				new FallCommandTrust(),
+				new FallCommandUntrust(),
+				new FallCommandLock(),
+				new FallCommandUnlock(),
 		};
 	}
 
@@ -25,10 +31,10 @@ public class FallCommands extends AbstractCommand {
 		if(args.length == 0){
 			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lFalling §7§m"+StringUtils.repeat(" ",47-"Falling".length()));
 			player.sendMessage("§6/ff create §f- Vytvorit novy ostrov");
-			if(FallManager.getFallPlayer(player).getArena() != null){
-				player.sendMessage("§7---------------");
-				player.sendMessage("§6/ff name §e<name> §f- Nastaveni nazvu");
-			}
+			player.sendMessage("§6/ff regen §f- Pregenerovat ostrov");
+			player.sendMessage("§6/ff join §e<player> §f- Teleport na hracuv ostrov");
+			player.sendMessage("§6/ff (un)trust §e<player> §f- (Odebrat) Pridat spoluhrace");
+			player.sendMessage("§6/ff (un)lock §f- (Odemknout) Zamknout ostrov");
 			return;
 		}
 		String subcommand = args[0].toLowerCase();

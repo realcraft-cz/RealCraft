@@ -3,9 +3,11 @@ package realcraft.bukkit.falling;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.falling.arena.FallArena;
+import realcraft.bukkit.falling.arena.FallArenaPermission;
 import realcraft.bukkit.falling.arena.FallArenaRegion;
 import realcraft.bukkit.falling.events.FallPlayerJoinArenaEvent;
 import realcraft.bukkit.falling.events.FallPlayerLeaveArenaEvent;
+import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.BorderUtil;
@@ -47,7 +49,10 @@ public class FallPlayer {
 		return null;
 	}
 
-	public void joinArena(FallArena arena){
+	public void joinArena(FallArena arena) throws FallArenaLockedException {
+		if(arena.isLocked() && arena.getPermission(this) == FallArenaPermission.NONE){
+			throw new FallArenaLockedException(arena);
+		}
 		this.arena = arena;
 		this.getPlayer().teleport(LocationUtil.getSafeDestination(arena.getRegion().getCenterLocation().clone().add(0,1,0)));
 		this.updateBorder();

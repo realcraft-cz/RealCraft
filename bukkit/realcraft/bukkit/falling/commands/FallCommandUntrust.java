@@ -12,10 +12,10 @@ import realcraft.share.users.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FallCommandTrust extends FallCommand {
+public class FallCommandUntrust extends FallCommand {
 
-	public FallCommandTrust(){
-		super("trust");
+	public FallCommandUntrust(){
+		super("untrust");
 	}
 
 	@Override
@@ -26,8 +26,8 @@ public class FallCommandTrust extends FallCommand {
 			return;
 		}
 		if(args.length == 0){
-			fPlayer.sendMessage("Pridat spoluhrace");
-			fPlayer.sendMessage("§6/ff trust §e<player>");
+			fPlayer.sendMessage("Odebrat spoluhrace");
+			fPlayer.sendMessage("§6/ff untrust §e<player>");
 			return;
 		}
 		User user = Users.getUser(args[0]);
@@ -35,13 +35,13 @@ public class FallCommandTrust extends FallCommand {
 			fPlayer.sendMessage("§cHrac nenalezen.");
 			return;
 		}
-		if(arena.getPermission(FallManager.getFallPlayer(user)).isMinimum(FallArenaPermission.TRUSTED)){
-			fPlayer.sendMessage("§cHrac je jiz pridany.");
+		if(arena.getPermission(FallManager.getFallPlayer(user)).isMinimum(FallArenaPermission.NONE)){
+			fPlayer.sendMessage("§cHrac je jiz odebrany.");
 			return;
 		}
-		arena.getTrusted().add(FallManager.getFallPlayer(user));
+		arena.getTrusted().remove(FallManager.getFallPlayer(user));
 		arena.save();
-		FallManager.sendMessage(fPlayer,"§dSpoluhrac §f"+user.getName()+" §dpridan");
+		FallManager.sendMessage(fPlayer,"§dSpoluhrac §f"+user.getName()+" §dodebran");
 	}
 
 	@Override

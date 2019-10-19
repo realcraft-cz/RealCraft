@@ -13,8 +13,12 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.arena.FallArenaPermission;
 import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
+import realcraft.bukkit.falling.events.FallPlayerJoinArenaEvent;
+import realcraft.bukkit.falling.events.FallPlayerLeaveArenaEvent;
+import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.LocationUtil;
@@ -44,6 +48,32 @@ public class FallListeners implements Listener  {
 		if(fPlayer.getArena() != null){
 			event.setRespawnLocation(LocationUtil.getSafeDestination(fPlayer.getArena().getRegion().getCenterLocation()));
 			fPlayer.updateBorder();
+		}
+	}
+
+	@EventHandler
+	public void PlayerTeleportEvent(PlayerTeleportEvent event){
+		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
+		if(!event.getTo().getWorld().getName().equals(FallManager.getWorld().getName())) return;
+		FallArena arena = FallManager.getArena(event.getTo());
+		if(arena == null){
+			event.setCancelled(true);
+			return;
+		}
+		if(!arena.equals(fPlayer.getArena())){
+			try {
+				fPlayer.joinArena(arena);
+			} catch (FallArenaLockedException e){
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler
+	public void PlayerChangedWorldEvent(PlayerChangedWorldEvent event){
+		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
+		if(event.getFrom().getName().equals(FallManager.getWorld().getName())){
+			fPlayer.leaveArena();
 		}
 	}
 
@@ -105,18 +135,32 @@ public class FallListeners implements Listener  {
 	}
 
 	@EventHandler
-	public void FallArenaRegionGenerateEvent(FallArenaRegionGenerateEvent event){
-		Player player = Users.getPlayer(event.getArena().getOwner());
-		if(player != null && player.isOnline()){
-			FallManager.sendMessage(player, "§aOstrov vytvoren");
-			FallManager.getFallPlayer(player).joinArena(event.getArena());
-		}
-	}
-
-	@EventHandler
 	public void CreatureSpawnEvent(CreatureSpawnEvent event){
 		if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL && event.getEntityType() != EntityType.SLIME){
 			event.setCancelled(true);
 		}
+	}
+
+	@EventHandler
+	public void FallArenaRegionGenerateEvent(FallArenaRegionGenerateEvent event){
+		event.getArena().getRegion().setGenerating(false);
+		Player player = Users.getPlayer(event.getArena().getOwner());
+		if(player != null && player.isOnline()){
+			FallManager.sendMessage(player, "§aOstrov vytvoren");
+			try {
+				FallManager.getFallPlayer(player).joinArena(event.getArena());
+			} catch (FallArenaLockedException e){
+			}
+		}
+	}
+
+	@EventHandler
+	public void FallPlayerJoinArenaEvent(FallPlayerJoinArenaEvent event){
+		event.getArena().checkHasPlayers();
+	}
+
+	@EventHandler
+	public void FallPlayerLeaveArenaEvent(FallPlayerLeaveArenaEvent event){
+		event.getArena().checkHasPlayers();
 	}
 }

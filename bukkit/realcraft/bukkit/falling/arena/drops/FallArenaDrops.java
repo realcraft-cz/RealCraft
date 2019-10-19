@@ -75,7 +75,7 @@ public class FallArenaDrops {
 	int ticks5 = 0;
 	private void dropMonsters(){
 		ticks5 ++;
-		if(ticks5%100 == 0){
+		if(ticks5%40 == 0){
 			if(FallManager.getWorld().getTime() >= 13000 && FallManager.getWorld().getTime() <= 23500){
 				for(EntityType type : MONSTERS){
 					int count = 0;

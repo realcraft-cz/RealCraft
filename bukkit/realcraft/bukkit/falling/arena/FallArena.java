@@ -7,6 +7,7 @@ import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.drops.FallArenaDrops;
 import realcraft.bukkit.utils.json.JsonData;
+import realcraft.bukkit.utils.json.JsonDataBoolean;
 import realcraft.bukkit.utils.json.JsonDataInteger;
 import realcraft.bukkit.utils.json.JsonDataList;
 import realcraft.share.users.User;
@@ -25,9 +26,12 @@ public class FallArena {
 	private FallArenaDrops drops = new FallArenaDrops(this);
 	private int created;
 	private int updated;
+	private boolean hasPlayersCached = false;
 
 	private ArrayList<FallPlayer> trusted = new ArrayList<>();
 	private JsonDataList<JsonDataInteger> trustedData = new JsonDataList<>("trusted",JsonDataInteger.class);
+
+	private JsonDataBoolean locked = new JsonDataBoolean("locked");
 
 	public FallArena(int id){
 		this.id = id;
@@ -57,10 +61,6 @@ public class FallArena {
 		return trusted;
 	}
 
-	public void addTrusted(FallPlayer fPlayer){
-		trusted.add(fPlayer);
-	}
-
 	public int getCreated(){
 		return created;
 	}
@@ -69,19 +69,33 @@ public class FallArena {
 		return updated;
 	}
 
+	public boolean isLocked(){
+		return locked.getValue();
+	}
+
+	public void setLocked(boolean lock){
+		locked.setValue(lock);
+		this.save();
+	}
+
 	public FallArenaPermission getPermission(FallPlayer fPlayer){
 		if(fPlayer.getUser().equals(this.getOwner()) || fPlayer.getUser().getRank().isMinimum(UserRank.ADMIN)) return FallArenaPermission.OWNER;
 		else if(trusted.contains(fPlayer)) return FallArenaPermission.TRUSTED;
 		return FallArenaPermission.NONE;
 	}
 
-	public boolean hasPlayers(){
+	public void checkHasPlayers(){
+		hasPlayersCached = false;
 		for(Player player : Bukkit.getOnlinePlayers()){
-			if(FallManager.getFallPlayer(player).getArena() != null && FallManager.getFallPlayer(player).getArena().equals(this)){
-				return true;
+			if(this.equals(FallManager.getFallPlayer(player).getArena())){
+				hasPlayersCached = true;
+				break;
 			}
 		}
-		return false;
+	}
+
+	public boolean hasPlayersCached(){
+		return hasPlayersCached;
 	}
 
 	public void create(){
@@ -145,9 +159,14 @@ public class FallArena {
 		}
 	}
 
+	int ticks5 = 0;
 	public void run(){
-		if(this.hasPlayers()){
+		ticks5 ++;
+		if(this.hasPlayersCached() && !this.getRegion().isGenerating()){
 			this.getDrops().drop();
+		}
+		if(ticks5%8 == 0){
+			this.checkHasPlayers();
 		}
 	}
 
