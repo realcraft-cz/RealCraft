@@ -1,13 +1,25 @@
 package realcraft.bukkit.falling.arena;
 
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.entity.BaseEntity;
+import com.sk89q.worldedit.entity.Entity;
+import com.sk89q.worldedit.extent.AbstractDelegateExtent;
+import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.math.BlockVector2;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.world.biome.BiomeType;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockState;
+import com.sk89q.worldedit.world.block.BlockStateHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
+import realcraft.bukkit.falling.exceptions.FallArenaRegionGenerateTimeoutException;
+import realcraft.bukkit.falling.exceptions.FallArenaRegionGeneratingException;
 
 public class FallArenaRegion {
 
@@ -22,6 +34,8 @@ public class FallArenaRegion {
 			Material.ANDESITE,
 	};
 
+	public static final int GENERATE_TIMEOUT = 600*1000;
+
 	private FallArena arena;
 	private Location minLoc;
 	private Location maxLoc;
@@ -30,6 +44,7 @@ public class FallArenaRegion {
 	private Location centerLoc;
 
 	private boolean generating = false;
+	private long generated;
 
 	public FallArenaRegion(FallArena arena){
 		this.arena = arena;
@@ -94,6 +109,10 @@ public class FallArenaRegion {
 				&& location.getBlockZ() >= this.getMinLocationFull().getBlockZ() && location.getBlockZ() <= this.getMaxLocationFull().getBlockZ());
 	}
 
+	public FallArenaRegionExtent getExtent(Extent extent){
+		return new FallArenaRegionExtent(extent);
+	}
+
 	public boolean isGenerating(){
 		return generating;
 	}
@@ -102,7 +121,28 @@ public class FallArenaRegion {
 		this.generating = generating;
 	}
 
+	public long getGenerated(){
+		return generated;
+	}
+
+	public void setGenerated(long generated){
+		this.generated = generated;
+	}
+
+	public void regenerate() throws FallArenaRegionGeneratingException, FallArenaRegionGenerateTimeoutException {
+		if(this.isGenerating()){
+			throw new FallArenaRegionGeneratingException(this.getArena());
+		}
+		if(this.getGenerated()+GENERATE_TIMEOUT > System.currentTimeMillis()){
+			throw new FallArenaRegionGenerateTimeoutException(this.getArena(),(int)((this.getGenerated()+GENERATE_TIMEOUT-System.currentTimeMillis())/1000));
+		}
+		arena.getDrops().resetTicks();
+		arena.getRegion().setGenerating(true);
+		arena.getRegion().generate();
+	}
+
 	public void generate(){
+		this.setGenerated(System.currentTimeMillis());
 		int delay = 0;
 		for(int x=0;x<ARENA_SIZE/16;x++){
 			for(int z=0;z<ARENA_SIZE/16;z++){
@@ -167,5 +207,40 @@ public class FallArenaRegion {
 			step ++;
 		}
 		return new int[]{x,y};
+	}
+
+	private class FallArenaRegionExtent extends AbstractDelegateExtent {
+
+		public FallArenaRegionExtent(Extent extent){
+			super(extent);
+		}
+
+		@Override
+		public boolean setBlock(BlockVector3 location,BlockStateHolder block) throws WorldEditException{
+			if(FallArenaRegion.this.isLocationInside(location)) return super.setBlock(location,block);
+			return false;
+		}
+
+		@Override
+		public Entity createEntity(com.sk89q.worldedit.util.Location location,BaseEntity entity){
+			if(FallArenaRegion.this.isLocationInside(location)) return super.createEntity(location,entity);
+			return null;
+		}
+
+		@Override
+		public boolean setBiome(BlockVector2 position,BiomeType biome){
+			return FallArenaRegion.this.isLocationInside(position);
+		}
+
+		@Override
+		public BlockState getBlock(BlockVector3 location){
+			if(FallArenaRegion.this.isLocationInside(location)) return super.getBlock(location);
+			return BlockTypes.AIR.getDefaultState();
+		}
+
+		@Override
+		public BaseBlock getFullBlock(BlockVector3 location){
+			return this.getBlock(location).toBaseBlock();
+		}
 	}
 }

@@ -1,6 +1,11 @@
 package realcraft.bukkit.falling;
 
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.event.extent.EditSessionEvent;
+import com.sk89q.worldedit.extent.NullExtent;
+import com.sk89q.worldedit.util.eventbus.Subscribe;
 import org.bukkit.Bukkit;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +16,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.arena.FallArena;
@@ -19,14 +25,31 @@ import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
 import realcraft.bukkit.falling.events.FallPlayerJoinArenaEvent;
 import realcraft.bukkit.falling.events.FallPlayerLeaveArenaEvent;
 import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
+import realcraft.bukkit.others.AbstractCommand;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.LocationUtil;
+
+import java.util.ArrayList;
 
 public class FallListeners implements Listener  {
 
 	public FallListeners(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
+		WorldEdit.getInstance().getEventBus().register(this);
+		new AbstractCommand("leave"){
+			@Override
+			public void perform(Player player,String[] args){
+				player.teleport(ServerSpawn.getLocation());
+			}
+		};
+		new AbstractCommand("wea"){
+			@Override
+			public void perform(Player player,String[] args){
+				FallManager.getFallPlayer(player).toggleWEByPass();
+				FallManager.sendMessage(player,"§6WorldEdit bypass "+(FallManager.getFallPlayer(player).isWEByPass() ? "§aenabled" : "§cdisabled"));
+			}
+		};
 	}
 
 	@EventHandler
@@ -69,6 +92,25 @@ public class FallListeners implements Listener  {
 		}
 	}
 
+	@Subscribe
+	public void EditSessionEvent(EditSessionEvent event){
+		if(event.getActor() != null && event.getActor().isPlayer()){
+			if(!event.getWorld().getName().equalsIgnoreCase(FallManager.getWorld().getName())){
+				return;
+			}
+			Player player = Bukkit.getServer().getPlayer(event.getActor().getName());
+			if(player != null){
+				FallPlayer fPlayer = FallManager.getFallPlayer(player);
+				if(fPlayer.isWEByPass()) return;
+				if(fPlayer.getArena() == null || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
+					event.setExtent(new NullExtent());
+					return;
+				}
+				event.setExtent(fPlayer.getArena().getRegion().getExtent(event.getExtent()));
+			}
+		}
+	}
+
 	@EventHandler
 	public void PlayerChangedWorldEvent(PlayerChangedWorldEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
@@ -80,7 +122,7 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void BlockBreakEvent(BlockBreakEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
-		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
+		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInsideFull(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			event.setCancelled(true);
 		}
 	}
@@ -90,6 +132,24 @@ public class FallListeners implements Listener  {
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void StructureGrowEvent(StructureGrowEvent event){
+		FallArena arena = FallManager.getArena(event.getLocation());
+		if(arena == null){
+			event.setCancelled(true);
+			return;
+		}
+		ArrayList<BlockState> toRemove = new ArrayList<>();
+		for(BlockState block : event.getBlocks()){
+			if(!arena.getRegion().isLocationInside(block.getLocation())){
+				toRemove.add(block);
+			}
+		}
+		for(BlockState block : toRemove){
+			event.getBlocks().remove(block);
 		}
 	}
 
@@ -156,12 +216,10 @@ public class FallListeners implements Listener  {
 
 	@EventHandler
 	public void FallPlayerJoinArenaEvent(FallPlayerJoinArenaEvent event){
-		event.getArena().getOnlinePlayers();
 		event.getArena().sendMessage("§b"+event.getPlayer().getPlayer().getName()+"§7 se pripojil na ostrov",true);
 	}
 
 	@EventHandler
 	public void FallPlayerLeaveArenaEvent(FallPlayerLeaveArenaEvent event){
-		event.getArena().getOnlinePlayers();
 	}
 }

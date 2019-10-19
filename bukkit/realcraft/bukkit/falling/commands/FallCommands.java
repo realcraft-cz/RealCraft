@@ -16,7 +16,7 @@ public class FallCommands extends AbstractCommand {
 	public FallCommands(){
 		super("ff","fall","falling");
 		commands = new FallCommand[]{
-				new FallCommandCreate(),
+				new FallCommandHome(),
 				new FallCommandRegen(),
 				new FallCommandJoin(),
 				new FallCommandTrust(),
@@ -30,7 +30,7 @@ public class FallCommands extends AbstractCommand {
 	public void perform(Player player,String[] args){
 		if(args.length == 0){
 			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lFalling §7§m"+StringUtils.repeat(" ",47-"Falling".length()));
-			player.sendMessage("§6/ff create §f- Vytvorit novy ostrov");
+			player.sendMessage("§6/ff home §f- Teleport na vlastni ostrov");
 			player.sendMessage("§6/ff regen §f- Pregenerovat ostrov");
 			player.sendMessage("§6/ff join §e<player> §f- Teleport na hracuv ostrov");
 			player.sendMessage("§6/ff (un)trust §e<player> §f- (Odebrat) Pridat spoluhrace");

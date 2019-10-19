@@ -33,6 +33,28 @@ public class FallManager implements Runnable {
 		new FallCommands();
 		this.loadArenas();
 		Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(),this,5,5);
+		Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(),new Runnable() {
+			@Override
+			public void run(){
+				HashMap<Integer,FallArena> arenasToActivate = new HashMap<>();
+				for(Player player : Bukkit.getOnlinePlayers()){
+					FallArena arena = FallManager.getFallPlayer(player).getArena();
+					if(arena != null){
+						arenasToActivate.put(arena.getId(),arena);
+					}
+				}
+				for(FallArena arena : FallManager.getArenas()){
+					if(arenasToActivate.containsKey(arena.getId())){
+						arena.setActive(true);
+					} else {
+						if(arena.isActive()){
+							arena.setActive(false);
+							arena.save();
+						}
+					}
+				}
+			}
+		},40,40);
 	}
 
 	public static World getWorld(){

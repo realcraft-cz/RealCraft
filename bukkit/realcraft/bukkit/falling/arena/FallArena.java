@@ -26,12 +26,13 @@ public class FallArena {
 	private FallArenaDrops drops = new FallArenaDrops(this);
 	private int created;
 	private int updated;
-	private boolean hasPlayers = false;
+	private boolean active = false;
 
 	private ArrayList<FallPlayer> trusted = new ArrayList<>();
 	private JsonDataList<JsonDataInteger> trustedData = new JsonDataList<>("trusted",JsonDataInteger.class);
 
-	private JsonDataBoolean locked = new JsonDataBoolean("locked");
+	private JsonDataBoolean lockedData = new JsonDataBoolean("locked");
+	private JsonDataInteger ticksData = new JsonDataInteger("ticks");
 
 	public FallArena(int id){
 		this.id = id;
@@ -69,13 +70,24 @@ public class FallArena {
 		return updated;
 	}
 
+	public boolean isActive(){
+		return active;
+	}
+
+	public void setActive(boolean active){
+		this.active = active;
+	}
+
 	public boolean isLocked(){
-		return locked.getValue();
+		return lockedData.getValue();
 	}
 
 	public void setLocked(boolean lock){
-		locked.setValue(lock);
-		this.save();
+		lockedData.setValue(lock);
+	}
+
+	public int getTicks(){
+		return ticksData.getValue();
 	}
 
 	public FallArenaPermission getPermission(FallPlayer fPlayer){
@@ -91,7 +103,6 @@ public class FallArena {
 				players.add(player);
 			}
 		}
-		hasPlayers = players.size() > 0;
 		return players;
 	}
 
@@ -101,10 +112,6 @@ public class FallArena {
 			fPlayers.add(FallManager.getFallPlayer(player));
 		}
 		return fPlayers;
-	}
-
-	public boolean hasOnlinePlayers(){
-		return hasPlayers;
 	}
 
 	public void create(){
@@ -136,6 +143,7 @@ public class FallArena {
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+		this.getDrops().resetTicks();
 	}
 
 	public void save(){
@@ -151,6 +159,8 @@ public class FallArena {
 	private String getJsonData(){
 		JsonData data = new JsonData();
 		data.addProperty(trustedData);
+		data.addProperty(lockedData);
+		data.addProperty(ticksData);
 		return data.toString();
 	}
 
@@ -159,6 +169,8 @@ public class FallArena {
 		for(JsonDataInteger value : trustedData.getValues()){
 			trusted.add(FallManager.getFallPlayer(Users.getUser(value.getValue())));
 		}
+		lockedData.loadData(data);
+		ticksData.loadData(data);
 	}
 
 	private void putData(){
@@ -168,14 +180,15 @@ public class FallArena {
 		}
 	}
 
-	int ticks5 = 0;
 	public void run(){
-		ticks5 ++;
-		if(this.hasOnlinePlayers() && !this.getRegion().isGenerating()){
-			this.getDrops().drop();
-		}
-		if(ticks5%8 == 0){
-			this.getOnlinePlayers();
+		if(this.isActive()){
+			if(!this.getRegion().isGenerating()){
+				this.ticksData.setValue(this.getTicks()+5);
+				this.getDrops().drop();
+			}
+			if(this.getTicks()%600 == 0){
+				this.save();
+			}
 		}
 	}
 

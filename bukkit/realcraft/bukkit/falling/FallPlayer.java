@@ -21,6 +21,8 @@ public class FallPlayer {
 
 	private FallArena arena;
 
+	private boolean WEByPass;
+
 	public FallPlayer(User user){
 		this.user = user;
 	}
@@ -47,6 +49,14 @@ public class FallPlayer {
 			}
 		}
 		return null;
+	}
+
+	public boolean isWEByPass(){
+		return WEByPass;
+	}
+
+	public void toggleWEByPass(){
+		this.WEByPass = !this.WEByPass;
 	}
 
 	public void joinArena(FallArena arena) throws FallArenaLockedException {

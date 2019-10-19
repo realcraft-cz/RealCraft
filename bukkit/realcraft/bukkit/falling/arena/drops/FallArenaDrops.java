@@ -44,6 +44,12 @@ public class FallArenaDrops {
 		return arena;
 	}
 
+	public void resetTicks(){
+		for(FallArenaDrop drop : drops){
+			drop.setLastTick(this.getArena().getTicks());
+		}
+	}
+
 	public void drop(){
 		for(FallArenaDrop drop : this.getNextDrops()){
 			Location location = this.getRandomDropLocation();
@@ -64,8 +70,8 @@ public class FallArenaDrops {
 	private ArrayList<FallArenaDrop> getNextDrops(){
 		ArrayList<FallArenaDrop> nextDrops = new ArrayList<>();
 		for(FallArenaDrop drop : drops){
-			if(drop.getLastTick()+drop.getTicks() <= FallManager.getWorld().getFullTime()){
-				drop.setLastTick(FallManager.getWorld().getFullTime());
+			if(drop.getLastTick()+drop.getTicks() <= this.getArena().getTicks()){
+				drop.setLastTick(this.getArena().getTicks());
 				nextDrops.add(drop);
 			}
 		}
@@ -103,7 +109,7 @@ public class FallArenaDrops {
 	}
 
 	private Block getHighestBlock(Location location){
-		int y = 256;
+		int y = 255;
 		World world = location.getWorld();
 		while(y >= 0){
 			if(world.getBlockAt(location.getBlockX(),y,location.getBlockZ()).getType() != Material.AIR){

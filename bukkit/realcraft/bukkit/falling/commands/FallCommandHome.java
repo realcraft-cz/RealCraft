@@ -7,10 +7,10 @@ import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
 
 import java.util.List;
 
-public class FallCommandCreate extends FallCommand {
+public class FallCommandHome extends FallCommand {
 
-	public FallCommandCreate(){
-		super("create");
+	public FallCommandHome(){
+		super("home");
 	}
 
 	@Override

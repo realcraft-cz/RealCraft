@@ -20,12 +20,13 @@ public class FallCommandUnlock extends FallCommand {
 			fPlayer.sendMessage("§cNemas zadny vlastni ostrov.");
 			return;
 		}
-		if(arena.isLocked()){
+		if(!arena.isLocked()){
 			fPlayer.sendMessage("§cOstrov je jiz odemknuty.");
 			return;
 		}
 		FallManager.sendMessage(fPlayer,"§fOstrov odemknuty, kdokoliv se muze pripojit.");
 		arena.setLocked(false);
+		arena.save();
 	}
 
 	@Override

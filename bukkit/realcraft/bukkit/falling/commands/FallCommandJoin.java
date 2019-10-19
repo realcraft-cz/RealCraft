@@ -26,7 +26,7 @@ public class FallCommandJoin extends FallCommand {
 			return;
 		}
 		User user = Users.getUser(args[0]);
-		if(user == null || user.equals(fPlayer.getUser())){
+		if(user == null){
 			fPlayer.sendMessage("§cHrac nenalezen.");
 			return;
 		}

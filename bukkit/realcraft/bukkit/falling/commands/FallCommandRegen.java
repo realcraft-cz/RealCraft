@@ -4,6 +4,9 @@ import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.arena.FallArenaPermission;
+import realcraft.bukkit.falling.exceptions.FallArenaRegionGenerateTimeoutException;
+import realcraft.bukkit.falling.exceptions.FallArenaRegionGeneratingException;
+import realcraft.share.utils.StringUtil;
 
 import java.util.List;
 
@@ -24,9 +27,14 @@ public class FallCommandRegen extends FallCommand {
 			fPlayer.sendMessage("§cOstrov se jiz generuje.");
 			return;
 		}
-		FallManager.sendMessage(fPlayer,"§fGeneruji novy ostrov, prosim vyckejte ...");
-		arena.getRegion().setGenerating(true);
-		arena.getRegion().generate();
+		try {
+			arena.getRegion().regenerate();
+			FallManager.sendMessage(fPlayer,"§fGeneruji novy ostrov, prosim vyckejte ...");
+		} catch (FallArenaRegionGeneratingException e){
+			fPlayer.sendMessage("§cOstrov se jiz generuje.");
+		} catch (FallArenaRegionGenerateTimeoutException e){
+			fPlayer.sendMessage("§cOstrov muzes znovu vygenerovat za "+(int)Math.ceil(e.getRemainingSeconds()/60f)+" "+StringUtil.inflect(e.getRemainingSeconds(),new String[]{"minutu","minuty","minut"})+".");
+		}
 	}
 
 	@Override
