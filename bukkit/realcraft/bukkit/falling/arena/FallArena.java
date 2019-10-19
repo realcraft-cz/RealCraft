@@ -26,7 +26,7 @@ public class FallArena {
 	private FallArenaDrops drops = new FallArenaDrops(this);
 	private int created;
 	private int updated;
-	private boolean hasPlayersCached = false;
+	private boolean hasPlayers = false;
 
 	private ArrayList<FallPlayer> trusted = new ArrayList<>();
 	private JsonDataList<JsonDataInteger> trustedData = new JsonDataList<>("trusted",JsonDataInteger.class);
@@ -84,18 +84,27 @@ public class FallArena {
 		return FallArenaPermission.NONE;
 	}
 
-	public void checkHasPlayers(){
-		hasPlayersCached = false;
+	public ArrayList<Player> getOnlinePlayers(){
+		ArrayList<Player> players = new ArrayList<>();
 		for(Player player : Bukkit.getOnlinePlayers()){
 			if(this.equals(FallManager.getFallPlayer(player).getArena())){
-				hasPlayersCached = true;
-				break;
+				players.add(player);
 			}
 		}
+		hasPlayers = players.size() > 0;
+		return players;
 	}
 
-	public boolean hasPlayersCached(){
-		return hasPlayersCached;
+	public ArrayList<FallPlayer> getOnlineFallPlayers(){
+		ArrayList<FallPlayer> fPlayers = new ArrayList<>();
+		for(Player player : this.getOnlinePlayers()){
+			fPlayers.add(FallManager.getFallPlayer(player));
+		}
+		return fPlayers;
+	}
+
+	public boolean hasOnlinePlayers(){
+		return hasPlayers;
 	}
 
 	public void create(){
@@ -162,11 +171,25 @@ public class FallArena {
 	int ticks5 = 0;
 	public void run(){
 		ticks5 ++;
-		if(this.hasPlayersCached() && !this.getRegion().isGenerating()){
+		if(this.hasOnlinePlayers() && !this.getRegion().isGenerating()){
 			this.getDrops().drop();
 		}
 		if(ticks5%8 == 0){
-			this.checkHasPlayers();
+			this.getOnlinePlayers();
+		}
+	}
+
+	public void sendMessage(String message){
+		this.sendMessage(message,false);
+	}
+
+	public void sendMessage(String message,boolean prefix){
+		for(Player player : this.getOnlinePlayers()){
+			if(prefix){
+				FallManager.sendMessage(player,message);
+			} else {
+				player.sendMessage(message);
+			}
 		}
 	}
 

@@ -73,7 +73,15 @@ public class FallPlayer {
 	}
 
 	public void sendMessage(String message){
-		this.getPlayer().sendMessage(message);
+		this.sendMessage(message,false);
+	}
+
+	public void sendMessage(String message,boolean prefix){
+		if(prefix){
+			FallManager.sendMessage(this.getPlayer(),message);
+		} else {
+			this.getPlayer().sendMessage(message);
+		}
 	}
 
 	@Override

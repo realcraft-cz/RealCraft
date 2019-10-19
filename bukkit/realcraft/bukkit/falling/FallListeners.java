@@ -156,11 +156,12 @@ public class FallListeners implements Listener  {
 
 	@EventHandler
 	public void FallPlayerJoinArenaEvent(FallPlayerJoinArenaEvent event){
-		event.getArena().checkHasPlayers();
+		event.getArena().getOnlinePlayers();
+		event.getArena().sendMessage("§b"+event.getPlayer().getPlayer().getName()+"§7 se pripojil na ostrov",true);
 	}
 
 	@EventHandler
 	public void FallPlayerLeaveArenaEvent(FallPlayerLeaveArenaEvent event){
-		event.getArena().checkHasPlayers();
+		event.getArena().getOnlinePlayers();
 	}
 }
