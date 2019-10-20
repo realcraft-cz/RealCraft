@@ -56,8 +56,6 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void PlayerJoinEvent(PlayerJoinEvent event){
 		Player player = event.getPlayer();
-		player.getInventory().clear();
-		player.getInventory().setHeldItemSlot(0);
 		player.setFlying(false);
 	}
 

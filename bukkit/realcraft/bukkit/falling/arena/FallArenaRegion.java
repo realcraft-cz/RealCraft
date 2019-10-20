@@ -168,11 +168,6 @@ public class FallArenaRegion {
 
 	private void generateChunk(int chunkX,int chunkZ){
 		Location location = this.getMinLocation().clone().add(chunkX*16,0,chunkZ*16);
-		for(Entity entity : location.getChunk().getEntities()){
-			if(entity.getType() != EntityType.PLAYER){
-				entity.remove();
-			}
-		}
 		for(int x=0;x<16;x++){
 			for(int y=0;y<256;y++){
 				for(int z=0;z<16;z++){
@@ -182,6 +177,11 @@ public class FallArenaRegion {
 						location.clone().add(x,y,z).getBlock().setType(Material.AIR);
 					}
 				}
+			}
+		}
+		for(Entity entity : location.getChunk().getEntities()){
+			if(entity.getType() != EntityType.PLAYER){
+				entity.remove();
 			}
 		}
 	}

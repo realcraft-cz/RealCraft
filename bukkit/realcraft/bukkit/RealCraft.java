@@ -346,27 +346,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 			packet.header = ChatSerializer.a("{\"text\":\""+header+"\"}");
 			packet.footer = ChatSerializer.a("{\"text\":\""+footer+"\"}");
 			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
-
-			/*PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-			try {
-				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+header+"\"}");
-				Field field = packet.getClass().getDeclaredField("a");
-				field.setAccessible(true);
-				field.set(packet,component);
-				field.setAccessible(false);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-			try {
-				IChatBaseComponent component = ChatSerializer.a("{\"text\":\""+footer+"\"}");
-				Field field = packet.getClass().getDeclaredField("b");
-				field.setAccessible(true);
-				field.set(packet,component);
-				field.setAccessible(false);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);*/
 		}
 	}
 
@@ -375,7 +354,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Server.ADVANCEMENTS,PacketType.Play.Server.RECIPES){
 				@Override
 				public void onPacketSending(PacketEvent event){
-					if(RealCraft.getServerType() != ServerType.SURVIVAL){
+					if(RealCraft.getServerType() != ServerType.SURVIVAL && RealCraft.getServerType() != ServerType.FALLING){
 						event.setCancelled(true);
 					}
 				}
