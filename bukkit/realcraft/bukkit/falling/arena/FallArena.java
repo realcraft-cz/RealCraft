@@ -117,8 +117,9 @@ public class FallArena {
 	public void create(){
 		created = (int)(System.currentTimeMillis()/1000);
 		try {
-			ResultSet rs = DB.insert("INSERT INTO "+FallManager.FALL_ARENAS+" (user_id,arena_created) VALUES(?,?)",
+			ResultSet rs = DB.insert("INSERT INTO "+FallManager.FALL_ARENAS+" (user_id,arena_data,arena_created) VALUES(?,?,?)",
 					this.getOwner().getId(),
+					this.getJsonData(),
 					this.getCreated()
 			);
 			if(rs.next()){
@@ -148,7 +149,6 @@ public class FallArena {
 
 	public void save(){
 		updated = (int)(System.currentTimeMillis()/1000);
-		this.putData();
 		DB.update("UPDATE "+FallManager.FALL_ARENAS+" SET user_id = ?,arena_data = ?,arena_updated = ? WHERE arena_id = '"+this.getId()+"'",
 				this.getOwner().getId(),
 				this.getJsonData(),
@@ -158,6 +158,10 @@ public class FallArena {
 
 	private String getJsonData(){
 		JsonData data = new JsonData();
+		trustedData.clear();
+		for(FallPlayer fPlayer : trusted){
+			trustedData.add(new JsonDataInteger(fPlayer.getUser().getId()));
+		}
 		data.addProperty(trustedData);
 		data.addProperty(lockedData);
 		data.addProperty(ticksData);
@@ -171,13 +175,6 @@ public class FallArena {
 		}
 		lockedData.loadData(data);
 		ticksData.loadData(data);
-	}
-
-	private void putData(){
-		trustedData.clear();
-		for(FallPlayer fPlayer : trusted){
-			trustedData.add(new JsonDataInteger(fPlayer.getUser().getId()));
-		}
 	}
 
 	public void run(){

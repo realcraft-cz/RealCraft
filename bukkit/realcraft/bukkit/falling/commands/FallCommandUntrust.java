@@ -35,7 +35,7 @@ public class FallCommandUntrust extends FallCommand {
 			fPlayer.sendMessage("§cHrac nenalezen.");
 			return;
 		}
-		if(arena.getPermission(FallManager.getFallPlayer(user)).isMinimum(FallArenaPermission.NONE)){
+		if(arena.getPermission(FallManager.getFallPlayer(user)).isMaximum(FallArenaPermission.NONE)){
 			fPlayer.sendMessage("§cHrac je jiz odebrany.");
 			return;
 		}
