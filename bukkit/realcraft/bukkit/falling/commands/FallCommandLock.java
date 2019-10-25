@@ -15,9 +15,9 @@ public class FallCommandLock extends FallCommand {
 
 	@Override
 	public void perform(FallPlayer fPlayer,String[] args){
-		FallArena arena = fPlayer.getOwnArena();
-		if(arena == null || fPlayer.getArena() == null || fPlayer.getArena().getPermission(fPlayer) != FallArenaPermission.OWNER){
-			fPlayer.sendMessage("§cNemas zadny vlastni ostrov.");
+		FallArena arena = fPlayer.getArena();
+		if(arena == null || arena.getPermission(fPlayer) != FallArenaPermission.OWNER){
+			fPlayer.sendMessage("§cNemas opravneni spravovat tento ostrov.");
 			return;
 		}
 		if(arena.isLocked()){

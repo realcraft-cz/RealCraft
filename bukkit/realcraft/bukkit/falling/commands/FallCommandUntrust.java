@@ -20,8 +20,8 @@ public class FallCommandUntrust extends FallCommand {
 
 	@Override
 	public void perform(FallPlayer fPlayer,String[] args){
-		FallArena arena = fPlayer.getOwnArena();
-		if(arena == null || !arena.getPermission(fPlayer).isMinimum(FallArenaPermission.OWNER)){
+		FallArena arena = fPlayer.getArena();
+		if(arena == null || arena.getPermission(fPlayer) != FallArenaPermission.OWNER){
 			fPlayer.sendMessage("§cNemas opravneni spravovat tento ostrov.");
 			return;
 		}

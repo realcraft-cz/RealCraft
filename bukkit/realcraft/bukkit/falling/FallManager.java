@@ -1,13 +1,13 @@
 package realcraft.bukkit.falling;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.falling.arena.FallArena;
+import realcraft.bukkit.falling.arena.FallArenaPermission;
 import realcraft.bukkit.falling.commands.FallCommands;
 import realcraft.bukkit.users.Users;
 import realcraft.share.users.User;
@@ -28,7 +28,6 @@ public class FallManager implements Runnable {
 
 	public FallManager(){
 		world = Bukkit.getWorld("world_falling");
-		world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
 		new FallListeners();
 		new FallCommands();
 		this.loadArenas();
@@ -39,7 +38,7 @@ public class FallManager implements Runnable {
 				HashMap<Integer,FallArena> arenasToActivate = new HashMap<>();
 				for(Player player : Bukkit.getOnlinePlayers()){
 					FallArena arena = FallManager.getFallPlayer(player).getArena();
-					if(arena != null){
+					if(arena != null && arena.getPermission(FallManager.getFallPlayer(player)).isMinimum(FallArenaPermission.TRUSTED)){
 						arenasToActivate.put(arena.getId(),arena);
 					}
 				}

@@ -22,7 +22,7 @@ public class FallArena {
 
 	private int id;
 	private User owner;
-	private FallArenaRegion region = new FallArenaRegion(this);
+	private FallArenaRegion region;
 	private FallArenaDrops drops = new FallArenaDrops(this);
 	private int created;
 	private int updated;
@@ -36,6 +36,7 @@ public class FallArena {
 
 	public FallArena(int id){
 		this.id = id;
+		this.region = new FallArenaRegion(this);
 	}
 
 	public FallArena(User owner){
@@ -129,6 +130,7 @@ public class FallArena {
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+		this.region = new FallArenaRegion(this);
 		this.getRegion().generate();
 	}
 

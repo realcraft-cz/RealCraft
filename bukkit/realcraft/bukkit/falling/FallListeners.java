@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
@@ -201,6 +202,14 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void CreatureSpawnEvent(CreatureSpawnEvent event){
 		if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL && event.getEntityType() != EntityType.SLIME){
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void ExplosionPrimeEvent(ExplosionPrimeEvent event){
+		FallArena arena = FallManager.getArena(event.getEntity().getLocation());
+		if(arena == null || !arena.isActive()){
 			event.setCancelled(true);
 		}
 	}
