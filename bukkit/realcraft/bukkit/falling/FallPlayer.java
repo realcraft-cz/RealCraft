@@ -14,6 +14,9 @@ import realcraft.bukkit.utils.BorderUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.share.users.User;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+
 public class FallPlayer {
 
 	private User user;
@@ -22,6 +25,7 @@ public class FallPlayer {
 	private FallArena arena;
 
 	private boolean WEByPass;
+	private String regenCode;
 
 	public FallPlayer(User user){
 		this.user = user;
@@ -51,12 +55,41 @@ public class FallPlayer {
 		return null;
 	}
 
+	public ArrayList<FallArena> getArenas(){
+		ArrayList<FallArena> arenas = new ArrayList<>();
+		for(FallArena arena : FallManager.getArenas()){
+			if(arena.getPermission(this).isMinimum(FallArenaPermission.TRUSTED)){
+				arenas.add(arena);
+			}
+		}
+		return arenas;
+	}
+
+	public ArrayList<FallArena> getSortedArenas(){
+		ArrayList<FallArena> arenas = new ArrayList<>(this.getArenas());
+		arenas.sort(new Comparator<FallArena>(){
+			@Override
+			public int compare(FallArena arena1,FallArena arena2){
+				return Boolean.compare(arena2.getOwner().equals(FallPlayer.this.getUser()),arena1.getOwner().equals(FallPlayer.this.getUser()));
+			}
+		});
+		return arenas;
+	}
+
 	public boolean isWEByPass(){
 		return WEByPass;
 	}
 
 	public void toggleWEByPass(){
 		this.WEByPass = !this.WEByPass;
+	}
+
+	public String getRegenCode(){
+		return regenCode;
+	}
+
+	public void setRegenCode(String regenCode){
+		this.regenCode = regenCode;
 	}
 
 	public void joinArena(FallArena arena) throws FallArenaLockedException {

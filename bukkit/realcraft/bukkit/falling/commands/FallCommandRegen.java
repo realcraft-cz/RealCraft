@@ -6,6 +6,7 @@ import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.arena.FallArenaPermission;
 import realcraft.bukkit.falling.exceptions.FallArenaRegionGenerateTimeoutException;
 import realcraft.bukkit.falling.exceptions.FallArenaRegionGeneratingException;
+import realcraft.share.utils.RandomUtil;
 import realcraft.share.utils.StringUtil;
 
 import java.util.List;
@@ -23,11 +24,22 @@ public class FallCommandRegen extends FallCommand {
 			fPlayer.sendMessage("§cNemas opravneni spravovat tento ostrov.");
 			return;
 		}
+		if(args.length == 0){
+			fPlayer.setRegenCode(RandomUtil.getRandomHex(2));
+			fPlayer.sendMessage("Pro pregenerovani ostrovu napis znovu §6/ff regen "+fPlayer.getRegenCode());
+			return;
+		}
+		if(!args[0].equalsIgnoreCase(fPlayer.getRegenCode())){
+			fPlayer.sendMessage("§cKontrolni kod se neshoduje.");
+			return;
+		}
 		if(arena.getRegion().isGenerating()){
 			fPlayer.sendMessage("§cOstrov se jiz generuje.");
 			return;
 		}
 		try {
+			fPlayer.getPlayer().getInventory().clear();
+			fPlayer.getPlayer().getEnderChest().clear();
 			arena.getRegion().regenerate();
 			FallManager.sendMessage(fPlayer,"§fGeneruji novy ostrov, prosim vyckejte ...");
 		} catch (FallArenaRegionGeneratingException e){

@@ -1,7 +1,5 @@
 package realcraft.bukkit.falling.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.FallArena;
@@ -47,7 +45,14 @@ public class FallCommandUntrust extends FallCommand {
 	@Override
 	public List<String> tabCompleter(FallPlayer fPlayer,String[] args){
 		List<String> players = new ArrayList<>();
-		for(Player target : Bukkit.getOnlinePlayers()) players.add(target.getName());
+		FallArena arena = fPlayer.getArena();
+		if(arena != null && arena.getPermission(fPlayer) == FallArenaPermission.OWNER) {
+			for(FallPlayer fPlayer2 : arena.getTrusted()){
+				if(args.length == 0 || fPlayer2.getUser().getName().toLowerCase().startsWith(args[0].toLowerCase())){
+					players.add(fPlayer2.getUser().getName());
+				}
+			}
+		}
 		return players;
 	}
 }

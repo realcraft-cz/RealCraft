@@ -137,6 +137,7 @@ public class FallArenaRegion {
 		if(this.getGenerated()+GENERATE_TIMEOUT > System.currentTimeMillis()){
 			throw new FallArenaRegionGenerateTimeoutException(this.getArena(),(int)((this.getGenerated()+GENERATE_TIMEOUT-System.currentTimeMillis())/1000));
 		}
+		arena.resetTicks();
 		arena.getDrops().resetTicks();
 		arena.getRegion().setGenerating(true);
 		arena.getRegion().generate();

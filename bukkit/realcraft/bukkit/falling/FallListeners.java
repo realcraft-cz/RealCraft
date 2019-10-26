@@ -5,6 +5,7 @@ import com.sk89q.worldedit.event.extent.EditSessionEvent;
 import com.sk89q.worldedit.extent.NullExtent;
 import com.sk89q.worldedit.util.eventbus.Subscribe;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
@@ -58,6 +59,7 @@ public class FallListeners implements Listener  {
 	public void PlayerJoinEvent(PlayerJoinEvent event){
 		Player player = event.getPlayer();
 		player.setFlying(false);
+		player.setGameMode(GameMode.SURVIVAL);
 	}
 
 	@EventHandler
@@ -201,7 +203,7 @@ public class FallListeners implements Listener  {
 
 	@EventHandler
 	public void CreatureSpawnEvent(CreatureSpawnEvent event){
-		if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL && event.getEntityType() != EntityType.SLIME){
+		if(event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.NATURAL){
 			event.setCancelled(true);
 		}
 	}
@@ -220,6 +222,8 @@ public class FallListeners implements Listener  {
 		Player player = Users.getPlayer(event.getArena().getOwner());
 		if(player != null && player.isOnline()){
 			FallManager.sendMessage(player, "§aOstrov vytvoren");
+			player.getInventory().clear();
+			player.getEnderChest().clear();
 			try {
 				FallManager.getFallPlayer(player).joinArena(event.getArena());
 			} catch (FallArenaLockedException e){

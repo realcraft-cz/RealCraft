@@ -1,6 +1,7 @@
 package realcraft.bukkit.falling;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -28,6 +29,8 @@ public class FallManager implements Runnable {
 
 	public FallManager(){
 		world = Bukkit.getWorld("world_falling");
+		world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
+		world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
 		new FallListeners();
 		new FallCommands();
 		this.loadArenas();

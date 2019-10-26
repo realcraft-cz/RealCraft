@@ -17,12 +17,14 @@ public class FallCommands extends AbstractCommand {
 		super("ff","fall","falling");
 		commands = new FallCommand[]{
 				new FallCommandHome(),
-				new FallCommandRegen(),
+				new FallCommandInfo(),
+				new FallCommandList(),
 				new FallCommandJoin(),
 				new FallCommandTrust(),
 				new FallCommandUntrust(),
 				new FallCommandLock(),
 				new FallCommandUnlock(),
+				new FallCommandRegen(),
 		};
 	}
 
@@ -31,10 +33,12 @@ public class FallCommands extends AbstractCommand {
 		if(args.length == 0){
 			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lFalling §7§m"+StringUtils.repeat(" ",47-"Falling".length()));
 			player.sendMessage("§6/ff home §f- Teleport na vlastni ostrov");
-			player.sendMessage("§6/ff regen §f- Pregenerovat ostrov");
+			player.sendMessage("§6/ff info §f- Informace o ostrove");
+			player.sendMessage("§6/ff list §f- Seznam tvych ostrovu");
 			player.sendMessage("§6/ff join §e<player> §f- Teleport na hracuv ostrov");
 			player.sendMessage("§6/ff (un)trust §e<player> §f- (Odebrat) Pridat spoluhrace");
 			player.sendMessage("§6/ff (un)lock §f- (Odemknout) Zamknout ostrov");
+			player.sendMessage("§6/ff regen §f- Pregenerovat ostrov (smaze inventar)");
 			return;
 		}
 		String subcommand = args[0].toLowerCase();

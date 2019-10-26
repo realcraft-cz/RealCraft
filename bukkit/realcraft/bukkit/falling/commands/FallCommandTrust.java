@@ -47,7 +47,11 @@ public class FallCommandTrust extends FallCommand {
 	@Override
 	public List<String> tabCompleter(FallPlayer fPlayer,String[] args){
 		List<String> players = new ArrayList<>();
-		for(Player target : Bukkit.getOnlinePlayers()) players.add(target.getName());
+		for(Player target : Bukkit.getOnlinePlayers()){
+			if(args.length == 0 || target.getName().toLowerCase().startsWith(args[0].toLowerCase())){
+				players.add(target.getName());
+			}
+		}
 		return players;
 	}
 }

@@ -27,6 +27,11 @@ public class FallCommandLock extends FallCommand {
 		FallManager.sendMessage(fPlayer,"§fOstrov zamknuty, cizi hraci se nyni nepripoji.");
 		arena.setLocked(true);
 		arena.save();
+		for(FallPlayer fPlayer2 : arena.getOnlineFallPlayers()){
+			if(arena.getPermission(fPlayer2) == FallArenaPermission.NONE){
+				fPlayer2.leaveArena();
+			}
+		}
 	}
 
 	@Override

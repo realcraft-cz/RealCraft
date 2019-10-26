@@ -11,7 +11,6 @@ import realcraft.bukkit.utils.json.JsonDataBoolean;
 import realcraft.bukkit.utils.json.JsonDataInteger;
 import realcraft.bukkit.utils.json.JsonDataList;
 import realcraft.share.users.User;
-import realcraft.share.users.UserRank;
 import realcraft.share.users.Users;
 
 import java.sql.ResultSet;
@@ -91,8 +90,12 @@ public class FallArena {
 		return ticksData.getValue();
 	}
 
+	public void resetTicks(){
+		ticksData.setValue(0);
+	}
+
 	public FallArenaPermission getPermission(FallPlayer fPlayer){
-		if(fPlayer.getUser().equals(this.getOwner()) || fPlayer.getUser().getRank().isMinimum(UserRank.ADMIN)) return FallArenaPermission.OWNER;
+		if(fPlayer.getUser().equals(this.getOwner())) return FallArenaPermission.OWNER;
 		else if(trusted.contains(fPlayer)) return FallArenaPermission.TRUSTED;
 		return FallArenaPermission.NONE;
 	}
