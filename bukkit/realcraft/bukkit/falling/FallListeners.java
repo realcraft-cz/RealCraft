@@ -12,6 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -67,6 +68,13 @@ public class FallListeners implements Listener  {
 		player.setFlying(false);
 		player.setGameMode(GameMode.SURVIVAL);
 		fPlayer.leaveArena();
+		Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+			@Override
+			public void run(){
+				RealCraft.getInstance().essentials.getUser(player).setNickname(RealCraft.getInstance().essentials.getUser(player).getName());
+				RealCraft.getInstance().essentials.getUser(player).setDisplayNick();
+			}
+		},5);
 	}
 
 	@EventHandler
@@ -98,6 +106,7 @@ public class FallListeners implements Listener  {
 	public void PlayerTeleportEvent(PlayerTeleportEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		if(!event.getTo().getWorld().getName().equals(FallManager.getWorld().getName())) return;
+		if(event.getPlayer().getGameMode() == GameMode.SPECTATOR) return;
 		FallArena arena = FallManager.getArena(event.getTo());
 		if(arena == null){
 			event.setCancelled(true);
@@ -187,6 +196,16 @@ public class FallListeners implements Listener  {
 		}
 	}
 
+	@EventHandler(priority=EventPriority.HIGHEST)
+	public void PlayerInteractEvent(PlayerInteractEvent event){
+		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
+		if(fPlayer.getArena() == null || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
+			if(event.getPlayer().getGameMode() != GameMode.SPECTATOR){
+				event.setCancelled(true);
+			}
+		}
+	}
+
 	@EventHandler
 	public void PlayerInteractEntityEvent(PlayerInteractEntityEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
@@ -234,6 +253,9 @@ public class FallListeners implements Listener  {
 				event.setCancelled(true);
 			}
 			if(fPlayer.getArena() == null && event.getEntity() instanceof ItemFrame && player.getGameMode() != GameMode.CREATIVE){
+				event.setCancelled(true);
+			}
+			if(fPlayer.getArena() != null && !fPlayer.isWEByPass() && !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 				event.setCancelled(true);
 			}
 		}

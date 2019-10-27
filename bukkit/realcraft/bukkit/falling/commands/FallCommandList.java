@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -122,7 +123,7 @@ public class FallCommandList extends FallCommand implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority=EventPriority.LOW)
 	public void PlayerInteractEvent(PlayerInteractEvent event){
 		Player player = event.getPlayer();
 		if(player.getInventory().getItemInMainHand().isSimilar(FallCommandList.getHotbarItem()) && event.getAction() != Action.PHYSICAL){

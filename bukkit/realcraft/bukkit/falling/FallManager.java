@@ -59,6 +59,14 @@ public class FallManager implements Runnable {
 				}
 			}
 		},40,40);
+		Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(),new Runnable() {
+			@Override
+			public void run(){
+				if(FallManager.getWorld().getTime() >= 13000 && FallManager.getWorld().getTime() <= 23500){
+					FallManager.getWorld().setTime(FallManager.getWorld().getTime()+10);
+				}
+			}
+		},20,20);
 	}
 
 	public static World getWorld(){

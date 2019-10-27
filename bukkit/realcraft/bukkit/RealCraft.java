@@ -216,6 +216,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		}
 		if(RealCraft.getServerType() == ServerType.FALLING){
 			new FallManager();
+			trading = new Trading(this);
 		}
 		restart = new Restart(this);
 		socketmanager = new SocketManager();
