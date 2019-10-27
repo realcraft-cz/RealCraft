@@ -10,6 +10,7 @@ import realcraft.bukkit.database.DB;
 import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.arena.FallArenaPermission;
 import realcraft.bukkit.falling.commands.FallCommands;
+import realcraft.bukkit.lobby.LobbyAutoParkour;
 import realcraft.bukkit.users.Users;
 import realcraft.share.users.User;
 
@@ -31,6 +32,7 @@ public class FallManager implements Runnable {
 		world = Bukkit.getWorld("world_falling");
 		world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
 		world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+		new LobbyAutoParkour(RealCraft.getInstance());
 		new FallListeners();
 		new FallCommands();
 		this.loadArenas();

@@ -135,6 +135,7 @@ public class FallArena {
 		}
 		this.region = new FallArenaRegion(this);
 		this.getRegion().generate();
+		this.getDrops().resetTicks();
 	}
 
 	public void load(){

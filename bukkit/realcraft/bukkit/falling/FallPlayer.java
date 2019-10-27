@@ -106,7 +106,9 @@ public class FallPlayer {
 		FallArena oldMap = this.arena;
 		this.arena = null;
 		this.getPlayer().teleport(ServerSpawn.getLocation());
-		Bukkit.getPluginManager().callEvent(new FallPlayerLeaveArenaEvent(this,oldMap));
+		if(oldMap != null){
+			Bukkit.getPluginManager().callEvent(new FallPlayerLeaveArenaEvent(this,oldMap));
+		}
 	}
 
 	public void updateBorder(){

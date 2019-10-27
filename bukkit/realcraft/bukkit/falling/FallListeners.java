@@ -9,12 +9,16 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.*;
@@ -28,6 +32,7 @@ import realcraft.bukkit.falling.events.FallArenaRegionGenerateEvent;
 import realcraft.bukkit.falling.events.FallPlayerJoinArenaEvent;
 import realcraft.bukkit.falling.events.FallPlayerLeaveArenaEvent;
 import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
+import realcraft.bukkit.fights.Fights;
 import realcraft.bukkit.others.AbstractCommand;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.users.Users;
@@ -58,8 +63,16 @@ public class FallListeners implements Listener  {
 	@EventHandler
 	public void PlayerJoinEvent(PlayerJoinEvent event){
 		Player player = event.getPlayer();
+		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		player.setFlying(false);
 		player.setGameMode(GameMode.SURVIVAL);
+		fPlayer.leaveArena();
+	}
+
+	@EventHandler
+	public void PlayerQuitEvent(PlayerQuitEvent event){
+		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
+		fPlayer.leaveArena();
 	}
 
 	@EventHandler
@@ -130,7 +143,9 @@ public class FallListeners implements Listener  {
 	public void BlockBreakEvent(BlockBreakEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInsideFull(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
-			event.setCancelled(true);
+			if(!fPlayer.isWEByPass()){
+				event.setCancelled(true);
+			}
 		}
 	}
 
@@ -138,7 +153,9 @@ public class FallListeners implements Listener  {
 	public void BlockPlaceEvent(BlockPlaceEvent event){
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getBlock().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
-			event.setCancelled(true);
+			if(!fPlayer.isWEByPass()){
+				event.setCancelled(true);
+			}
 		}
 	}
 
@@ -193,6 +210,32 @@ public class FallListeners implements Listener  {
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		if(fPlayer.getArena() == null || !fPlayer.getArena().getRegion().isLocationInside(event.getEgg().getLocation()) || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			event.setHatching(false);
+		}
+	}
+
+	@EventHandler
+	public void EntityDamageEvent(EntityDamageEvent event){
+		if(event.getEntity() instanceof Player){
+			FallPlayer fPlayer = FallManager.getFallPlayer((Player)event.getEntity());
+			if(fPlayer.getArena() == null){
+				event.setCancelled(true);
+				if(event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK) event.getEntity().setFireTicks(0);
+				if(event.getCause() == DamageCause.VOID) event.getEntity().teleport(Fights.getLobbyLocation());
+			}
+		}
+	}
+
+	@EventHandler
+	public void EntityDamageByEntityEvent(EntityDamageByEntityEvent event){
+		if(event.getDamager() instanceof Player){
+			Player player = (Player)event.getDamager();
+			FallPlayer fPlayer = FallManager.getFallPlayer((Player)event.getDamager());
+			if(fPlayer.getArena() == null && player.getGameMode() != GameMode.CREATIVE){
+				event.setCancelled(true);
+			}
+			if(fPlayer.getArena() == null && event.getEntity() instanceof ItemFrame && player.getGameMode() != GameMode.CREATIVE){
+				event.setCancelled(true);
+			}
 		}
 	}
 

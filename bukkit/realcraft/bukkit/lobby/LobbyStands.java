@@ -215,6 +215,7 @@ public class LobbyStands implements Listener, Runnable {
 			switch(server){
 				case LOBBY: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTllYjlkYTI2Y2YyZDMzNDEzOTdhN2Y0OTEzYmEzZDM3ZDFhZDEwZWFlMzBhYjI1ZmEzOWNlYjg0YmMifX19");
 				case SURVIVAL: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6XC9cL3RleHR1cmVzLm1pbmVjcmFmdC5uZXRcL3RleHR1cmVcLzQ5ZTJjY2E5YWU4MDYyZTZjYWE0ZDE0YjM0OWVmYTM3ODdlZGI5ZjE1OGMxNDdkN2VkYTA5MjQxOWI3NmFmY2QifX19");
+				case FALLING: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2I3MTIxNzIwYmQyYjlhMTU5OTQ1ZGFkNDQxMmJhZDcwZTAwOTY2NjYwMGI3ZjJhZmRhNGRlMmMyNmE1MzExZiJ9fX0=");
 				case CREATIVE: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6XC9cL3RleHR1cmVzLm1pbmVjcmFmdC5uZXRcL3RleHR1cmVcLzliOWRiMWYyYTVhOTc5MTY2ZmI3NThlZTRkN2M4Zjk0N2JhNjgyOTY4N2E5OTZlNDZiZTM0Yzc5ZTQ5ODYifX19");
 				case FIGHTS: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk3ZWRlNDlmNTJlMjVhZGVhYTU4YjFkNzgxNmZjY2UyMjI5ZmQ4ZjI0ZWI1ZjA2NWIyM2YzNzY1ODk0NGUifX19");
 				case BEDWARS: return ItemUtil.getHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6XC9cL3RleHR1cmVzLm1pbmVjcmFmdC5uZXRcL3RleHR1cmVcLzg4ZDUyNjQyOGFhNWFmNTk0ZGRlMmViN2RhZmI1OGZjYmFhNGRkM2I3ZmUzOGY3NzU3ODUxZTgzNDMyMDRhIn19fQ==");
@@ -234,6 +235,7 @@ public class LobbyStands implements Listener, Runnable {
 			if(server == ServerType.LOBBY) item.setType(Material.AIR);
 			else if(server == ServerType.SURVIVAL) item = new ItemStack(Material.DIAMOND_CHESTPLATE);
 			else if(server == ServerType.CREATIVE) ItemUtil.setLetherColor(item,"#2CCC1E");
+			else if(server == ServerType.FALLING) item = new ItemStack(Material.IRON_CHESTPLATE);
 			else if(server == ServerType.FIGHTS) item = new ItemStack(Material.GOLDEN_CHESTPLATE);
 			else if(server == ServerType.BEDWARS) ItemUtil.setLetherColor(item,"#CC0000");
 			else if(server == ServerType.HIDENSEEK) ItemUtil.setLetherColor(item,"#3A86CC");
@@ -250,7 +252,7 @@ public class LobbyStands implements Listener, Runnable {
 			if(server == ServerType.LOBBY) item.setType(Material.AIR);
 			else if(server == ServerType.SURVIVAL) return item;
 			else if(server == ServerType.CREATIVE) ItemUtil.setLetherColor(item,"#2CCC1E");
-			else if(server == ServerType.FIGHTS) item = new ItemStack(Material.DIAMOND_LEGGINGS);
+			else if(server == ServerType.FIGHTS) return item;
 			else if(server == ServerType.BEDWARS) item = new ItemStack(Material.IRON_LEGGINGS);
 			else if(server == ServerType.HIDENSEEK) ItemUtil.setLetherColor(item,"#3A86CC");
 			else if(server == ServerType.BLOCKPARTY) ItemUtil.setLetherColor(item,"#DC82EB");
@@ -266,6 +268,7 @@ public class LobbyStands implements Listener, Runnable {
 			if(server == ServerType.LOBBY) item.setType(Material.AIR);
 			else if(server == ServerType.SURVIVAL) ItemUtil.setLetherColor(item,"#FFFFFF");
 			else if(server == ServerType.CREATIVE) ItemUtil.setLetherColor(item,"#2FB024");
+			else if(server == ServerType.FALLING) item = new ItemStack(Material.GOLDEN_BOOTS);
 			else if(server == ServerType.FIGHTS) item = new ItemStack(Material.DIAMOND_BOOTS);
 			else if(server == ServerType.BEDWARS) ItemUtil.setLetherColor(item,"#CC0000");
 			else if(server == ServerType.HIDENSEEK) ItemUtil.setLetherColor(item,"#2566A3");
@@ -282,6 +285,7 @@ public class LobbyStands implements Listener, Runnable {
 			switch(server){
 				case SURVIVAL: return new ItemStack(Material.IRON_PICKAXE);
 				case CREATIVE: return new ItemStack(Material.GRASS_BLOCK);
+				case FALLING: return new ItemStack(Material.ANDESITE);
 				case FIGHTS: return new ItemStack(Material.IRON_SWORD);
 				case BEDWARS: return new ItemStack(Material.RED_BED);
 				case HIDENSEEK: return new ItemStack(Material.BOOKSHELF);
