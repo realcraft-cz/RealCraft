@@ -35,6 +35,7 @@ public class FriendNotices implements Listener {
 	}
 
 	public static void showRequestToRecipient(FriendPlayer fPlayer,FriendsRequest request){
+		System.out.println("Sdfg");
 		if(fPlayer.getPlayer() == null) return;
 		fPlayer.getPlayer().sendMessage("");
 		fPlayer.getPlayer().sendMessage(FRIENDS_PREFIX+"§eZadost o pratelstvi od hrace §f"+request.getSender().getUser().getName()+"§e.");
@@ -86,12 +87,14 @@ public class FriendNotices implements Listener {
 	}
 
 	public static void showFriendTeleport(FriendPlayer fPlayer,FriendPlayer friend){
-		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.TELEPORTS) || friend.getPlayer() == null) return;
+		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.TELEPORTS) || friend.getPlayer() == null)
+			return;
 		fPlayer.getPlayer().sendMessage(FRIENDS_PREFIX+"§f"+friend.getUser().getName()+" §7se k tobe teleportoval.");
 	}
 
 	public static void showFriendChat(FriendPlayer fPlayer,FriendPlayer friend,String message){
-		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.CHATS)) return;
+		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.CHATS))
+			return;
 		fPlayer.getPlayer().sendMessage(FRIENDS_PREFIX+"§f"+friend.getUser().getName()+": §7"+message);
 	}
 
@@ -101,12 +104,14 @@ public class FriendNotices implements Listener {
 	}
 
 	private static void showFriendJoin(FriendPlayer fPlayer,FriendPlayer friend){
-		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.JOINS) || friend.getPlayer() != null) return;
+		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.JOINS) || friend.getPlayer() != null)
+			return;
 		fPlayer.getPlayer().sendMessage(FRIENDS_PREFIX_GREEN+"§f"+friend.getUser().getName()+" §7se pripojil.");
 	}
 
 	private static void showFriendQuit(FriendPlayer fPlayer,FriendPlayer friend){
-		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.QUITS) || friend.getPlayer() != null) return;
+		if(fPlayer.getPlayer() == null || !fPlayer.getSettings().getValue(FriendPlayerSettingsType.QUITS) || friend.getPlayer() != null)
+			return;
 		fPlayer.getPlayer().sendMessage(FRIENDS_PREFIX_RED+"§f"+friend.getUser().getName()+" §7se odpojil.");
 	}
 
@@ -120,14 +125,12 @@ public class FriendNotices implements Listener {
 			recipient.reload();
 			FriendNotices.showRemoveToSender(sender,recipient);
 			FriendNotices.showRemoveToRecipient(recipient,sender);
-		}
-		else if(data.getChannel().equalsIgnoreCase(CHANNEL_BUNGEE_LOGIN)){
+		} else if(data.getChannel().equalsIgnoreCase(CHANNEL_BUNGEE_LOGIN)){
 			FriendPlayer fPlayer = Friends.getFriendPlayer(data.getInt("id"));
 			for(FriendPlayer friend : fPlayer.getFriends()){
 				FriendNotices.showFriendJoin(friend,fPlayer);
 			}
-		}
-		else if(data.getChannel().equalsIgnoreCase(CHANNEL_BUNGEE_LOGOUT)){
+		} else if(data.getChannel().equalsIgnoreCase(CHANNEL_BUNGEE_LOGOUT)){
 			FriendPlayer fPlayer = Friends.getFriendPlayer(data.getInt("id"));
 			for(FriendPlayer friend : fPlayer.getFriends()){
 				FriendNotices.showFriendQuit(friend,fPlayer);

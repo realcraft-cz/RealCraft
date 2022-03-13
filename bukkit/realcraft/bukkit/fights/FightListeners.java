@@ -4,8 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -14,7 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -70,7 +69,7 @@ public class FightListeners implements Listener {
 							if(fPlayer != null && fPlayer.getState() == FightPlayerState.SPECTATOR && !fPlayer.isLeaving()){
 								PacketPlayOutPlayerInfo packet = (PacketPlayOutPlayerInfo) event.getPacket().getHandle();
 								PacketPlayOutPlayerInfo.EnumPlayerInfoAction action = (PacketPlayOutPlayerInfo.EnumPlayerInfoAction) ReflectionUtils.getField(packet.getClass(),true,"a").get(packet);
-								if(action == PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER){
+								if(action == PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e){
 									event.setCancelled(true);
 								}
 							}
@@ -112,8 +111,8 @@ public class FightListeners implements Listener {
 			@Override
 			public void run(){
 				for(FightPlayer fPlayer2 : Fights.getOnlineFightPlayers()){
-					PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER,((CraftPlayer)player).getHandle());
-					((CraftPlayer)fPlayer2.getPlayer()).getHandle().playerConnection.sendPacket(packet);
+					PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e,((CraftPlayer)player).getHandle());
+					((CraftPlayer)fPlayer2.getPlayer()).getHandle().b.a(packet);
 				}
 			}
 		});

@@ -1,25 +1,15 @@
 package realcraft.bukkit.friends;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
 import realcraft.bukkit.RealCraft;
-import realcraft.bukkit.friends.commands.FriendCommand;
-import realcraft.bukkit.friends.commands.FriendCommandAccept;
-import realcraft.bukkit.friends.commands.FriendCommandAdd;
-import realcraft.bukkit.friends.commands.FriendCommandChat;
-import realcraft.bukkit.friends.commands.FriendCommandDeny;
-import realcraft.bukkit.friends.commands.FriendCommandList;
-import realcraft.bukkit.friends.commands.FriendCommandRemove;
-import realcraft.bukkit.friends.commands.FriendCommandSettings;
-import realcraft.bukkit.friends.commands.FriendCommandTp;
+import realcraft.bukkit.friends.commands.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FriendCommands implements CommandExecutor, TabCompleter {
 
@@ -81,7 +71,7 @@ public class FriendCommands implements CommandExecutor, TabCompleter {
 	}
 
 	private void showHelpPage(Player player){
-		player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §a§lFriends §7§m"+StringUtils.repeat(" ",47-"Friends".length()));
+		player.sendMessage("§7§m"+" ".repeat(10)+"§r §a§lFriends §7§m"+" ".repeat(47-"Friends".length()));
 		player.sendMessage("§6/friend add §e<player> §f- Odeslat zadost o pratelstvi");
 		player.sendMessage("§6/friend remove §e<player> §f- Odebrat hrace z pratel");
 		player.sendMessage("§6/friend accept §e<player> §f- Prijmout zadost od hrace");
@@ -90,6 +80,6 @@ public class FriendCommands implements CommandExecutor, TabCompleter {
 		player.sendMessage("§6/friend chat §f- Soukromy chat mezi prateli");
 		player.sendMessage("§6/friend list §f- Seznam tvych pratel");
 		player.sendMessage("§6/friend settings §f- Nastaveni pratel");
-		player.sendMessage("§7§m"+StringUtils.repeat(" ",62));
+		player.sendMessage("§7§m"+" ".repeat(62));
 	}
 }

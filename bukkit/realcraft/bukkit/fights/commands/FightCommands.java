@@ -1,16 +1,14 @@
 package realcraft.bukkit.fights.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
 import realcraft.bukkit.RealCraft;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FightCommands implements CommandExecutor, TabCompleter {
 
@@ -73,9 +71,9 @@ public class FightCommands implements CommandExecutor, TabCompleter {
 	}
 
 	private void showHelpPage(Player player){
-		player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §b§lFights §7§m"+StringUtils.repeat(" ",47-"Fights".length()));
+		player.sendMessage("§7§m"+" ".repeat(10)+"§r §b§lFights §7§m"+" ".repeat(47-"Fights".length()));
 		player.sendMessage("§6/fight duel §e<player> §f- Vyzvat hrace na souboj");
 		player.sendMessage("§6/fight accept §e<player> §f- Prijmout vyzvu od hrace");
-		player.sendMessage("§7§m"+StringUtils.repeat(" ",62));
+		player.sendMessage("§7§m"+" ".repeat(62));
 	}
 }

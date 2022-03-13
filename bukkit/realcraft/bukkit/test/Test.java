@@ -9,13 +9,8 @@ public class Test {
 		new ParticlesTest();
 		new ChunkTest();
 		new ImageTest();
-		new PokemonTest();
 		new TitleTest();
 		if(RealCraft.isTestServer()){
-			//new SignTest();
-			//new KickTest();
-			//new FallingTest();
-			new RandomTest();
 			new CombatTest();
 			new AdvancementTest();
 		}

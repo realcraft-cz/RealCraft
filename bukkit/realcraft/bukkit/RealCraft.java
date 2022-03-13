@@ -6,15 +6,13 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.earth2me.essentials.Essentials;
-import net.minecraft.server.v1_14_R1.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_14_R1.PacketPlayOutMapChunk;
-import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerListHeaderFooter;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_14_R1.CraftChunk;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -63,7 +61,6 @@ import realcraft.bukkit.survival.MapCrafter;
 import realcraft.bukkit.survival.PassiveMode;
 import realcraft.bukkit.survival.RandomSpawn;
 import realcraft.bukkit.survival.economy.Economy;
-import realcraft.bukkit.survival.entitytrackerfixer.EntityTrackerFixer;
 import realcraft.bukkit.survival.residences.CheckResidences;
 import realcraft.bukkit.survival.residences.ResidenceSigns;
 import realcraft.bukkit.survival.sells.Sells;
@@ -211,12 +208,10 @@ public class RealCraft extends JavaPlugin implements Listener {
 		if(RealCraft.getServerType() != ServerType.MAPS){
 			new MapServerTeleport();
 		}
-		if(RealCraft.isTestServer() || RealCraft.getServerType() == ServerType.SURVIVAL){
-			new EntityTrackerFixer();
-		}
 		if(RealCraft.getServerType() == ServerType.FALLING){
 			new FallManager();
 			trading = new Trading(this);
+			new Sitting();
 		}
 		restart = new Restart(this);
 		socketmanager = new SocketManager();
@@ -264,27 +259,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 				}
 			},20);
 		}
-
-		if(RealCraft.getServerType() == ServerType.SURVIVAL){
-			Bukkit.getScheduler().runTaskLater(this,new Runnable(){
-				@Override
-				public void run(){
-					if(player.isOnline()){
-						int cx = player.getLocation().getChunk().getX();
-						int cz = player.getLocation().getChunk().getZ();
-						int view = Bukkit.getViewDistance();
-						for(int x=-view;x<=view;x++){
-							for(int z=-view;z<=view;z++){
-								net.minecraft.server.v1_14_R1.Chunk chunk = ((CraftChunk)player.getWorld().getChunkAt(cx+x,cz+z)).getHandle();
-								PacketPlayOutMapChunk packet = new PacketPlayOutMapChunk(chunk,20);
-								((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
-							}
-						}
-					}
-				}
-			},20);
-		}
-
 	}
 
 	@EventHandler(priority=EventPriority.NORMAL,ignoreCancelled = false)
@@ -343,10 +317,11 @@ public class RealCraft extends JavaPlugin implements Listener {
 		}
 
 		private void setPlayerHeaderFooter(Player player,String header,String footer){
-			PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-			packet.header = ChatSerializer.a("{\"text\":\""+header+"\"}");
-			packet.footer = ChatSerializer.a("{\"text\":\""+footer+"\"}");
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+			PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(
+				IChatBaseComponent.ChatSerializer.a("{\"text\":\""+header+"\"}"),
+				IChatBaseComponent.ChatSerializer.a("{\"text\":\""+footer+"\"}")
+			);
+			((CraftPlayer)player).getHandle().b.a(packet);
 		}
 	}
 

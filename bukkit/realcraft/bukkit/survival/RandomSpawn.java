@@ -63,8 +63,7 @@ public class RandomSpawn extends AbstractCommand {
 				biome == Biome.WARM_OCEAN ||
 				biome == Biome.DEEP_FROZEN_OCEAN ||
 				biome == Biome.DEEP_LUKEWARM_OCEAN ||
-				biome == Biome.DEEP_COLD_OCEAN ||
-				biome == Biome.DEEP_WARM_OCEAN
+				biome == Biome.DEEP_COLD_OCEAN
 		);
 	}
 }

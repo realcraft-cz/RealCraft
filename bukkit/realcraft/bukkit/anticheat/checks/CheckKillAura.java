@@ -1,3 +1,4 @@
+/*
 package realcraft.bukkit.anticheat.checks;
 
 import com.comphenix.protocol.PacketType;
@@ -7,13 +8,13 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.EntityUseAction;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.server.v1_14_R1.*;
-import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import net.minecraft.server.v1_18_R2.*;
+import net.minecraft.server.v1_18_R2.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_14_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -100,9 +101,9 @@ public class CheckKillAura extends Check {
 			Location location = player.getLocation().clone();
 			location = this.getBehindLocation(location);
 			AntiCheat.getPlayer(player).ghostPlayer.setLocation(location.getX(),location.getY(),location.getZ(),location.getYaw(),location.getPitch());
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.ADD_PLAYER,AntiCheat.getPlayer(player).ghostPlayer));
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutNamedEntitySpawn(AntiCheat.getPlayer(player).ghostPlayer));
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER,AntiCheat.getPlayer(player).ghostPlayer));
+			((CraftPlayer)player).getHandle().b.a(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.ADD_PLAYER,AntiCheat.getPlayer(player).ghostPlayer));
+			((CraftPlayer)player).getHandle().b.a(new PacketPlayOutNamedEntitySpawn(AntiCheat.getPlayer(player).ghostPlayer));
+			((CraftPlayer)player).getHandle().b.a(new PacketPlayOutPlayerInfo(EnumPlayerInfoAction.REMOVE_PLAYER,AntiCheat.getPlayer(player).ghostPlayer));
 			AntiCheat.getPlayer(player).lastGhost = System.currentTimeMillis();
 		}
 	}
@@ -115,13 +116,13 @@ public class CheckKillAura extends Check {
 			|| (AntiCheat.getPlayer(player).ghostPlayer.ticksLived+2)%10 == 0 || location.getPitch() < -45) location = this.getBehindLocation(location);
 			else location = this.getAboveLocation(location);
 			AntiCheat.getPlayer(player).ghostPlayer.setLocation(location.getX(),location.getY(),location.getZ(),location.getYaw(),location.getPitch());
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityTeleport(AntiCheat.getPlayer(player).ghostPlayer));
+			((CraftPlayer)player).getHandle().b.a(new PacketPlayOutEntityTeleport(AntiCheat.getPlayer(player).ghostPlayer));
 		}
 	}
 
 	private void removeFakePlayer(Player player){
 		if(AntiCheat.getPlayer(player).ghostPlayer != null){
-			((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutEntityDestroy(AntiCheat.getPlayer(player).ghostPlayer.getId()));
+			((CraftPlayer)player).getHandle().b.a(new PacketPlayOutEntityDestroy(AntiCheat.getPlayer(player).ghostPlayer.getId()));
 			AntiCheat.getPlayer(player).ghostPlayer = null;
 		}
 	}
@@ -173,4 +174,4 @@ public class CheckKillAura extends Check {
 			}
 		}
 	}
-}
+}*/

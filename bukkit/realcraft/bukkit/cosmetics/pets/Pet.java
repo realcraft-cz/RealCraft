@@ -1,13 +1,16 @@
+/*
 package realcraft.bukkit.cosmetics.pets;
 
 import com.google.common.collect.Sets;
-import net.minecraft.server.v1_14_R1.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.entity.monster.EntityZombie;
+import net.minecraft.world.level.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -310,15 +313,17 @@ public class Pet extends Cosmetic {
 		}
 
 		private void clearPathfinders(org.bukkit.entity.Entity entity){
-			net.minecraft.server.v1_14_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+			net.minecraft.server.v1_18_R2.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 			try {
 				Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
 				bField.setAccessible(true);
 				Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
 				cField.setAccessible(true);
 				((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
-				/*bField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
-				bField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());*/
+				*/
+/*bField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
+				bField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());*//*
+
 				cField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
 				cField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());
 			} catch (Exception e){
@@ -422,13 +427,13 @@ public class Pet extends Cosmetic {
 		}
 
 		@Override
-		public boolean isTypeNotPersistent(double d){
-			return false;
+		public NBTTagCompound f(NBTTagCompound nbttagcompound){
+			return null;
 		}
 
 		@Override
-		public NBTTagCompound save(NBTTagCompound nbttagcompound){
-			return null;
+		public boolean d_() {
+			return false;
 		}
 	}
-}
+}*/

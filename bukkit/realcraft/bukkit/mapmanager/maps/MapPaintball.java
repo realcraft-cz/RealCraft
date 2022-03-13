@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -129,7 +128,7 @@ public class MapPaintball extends Map implements Listener {
 			MapTeam team = MapTeam.getByName(args[0]);
 			if(team == null){
 				player.sendMessage("§cNeplatny tym.");
-				player.sendMessage("§7Teams: "+StringUtils.join(MapTeam.values(),", ").toUpperCase());
+				player.sendMessage("§7Teams: "+String.join(", ", Arrays.toString(MapTeam.values())).toUpperCase());
 				return;
 			}
 			if(args.length == 2 && args[1].equalsIgnoreCase("remove")){

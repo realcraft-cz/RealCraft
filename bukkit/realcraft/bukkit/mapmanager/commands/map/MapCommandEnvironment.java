@@ -1,6 +1,5 @@
 package realcraft.bukkit.mapmanager.commands.map;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.mapmanager.MapManager;
@@ -9,6 +8,7 @@ import realcraft.bukkit.mapmanager.commands.MapCommand;
 import realcraft.bukkit.mapmanager.map.MapPermission;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MapCommandEnvironment extends MapCommand {
@@ -34,7 +34,7 @@ public class MapCommandEnvironment extends MapCommand {
 			environment = Environment.valueOf(args[0].toUpperCase());
 		} catch (IllegalArgumentException e){
 			player.sendMessage("§cNeplatne prostredi.");
-			player.sendMessage("§7Environments: "+StringUtils.join(Environment.values(),", ").toUpperCase());
+			player.sendMessage("§7Environments: "+String.join(", ", Arrays.toString(Environment.values())).toUpperCase());
 			return;
 		}
 		mPlayer.getMap().getEnvironment().setEnvironment(environment);

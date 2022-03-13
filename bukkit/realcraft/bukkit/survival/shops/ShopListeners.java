@@ -4,7 +4,6 @@ import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.event.ResidenceDeleteEvent;
 import com.bekvon.bukkit.residence.event.ResidenceRenameEvent;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -248,7 +247,7 @@ public class ShopListeners extends AbstractCommand implements Listener, CommandE
 			return;
 		}
 		if(args.length == 0 || (!args[0].equalsIgnoreCase("create") && !args[0].equalsIgnoreCase("stats") && !args[0].equalsIgnoreCase("market"))){
-			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §e§lChestShop §7§m"+StringUtils.repeat(" ",47-"ChestShop".length()));
+			player.sendMessage("§7§m"+" ".repeat(10)+"§r §e§lChestShop §7§m"+" ".repeat(47-"ChestShop".length()));
 			player.sendMessage("§6/shop create §e<pocet> §e<cena> §f- Vytvorit obchod");
 			player.sendMessage("§6/shop market §e<cena> §f- Pridat residenci na verejny trh");
 			player.sendMessage("§6/shop market remove §f- Odebrat residenci z verejneho trhu");
@@ -256,7 +255,7 @@ public class ShopListeners extends AbstractCommand implements Listener, CommandE
 			player.sendMessage("§6/market §f- Seznam obchodu na verejnem trhu");
 			player.sendMessage("§7Pri vytvareni obchodu musis drzet item, ktery chces pridat.");
 			player.sendMessage("§7Obchod zrusis znicenim truhly.");
-			player.sendMessage("§7§m"+StringUtils.repeat(" ",62));
+			player.sendMessage("§7§m"+" ".repeat(62));
 			return;
 		}
 		if(args[0].equalsIgnoreCase("create")){

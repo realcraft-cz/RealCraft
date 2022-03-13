@@ -4,7 +4,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.users.Users;
@@ -18,7 +17,7 @@ public class VipCommand extends AbstractCommand {
 
 	@Override
 	public void perform(Player player,String[] args){
-		player.sendMessage(ChatColor.LIGHT_PURPLE+""+ChatColor.STRIKETHROUGH+StringUtils.repeat(" ",60));
+		player.sendMessage(ChatColor.LIGHT_PURPLE+""+ChatColor.STRIKETHROUGH+" ".repeat(60));
 		if(Users.getUser(player).getRank() != UserRank.VIP){
 			player.sendMessage("");
 			player.sendMessage("      "+ChatColor.BOLD+player.getName()+", stale nemas VIP ucet?");
@@ -38,6 +37,6 @@ public class VipCommand extends AbstractCommand {
 			player.sendMessage("    §aVIP ucet mas aktivni");
 			player.sendMessage("");
 		}
-		player.sendMessage(ChatColor.LIGHT_PURPLE+""+ChatColor.STRIKETHROUGH+StringUtils.repeat(" ",60));
+		player.sendMessage(ChatColor.LIGHT_PURPLE+""+ChatColor.STRIKETHROUGH+" ".repeat(60));
 	}
 }

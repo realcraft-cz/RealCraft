@@ -1,7 +1,5 @@
 package realcraft.bukkit.banmanazer;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.net.InetAddress;
 
 public class BanUtils {
@@ -23,36 +21,6 @@ public class BanUtils {
 
 	public static String toString(long ip){
 		return ((ip >> 24) & 0xFF) + "." + ((ip >> 16) & 0xFF) + "." + ((ip >> 8) & 0xFF) + "." + (ip & 0xFF);
-	}
-
-	public static long[] getRangeFromWildcard(String ipStr){
-		String[] ocelots = ipStr.split("\\.");
-		
-		if(ocelots.length != 4) return null;
-		
-		String[] fromIp = new String[4];
-		String[] toIp = new String[4];
-		
-		for(int i = 0; i < ocelots.length; i++){
-			if(ocelots[i].equals("*")){
-				fromIp[i] = "0";
-			} else {
-				fromIp[i] = ocelots[i];
-			}
-		}
-		
-		for(int i = 0; i < ocelots.length; i++){
-			if(ocelots[i].equals("*")){
-				toIp[i] = "255";
-			} else {
-				toIp[i] = ocelots[i];
-			}
-		}
-		
-		long fromIpAddress = toLong(StringUtils.join(fromIp, "."));
-		long toIpAddress = toLong(StringUtils.join(toIp, "."));
-	
-		return new long[] { fromIpAddress, toIpAddress };
 	}
 	
 	public static String combineSplit(int startIndex, String[] string) {

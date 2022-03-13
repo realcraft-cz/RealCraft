@@ -1,6 +1,5 @@
 package realcraft.bukkit.mapmanager.commands.map;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.mapmanager.MapManager;
@@ -9,6 +8,7 @@ import realcraft.bukkit.mapmanager.commands.MapCommand;
 import realcraft.bukkit.mapmanager.map.MapPermission;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MapCommandBiome extends MapCommand {
@@ -34,7 +34,7 @@ public class MapCommandBiome extends MapCommand {
 			biome = Biome.valueOf(args[0].toUpperCase());
 		} catch (IllegalArgumentException e){
 			player.sendMessage("§cNeplatny biome.");
-			player.sendMessage("§7Biomes: "+StringUtils.join(Biome.values(),", ").toUpperCase());
+			player.sendMessage("§7Biomes: "+String.join(", ", Arrays.toString(Biome.values())).toUpperCase());
 			return;
 		}
 		mPlayer.getMap().getBiome().setBiome(biome);

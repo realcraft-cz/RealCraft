@@ -41,6 +41,7 @@ public abstract class Map {
 	private MapState state = MapState.BUILD;
 	private int created;
 	private int updated;
+	private byte[] regionData;
 
 	private MapDataInteger time = new MapDataInteger("time",6000);
 	private MapDataBiome biome = new MapDataBiome("biome",Biome.FOREST);
@@ -102,6 +103,10 @@ public abstract class Map {
 
 	public int getUpdated(){
 		return updated;
+	}
+
+	public byte[] getRegionData(){
+		return regionData;
 	}
 
 	public MapDataInteger getTime(){
@@ -178,9 +183,8 @@ public abstract class Map {
 				this._loadData(new MapData(rs.getString("map_data")));
 				Blob blob = rs.getBlob("map_region");
 				if(blob != null){
-					byte[] bytes = blob.getBytes(1,(int)blob.length());
+					regionData = blob.getBytes(1,(int)blob.length());
 					blob.free();
-					this.getRegion().load(bytes);
 				} else {
 					this.getRegion().setLoaded(true);
 				}

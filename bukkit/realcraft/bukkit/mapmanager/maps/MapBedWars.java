@@ -1,6 +1,5 @@
 package realcraft.bukkit.mapmanager.maps;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -118,7 +117,7 @@ public class MapBedWars extends Map {
 			MapTeam team = MapTeam.getByName(args[0]);
 			if(team == null){
 				player.sendMessage("§cNeplatny tym.");
-				player.sendMessage("§7Teams: "+StringUtils.join(MapTeam.values(),", ").toUpperCase());
+				player.sendMessage("§7Teams: "+String.join(", ", Arrays.toString(MapTeam.values())).toUpperCase());
 				return;
 			}
 			if(args.length == 2 && args[1].equalsIgnoreCase("remove")){
@@ -138,7 +137,7 @@ public class MapBedWars extends Map {
 			MapTeam team = MapTeam.getByName(args[0]);
 			if(team == null){
 				player.sendMessage("§cNeplatny tym.");
-				player.sendMessage("§7Teams: "+StringUtils.join(MapTeam.values(),", ").toUpperCase());
+				player.sendMessage("§7Teams: "+String.join(", ", Arrays.toString(MapTeam.values())).toUpperCase());
 				return;
 			}
 			if(args.length == 2 && args[1].equalsIgnoreCase("remove")){

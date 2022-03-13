@@ -1,14 +1,12 @@
 package realcraft.bukkit.chat;
 
+import com.earth2me.essentials.Essentials;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import com.earth2me.essentials.Essentials;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.banmanazer.BanUtils;
 import realcraft.bukkit.sockets.SocketData;

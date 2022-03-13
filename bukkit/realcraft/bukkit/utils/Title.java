@@ -1,12 +1,8 @@
 package realcraft.bukkit.utils;
 
 
-import net.minecraft.server.v1_14_R1.ChatMessageType;
-import net.minecraft.server.v1_14_R1.IChatBaseComponent;
-import net.minecraft.server.v1_14_R1.PacketPlayOutTitle;
-import net.minecraft.server.v1_14_R1.PacketPlayOutTitle.EnumTitleAction;
+import net.minecraft.network.chat.ChatMessageType;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import realcraft.bukkit.RealCraft;
@@ -17,23 +13,29 @@ import java.lang.reflect.Method;
 public class Title {
 
 	public static void showTitle(Player player, String title, double fadeIn, double stay, double fadeOut) {
-		IChatBaseComponent titleComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + title + "\"}");
+        player.sendTitle(title, null, (int) Math.round(fadeIn * 20), (int) Math.round(stay * 20), (int) Math.round(fadeOut * 20));
 
-		PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.TITLE, titleComponent);
+        /*PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.TITLE);
+
+        packet.getTitleActions().writeSafely(0, EnumWrappers.TitleAction.TITLE);
+        packet.getChatComponents().write(0, WrappedChatComponent.fromText(title));
+
 		PacketPlayOutTitle timesPacket = new PacketPlayOutTitle(EnumTitleAction.TIMES, null, (int) Math.round(fadeIn*20), (int) Math.round(stay*20), (int) Math.round(fadeOut*20));
 
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(timesPacket);
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(titlePacket);
+		((CraftPlayer) player).getHandle().b.a(timesPacket);
+		((CraftPlayer) player).getHandle().b.a(titlePacket);*/
 	}
 
 	public static void showSubTitle(Player player, String subTitle, double fadeIn, double stay, double fadeOut) {
-		IChatBaseComponent subTitleComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + subTitle + "\"}");
+        player.sendTitle(null, subTitle, (int) Math.round(fadeIn * 20), (int) Math.round(stay * 20), (int) Math.round(fadeOut * 20));
+
+		/*IChatBaseComponent subTitleComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + subTitle + "\"}");
 
 		PacketPlayOutTitle subTitlePacket = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, subTitleComponent);
 		PacketPlayOutTitle timesPacket = new PacketPlayOutTitle(EnumTitleAction.TIMES, null, (int) Math.round(fadeIn*20.0), (int) Math.round(stay*20.0), (int) Math.round(fadeOut*20.0));
 
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(timesPacket);
-		((CraftPlayer) player).getHandle().playerConnection.sendPacket(subTitlePacket);
+		((CraftPlayer) player).getHandle().b.a(timesPacket);
+		((CraftPlayer) player).getHandle().b.a(subTitlePacket);*/
 	}
 
 	public static void showActionTitle(Player player, String message){
@@ -58,7 +60,7 @@ public class Title {
             Class<?> c2 = Class.forName("net.minecraft.server." + nmsver + ".ChatComponentText");
             Class<?> c3 = Class.forName("net.minecraft.server." + nmsver + ".IChatBaseComponent");
             Object o = c2.getConstructor(new Class<?>[]{String.class}).newInstance(message);
-            ppoc = c4.getConstructor(new Class<?>[]{c3, ChatMessageType.class}).newInstance(o, ChatMessageType.GAME_INFO);
+            ppoc = c4.getConstructor(new Class<?>[]{c3, ChatMessageType.class}).newInstance(o, ChatMessageType.c);
             Method m1 = c1.getDeclaredMethod("getHandle");
             Object h = m1.invoke(p);
             Field f1 = h.getClass().getDeclaredField("playerConnection");

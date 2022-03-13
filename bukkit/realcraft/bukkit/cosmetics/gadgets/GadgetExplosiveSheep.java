@@ -1,22 +1,20 @@
 package realcraft.bukkit.cosmetics.gadgets;
 
 import com.google.common.collect.Sets;
-import net.minecraft.server.v1_14_R1.Entity;
-import net.minecraft.server.v1_14_R1.EntityCreature;
-import net.minecraft.server.v1_14_R1.EntityInsentient;
-import net.minecraft.server.v1_14_R1.PathfinderGoalSelector;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
-import realcraft.bukkit.cosmetics.utils.CustomPathFinderGoalPanic;
 import realcraft.bukkit.cosmetics.utils.MathUtils;
 import realcraft.bukkit.cosmetics.utils.UtilParticles;
 import realcraft.bukkit.utils.Particles;
@@ -79,7 +77,6 @@ public class GadgetExplosiveSheep extends Gadget {
 					sheep.setAgeLock(true);
 					sheep.setNoDamageTicks(120);
 					clearPathfinders(sheep);
-					makePanic(sheep);
 					Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
 						@Override
 						public void run() {
@@ -112,15 +109,10 @@ public class GadgetExplosiveSheep extends Gadget {
 			cField.setAccessible(true);
 			/*bField.set(((EntityInsentient) nmsEntity).goalSelector, Sets.newLinkedHashSet());
 			bField.set(((EntityInsentient) nmsEntity).targetSelector, Sets.newLinkedHashSet());*/
-			cField.set(((EntityInsentient) nmsEntity).goalSelector, Sets.newLinkedHashSet());
-			cField.set(((EntityInsentient) nmsEntity).targetSelector, Sets.newLinkedHashSet());
+			cField.set(((EntityInsentient) nmsEntity).bQ, Sets.newLinkedHashSet());
+			cField.set(((EntityInsentient) nmsEntity).bR, Sets.newLinkedHashSet());
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
-	}
-
-	public void makePanic(org.bukkit.entity.Entity entity) {
-		EntityInsentient insentient = (EntityInsentient) ((CraftEntity) entity).getHandle();
-		insentient.goalSelector.a(3, new CustomPathFinderGoalPanic((EntityCreature) insentient, 0.4d));
 	}
 }

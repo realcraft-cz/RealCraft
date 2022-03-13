@@ -7,13 +7,18 @@ import com.sk89q.worldedit.util.eventbus.Subscribe;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -201,7 +206,24 @@ public class FallListeners implements Listener  {
 		FallPlayer fPlayer = FallManager.getFallPlayer(event.getPlayer());
 		if(fPlayer.getArena() == null || !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
 			if(event.getPlayer().getGameMode() != GameMode.SPECTATOR){
-				event.setCancelled(true);
+				Block block = event.getClickedBlock();
+				if(block == null) return;
+				if(event.getAction() == Action.PHYSICAL && block.getType() == Material.FARMLAND){
+					event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
+					event.setCancelled(true);
+				}
+				else if(block.getType() == Material.CHEST || block.getType() == Material.ENDER_CHEST || block.getType() == Material.TRAPPED_CHEST || block.getType() == Material.BARREL || block.getType() == Material.FURNACE || block.getType() == Material.BLAST_FURNACE || block.getType() == Material.SMOKER){
+					event.setCancelled(true);
+				}
+				else if(block.getType() == Material.LEVER || block.getType() == Material.COMPARATOR || block.getType() == Material.REPEATER){
+					event.setCancelled(true);
+				}
+				else if(block.getType() == Material.FLOWER_POT){
+					event.setCancelled(true);
+				}
+				else if(event.getAction() == Action.LEFT_CLICK_BLOCK && block.getRelative(BlockFace.UP).getType() == Material.FIRE){
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
@@ -242,6 +264,11 @@ public class FallListeners implements Listener  {
 				if(event.getCause() == DamageCause.VOID) event.getEntity().teleport(Fights.getLobbyLocation());
 			}
 		}
+		else if(event.getEntity() instanceof Monster && event.getCause() == DamageCause.FALL){
+			if(event.getEntity().getTicksLived() < 4*20){
+				event.setCancelled(true);
+			}
+		}
 	}
 
 	@EventHandler
@@ -256,7 +283,9 @@ public class FallListeners implements Listener  {
 				event.setCancelled(true);
 			}
 			if(fPlayer.getArena() != null && !fPlayer.isWEByPass() && !fPlayer.getArena().getPermission(fPlayer).isMinimum(FallArenaPermission.TRUSTED)){
-				event.setCancelled(true);
+				if(!(event.getEntity() instanceof Monster)){
+					event.setCancelled(true);
+				}
 			}
 		}
 	}

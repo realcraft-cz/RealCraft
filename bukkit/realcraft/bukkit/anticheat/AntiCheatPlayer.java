@@ -1,11 +1,9 @@
 package realcraft.bukkit.anticheat;
 
-import net.minecraft.server.v1_14_R1.EntityPlayer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.anticheat.checks.Check.CheckType;
 import realcraft.bukkit.anticheat.checks.CheckClickAura.HitFrequency;
-import realcraft.bukkit.anticheat.checks.CheckKillAura.GhostFrequency;
 import realcraft.bukkit.anticheat.checks.CheckSneakHack.SneakFrequency;
 import realcraft.bukkit.anticheat.utils.Utils;
 
@@ -13,7 +11,7 @@ import java.util.HashMap;
 
 public class AntiCheatPlayer {
 
-	private Player player;
+	private final Player player;
 	private HashMap<CheckType,PlayerCheck> typeChecks = new HashMap<CheckType,PlayerCheck>();
 
 	/** FLYHACK */
@@ -38,8 +36,8 @@ public class AntiCheatPlayer {
 
 	/** KILLAURA */
 	public int ghostChecks = 0;
-	public GhostFrequency ghostFrequency = new GhostFrequency(50*5);
-	public EntityPlayer ghostPlayer;
+	/*public GhostFrequency ghostFrequency = new GhostFrequency(50*5);
+	public EntityPlayer ghostPlayer;*/
 	public long lastGhost = 0;
 
 	public AntiCheatPlayer(Player player){
@@ -85,7 +83,7 @@ public class AntiCheatPlayer {
 		hitFrequency = new HitFrequency(1000);
 
 		ghostChecks = 0;
-		ghostFrequency = new GhostFrequency(50*5);
+		//ghostFrequency = new GhostFrequency(50*5);
 
 		typeChecks = new HashMap<CheckType,PlayerCheck>();
 	}

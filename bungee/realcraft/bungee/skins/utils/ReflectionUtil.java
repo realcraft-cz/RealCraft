@@ -3,7 +3,6 @@ package realcraft.bungee.skins.utils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public class ReflectionUtil {
 
@@ -22,9 +21,9 @@ public class ReflectionUtil {
 
 	public static void setFieldAccessible(Field f) throws Exception {
 		f.setAccessible(true);
-		Field modifiers = Field.class.getDeclaredField("modifiers");
+		/*Field modifiers = Field.class.getDeclaredField("modifiers");
 		modifiers.setAccessible(true);
-		modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+		modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);*/
 	}
 
 	public static Object getObject(Object obj, String fname) throws Exception {

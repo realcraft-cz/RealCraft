@@ -52,6 +52,7 @@ public class MapRegion implements Runnable {
 	private Location maxLoc;
 
 	private boolean loaded = false;
+	private boolean loading = false;
 
 	private boolean toSave = false;
 	private long lastBlockChange = 0;
@@ -79,6 +80,14 @@ public class MapRegion implements Runnable {
 
 	public void setLoaded(boolean loaded){
 		this.loaded = loaded;
+	}
+
+	public boolean isLoading(){
+		return loading;
+	}
+
+	public void setLoading(boolean loading){
+		this.loading = loading;
 	}
 
 	public boolean isToSave(){
@@ -149,10 +158,12 @@ public class MapRegion implements Runnable {
 		return new MapRegionExtent(extent);
 	}
 
-	public void load(byte[] bytes){
+	public void load(){
+		if(this.isLoading()) return;
+		this.setLoading(true);
 		try {
 			BuiltInClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
-			ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+			ByteArrayInputStream bais = new ByteArrayInputStream(map.getRegionData());
 			ClipboardReader reader = format.getReader(bais);
 			Clipboard clipboard = reader.read();
 			new SchemaStages(clipboard,this.getBaseLocation());

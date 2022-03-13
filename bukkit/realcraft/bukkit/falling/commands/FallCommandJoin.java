@@ -15,7 +15,7 @@ import java.util.List;
 public class FallCommandJoin extends FallCommand {
 
 	public FallCommandJoin(){
-		super("join");
+		super("join","tp");
 	}
 
 	@Override

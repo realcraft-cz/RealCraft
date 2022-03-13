@@ -3,13 +3,17 @@ package realcraft.bukkit.creative;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dye;
 import realcraft.bukkit.RealCraft;
+import realcraft.share.ServerType;
 
 import java.util.HashMap;
 
@@ -65,5 +69,26 @@ public class CancelGrow implements Listener {
 	@EventHandler
 	public void LeavesDecayEvent(LeavesDecayEvent event){
 		event.setCancelled(true);
+	}
+
+	@EventHandler
+	public void ChunkLoadEvent(ChunkLoadEvent event){
+		if(RealCraft.getServerType() == ServerType.CREATIVE){
+			int count = 0;
+			int removed = 0;
+			for(Entity entity : event.getChunk().getEntities()){
+				count ++;
+				if(entity.getType() == EntityType.MINECART || entity.getType() == EntityType.MINECART_CHEST || entity.getType() == EntityType.MINECART_FURNACE || entity.getType() == EntityType.MINECART_HOPPER || entity.getType() == EntityType.MINECART_TNT){
+					removed ++;
+					entity.remove();
+				}
+			}
+			if(removed > 0){
+				System.out.println("ChunkLoadEvent removed "+removed);
+			}
+			if(count > 0){
+				System.out.println("ChunkLoadEvent count "+count);
+			}
+		}
 	}
 }

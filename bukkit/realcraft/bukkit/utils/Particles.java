@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 public enum Particles {
-	BARRIER            	(Particle.BARRIER),
 	BLOCK_CRACK        	(Particle.BLOCK_CRACK),
 	BLOCK_DUST         	(Particle.BLOCK_DUST),
 	BUBBLE_COLUMN_UP   	(Particle.BUBBLE_COLUMN_UP),

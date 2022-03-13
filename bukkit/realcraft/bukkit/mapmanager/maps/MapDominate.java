@@ -2,7 +2,6 @@ package realcraft.bukkit.mapmanager.maps;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -104,7 +103,7 @@ public class MapDominate extends Map {
 			MapTeam team = MapTeam.getByName(args[0]);
 			if(team == null){
 				player.sendMessage("§cNeplatny tym.");
-				player.sendMessage("§7Teams: "+StringUtils.join(MapTeam.values(),", ").toUpperCase());
+				player.sendMessage("§7Teams: "+String.join(", ", Arrays.toString(MapTeam.values())).toUpperCase());
 				return;
 			}
 			if(args.length == 2 && args[1].equalsIgnoreCase("remove")){

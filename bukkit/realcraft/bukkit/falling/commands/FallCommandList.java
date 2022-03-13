@@ -1,6 +1,5 @@
 package realcraft.bukkit.falling.commands;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -71,7 +70,7 @@ public class FallCommandList extends FallCommand implements Listener {
 			meta.setDisplayName("§6§lOstrov "+arena.getOwner().getRank().getChatColor()+arena.getOwner().getName());
 			ArrayList<String> lores = new ArrayList<>();
 			if(trusted.length > 0){
-				lores.add("§7Trusted: "+StringUtils.join(trusted,", "));
+				lores.add("§7Trusted: "+String.join(", ", trusted));
 				lores.add("§r");
 			}
 			lores.add("§7Vytvoreno: §f"+DateUtil.lastTime(arena.getCreated()));

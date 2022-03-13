@@ -1,6 +1,5 @@
 package realcraft.bukkit.falling.commands;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.others.AbstractCommand;
@@ -31,7 +30,7 @@ public class FallCommands extends AbstractCommand {
 	@Override
 	public void perform(Player player,String[] args){
 		if(args.length == 0){
-			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lFalling §7§m"+StringUtils.repeat(" ",47-"Falling".length()));
+			player.sendMessage("§7§m"+" ".repeat(10)+"§r §6§lFalling §7§m"+" ".repeat(47-"Falling".length()));
 			player.sendMessage("§6/ff home §f- Teleport na vlastni ostrov");
 			player.sendMessage("§6/ff info §f- Informace o ostrove");
 			player.sendMessage("§6/ff list §f- Seznam tvych ostrovu");

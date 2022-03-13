@@ -1,21 +1,14 @@
 package realcraft.bukkit.survival.sells;
 
-import net.minecraft.server.v1_14_R1.EntityTypes;
-import net.minecraft.server.v1_14_R1.EntityVillager;
-import net.minecraft.server.v1_14_R1.NBTTagCompound;
-import net.minecraft.server.v1_14_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_14_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -54,16 +47,13 @@ public class SellTrader implements Listener {
 
 	public void spawn(){
 		this.remove();
-		CustomTrader trader = new CustomTrader(((CraftWorld)location.getWorld()).getHandle());
-		trader.setLocation(location.getX(),location.getY(),location.getZ(),location.getPitch(),location.getYaw());
-		((CraftLivingEntity) trader.getBukkitEntity()).setRemoveWhenFarAway(false);
-		((CraftWorld)location.getWorld()).getHandle().addEntity(trader,CreatureSpawnEvent.SpawnReason.CUSTOM);
-		entity = (Villager)trader.getBukkitEntity();
-		entity.setAI(false);
-		entity.setInvulnerable(false);
-		entity.setCustomNameVisible(true);
-		entity.setCustomName("§e§lVykupna");
-		entity.teleport(location);
+		Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER, false);
+		villager.setAI(false);
+		villager.setRemoveWhenFarAway(false);
+		villager.setInvulnerable(false);
+		villager.setCustomNameVisible(true);
+		villager.setCustomName("§e§lVykupna");
+		villager.teleport(location);
 	}
 
 	public void remove(){
@@ -113,23 +103,6 @@ public class SellTrader implements Listener {
 			if(event.getDamager() instanceof Player){
 				this.click((Player)event.getDamager());
 			}
-		}
-	}
-
-	private class CustomTrader extends EntityVillager {
-
-		public CustomTrader(World world){
-			super(EntityTypes.VILLAGER,world);
-		}
-
-		@Override
-		public boolean isTypeNotPersistent(double d){
-			return false;
-		}
-
-		@Override
-		public NBTTagCompound save(NBTTagCompound nbttagcompound){
-			return null;
 		}
 	}
 }

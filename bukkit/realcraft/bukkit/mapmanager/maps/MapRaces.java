@@ -3,7 +3,6 @@ package realcraft.bukkit.mapmanager.maps;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -107,7 +106,7 @@ public class MapRaces extends Map {
 			MapRaceType team = MapRaceType.getByName(args[0]);
 			if(team == null){
 				player.sendMessage("§cNeplatny typ.");
-				player.sendMessage("§7Types: "+StringUtils.join(MapRaceType.values(),", ").toUpperCase());
+				player.sendMessage("§7Types: "+String.join(", ", Arrays.toString(MapRaceType.values())).toUpperCase());
 				return;
 			}
 			type.setValue(team.toString());

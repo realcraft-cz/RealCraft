@@ -5,13 +5,13 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.falling.FallManager;
 import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.arena.FallArenaRegion;
-import realcraft.bukkit.utils.LocationUtil;
 import realcraft.share.utils.RandomUtil;
 
 import java.util.ArrayList;
@@ -78,10 +78,10 @@ public class FallArenaDrops {
 		return nextDrops;
 	}
 
-	int ticks5 = 0;
+	int ticks = 0;
 	private void dropMonsters(){
-		ticks5 ++;
-		if(ticks5%40 == 0){
+		ticks += 5;
+		if(ticks%100 == 0){
 			if(FallManager.getWorld().getTime() >= 13000 && FallManager.getWorld().getTime() <= 23500){
 				for(EntityType type : MONSTERS){
 					int count = 0;
@@ -93,7 +93,14 @@ public class FallArenaDrops {
 					}
 					if(count < MAX_SAME_ENTITIES){
 						for(int i=count;i<MAX_SAME_ENTITIES;i++){
-							FallManager.getWorld().spawnEntity(LocationUtil.getSafeDestination(this.getRandomDropLocation()),type);
+							Location location = this.getRandomDropLocation();
+							Block block = this.getHighestBlock(location);
+							if(block != null){
+								if(block.getRelative(BlockFace.UP).getLightLevel() <= 6){
+									location.setY(block.getY()+64);
+									FallManager.getWorld().spawnEntity(location,type);
+								}
+							}
 						}
 					}
 				}

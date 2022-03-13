@@ -158,6 +158,10 @@ public class MapListeners implements Listener {
 		MapManager.sendMessage("§b"+mPlayer.getPlayer().getName()+"§7 se pripojil do mapy §e"+map.getName()+" §7[#"+map.getId()+"]");
 		mPlayer.getPlayer().setAllowFlight(true);
 		mPlayer.getPlayer().setFlying(true);
+		if(!map.getRegion().isLoaded() && !map.getRegion().isLoading()){
+			MapManager.sendMessage("§7Nacitani mapy §e"+event.getMap().getName()+" §7[#"+event.getMap().getId()+"] ...");
+			map.getRegion().load();
+		}
 	}
 
 	@EventHandler

@@ -1,6 +1,5 @@
 package realcraft.bukkit.mapmanager.commands;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -101,7 +100,7 @@ public class MapCommandList extends MapCommand implements Listener {
 					}
 					ArrayList<String> lores = new ArrayList<>();
 					lores.add("§7Autor: "+map.getUser().getRank().getChatColor()+"§l"+map.getUser().getName());
-					if(trusted.length > 0) lores.add("§7Trusted: "+StringUtils.join(trusted,", "));
+					if(trusted.length > 0) lores.add("§7Trusted: "+String.join(", ", trusted));
 					lores.add("§7Stav: "+map.getState().getColor()+"§l"+map.getState().getName());
 					lores.add("§r");
 					lores.add("§7Vytvoreno: §f"+DateUtil.lastTime(map.getCreated()));

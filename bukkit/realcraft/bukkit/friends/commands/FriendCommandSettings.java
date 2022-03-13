@@ -1,12 +1,10 @@
 package realcraft.bukkit.friends.commands;
 
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.entity.Player;
-
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.entity.Player;
 import realcraft.bukkit.friends.FriendPlayer;
 import realcraft.bukkit.friends.FriendPlayerSettings;
 import realcraft.bukkit.friends.FriendPlayerSettings.FriendPlayerSettingsType;
@@ -36,7 +34,7 @@ public class FriendCommandSettings extends FriendCommand {
 
 	private void showSettingsPage(Player player){
 		FriendPlayer fPlayer = Friends.getFriendPlayer(player);
-		player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §a§lFriends > Nastaveni §7§m"+StringUtils.repeat(" ",47-"Friends > Nastaveni".length()));
+		player.sendMessage("§7§m"+" ".repeat(10)+"§r §a§lFriends > Nastaveni §7§m"+" ".repeat(47-"Friends > Nastaveni".length()));
 		for(FriendPlayerSettingsType type : FriendPlayerSettingsType.values()){
 			TextComponent component = new TextComponent(" "+this.getCheckboxSettings(fPlayer.getSettings(),type)+"§7 "+type.getName());
 			component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend settings "+type.toString().toLowerCase()));
@@ -44,7 +42,7 @@ public class FriendCommandSettings extends FriendCommand {
 			else component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§aKlikni pro zapnuti").create()));
 			player.spigot().sendMessage(component);
 		}
-		player.sendMessage("§7§m"+StringUtils.repeat(" ",62));
+		player.sendMessage("§7§m"+" ".repeat(62));
 	}
 
 	private String getCheckboxSettings(FriendPlayerSettings settings,FriendPlayerSettingsType type){

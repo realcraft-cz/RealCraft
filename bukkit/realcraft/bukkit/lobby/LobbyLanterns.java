@@ -1,12 +1,17 @@
 package realcraft.bukkit.lobby;
 
+/*import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import net.minecraft.server.v1_18_R2.BlockPosition;
+import net.minecraft.server.v1_18_R2.TileEntitySkull;*/
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import net.minecraft.server.v1_14_R1.BlockPosition;
-import net.minecraft.server.v1_14_R1.TileEntitySkull;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.world.level.block.entity.TileEntitySkull;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -101,9 +106,9 @@ public class LobbyLanterns implements Listener {
 	public boolean isBlockLantern(Block block){
 		if(block.getType() == Material.PLAYER_HEAD){
 			Location location = block.getLocation();
-			TileEntitySkull skullTile = (TileEntitySkull)((CraftWorld)block.getWorld()).getHandle().getTileEntity(new BlockPosition(location.getBlockX(),location.getBlockY(),location.getBlockZ()));
+			TileEntitySkull skullTile = (TileEntitySkull)((CraftWorld)block.getWorld()).getHandle().getBlockEntity(new BlockPosition(location.getBlockX(),location.getBlockY(),location.getBlockZ()), false);
 			if(skullTile != null){
-				GameProfile profile = skullTile.gameProfile;
+				GameProfile profile = skullTile.e;
 				if(profile != null){
 					Collection<Property> properties = profile.getProperties().get("textures");
 					for(Property property : properties){

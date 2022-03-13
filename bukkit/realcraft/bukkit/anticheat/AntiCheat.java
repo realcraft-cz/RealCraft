@@ -40,7 +40,7 @@ public class AntiCheat implements Listener {
 		new CheckSpeedHack();
 		new CheckSneakHack();
 		new CheckClickAura();
-		new CheckKillAura();
+		//new CheckKillAura();
 		if(RealCraft.getServerType() == ServerType.SURVIVAL || RealCraft.getServerType() == ServerType.CREATIVE){
 			new CheckEnchant();
 		}

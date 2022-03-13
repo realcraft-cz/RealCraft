@@ -178,7 +178,7 @@ public class UsersAuthentication implements Listener {
 
 	private void loginUser(User user,String password){
 		if(password != null && user.getPassword().length() > 60) user.setPassword(BCrypt.hashPassword(password));
-		user.login();
+		if (!RealCraftBungee.isTestServer()) user.login();
 		SocketData data = new SocketData(Users.CHANNEL_BUNGEE_LOGIN);
         data.setInt("id",user.getId());
         SocketManager.sendToAll(data);

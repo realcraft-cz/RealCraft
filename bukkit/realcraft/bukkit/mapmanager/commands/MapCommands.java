@@ -1,6 +1,5 @@
 package realcraft.bukkit.mapmanager.commands;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.mapmanager.MapManager;
 import realcraft.bukkit.mapmanager.commands.map.*;
@@ -35,7 +34,7 @@ public class MapCommands extends AbstractCommand {
 	@Override
 	public void perform(Player player,String[] args){
 		if(args.length == 0){
-			player.sendMessage("§7§m"+StringUtils.repeat(" ",10)+"§r §6§lMaps §7§m"+StringUtils.repeat(" ",47-"Maps".length()));
+			player.sendMessage("§7§m"+" ".repeat(10)+"§r §6§lMaps §7§m"+" ".repeat(47-"Maps".length()));
 			player.sendMessage("§6/map create §e<type> §f- Vytvorit novou mapu");
 			player.sendMessage("§6/map tp §e<id> §f- Pripojit se do mapy");
 			player.sendMessage("§6/map info §e[<id>] §f- Informace o mape");
