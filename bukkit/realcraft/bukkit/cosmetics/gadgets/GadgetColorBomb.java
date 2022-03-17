@@ -109,7 +109,7 @@ public class GadgetColorBomb extends Gadget {
 				}
 			}
 		};
-		runnable.runTaskTimerAsynchronously(RealCraft.getInstance(),0,1);
+		runnable.runTaskTimer(RealCraft.getInstance(),0,1);
 	}
 
 	public Vector getRandomCircleVector() {

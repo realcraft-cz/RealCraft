@@ -58,7 +58,7 @@ public class GadgetGhostParty extends Gadget {
 				}
 			}
 		};
-		runnable.runTaskTimerAsynchronously(RealCraft.getInstance(),0,2);
+		runnable.runTaskTimer(RealCraft.getInstance(),0,2);
 		for (int i = 0; i < 20; i++){
 			Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
 				@Override

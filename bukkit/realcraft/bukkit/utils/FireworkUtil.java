@@ -1,15 +1,13 @@
 package realcraft.bukkit.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
+
+import java.util.Random;
 
 public class FireworkUtil {
 	private static Random random = new Random();
@@ -67,7 +65,8 @@ public class FireworkUtil {
         FireworkMeta fm = f.getFireworkMeta();
         fm.addEffect(fe);
         f.setFireworkMeta(fm);
-        try {
+        f.detonate();
+        /*try {
             Class<?> entityFireworkClass = getClass("net.minecraft.server.", "EntityFireworks");
             Class<?> craftFireworkClass = getClass("org.bukkit.craftbukkit.", "entity.CraftFirework");
             Object firework = craftFireworkClass.cast(f);
@@ -80,7 +79,7 @@ public class FireworkUtil {
             ticksFlown.setAccessible(false);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     private static Class<?> getClass(String prefix, String nmsClassString) throws ClassNotFoundException {

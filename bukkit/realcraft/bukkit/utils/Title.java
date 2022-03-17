@@ -1,14 +1,10 @@
 package realcraft.bukkit.utils;
 
 
-import net.minecraft.network.chat.ChatMessageType;
-import org.bukkit.Bukkit;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import realcraft.bukkit.RealCraft;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class Title {
 
@@ -47,8 +43,8 @@ public class Title {
 	}
 
 	public static void sendActionBar(Player player, String message){
-
-		String nmsver = Bukkit.getServer().getClass().getPackage().getName();
+        player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+		/*String nmsver = Bukkit.getServer().getClass().getPackage().getName();
         nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
 
         try {
@@ -69,7 +65,7 @@ public class Title {
             m5.invoke(pc, ppoc);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     public static void sendActionBar(final Player player, final String message, int duration) {

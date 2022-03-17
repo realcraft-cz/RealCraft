@@ -1,7 +1,5 @@
 package realcraft.bukkit.fights;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -19,7 +17,8 @@ import realcraft.bukkit.fights.menu.FightMenuDuels;
 import realcraft.bukkit.fights.menu.FightMenuKits;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.StringUtil;
-import ru.beykerykt.lightapi.LightAPI;
+import realcraft.bukkit.wrappers.HologramsApi;
+import realcraft.bukkit.wrappers.LightApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,24 +114,24 @@ public class FightStands implements Listener, Runnable {
 		private Location location;
 
 		private ArmorStand stand;
-		private Hologram hologramName;
-		private Hologram hologramInfo;
+		private HologramsApi.Hologram hologramName;
+		private HologramsApi.Hologram hologramInfo;
 		private int players = 0;
 
 		public FightStand(FightType type,Location location){
 			this.type = type;
 			this.location = location;
 			this.spawn();
-			hologramName = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,3.9,0.0));
+			hologramName = HologramsApi.createHologram(location.clone().add(0.0,3.9,0.0));
 			hologramName.insertTextLine(0,type.getName());
 			hologramName.insertTextLine(1,"0 hracu");
-			hologramInfo = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,3.3,0.0));
+			hologramInfo = HologramsApi.createHologram(location.clone().add(0.0,3.3,0.0));
 			hologramInfo.insertTextLine(0,"§dLevy klik");
 			hologramInfo.insertTextLine(1,"§7Pripojit do hry");
 			hologramInfo.insertTextLine(2,"§dPravy klik");
 			hologramInfo.insertTextLine(3,"§7Sledovat hru");
-			LightAPI.createLight(location.clone().add(0.0,2.0,0.0),15,false);
-			LightAPI.createLight(location.clone().add(0.0,3.0,0.0),15,false);
+			LightApi.createLight(location.clone().add(0.0,2.0,0.0),15,false);
+			LightApi.createLight(location.clone().add(0.0,3.0,0.0),15,false);
 		}
 
 		public FightType getType(){

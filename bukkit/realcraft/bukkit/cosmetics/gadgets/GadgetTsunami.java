@@ -28,7 +28,7 @@ public class GadgetTsunami extends Gadget {
 		final Vector v = player.getLocation().getDirection().normalize().multiply(0.3);
 		v.setY(0);
 		final Location loc = player.getLocation().subtract(0, 1, 0).add(v);
-		final int i = Bukkit.getScheduler().runTaskTimerAsynchronously(RealCraft.getInstance(), new Runnable() {
+		final int i = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				if (loc.getBlock().getType() != Material.AIR

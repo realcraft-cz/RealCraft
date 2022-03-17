@@ -1,7 +1,5 @@
 package realcraft.bukkit.lobby;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,8 +16,9 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.coins.Coins;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.*;
+import realcraft.bukkit.wrappers.HologramsApi;
+import realcraft.bukkit.wrappers.LightApi;
 import realcraft.share.database.DB;
-import ru.beykerykt.lightapi.LightAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,17 +37,17 @@ public class LobbyLottery implements Listener {
 	private HashMap<Player,LobbyLotteryInventory> lotteries = new HashMap<Player,LobbyLotteryInventory>();
 	private Random random = new Random();
 	private Location location;
-	private Hologram hologram;
+	private HologramsApi.Hologram hologram;
 
 	public LobbyLottery(RealCraft realcraft){
 		plugin = realcraft;
 		plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		location = LocationUtil.getConfigLocation(plugin.config.getConfig(),"lottery.location");
-		hologram = HologramsAPI.createHologram(plugin,location.clone().add(0.5,2.0,0.5));
+		hologram = HologramsApi.createHologram(location.clone().add(0.5,2.0,0.5));
 		hologram.insertTextLine(0,"§d§l"+invName);
 		hologram.insertTextLine(1,"§7Vsad si");
 		hologram.insertTextLine(2,"§7a vyhraj");
-		LightAPI.createLight(location.clone().add(0.5,2.0,0.5),15,false);
+		LightApi.createLight(location.clone().add(0.5,2.0,0.5),15,false);
 	}
 
 	public LobbyLotteryInventory getLottery(Player player){

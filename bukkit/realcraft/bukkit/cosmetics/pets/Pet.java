@@ -1,23 +1,16 @@
-/*
 package realcraft.bukkit.cosmetics.pets;
 
-import com.google.common.collect.Sets;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.entity.monster.EntityZombie;
-import net.minecraft.world.level.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -33,11 +26,11 @@ import realcraft.bukkit.cosmetics.CosmeticPlayer;
 import realcraft.bukkit.cosmetics.Cosmetics;
 import realcraft.bukkit.cosmetics.cosmetic.Cosmetic;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
+import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.Particles;
 import realcraft.bukkit.utils.RandomUtil;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class Pet extends Cosmetic {
@@ -157,26 +150,21 @@ public class Pet extends Cosmetic {
 		private void create(){
 			Location location = player.getLocation();
 			location.setPitch(0f);
-			location.add(location.getDirection().setY(0).normalize().multiply(1.5));
-			CustomPetEntity zombie = new CustomPetEntity(((CraftWorld)location.getWorld()).getHandle());
-			zombie.setLocation(location.getX(),location.getY(),location.getZ(),location.getPitch(),location.getYaw());
-			((CraftWorld)location.getWorld()).getHandle().addEntity(zombie,CreatureSpawnEvent.SpawnReason.CUSTOM);
-			entity = (Zombie)zombie.getBukkitEntity();
-			if(entity != null){
-				entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_VEX_CHARGE,1f,1f);
-				entity.setSilent(true);
-				entity.setBaby(true);
-				entity.getEquipment().clear();
-				entity.getEquipment().setHelmet(Pet.this.getItemStack());
-				entity.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
-				entity.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
-				entity.getEquipment().setItemInMainHandDropChance(0);
-				entity.getEquipment().setItemInOffHandDropChance(0);
-				entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,Integer.MAX_VALUE,1));
-				((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
-				this.clearPathfinders(entity);
-			}
-			else Pet.this.setRunning(player,false);
+            location.add(location.getDirection().setY(0).normalize().multiply(1.5));
+
+            entity = (Zombie) player.getWorld().spawnEntity(location, EntityType.ZOMBIE, false);
+            entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_VEX_CHARGE, 1f, 1f);
+            entity.setSilent(true);
+            entity.setBaby();
+            entity.getEquipment().clear();
+            entity.getEquipment().setHelmet(Pet.this.getItemStack());
+            entity.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
+            entity.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
+            entity.getEquipment().setItemInMainHandDropChance(0);
+            entity.getEquipment().setItemInOffHandDropChance(0);
+            entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,Integer.MAX_VALUE,1));
+
+            EntityUtil.clearPathfinders(entity);
 		}
 
 		private void remove(){
@@ -219,13 +207,7 @@ public class Pet extends Cosmetic {
 						if(distance <= 2*2) targetLocation.add(RandomUtil.getRandomDouble(-2.0,2.0),0,RandomUtil.getRandomDouble(-2.0,2.0));
 						try {
 							double speed = (distance > 2*2 ? 0.7 : 0.5);
-							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
-							PathEntity path;
-							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ(),0);
-							if(path != null){
-								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
-								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
-							}
+                            EntityUtil.navigate(entity, targetLocation, speed);
 						} catch (Exception exception){
 						}
 					}
@@ -279,55 +261,26 @@ public class Pet extends Cosmetic {
 				double speed = 1D;
 				double distance = this.getDistanceToOwner();
 				if(distance > 4*4){
-					((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
-					PathEntity path;
-					path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ(),0);
+                    EntityUtil.setNavigationSpeed(entity, speed);
 					if(distance > 32*32 && player.isOnGround()){
-						((CraftEntity)entity).getHandle().setLocation(targetLocation.getBlockX(),targetLocation.getBlockY(),targetLocation.getBlockZ(),0,0);
+                        entity.teleport(targetLocation);
 					}
-					if(path != null){
-						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
-						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
-						arrivedTimeout = System.currentTimeMillis()+600;
-					}
+                    EntityUtil.navigate(entity, targetLocation, speed);
+                    arrivedTimeout = System.currentTimeMillis()+600;
 				} else {
 					if(arrivedTimeout >= System.currentTimeMillis()){
-						((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
+                        EntityUtil.setNavigationSpeed(entity, 0);
 						if(tick == 0) entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_GHAST_AMBIENT,1f,2f);
 					} else {
 						speed = 0.5;
 						if(tick == 0 && RandomUtil.getRandomBoolean()){
-							((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
+                            EntityUtil.setNavigationSpeed(entity, speed);
 							targetLocation.add(RandomUtil.getRandomDouble(-4.0,4.0),0,RandomUtil.getRandomDouble(-4.0,4.0));
-							PathEntity path;
-							path = ((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(targetLocation.getX(),targetLocation.getY(),targetLocation.getZ(),0);
-							if(path != null){
-								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(path,speed);
-								((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(speed);
-							}
+                            EntityUtil.navigate(entity, targetLocation, speed);
 						}
 					}
 				}
 			} catch (Exception exception){
-			}
-		}
-
-		private void clearPathfinders(org.bukkit.entity.Entity entity){
-			net.minecraft.server.v1_18_R2.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-			try {
-				Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
-				bField.setAccessible(true);
-				Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
-				cField.setAccessible(true);
-				((EntityInsentient) ((CraftEntity)entity).getHandle()).getNavigation().a(0);
-				*/
-/*bField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
-				bField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());*//*
-
-				cField.set(((EntityInsentient) nmsEntity).goalSelector,Sets.newLinkedHashSet());
-				cField.set(((EntityInsentient) nmsEntity).targetSelector,Sets.newLinkedHashSet());
-			} catch (Exception e){
-				e.printStackTrace();
 			}
 		}
 
@@ -385,10 +338,10 @@ public class Pet extends Cosmetic {
 					entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_BAT_HURT,0.2f,1f);
 					Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
 						public void run(){
-							((CraftEntity)entity).getHandle().setLocation(entity.getLocation().getX(),entity.getLocation().getY()-0.7,entity.getLocation().getZ(),0,0);
+                            entity.teleport(entity.getLocation().clone().add(0, -0.7, 0));
 						}
 					});
-					this.clearPathfinders(entity);
+					EntityUtil.clearPathfinders(entity);
 				}
 				else if(state == PetState.SITTING){
 					state = PetState.FOLLOW;
@@ -398,11 +351,11 @@ public class Pet extends Cosmetic {
 					entity.getWorld().playSound(entity.getLocation(),Sound.ENTITY_BAT_HURT,0.2f,1f);
 					Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
 						public void run(){
-							((CraftEntity)entity).getHandle().setLocation(entity.getLocation().getX(),entity.getLocation().getY()+1.0,entity.getLocation().getZ(),0,0);
+							entity.teleport(entity.getLocation().clone().add(0, 1, 0));
 							entity.setVelocity(new Vector(0,0,0));
 						}
 					});
-					this.clearPathfinders(entity);
+					EntityUtil.clearPathfinders(entity);
 				}
 			}
 		}
@@ -419,21 +372,4 @@ public class Pet extends Cosmetic {
 	private enum PetState {
 		FOLLOW, FRIEND, SITTING;
 	}
-
-	private class CustomPetEntity extends EntityZombie {
-
-		public CustomPetEntity(World world){
-			super(world);
-		}
-
-		@Override
-		public NBTTagCompound f(NBTTagCompound nbttagcompound){
-			return null;
-		}
-
-		@Override
-		public boolean d_() {
-			return false;
-		}
-	}
-}*/
+}

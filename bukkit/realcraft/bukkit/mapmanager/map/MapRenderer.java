@@ -1,7 +1,5 @@
 package realcraft.bukkit.mapmanager.map;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +9,7 @@ import realcraft.bukkit.mapmanager.map.data.MapDataLocation;
 import realcraft.bukkit.mapmanager.map.data.MapDataLocationArea;
 import realcraft.bukkit.mapmanager.map.data.MapDataLocationBlock;
 import realcraft.bukkit.mapmanager.map.data.MapDataLocationSpawn;
+import realcraft.bukkit.wrappers.HologramsApi;
 
 import java.util.ArrayList;
 
@@ -120,11 +119,11 @@ public class MapRenderer implements Runnable {
 
 	public static abstract class MapRendererEntry {
 
-		private Hologram hologram;
+		private HologramsApi.Hologram hologram;
 
 		public void spawn(Location location,Material material,String... lines){
 			location.setY(location.getBlockY()+0.6+(0.4*(lines.length-1))+(material != null ? 0.4 : 0));
-			this.hologram = HologramsAPI.createHologram(RealCraft.getInstance(),location);
+			this.hologram = HologramsApi.createHologram(location);
 			for(int i=0;i<lines.length;i++) hologram.insertTextLine(i,lines[i]);
 			if(material != null) hologram.appendItemLine(new ItemStack(material));
 		}

@@ -80,16 +80,13 @@ public class LobbyLightsOff implements Listener {
 				lamps[i][a] = false;
 			}
 		}
-		System.out.println("Lamps ===========");
 		for(int i=0;i<SIZE_Y;i++){
 			for(int a=0;a<SIZE_X;a++){
 				if(RandomUtil.getRandomInteger(1,10) >= 8){
-					System.out.println("Lamps reset: ["+(a+1)+";"+(i+1)+"]");
 					this.clickLamp(a,i);
 				}
 			}
 		}
-		System.out.println("=================");
 		this.draw();
 	}
 

@@ -11,6 +11,8 @@ public class Test {
 		new ImageTest();
 		new TitleTest();
 		if(RealCraft.isTestServer()){
+			new HolographTest();
+			new EntityTest();
 			new CombatTest();
 			new AdvancementTest();
 		}

@@ -6,8 +6,6 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,7 +30,8 @@ import realcraft.bukkit.cosmetics.cosmetic.Cosmetic;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticCategory;
 import realcraft.bukkit.cosmetics.gadgets.Gadget;
 import realcraft.bukkit.utils.*;
-import ru.beykerykt.lightapi.LightAPI;
+import realcraft.bukkit.wrappers.HologramsApi;
+import realcraft.bukkit.wrappers.LightApi;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 			public void onPacketReceiving(PacketEvent event){
 				Player player = event.getPlayer();
 				if(event.getPacketType() == PacketType.Play.Client.USE_ENTITY){
-					if(event.getPacket().getEntityUseActions().read(0) == EnumWrappers.EntityUseAction.ATTACK){
+					if(event.getPacket().getEnumEntityUseActions().read(0).getAction() == EnumWrappers.EntityUseAction.ATTACK){
 						for(CosmeticCrystal crystal : crystals){
 							if(crystal.getEntityId() == event.getPacket().getIntegers().read(0)){
 								Bukkit.getServer().getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
@@ -296,8 +295,8 @@ public class CosmeticCrystals implements Listener, Runnable {
 		private int id;
 		private Location location;
 		private EnderCrystal crystal;
-		private Hologram hologramName;
-		private Hologram hologramReward;
+		private HologramsApi.Hologram hologramName;
+		private HologramsApi.Hologram hologramReward;
 		private ArmorStand stand;
 
 		private boolean occupied = false;
@@ -330,10 +329,10 @@ public class CosmeticCrystals implements Listener, Runnable {
 		}
 
 		private void init(){
-			hologramName = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,2.0,0.0));
+			hologramName = HologramsApi.createHologram(location.clone().add(0.0,2.0,0.0));
 			hologramName.insertTextLine(0,"§a§lLucky Crystal");
-			hologramReward = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,2.0,0.0));
-			LightAPI.createLight(location.clone().add(0.0,2.0,0.0),15,false);
+			hologramReward = HologramsApi.createHologram(location.clone().add(0.0,2.0,0.0));
+			LightApi.createLight(location.clone().add(0.0,2.0,0.0),15,false);
 		}
 
 		private void spawn(){
@@ -462,7 +461,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 
 		private Location location;
 		private ArmorStand stand;
-		private Hologram hologram;
+		private HologramsApi.Hologram hologram;
 
 		private CosmeticTransaction transaction;
 		private ItemStack head = new ItemStack(Material.PLAYER_HEAD);
@@ -470,7 +469,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 
 		public CosmeticHead(Location location){
 			this.location = location;
-			hologram = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.0,1.0,0.0));
+			hologram = HologramsApi.createHologram(location.clone().add(0.0,1.0,0.0));
 			hologram.insertTextLine(0,"§r");
 			this.spawn();
 		}

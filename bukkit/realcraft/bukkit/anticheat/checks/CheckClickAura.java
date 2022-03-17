@@ -24,7 +24,7 @@ public class CheckClickAura extends Check {
 			public void onPacketReceiving(PacketEvent event){
 				Player player = event.getPlayer();
 				if(event.getPacketType() == PacketType.Play.Client.USE_ENTITY){
-					if(event.getPacket().getEntityUseActions().read(0) == EntityUseAction.ATTACK){
+					if(event.getPacket().getEnumEntityUseActions().read(0).getAction() == EntityUseAction.ATTACK){
 						if(!AntiCheat.isPlayerExempted(player)){
 							CheckClickAura.this.check(player);
 						}

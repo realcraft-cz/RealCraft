@@ -1,7 +1,5 @@
 package realcraft.bukkit.lobby;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -20,8 +18,10 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.BungeeMessages;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.StringUtil;
+import realcraft.bukkit.wrappers.HologramsApi;
+import realcraft.bukkit.wrappers.HologramsApi.Hologram;
+import realcraft.bukkit.wrappers.LightApi;
 import realcraft.share.ServerType;
-import ru.beykerykt.lightapi.LightAPI;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -155,14 +155,14 @@ public class LobbyStands implements Listener, Runnable {
 		}
 
 		private void init(){
-			hologramName = HologramsAPI.createHologram(plugin,location.clone().add(0.0,2.9,0.0));
-			hologramPlayers = HologramsAPI.createHologram(plugin,location.clone().add(0.0,2.6,0.0));
+			hologramName = HologramsApi.createHologram(location.clone().add(0.0,2.9,0.0));
+			hologramPlayers = HologramsApi.createHologram(location.clone().add(0.0,2.6,0.0));
 
 			hologramName.insertTextLine(0,server.getColor()+""+ChatColor.BOLD+server.getName());
 			hologramPlayers.insertTextLine(0,"0 hracu");
 
-			LightAPI.createLight(location.clone().add(0.0,2.0,0.0),15,false);
-			LightAPI.createLight(location.clone().add(0.0,3.0,0.0),15,false);
+			LightApi.createLight(location.clone().add(0.0,2.0,0.0),15,false);
+			LightApi.createLight(location.clone().add(0.0,3.0,0.0),15,false);
 		}
 
 		private void spawn(){
@@ -199,8 +199,7 @@ public class LobbyStands implements Listener, Runnable {
 				int tmpPlayers = plugin.lobby.lobbymenu.getPlayersCount(server.toString());
 				if(tmpPlayers != players){
 					players = tmpPlayers;
-					hologramPlayers.removeLine(0);
-					hologramPlayers.insertTextLine(0,players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
+					hologramPlayers.getTextLine(0).setText(players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
 				}
 			}
 			if(stand == null || stand.isDead() || !stand.isValid()) this.spawn();

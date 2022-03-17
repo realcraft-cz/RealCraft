@@ -10,7 +10,6 @@ import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import realcraft.bungee.RealCraftBungee;
-import realcraft.bungee.geoip.GeoLiteAPI;
 import realcraft.bungee.sockets.SocketData;
 import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.Users;
@@ -45,11 +44,11 @@ public class UsersAuthentication implements Listener {
 		event.getConnection().setUniqueId(UUID.nameUUIDFromBytes(("OfflinePlayer:"+event.getConnection().getName()).getBytes(Charsets.UTF_8)));
 		User user = Users.getUser(event.getConnection().getName());
 		if(user == null){
-			if(GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
+			/*if(GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
 				event.setCancelReason(TextComponent.fromLegacyText("§cZeme, ze ktere se pripojujes, je zablokovana!"));
 				event.setCancelled(true);
 				return;
-			}
+			}*/
 			Users.createUser(
 				event.getConnection().getName(),
 				event.getConnection().getUniqueId(),
@@ -65,10 +64,10 @@ public class UsersAuthentication implements Listener {
 			user.setAddress(event.getConnection().getAddress().getAddress().getHostAddress().replace("/",""));
 			if(user.isPremium()) event.getConnection().setOnlineMode(true);
 			else {
-				if(!user.isCountryException() && GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
+				/*if(!user.isCountryException() && GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
 					event.setCancelReason(TextComponent.fromLegacyText("§cZeme, ze ktere se pripojujes, je zablokovana!"));
 					event.setCancelled(true);
-				}
+				}*/
 			}
 		}
 	}
@@ -178,7 +177,7 @@ public class UsersAuthentication implements Listener {
 
 	private void loginUser(User user,String password){
 		if(password != null && user.getPassword().length() > 60) user.setPassword(BCrypt.hashPassword(password));
-		if (!RealCraftBungee.isTestServer()) user.login();
+		user.login();
 		SocketData data = new SocketData(Users.CHANNEL_BUNGEE_LOGIN);
         data.setInt("id",user.getId());
         SocketManager.sendToAll(data);

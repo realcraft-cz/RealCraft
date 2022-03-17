@@ -45,7 +45,6 @@ import realcraft.bukkit.mapmanager.MapManager;
 import realcraft.bukkit.minihry.EventCmds;
 import realcraft.bukkit.minihry.GamesReminder;
 import realcraft.bukkit.mute.Mute;
-import realcraft.bukkit.nicks.NickManager;
 import realcraft.bukkit.others.Canvas;
 import realcraft.bukkit.others.MapServerTeleport;
 import realcraft.bukkit.others.VipCommand;
@@ -64,12 +63,12 @@ import realcraft.bukkit.survival.economy.Economy;
 import realcraft.bukkit.survival.residences.CheckResidences;
 import realcraft.bukkit.survival.residences.ResidenceSigns;
 import realcraft.bukkit.survival.sells.Sells;
-import realcraft.bukkit.survival.shops.ShopManager;
 import realcraft.bukkit.survival.trading.Trading;
 import realcraft.bukkit.teleport.TeleportRequests;
 import realcraft.bukkit.test.Test;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.webshop.WebShop;
+import realcraft.bukkit.wrappers.HologramsApi;
 import realcraft.share.ServerType;
 import realcraft.share.users.UserRank;
 
@@ -138,6 +137,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		}
 		DB.init();
 		new Users();
+		new HologramsApi(this);
 		banmanazer = new BanManazer(this);
 		new Spectator(this);
 		mute = new Mute(this);
@@ -156,7 +156,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		gamesreminder = new GamesReminder(this);
 		new SchematicBrush();
 		new WebShop();
-		new NickManager();
+		//new NickManager();
 		new Coins();
 		new Friends();
 		new Cosmetics();
@@ -169,17 +169,19 @@ public class RealCraft extends JavaPlugin implements Listener {
 			new Sitting();
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
+			//1.18.2 seed: -4021838568611269878
 			checkresidences = new CheckResidences(this);
 			residencesigns = new ResidenceSigns(this);
 			trading = new Trading(this);
 			mapcrafter = new MapCrafter(this);
 			new PassiveMode();
 			new RandomSpawn();
-			new ShopManager();
+			//new ShopManager();
 			new Sells();
 			new Economy();
 			lobby = new Lobby(this);
 			new Sitting();
+
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||

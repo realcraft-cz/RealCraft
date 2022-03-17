@@ -83,6 +83,8 @@ public class Lobby implements Listener {
 		player.getInventory().clear();
 		player.setGameMode(GameMode.ADVENTURE);
 		player.setWalkSpeed(0.2f);
+		player.setFoodLevel(20);
+		player.setSaturation(20);
 		if(RealCraft.getServerType() == ServerType.LOBBY){
 			Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
 				@Override

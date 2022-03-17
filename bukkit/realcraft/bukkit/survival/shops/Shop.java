@@ -1,7 +1,5 @@
 package realcraft.bukkit.survival.shops;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -17,6 +15,7 @@ import realcraft.bukkit.utils.DateUtil;
 import realcraft.bukkit.utils.ItemUtil;
 import realcraft.bukkit.utils.JsonUtil;
 import realcraft.bukkit.utils.StringUtil;
+import realcraft.bukkit.wrappers.HologramsApi;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +29,7 @@ public class Shop {
 	private ItemStack item;
 	private int price;
 	private int created;
-	private Hologram hologram;
+	private HologramsApi.Hologram hologram;
 	private boolean inStock = true;
 	private int sales;
 
@@ -50,7 +49,7 @@ public class Shop {
 					this.price = rs.getInt("shop_price");
 					this.created = rs.getInt("shop_created");
 					this.sales = rs.getInt("shop_sales");
-					hologram = HologramsAPI.createHologram(RealCraft.getInstance(),location.clone().add(0.5,2,0.5));
+					hologram = HologramsApi.createHologram(location.clone().add(0.5,2,0.5));
 					hologram.insertTextLine(0,"§e"+this.getItemName());
 					hologram.insertTextLine(1,"§a"+Economy.format(this.getPrice()));
 					try {

@@ -19,7 +19,7 @@ import realcraft.bukkit.RealCraft;
 
 public class SellTrader implements Listener {
 
-	private Location location;
+	private final Location location;
 	private Villager entity;
 
 	public SellTrader(){
@@ -47,13 +47,13 @@ public class SellTrader implements Listener {
 
 	public void spawn(){
 		this.remove();
-		Villager villager = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER, false);
-		villager.setAI(false);
-		villager.setRemoveWhenFarAway(false);
-		villager.setInvulnerable(false);
-		villager.setCustomNameVisible(true);
-		villager.setCustomName("§e§lVykupna");
-		villager.teleport(location);
+		entity = (Villager) location.getWorld().spawnEntity(location, EntityType.VILLAGER, false);
+		entity.setAI(false);
+		entity.setRemoveWhenFarAway(false);
+		entity.setInvulnerable(true);
+		entity.setCustomNameVisible(true);
+		entity.setCustomName("§e§lVykupna");
+		entity.teleport(location);
 	}
 
 	public void remove(){

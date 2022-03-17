@@ -22,7 +22,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import realcraft.bukkit.RealCraft;
-import ru.beykerykt.lightapi.LightAPI;
+import realcraft.bukkit.wrappers.LightApi;
 import ru.beykerykt.lightapi.chunks.ChunkInfo;
 
 import java.lang.reflect.Field;
@@ -96,7 +96,7 @@ public class LobbyLanterns implements Listener {
 				for(int z=minZ;z<=center.getBlockZ()+(radius/2);z++){
 					Block block = world.getBlockAt(x,y,z);
 					if(this.isBlockLantern(block)){
-						LightAPI.createLight(block.getLocation(),15,false);
+						LightApi.createLight(block.getLocation(),15,false);
 					}
 				}
 			}
@@ -126,9 +126,9 @@ public class LobbyLanterns implements Listener {
 	public void BlockPlaceEvent(BlockPlaceEvent event){
 		Block block = event.getBlock();
 		if(this.isBlockLantern(block)){
-			LightAPI.createLight(block.getLocation(),15,false);
-			for(ChunkInfo info : LightAPI.collectChunks(block.getLocation())){
-				LightAPI.updateChunk(info);
+			LightApi.createLight(block.getLocation(),15,false);
+			for(ChunkInfo info : LightApi.collectChunks(block.getLocation())){
+				LightApi.updateChunk(info);
 			}
 		}
 	}
@@ -137,9 +137,9 @@ public class LobbyLanterns implements Listener {
 	public void BlockBreakEvent(BlockBreakEvent event){
 		Block block = event.getBlock();
 		if(this.isBlockLantern(block)){
-			LightAPI.deleteLight(block.getLocation(),false);
-			for(ChunkInfo info : LightAPI.collectChunks(block.getLocation())){
-				LightAPI.updateChunk(info);
+			LightApi.deleteLight(block.getLocation(),false);
+			for(ChunkInfo info : LightApi.collectChunks(block.getLocation())){
+				LightApi.updateChunk(info);
 			}
 		}
 	}
