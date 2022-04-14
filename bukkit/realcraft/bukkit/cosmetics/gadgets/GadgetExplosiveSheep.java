@@ -1,14 +1,9 @@
 package realcraft.bukkit.cosmetics.gadgets;
 
-import com.google.common.collect.Sets;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,9 +12,9 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.cosmetics.cosmetic.CosmeticType;
 import realcraft.bukkit.cosmetics.utils.MathUtils;
 import realcraft.bukkit.cosmetics.utils.UtilParticles;
+import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.Particles;
 
-import java.lang.reflect.Field;
 import java.util.Random;
 
 public class GadgetExplosiveSheep extends Gadget {
@@ -76,7 +71,7 @@ public class GadgetExplosiveSheep extends Gadget {
 					sheep.setBaby();
 					sheep.setAgeLock(true);
 					sheep.setNoDamageTicks(120);
-					clearPathfinders(sheep);
+					EntityUtil.clearPathfinders(sheep);
 					Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
 						@Override
 						public void run() {
@@ -97,22 +92,6 @@ public class GadgetExplosiveSheep extends Gadget {
 				Bukkit.getScheduler().cancelTask(getTaskId());
 				new SheepColorRunnable(player, time, red, s, gadgetExplosiveSheep);
 			}
-		}
-	}
-
-	public void clearPathfinders(org.bukkit.entity.Entity entity) {
-		Entity nmsEntity = ((CraftEntity) entity).getHandle();
-		try {
-			Field bField = PathfinderGoalSelector.class.getDeclaredField("b");
-			bField.setAccessible(true);
-			Field cField = PathfinderGoalSelector.class.getDeclaredField("c");
-			cField.setAccessible(true);
-			/*bField.set(((EntityInsentient) nmsEntity).goalSelector, Sets.newLinkedHashSet());
-			bField.set(((EntityInsentient) nmsEntity).targetSelector, Sets.newLinkedHashSet());*/
-			cField.set(((EntityInsentient) nmsEntity).bQ, Sets.newLinkedHashSet());
-			cField.set(((EntityInsentient) nmsEntity).bR, Sets.newLinkedHashSet());
-		} catch (Exception exc) {
-			exc.printStackTrace();
 		}
 	}
 }

@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -13,7 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -39,7 +37,6 @@ import realcraft.bukkit.fights.events.FightPlayerJoinLobbyEvent;
 import realcraft.bukkit.fights.events.FightPlayerLeaveLobbyEvent;
 import realcraft.bukkit.fights.events.FightPlayerRankChange;
 import realcraft.bukkit.fights.events.FightPlayerRankCreatedEvent;
-import realcraft.bukkit.utils.ReflectionUtils;
 import realcraft.bukkit.utils.Title;
 
 import java.util.UUID;
@@ -67,11 +64,11 @@ public class FightListeners implements Listener {
 						if(player != null && player.isOnline() && event.getPlayer().getUniqueId() != uuid){
 							FightPlayer fPlayer = Fights.getFightPlayer(player);
 							if(fPlayer != null && fPlayer.getState() == FightPlayerState.SPECTATOR && !fPlayer.isLeaving()){
-								PacketPlayOutPlayerInfo packet = (PacketPlayOutPlayerInfo) event.getPacket().getHandle();
+								/*PacketPlayOutPlayerInfo packet = (PacketPlayOutPlayerInfo) event.getPacket().getHandle();
 								PacketPlayOutPlayerInfo.EnumPlayerInfoAction action = (PacketPlayOutPlayerInfo.EnumPlayerInfoAction) ReflectionUtils.getField(packet.getClass(),true,"a").get(packet);
 								if(action == PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e){
 									event.setCancelled(true);
-								}
+								}*/
 							}
 						}
 					} catch (Exception e){
@@ -111,8 +108,8 @@ public class FightListeners implements Listener {
 			@Override
 			public void run(){
 				for(FightPlayer fPlayer2 : Fights.getOnlineFightPlayers()){
-					PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e,((CraftPlayer)player).getHandle());
-					((CraftPlayer)fPlayer2.getPlayer()).getHandle().b.a(packet);
+					/*PacketPlayOutPlayerInfo packet = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e,((CraftPlayer)player).getHandle());
+					((CraftPlayer)fPlayer2.getPlayer()).getHandle().b.a(packet);*/
 				}
 			}
 		});

@@ -27,7 +27,8 @@ public class MapCommands extends AbstractCommand {
 				new MapCommandTrust(),
 				new MapCommandUnTrust(),
 				new MapCommandData(),
-				new MapCommandReady()
+				new MapCommandReady(),
+				new MapCommandRegenerate(),
 		};
 	}
 

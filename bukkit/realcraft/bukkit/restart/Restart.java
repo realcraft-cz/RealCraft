@@ -57,6 +57,7 @@ public class Restart implements Runnable, CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
 		if(!enabled) return false;
+		//TODO: /restart does not work
 		final Player player = (Player) sender;
 		if(command.getName().equalsIgnoreCase("restart")){
 			if(player.hasPermission("group.Manazer") || player.hasPermission("group.HlAdmin")){

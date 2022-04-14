@@ -1,8 +1,6 @@
 package realcraft.bukkit.mapmanager;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.mapmanager.commands.MapCommands;
@@ -28,10 +26,33 @@ public class MapManager {
 	private static ArrayList<Map> maps = new ArrayList<>();
 
 	public MapManager(){
-		world = Bukkit.getWorld("world_maps");
+		MapManager._createWorld();
 		new MapListeners();
 		new MapCommands();
 		MapManager.loadMaps();
+	}
+
+	protected static void _createWorld() {
+		WorldCreator creator = new WorldCreator("world_maps");
+		creator.type(WorldType.FLAT);
+		creator.environment(World.Environment.NORMAL);
+		creator.generator("VoidGenerator");
+
+		world = Bukkit.getServer().createWorld(creator);
+		if (world == null) {
+			throw new RuntimeException("World world_maps failed to create");
+		}
+
+		world.setKeepSpawnInMemory(false);
+		world.setDifficulty(Difficulty.HARD);
+		world.setPVP(true);
+		world.setAutoSave(true);
+		world.setFullTime(1000);
+		world.setMonsterSpawnLimit(0);
+		world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
+		world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+		world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
+		world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
 	}
 
 	public static World getWorld(){

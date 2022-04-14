@@ -26,7 +26,9 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.users.Users;
+import realcraft.bukkit.utils.BungeeMessages;
 import realcraft.bukkit.utils.Glow;
+import realcraft.share.ServerType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -240,6 +242,9 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 			ItemMeta meta = itemstack.getItemMeta();
 			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 			meta.setDisplayName(this.name);
+			if (!BungeeMessages.isServerOnline(ServerType.getByName(this.server))) {
+				meta.setDisplayName(ChatColor.GRAY + ChatColor.stripColor(this.name) + ChatColor.RED + ChatColor.BOLD + " OFFLINE");
+			}
 			meta.setLore(lore);
 			if(this.players > 0) meta.addEnchant(Glow.getGlow(),1,true);
 			else meta.removeEnchant(Glow.getGlow());

@@ -5,13 +5,12 @@ import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_18_R2.BlockPosition;
 import net.minecraft.server.v1_18_R2.TileEntitySkull;*/
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.world.level.block.entity.TileEntitySkull;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,12 +20,11 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerTextures;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.wrappers.LightApi;
-import ru.beykerykt.lightapi.chunks.ChunkInfo;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.UUID;
 
 public class LobbyLanterns implements Listener {
@@ -106,16 +104,13 @@ public class LobbyLanterns implements Listener {
 	public boolean isBlockLantern(Block block){
 		if(block.getType() == Material.PLAYER_HEAD){
 			Location location = block.getLocation();
-			TileEntitySkull skullTile = (TileEntitySkull)((CraftWorld)block.getWorld()).getHandle().getBlockEntity(new BlockPosition(location.getBlockX(),location.getBlockY(),location.getBlockZ()), false);
-			if(skullTile != null){
-				GameProfile profile = skullTile.e;
-				if(profile != null){
-					Collection<Property> properties = profile.getProperties().get("textures");
-					for(Property property : properties){
-						if(property.getValue().equals(lanternTexture1) || property.getValue().equals(lanternTexture2)){
-							return true;
-						}
-					}
+			Skull skull = (Skull) location.getBlock().getState();
+
+			PlayerProfile profile = skull.getPlayerProfile();
+			if(profile != null){
+				PlayerTextures textures = profile.getTextures();
+				if(textures.getSkin().equals(lanternTexture1) || textures.getSkin().equals(lanternTexture2)){
+					return true;
 				}
 			}
 		}
@@ -127,9 +122,9 @@ public class LobbyLanterns implements Listener {
 		Block block = event.getBlock();
 		if(this.isBlockLantern(block)){
 			LightApi.createLight(block.getLocation(),15,false);
-			for(ChunkInfo info : LightApi.collectChunks(block.getLocation())){
+			/*for(ChunkInfo info : LightApi.collectChunks(block.getLocation())){
 				LightApi.updateChunk(info);
-			}
+			}*/
 		}
 	}
 
@@ -138,9 +133,9 @@ public class LobbyLanterns implements Listener {
 		Block block = event.getBlock();
 		if(this.isBlockLantern(block)){
 			LightApi.deleteLight(block.getLocation(),false);
-			for(ChunkInfo info : LightApi.collectChunks(block.getLocation())){
+			/*for(ChunkInfo info : LightApi.collectChunks(block.getLocation())){
 				LightApi.updateChunk(info);
-			}
+			}*/
 		}
 	}
 }

@@ -5,6 +5,7 @@ import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.bekvon.bukkit.residence.protection.CuboidArea;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import realcraft.bukkit.users.Users;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 public class MapCrafter {
 	RealCraft plugin;
@@ -24,13 +26,13 @@ public class MapCrafter {
 			public void run(){
 				savePlayers();
 			}
-		},2*20,2*20);
+		},10*20,5*20);
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,new Runnable(){
 			@Override
 			public void run(){
 				saveResidences();
 			}
-		},2*20,60*20);
+		},10*20,60*20);
 	}
 
 	public void onReload(){
@@ -50,14 +52,21 @@ public class MapCrafter {
 				array.add(playerJSON);
 			}
 		}
-		JsonObject json = new JsonObject();
-		json.add("players",array);
-		try {
-		    PrintWriter writer = new PrintWriter("/var/www/realcraft/www/maps/players.json","UTF-8");
-		    writer.write(json.toString());
-		    writer.close();
-		} catch (IOException e){
-		}
+
+		Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				JsonObject json = new JsonObject();
+				json.add("players",array);
+				try {
+					PrintWriter writer = new PrintWriter("/var/www/realcraft/www/maps/players.json", StandardCharsets.UTF_8);
+					writer.write(json.toString());
+					writer.close();
+				} catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public void saveResidences(){
@@ -76,14 +85,21 @@ public class MapCrafter {
 				}
 			}
 		}
-		JsonObject json = new JsonObject();
-		json.add("residences",array);
-		try {
-		    PrintWriter writer = new PrintWriter("/var/www/realcraft/www/maps/residences.json","UTF-8");
-		    writer.write(json.toString());
-		    writer.close();
-		} catch (IOException e){
-		}
+
+		Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				JsonObject json = new JsonObject();
+				json.add("residences", array);
+				try {
+					PrintWriter writer = new PrintWriter("/var/www/realcraft/www/maps/residences.json", StandardCharsets.UTF_8);
+					writer.write(json.toString());
+					writer.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public static JsonObject toJSONLocation(Location location){

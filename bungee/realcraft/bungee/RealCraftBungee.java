@@ -1,8 +1,5 @@
 package realcraft.bungee;
 
-import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.plugin.Plugin;
 import realcraft.bungee.commands.ListCommand;
@@ -12,6 +9,9 @@ import realcraft.bungee.motd.ServerMotd;
 import realcraft.bungee.skins.Skins;
 import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.Users;
+
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 public class RealCraftBungee extends Plugin implements Runnable {
 	private static RealCraftBungee instance;

@@ -156,7 +156,7 @@ public class LobbyFunGun implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void EntityDamageByEntityEvent(EntityDamageByEntityEvent event){
-		if(event.getDamager() instanceof Snowball){
+		if(event.getDamager() instanceof Snowball && event.getDamager().getWorld().getName().equalsIgnoreCase("world")){
 			event.setCancelled(true);
 		}
 	}

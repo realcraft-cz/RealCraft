@@ -6,13 +6,10 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.earth2me.essentials.Essentials;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,15 +56,16 @@ import realcraft.bukkit.spectator.Spectator;
 import realcraft.bukkit.survival.MapCrafter;
 import realcraft.bukkit.survival.PassiveMode;
 import realcraft.bukkit.survival.RandomSpawn;
+import realcraft.bukkit.survival.ViewDistanceLimiter;
 import realcraft.bukkit.survival.economy.Economy;
 import realcraft.bukkit.survival.residences.CheckResidences;
 import realcraft.bukkit.survival.residences.ResidenceSigns;
 import realcraft.bukkit.survival.sells.Sells;
+import realcraft.bukkit.survival.shops.ShopManager;
 import realcraft.bukkit.survival.trading.Trading;
 import realcraft.bukkit.teleport.TeleportRequests;
 import realcraft.bukkit.test.Test;
 import realcraft.bukkit.users.Users;
-import realcraft.bukkit.webshop.WebShop;
 import realcraft.bukkit.wrappers.HologramsApi;
 import realcraft.share.ServerType;
 import realcraft.share.users.UserRank;
@@ -155,13 +153,12 @@ public class RealCraft extends JavaPlugin implements Listener {
 		skins = new Skins();
 		gamesreminder = new GamesReminder(this);
 		new SchematicBrush();
-		new WebShop();
 		//new NickManager();
 		new Coins();
 		new Friends();
-		new Cosmetics();
 		new ServerSpawn();
 		if(serverName.equalsIgnoreCase("lobby")){
+			new Cosmetics();
 			auth = new Auth(this);
 			eventcmds = new EventCmds(this);
 			cancelgrow = new CancelGrow(this);
@@ -176,12 +173,12 @@ public class RealCraft extends JavaPlugin implements Listener {
 			mapcrafter = new MapCrafter(this);
 			new PassiveMode();
 			new RandomSpawn();
-			//new ShopManager();
+			new ShopManager();
 			new Sells();
 			new Economy();
 			lobby = new Lobby(this);
 			new Sitting();
-
+			new ViewDistanceLimiter();
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||
@@ -311,19 +308,11 @@ public class RealCraft extends JavaPlugin implements Listener {
 				public void run(){
 					for(Player player : Bukkit.getServer().getOnlinePlayers()){
 						int ping = Users.getUser(player).getPing();
-						TabList.this.setPlayerHeaderFooter(player,"§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+Users.getOnlineUsers().size()+"/100\n§7play.realcraft.cz\n§r");
+						player.setPlayerListHeaderFooter("§r\n    §e§lRealCraft.cz§r    \n§r","§r\n§a"+ping+" ms §7| §e"+Users.getOnlineUsers().size()+"/100\n§7play.realcraft.cz\n§r");
 						if(!player.getPlayerListName().equalsIgnoreCase(player.getDisplayName())) player.setPlayerListName(player.getDisplayName());
 					}
 				}
 			},2*20,2*20);
-		}
-
-		private void setPlayerHeaderFooter(Player player,String header,String footer){
-			PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(
-				IChatBaseComponent.ChatSerializer.a("{\"text\":\""+header+"\"}"),
-				IChatBaseComponent.ChatSerializer.a("{\"text\":\""+footer+"\"}")
-			);
-			((CraftPlayer)player).getHandle().b.a(packet);
 		}
 	}
 

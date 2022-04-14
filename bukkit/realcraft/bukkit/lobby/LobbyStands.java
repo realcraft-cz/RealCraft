@@ -196,10 +196,17 @@ public class LobbyStands implements Listener, Runnable {
 
 		private void update(){
 			if(server != ServerType.LOBBY){
-				int tmpPlayers = plugin.lobby.lobbymenu.getPlayersCount(server.toString());
-				if(tmpPlayers != players){
-					players = tmpPlayers;
-					hologramPlayers.getTextLine(0).setText(players+" "+StringUtil.inflect(players,new String[]{"hrac","hraci","hracu"}));
+				if (BungeeMessages.isServerOnline(server)) {
+					hologramName.getTextLine(0).setText(server.getColor() + "" + ChatColor.BOLD + server.getName());
+					int tmpPlayers = plugin.lobby.lobbymenu.getPlayersCount(server.toString());
+					if (tmpPlayers != players) {
+						players = tmpPlayers;
+						hologramPlayers.getTextLine(0).setText(players + " " + StringUtil.inflect(players, new String[]{"hrac", "hraci", "hracu"}));
+					}
+				} else {
+					players = -1;
+					hologramName.getTextLine(0).setText(ChatColor.GRAY + "" + ChatColor.BOLD + server.getName());
+					hologramPlayers.getTextLine(0).setText(ChatColor.RED + "offline");
 				}
 			}
 			if(stand == null || stand.isDead() || !stand.isValid()) this.spawn();

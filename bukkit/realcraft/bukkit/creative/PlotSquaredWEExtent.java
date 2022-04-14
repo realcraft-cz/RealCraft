@@ -1,23 +1,8 @@
 package realcraft.bukkit.creative;
 
-import com.github.intellectualsites.plotsquared.plot.object.RegionWrapper;
-import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.entity.BaseEntity;
-import com.sk89q.worldedit.entity.Entity;
-import com.sk89q.worldedit.extent.AbstractDelegateExtent;
-import com.sk89q.worldedit.extent.Extent;
-import com.sk89q.worldedit.math.BlockVector2;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.util.Location;
-import com.sk89q.worldedit.world.World;
-import com.sk89q.worldedit.world.biome.BiomeType;
-import com.sk89q.worldedit.world.block.*;
+public class PlotSquaredWEExtent {
 
-import java.util.HashSet;
-
-public class PlotSquaredWEExtent extends AbstractDelegateExtent {
-
-	private final HashSet<RegionWrapper> mask;
+	/*private final HashSet<RegionWrapper> mask;
 	private World world;
 
 	private static final int BLOCKS_LIMIT = 500000;
@@ -198,5 +183,5 @@ public class PlotSquaredWEExtent extends AbstractDelegateExtent {
 			return true;
 		}
 		return false;
-	}
+	}*/
 }

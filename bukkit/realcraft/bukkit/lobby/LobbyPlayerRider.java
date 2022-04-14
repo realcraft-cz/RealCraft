@@ -1,8 +1,6 @@
 package realcraft.bukkit.lobby;
 
-import net.minecraft.network.protocol.game.PacketPlayOutMount;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,8 +50,8 @@ public class LobbyPlayerRider implements Listener, Runnable {
 				if(player2.getVehicle() == null){
 					player.eject();
 					player.setPassenger(player2);
-					PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)player).getHandle());
-					((CraftPlayer)(player)).getHandle().b.a(packet);
+					/*PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)player).getHandle());
+					((CraftPlayer)(player)).getHandle().b.a(packet);*/
 					riding.put(player2.getName(),player.getName());
 				}
 			}
@@ -98,8 +96,8 @@ public class LobbyPlayerRider implements Listener, Runnable {
 
 	public void leaveVehicle(Player player,Player vehicle){
 		vehicle.eject();
-		PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)vehicle).getHandle());
-		((CraftPlayer)(vehicle)).getHandle().b.a(packet);
+		/*PacketPlayOutMount packet = new PacketPlayOutMount(((CraftPlayer)vehicle).getHandle());
+		((CraftPlayer)(vehicle)).getHandle().b.a(packet);*/
 		riding.remove(player.getName());
 	}
 }

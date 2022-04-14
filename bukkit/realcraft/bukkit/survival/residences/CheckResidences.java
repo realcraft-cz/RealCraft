@@ -40,7 +40,7 @@ public class CheckResidences {
 		String [] residences = Residence.getInstance().getResidenceManager().getResidenceList();
 		for(String res : residences){
 			ClaimedResidence residence = Residence.getInstance().getResidenceManager().getByName(res);
-			if(residence != null){
+			if(residence != null && !residence.getName().equalsIgnoreCase("Spawn")){
 				String owner = residence.getOwner();
 				ResultSet rs = plugin.db.query("SELECT user_lastlogin FROM authme WHERE user_name = '"+owner+"'");
 				try {

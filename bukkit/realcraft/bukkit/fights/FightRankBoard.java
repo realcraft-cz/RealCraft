@@ -49,7 +49,7 @@ public class FightRankBoard {
 		boolean xDiff = (location1.getBlockX() < location2.getBlockX());
 		boolean zDiff = (location1.getBlockZ() < location2.getBlockZ());
 		int y = (location1.getBlockY() > location2.getBlockY() ? location1.getBlockY() : location2.getBlockY());
-		while(y >= location1.getBlockZ()){
+		while(y >= location1.getBlockY()){
 			int x = location1.getBlockX();
 			while(xDiff ? x <= location2.getBlockX() : x >= location2.getBlockX()){
 				int z = location1.getBlockZ();

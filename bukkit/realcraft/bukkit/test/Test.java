@@ -10,8 +10,13 @@ public class Test {
 		new ChunkTest();
 		new ImageTest();
 		new TitleTest();
+		new ViewTest();
 		if(RealCraft.isTestServer()){
+			new BlockTest();
+			new BoatTest();
+			new AsyncTest();
 			new HolographTest();
+			new HideTest();
 			new EntityTest();
 			new CombatTest();
 			new AdvancementTest();

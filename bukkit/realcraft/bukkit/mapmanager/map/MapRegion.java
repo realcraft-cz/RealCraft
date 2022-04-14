@@ -1,7 +1,6 @@
 package realcraft.bukkit.mapmanager.map;
 
 import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -256,7 +255,7 @@ public class MapRegion implements Runnable {
 		public SchemaStages(Clipboard clipboard,Location location){
 			this.clipboard = clipboard;
 			this.location = location;
-			this.editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(location.getWorld()),-1);
+			this.editSession = WorldEdit.getInstance().newEditSession(new BukkitWorld(location.getWorld()));
 			this.start();
 		}
 
@@ -271,6 +270,7 @@ public class MapRegion implements Runnable {
 					public void run(){
 						for(Chunk chunk : location.getWorld().getLoadedChunks()) chunk.unload();
 						MapRegion.this.setLoaded(true);
+						MapRegion.this.setLoading(false);
 						Bukkit.getServer().getPluginManager().callEvent(new MapRegionLoadEvent(MapRegion.this.getMap()));
 					}
 				});
@@ -321,14 +321,10 @@ public class MapRegion implements Runnable {
 							location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setType(BukkitAdapter.adapt(map.getValue().getBlockType()),false);
 							location.getWorld().getBlockAt(map.getKey().getBlockX(),map.getKey().getBlockY(),map.getKey().getBlockZ()).setBlockData(BukkitAdapter.adapt(map.getValue()),false);
 						} else {
-							try {
-								editSession.setBlock(map.getKey(),map.getValue());
-							} catch (MaxChangedBlocksException e){
-								e.printStackTrace();
-							}
+							editSession.smartSetBlock(map.getKey(),map.getValue());
 						}
 					}
-					editSession.commit();
+					Operations.completeBlindly(editSession.commit());
 					blocks.clear();
 					build = false;
 					return null;

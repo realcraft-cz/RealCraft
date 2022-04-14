@@ -215,13 +215,14 @@ public abstract class Map {
 		Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable() {
 			@Override
 			public void run(){
+				regionData = Map.this.getRegion().toByteArray();
 				Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(),new Runnable(){
 					@Override
 					public void run(){
 						Map.this.getRegion().setToSave(false);
 						DB.update("UPDATE "+MAPS+" SET map_updated = ?,map_region = ? WHERE map_id = '"+Map.this.getId()+"'",
 								Map.this.getUpdated(),
-								new ByteArrayInputStream(Map.this.getRegion().toByteArray())
+								new ByteArrayInputStream(regionData)
 						);
 						updated = (int)(System.currentTimeMillis()/1000);
 					}
@@ -292,11 +293,15 @@ public abstract class Map {
 			Map.this.save();
 			HashMap<String,Chunk> chunks = new HashMap<>();
 			for(int x=Map.this.getRegion().getMinLocation().getBlockX()-1;x<Map.this.getRegion().getMaxLocation().getBlockX()+1;x++){
-				for(int z=Map.this.getRegion().getMinLocation().getBlockZ()-1;z<Map.this.getRegion().getMaxLocation().getBlockZ()+1;z++){
-					Map.this.getRegion().getWorld().setBiome(x,z,biome);
-					Location location = new Location(Map.this.getRegion().getWorld(),x,0,z);
-					String key = location.getWorld().getChunkAt(location).getX()+";"+location.getWorld().getChunkAt(location).getZ();
-					if(!chunks.containsKey(key)) chunks.put(key,location.getWorld().getChunkAt(location));
+				for(int y=Map.this.getRegion().getMinLocation().getBlockY()-1;y<Map.this.getRegion().getMaxLocation().getBlockY()+1;y++) {
+					for (int z = Map.this.getRegion().getMinLocation().getBlockZ() - 1;z < Map.this.getRegion().getMaxLocation().getBlockZ() + 1;z++) {
+						//Map.this.getRegion().getWorld().setBiome(x, z, biome);
+						Location location = new Location(Map.this.getRegion().getWorld(), x, y, z);
+						location.getBlock().setBiome(biome);
+						String key = location.getWorld().getChunkAt(location).getX() + ";" + location.getWorld().getChunkAt(location).getZ();
+						if (!chunks.containsKey(key))
+							chunks.put(key, location.getWorld().getChunkAt(location));
+					}
 				}
 			}
 			for(Chunk chunk : chunks.values()){

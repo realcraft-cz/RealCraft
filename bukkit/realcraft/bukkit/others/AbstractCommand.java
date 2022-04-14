@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.RealCraft;
 
@@ -23,7 +22,7 @@ public abstract class AbstractCommand extends Command implements CommandExecutor
 
 	private void register(){
 		if(Bukkit.getPluginCommand(this.getName()) == null){
-			((CraftServer)Bukkit.getServer()).getCommandMap().register(this.getName(),this);
+			Bukkit.getServer().getCommandMap().register(this.getName(),this);
 		} else {
 			if(RealCraft.getInstance().getCommand(this.getName()) != null){
 				RealCraft.getInstance().getCommand(this.getName()).setExecutor(this);

@@ -33,7 +33,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 
 	Location plateLocation = null;
 	Vector[] arenaBounds = new Vector[2];
-	HashMap<Player,ParkourPlayer> players = new HashMap<Player,ParkourPlayer>();
+	HashMap<Player,ParkourPlayer> players = new HashMap<>();
 
 	static Random random = new Random();
 

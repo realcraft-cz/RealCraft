@@ -24,7 +24,7 @@ public class SellTrader implements Listener {
 
 	public SellTrader(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
-		location = new Location(Bukkit.getWorld("world"),112.5,72.0,-54.5,0f,0f);
+		location = new Location(Bukkit.getWorld("world"),-245.5,114.0,86.5,0f,0f);
 		Bukkit.getScheduler().runTask(RealCraft.getInstance(),new Runnable(){
 			@Override
 			public void run(){
@@ -51,6 +51,7 @@ public class SellTrader implements Listener {
 		entity.setAI(false);
 		entity.setRemoveWhenFarAway(false);
 		entity.setInvulnerable(true);
+		entity.setPersistent(false);
 		entity.setCustomNameVisible(true);
 		entity.setCustomName("§e§lVykupna");
 		entity.teleport(location);

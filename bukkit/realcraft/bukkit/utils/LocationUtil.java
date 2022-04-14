@@ -72,6 +72,69 @@ public class LocationUtil {
 		HOLLOW_MATERIALS.add(Material.LEGACY_FENCE_GATE);
 	}
 
+	public static boolean isLocationInside(Location location, Location minLocation, Location maxLocation) {
+		return (location.getBlockX() >= minLocation.getBlockX() && location.getBlockX() <= maxLocation.getBlockX()
+			&& location.getBlockY() >= minLocation.getBlockY() && location.getBlockY() <= maxLocation.getBlockY()
+			&& location.getBlockZ() >= minLocation.getBlockZ() && location.getBlockZ() <= maxLocation.getBlockZ());
+	}
+
+	public static boolean isLocationInside(Location location, BlockLocation minBlockLocation, BlockLocation maxBlockLocation) {
+		return isLocationInside(location, minBlockLocation.getLocation(), maxBlockLocation.getLocation());
+	}
+
+	public static class BlockLocation {
+
+		private final World world;
+		private final int x;
+		private final int y;
+		private final int z;
+
+		public BlockLocation(Location location) {
+			this(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		}
+
+		public BlockLocation(World world, int x, int y, int z) {
+			this.world = world;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public int getY() {
+			return y;
+		}
+
+		public int getZ() {
+			return z;
+		}
+
+		public Location getLocation() {
+			return new Location(world, x, y, z);
+		}
+
+		@Override
+		public int hashCode() {
+			int result = 7;
+			result = 31 * result + x;
+			result = 31 * result + y;
+			result = 31 * result + z;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object object) {
+			if (object instanceof BlockLocation toCompare) {
+				return (toCompare.hashCode() == this.hashCode());
+			}
+
+			return false;
+		}
+	}
+
 	public static class Vector3D {
 		public int x;
 		public int y;

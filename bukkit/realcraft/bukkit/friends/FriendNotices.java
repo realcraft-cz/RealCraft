@@ -35,7 +35,6 @@ public class FriendNotices implements Listener {
 	}
 
 	public static void showRequestToRecipient(FriendPlayer fPlayer,FriendsRequest request){
-		System.out.println("Sdfg");
 		if(fPlayer.getPlayer() == null) return;
 		fPlayer.getPlayer().sendMessage("");
 		fPlayer.getPlayer().sendMessage(FRIENDS_PREFIX+"§eZadost o pratelstvi od hrace §f"+request.getSender().getUser().getName()+"§e.");

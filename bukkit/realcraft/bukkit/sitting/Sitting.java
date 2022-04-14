@@ -18,7 +18,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.utils.LocationUtil;
-import realcraft.bukkit.utils.MaterialUtil;
 
 import java.util.HashMap;
 
@@ -43,6 +42,7 @@ public class Sitting implements Listener {
 			stand.setVisible(false);
 			stand.setGravity(false);
 			stand.setInvulnerable(true);
+			stand.setPersistent(false);
 			stand.setMarker(true);
 			stands.put(player,stand);
 			stand.addPassenger(player);
@@ -67,13 +67,13 @@ public class Sitting implements Listener {
 
 	@EventHandler
 	public void PlayerInteractEvent(PlayerInteractEvent event){
-		if(event.getClickedBlock() == null || !MaterialUtil.isStairs(event.getClickedBlock().getType())) return;
+		if(event.getClickedBlock() == null || !(event.getClickedBlock().getBlockData() instanceof Stairs)) return;
 		if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND || event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR) return;
 		if(event.getClickedBlock().getRelative(BlockFace.UP).getType() != Material.AIR) return;
 		if(event.getPlayer().isInsideVehicle()) return;
 		Stairs stairs = (Stairs) event.getClickedBlock().getBlockData();
 		if(stairs.getShape() != Stairs.Shape.STRAIGHT || stairs.getHalf() != Bisected.Half.BOTTOM) return;
-		if(event.getClickedBlock().getRelative(stairs.getFacing().getOppositeFace()).getType() != Material.AIR) return;
+		//if(event.getClickedBlock().getRelative(stairs.getFacing().getOppositeFace()).getType() != Material.AIR) return;
 		event.setCancelled(true);
 		this.setSitting(event.getPlayer(),event.getClickedBlock().getLocation(),true);
 	}

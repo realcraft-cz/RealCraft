@@ -74,17 +74,19 @@ public class DB {
 		return update(query,(Object)null);
 	}
 
-	public static int update(String query,Object... params){
-		if(!connected) return 0;
+	public static int update(String query,Object... params) {
+		if (!connected) return 0;
+		PreparedStatement stmt = null;
 		try {
-			PreparedStatement stmt = conn.prepareStatement(query);
-			for(int i=0;i<params.length;i++){
-				if(params[i] != null) stmt.setObject(i+1,params[i]);
+			stmt = conn.prepareStatement(query);
+			for (int i = 0;i < params.length;i++) {
+				if (params[i] != null) stmt.setObject(i + 1, params[i]);
 			}
 			return stmt.executeUpdate();
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			close(stmt);
 		}
 		return 0;
 	}
@@ -107,6 +109,24 @@ public class DB {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static void close(ResultSet rs) {
+		if (rs != null) {
+			try {
+				rs.close();
+			} catch (SQLException ignored) {
+			}
+		}
+	}
+
+	public static void close(Statement ps) {
+		if (ps != null) {
+			try {
+				ps.close();
+			} catch (SQLException ignored) {
+			}
+		}
 	}
 
 	private static class BungeeDB {

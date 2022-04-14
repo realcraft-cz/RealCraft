@@ -32,7 +32,6 @@ import realcraft.bukkit.mapmanager.map.Map;
 import realcraft.bukkit.mapmanager.map.MapPermission;
 import realcraft.bukkit.others.AbstractCommand;
 import realcraft.bukkit.spawn.ServerSpawn;
-import realcraft.bukkit.utils.LocationUtil;
 import realcraft.share.users.UserRank;
 
 import java.util.ArrayList;
@@ -116,7 +115,7 @@ public class MapListeners implements Listener {
 	public void PlayerRespawnEvent(PlayerRespawnEvent event){
 		MapPlayer mPlayer = MapManager.getMapPlayer(event.getPlayer());
 		if(mPlayer.getMap() != null){
-			event.setRespawnLocation(LocationUtil.getSafeDestination(mPlayer.getMap().getRegion().getCenterLocation()));
+			event.setRespawnLocation(mPlayer.getMap().getRegion().getCenterLocation());
 			mPlayer.updateBorder();
 		}
 	}

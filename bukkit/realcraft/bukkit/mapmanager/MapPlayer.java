@@ -9,7 +9,6 @@ import realcraft.bukkit.mapmanager.map.MapType;
 import realcraft.bukkit.spawn.ServerSpawn;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.BorderUtil;
-import realcraft.bukkit.utils.LocationUtil;
 import realcraft.share.users.User;
 
 public class MapPlayer {
@@ -69,7 +68,7 @@ public class MapPlayer {
 
 	public void joinMap(Map map){
 		this.map = map;
-		this.getPlayer().teleport(LocationUtil.getSafeDestination(map.getRegion().getCenterLocation().clone().add(0,1,0)));
+		this.getPlayer().teleport((map.getRegion().getCenterLocation().clone().add(0,1,0)));
 		this.getPlayer().setScoreboard(map.getScoreboard().getScoreboard());
 		this.getPlayer().setPlayerTime(map.getTime().getValue(),false);
 		this.updateBorder();

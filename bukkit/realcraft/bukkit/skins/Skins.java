@@ -23,6 +23,9 @@ public class Skins implements Listener {
 		SocketData data = event.getData();
 		if(data.getChannel().equalsIgnoreCase(CHANNEL_SKIN_RESET)){
 			Player player = Bukkit.getPlayer(UUID.fromString(data.getString("uuid")));
+			if (player != null) {
+				player.setPlayerProfile(player.getPlayerProfile());
+			}
 			//if(player != null && player.isOnline()) SkinHandler_v1_13_R1.updateSkin(player);
 		}
 	}

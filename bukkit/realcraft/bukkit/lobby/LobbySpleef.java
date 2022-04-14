@@ -31,7 +31,7 @@ public class LobbySpleef implements Listener, Runnable {
 
 	private static final int BLOCK_TIMEOUT = 5000;
 	private HashMap<Player,LobbySpleefPlayer> players = new HashMap<>();
-	private HashMap<SimpleLocation,LobbySpleefBlock> blocks = new HashMap<>();
+	private HashMap<LocationUtil.BlockLocation,LobbySpleefBlock> blocks = new HashMap<>();
 	private Location location;
 	private int radius;
 	private ItemStack item;
@@ -112,7 +112,7 @@ public class LobbySpleef implements Listener, Runnable {
 	private void addBlock(Location location){
 		Block block = location.getBlock();
 		block.setType(Material.SNOW_BLOCK);
-		SimpleLocation sLocation = new SimpleLocation(block.getLocation());
+		LocationUtil.BlockLocation sLocation = new LocationUtil.BlockLocation(block.getLocation());
 		blocks.put(sLocation,new LobbySpleefBlock(block));
 	}
 
@@ -170,7 +170,7 @@ public class LobbySpleef implements Listener, Runnable {
 		if(player.getInventory().getItemInMainHand().getType() != Material.DIAMOND_SHOVEL) return;
 		if(event.getBlock().getType() != Material.SNOW_BLOCK) return;
 		Block block = event.getBlock();
-		SimpleLocation sLocation = new SimpleLocation(block.getLocation());
+		LocationUtil.BlockLocation sLocation = new LocationUtil.BlockLocation(block.getLocation());
 		if(blocks.containsKey(sLocation)){
 			event.setCancelled(false);
 			event.setDropItems(false);
@@ -235,53 +235,6 @@ public class LobbySpleef implements Listener, Runnable {
 
 		public long getChanged(){
 			return changed;
-		}
-	}
-
-	private class SimpleLocation {
-
-		private int x;
-		private int y;
-		private int z;
-
-		public SimpleLocation(Location location){
-			this(location.getBlockX(),location.getBlockY(),location.getBlockZ());
-		}
-
-		public SimpleLocation(int x,int y,int z){
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-
-		public int getX(){
-			return x;
-		}
-
-		public int getY(){
-			return y;
-		}
-
-		public int getZ(){
-			return z;
-		}
-
-		@Override
-		public int hashCode(){
-			int result = 7;
-			result = 31*result+x;
-			result = 31*result+y;
-			result = 31*result+z;
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object object){
-			if(object instanceof SimpleLocation){
-				SimpleLocation toCompare = (SimpleLocation) object;
-				return (toCompare.hashCode() == this.hashCode());
-			}
-			return false;
 		}
 	}
 }

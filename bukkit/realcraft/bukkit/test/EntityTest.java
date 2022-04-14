@@ -61,7 +61,7 @@ public class EntityTest implements Listener {
 			@Override
 			public void run() {
 				if (!entity.isDead()) {
-                    EntityUtil.navigate(entity, player, 0.5);
+                    EntityUtil.navigate(entity, player.getLocation(), 0.5);
 				}
 			}
 		}, 20, 20);

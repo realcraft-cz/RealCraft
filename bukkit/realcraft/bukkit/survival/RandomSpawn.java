@@ -16,11 +16,11 @@ import java.util.List;
 public class RandomSpawn extends AbstractCommand {
 
 	private static final int RANDOM_LIMIT = 60*1000;
-	private static final int RANDOM_SIZE = 5000;
+	private static final int RANDOM_SIZE = 6000;
 	private HashMap<Player,Long> lastRandomSpawn = new HashMap<Player,Long>();
 
 	public RandomSpawn(){
-		super("priroda","nature","warp rs");
+		super("priroda","nature","warp rs","rtp");
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class RandomSpawn extends AbstractCommand {
 			return;
 		}
 		lastRandomSpawn.put(player,System.currentTimeMillis());
-		player.teleport(this.getRandomLocation(Bukkit.getWorld("world")),PlayerTeleportEvent.TeleportCause.PLUGIN);
+		player.teleportAsync(this.getRandomLocation(Bukkit.getWorld("world")), PlayerTeleportEvent.TeleportCause.PLUGIN);
 	}
 
 	@Override

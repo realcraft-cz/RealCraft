@@ -346,6 +346,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 			crystal.setCustomNameVisible(false);
 			crystal.setInvulnerable(true);
 			crystal.setShowingBottom(false);
+			crystal.setPersistent(false);
 			crystal.setGravity(false);
 			stand = (ArmorStand)location.getWorld().spawnEntity(location.clone().add(0.0,-2.0,0.0),EntityType.ARMOR_STAND);
 			stand.setCustomName("§7§kABCDEFGHK");
@@ -356,6 +357,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 			stand.setVisible(false);
 			stand.setGravity(false);
 			stand.setInvulnerable(true);
+			stand.setPersistent(false);
 			stand.getEquipment().setHelmet(ItemUtil.getHead(CRYSTAL_LUCKY_TEXTURE));
 			for(Entity entity : crystal.getNearbyEntities(3.0,3.0,3.0)){
 				if(entity.getType() == EntityType.ENDER_CRYSTAL && crystal.getCustomName().equalsIgnoreCase(entity.getCustomName())){

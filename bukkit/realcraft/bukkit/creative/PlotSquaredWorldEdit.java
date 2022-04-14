@@ -1,30 +1,19 @@
 package realcraft.bukkit.creative;
 
-import com.github.intellectualsites.plotsquared.plot.PlotSquared;
-import com.github.intellectualsites.plotsquared.plot.object.*;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.event.extent.EditSessionEvent;
-import com.sk89q.worldedit.extent.NullExtent;
-import com.sk89q.worldedit.util.eventbus.EventHandler.Priority;
-import com.sk89q.worldedit.util.eventbus.Subscribe;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import realcraft.bukkit.RealCraft;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
 
 public class PlotSquaredWorldEdit implements Listener, Runnable {
 
@@ -73,7 +62,7 @@ public class PlotSquaredWorldEdit implements Listener, Runnable {
 		}
 	}
 
-	@EventHandler(priority=EventPriority.LOW)
+	/*@EventHandler(priority=EventPriority.LOW)
 	public void PlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event){
 		Player player = event.getPlayer();
 		String command = event.getMessage().substring(1).toLowerCase();
@@ -100,7 +89,7 @@ public class PlotSquaredWorldEdit implements Listener, Runnable {
 				}
 			}
 		}
-	}
+	}*/
 
 	@EventHandler
 	public void PlayerJoinEvent(PlayerJoinEvent event){
@@ -160,7 +149,7 @@ public class PlotSquaredWorldEdit implements Listener, Runnable {
 		}
 	}
 
-	@Subscribe(priority = Priority.NORMAL)
+	/*@Subscribe(priority = Priority.NORMAL)
 	public void EditSessionEvent(EditSessionEvent event){
 		if(event.getActor() != null && event.getActor().isPlayer()){
 			Player player = Bukkit.getServer().getPlayer(event.getActor().getName());
@@ -212,7 +201,7 @@ public class PlotSquaredWorldEdit implements Listener, Runnable {
 			}
 		}
 		return false;
-	}
+	}*/
 
 	private boolean isEntityForbidden(Entity entity){
 		switch(entity.getType()){
