@@ -13,7 +13,7 @@ public class MapData {
 	}
 
 	public MapData(String data){
-		JsonElement element = new JsonParser().parse(data);
+		JsonElement element = JsonParser.parseString(data);
 		if(element.isJsonObject()) objects = element.getAsJsonObject();
 		else objects = new JsonObject();
 	}

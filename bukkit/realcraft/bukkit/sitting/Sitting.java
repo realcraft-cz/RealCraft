@@ -39,10 +39,9 @@ public class Sitting implements Listener {
 			stand.setSmall(true);
 			stand.setBasePlate(false);
 			stand.setArms(false);
-			stand.setVisible(false);
+			stand.setInvisible(true);
 			stand.setGravity(false);
 			stand.setInvulnerable(true);
-			stand.setPersistent(false);
 			stand.setMarker(true);
 			stands.put(player,stand);
 			stand.addPassenger(player);

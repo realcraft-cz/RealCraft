@@ -25,12 +25,6 @@ public class HideTest extends AbstractCommand implements Listener {
             return;
         }
 
-        player.sendBlockChange(player.getLocation().add(2, 0, 0),Material.AIR.createBlockData());
-
-        if (true) {
-            return;
-        }
-
         //CustomFallingBlock block = new CustomFallingBlock(((CraftWorld)player.getWorld()).getHandle());
         //((CraftWorld)player.getWorld()).getHandle().b(new BlockPosition(player.getLocation().getX() + 2, player.getLocation().getY() + 2, player.getLocation().getZ()), ibd);
         //((CraftWorld)player.getWorld()).getHandle().b(block);
@@ -40,7 +34,7 @@ public class HideTest extends AbstractCommand implements Listener {
         stand.setPersistent(false);
         stand.setSmall(true);
 
-        FallingBlock block = player.getWorld().spawnFallingBlock(player.getLocation().add(2, 2, 0), new MaterialData(Material.GRASS_BLOCK));
+        FallingBlock block = player.getWorld().spawnFallingBlock(player.getLocation().add(2, 2, 0), new MaterialData(Material.TRAPPED_CHEST));
         block.setGravity(false);
         block.setInvulnerable(true);
         block.setPersistent(false);
@@ -66,6 +60,7 @@ public class HideTest extends AbstractCommand implements Listener {
                 //block.remove();
                 block.setTicksLived(1);
                 stand.setSmall(true);
+                block.setGlowing(false);
                 //((CraftArmorStand)stand).getHandle().teleportTo(((CraftWorld)stand.getWorld()).getHandle(), new BlockPosition(player.getLocation().getX() + 0.0, player.getLocation().getY() - 0.7, player.getLocation().getZ() + 0.0));
                 ((CraftArmorStand)stand).getHandle().c(player.getLocation().getX() + 0.0, player.getLocation().getY() - 0.70, player.getLocation().getZ() + 0.0);
             }

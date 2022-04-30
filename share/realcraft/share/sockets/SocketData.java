@@ -19,7 +19,7 @@ public abstract class SocketData {
 	}
 
 	public SocketData(String channel,String server,String data){
-		JsonElement element = new JsonParser().parse(data);
+		JsonElement element = JsonParser.parseString(data);
 		if(element.isJsonObject()) objects = element.getAsJsonObject();
 	}
 

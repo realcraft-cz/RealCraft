@@ -3,6 +3,7 @@ package realcraft.bukkit.lobby;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,14 +27,8 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
-public class LobbyAutoParkour implements Listener, Runnable {
+public class LobbyAutoParkour {
 	RealCraft plugin;
-
-	private FileConfiguration parkourConfig;
-
-	Location plateLocation = null;
-	Vector[] arenaBounds = new Vector[2];
-	HashMap<Player,ParkourPlayer> players = new HashMap<>();
 
 	static Random random = new Random();
 
@@ -42,152 +37,183 @@ public class LobbyAutoParkour implements Listener, Runnable {
 
 	public LobbyAutoParkour(RealCraft realcraft){
 		plugin = realcraft;
-		plugin.getServer().getPluginManager().registerEvents(this,plugin);
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,this,4,4);
-		this.loadParkour();
+		this.loadParkours();
 	}
 
-	public void loadParkour(){
+	public void loadParkours(){
 		File parkourFile = new File(RealCraft.getInstance().getDataFolder()+"/parkours/"+plugin.serverName+".yml");
 		if(parkourFile.exists()){
-			parkourConfig = new YamlConfiguration();
+			FileConfiguration parkourConfig = new YamlConfiguration();
 			try {
 				parkourConfig.load(parkourFile);
 			} catch (Exception e){
 				e.printStackTrace();
 			}
-			plateLocation = LocationUtil.getConfigLocation(parkourConfig,"plate");
-			arenaBounds[0] = LocationUtil.getConfigLocation(parkourConfig,"arena.locMin").toVector();
-			arenaBounds[1] = LocationUtil.getConfigLocation(parkourConfig,"arena.locMax").toVector();
-		}
-	}
 
-	public void onReload(){
-	}
-
-	public void onDisable(){
-		for(Entry<Player,ParkourPlayer> entry: players.entrySet()){
-			entry.getValue().clear();
-		}
-	}
-
-	@Override
-	public void run(){
-		for(Entry<Player,ParkourPlayer> entry: players.entrySet()){
-			if(entry.getValue().getJumps() != 0) entry.getValue().setTime(entry.getValue().getTime()-1);
-			if(entry.getValue().getTime() == -1){
-				entry.getValue().clearBase();
-			}
-			else if(entry.getValue().getTime() == -10){
-				this.cancelPlayerParkour(entry.getKey());
+			if (parkourConfig.isSet("arenas")) {
+				for (String key : parkourConfig.getConfigurationSection("arenas").getKeys(false)) {
+					ConfigurationSection section = parkourConfig.getConfigurationSection("arenas." + key);
+					Location plateLoc = LocationUtil.getConfigLocation(section, "plate");
+					Location minLoc = LocationUtil.getConfigLocation(section, "locMin");
+					Location maxLoc = LocationUtil.getConfigLocation(section, "locMax");
+					new ParkourArena(plateLoc, minLoc, maxLoc);
+				}
 			} else {
-				float exp = entry.getValue().getTime()/(entry.getValue().getMaxTime()+0f);
-				if(exp < 0) exp = 0;
-				else if(exp > 1) exp = 1;
-				entry.getKey().setExp(exp);
+				/** @deprecated */
+				Location plateLoc = LocationUtil.getConfigLocation(parkourConfig, "plate");
+				Location minLoc = LocationUtil.getConfigLocation(parkourConfig, "arena.locMin");
+				Location maxLoc = LocationUtil.getConfigLocation(parkourConfig, "arena.locMax");
+				new ParkourArena(plateLoc, minLoc, maxLoc);
 			}
 		}
 	}
 
-	@EventHandler
-	public void PlayerQuitEvent(PlayerQuitEvent event){
-		Player player = event.getPlayer();
-		if(this.isPlayerInParkour(player)){
-			this.cancelPlayerParkour(player);
-		}
-	}
+	private class ParkourArena implements Listener, Runnable {
 
-	@EventHandler
-	public void PlayerInteractEvent(PlayerInteractEvent event){
-		if(event.getAction() == Action.PHYSICAL && plateLocation != null){
-			Block block = event.getClickedBlock();
-			if(block != null && (block.getType() == Material.STONE_PRESSURE_PLATE || block.getType() == Material.OAK_PRESSURE_PLATE)
-					&& block.getLocation().getBlockX() == plateLocation.getBlockX() && block.getLocation().getBlockY() == plateLocation.getBlockY() && block.getLocation().getBlockZ() == plateLocation.getBlockZ()){
-				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
-					@Override
-					public void run(){
-						if(event.getPlayer().getLocation().distanceSquared(plateLocation) < 4) LobbyAutoParkour.this.startPlayerParkour(event.getPlayer());
-					}
-				},10);
-			}
-		}
-	}
+		private final Location plateLoc;
+		private final Vector minVec;
+		private final Vector maxVec;
+		HashMap<Player,ParkourPlayer> players = new HashMap<>();
 
-	@EventHandler
-	public void PlayerMoveEvent(PlayerMoveEvent event){
-		Player player = event.getPlayer();
-		if(this.isPlayerInParkour(player)){
-			if(player.getLocation().getBlockY()+1 < this.getPlayerParkour(player).getDestination().getBlockY()){
-				this.cancelPlayerParkour(player);
-			} else {
-				Location location = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation();
-				Location destination = this.getPlayerParkour(player).getDestination();
-				if(location.getBlockX() == destination.getBlockX() && location.getBlockY() == destination.getBlockY() && location.getBlockZ() == destination.getBlockZ()){
-					this.createNextStep(player,destination);
+		public ParkourArena(Location plateLoc, Location loc1, Location loc2) {
+			this.plateLoc = plateLoc;
+
+			this.minVec = new Vector(Math.min(loc1.getBlockX(), loc2.getBlockX()), Math.min(loc1.getBlockY(), loc2.getBlockY()), Math.min(loc1.getBlockZ(), loc2.getBlockZ()));
+			this.maxVec = new Vector(Math.max(loc1.getBlockX(), loc2.getBlockX()), Math.max(loc1.getBlockY(), loc2.getBlockY()), Math.max(loc1.getBlockZ(), loc2.getBlockZ()));
+
+			Bukkit.getPluginManager().registerEvents(this, plugin);
+			Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 4, 4);
+		}
+
+		@Override
+		public void run() {
+			for(Entry<Player,ParkourPlayer> entry: players.entrySet()){
+				if(entry.getValue().getJumps() != 0) entry.getValue().setTime(entry.getValue().getTime()-1);
+				if(entry.getValue().getTime() == -1){
+					entry.getValue().clearBase();
+				}
+				else if(entry.getValue().getTime() == -10){
+					this.cancelPlayerParkour(entry.getKey());
+				} else {
+					float exp = entry.getValue().getTime()/(entry.getValue().getMaxTime()+0f);
+					if(exp < 0) exp = 0;
+					else if(exp > 1) exp = 1;
+					entry.getKey().setExp(exp);
 				}
 			}
 		}
-	}
 
-	public void startPlayerParkour(Player player){
-		if(!this.isPlayerInParkour(player)){
-			players.put(player,new ParkourPlayer(player));
-			player.setFlying(false);
-			player.setAllowFlight(false);
-			player.setWalkSpeed(0.3f);
-			Location random = this.chooseRandomStartLocation();
-			this.createNextStep(player,random);
-			Location teleport = random.clone();
-			teleport.setPitch(player.getLocation().getPitch());
-			teleport.setYaw(player.getLocation().getYaw());
-			player.teleport(teleport.add(0.5,1,0.5));
-			player.getWorld().playSound(teleport,Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f);
+		@EventHandler
+		public void PlayerQuitEvent(PlayerQuitEvent event){
+			Player player = event.getPlayer();
+			if(this.isPlayerInParkour(player)){
+				this.cancelPlayerParkour(player);
+			}
 		}
-	}
 
-	public void cancelPlayerParkour(Player player){
-		this.getPlayerParkour(player).clear();
-		this.getPlayerParkour(player).cancel();
-		players.remove(player);
-	}
+		@EventHandler
+		public void PlayerInteractEvent(PlayerInteractEvent event){
+			if(event.getAction() == Action.PHYSICAL && plateLoc != null){
+				Block block = event.getClickedBlock();
+				if(block != null && (block.getType() == Material.STONE_PRESSURE_PLATE || block.getType() == Material.OAK_PRESSURE_PLATE)
+					&& block.getLocation().getBlockX() == plateLoc.getBlockX() && block.getLocation().getBlockY() == plateLoc.getBlockY() && block.getLocation().getBlockZ() == plateLoc.getBlockZ()){
+					Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
+						@Override
+						public void run(){
+							if(event.getPlayer().getLocation().distanceSquared(plateLoc) < 4) startPlayerParkour(event.getPlayer());
+						}
+					},10);
+				}
+			}
+		}
 
-	public void createNextStep(Player player,Location baseLocation){
-		this.getPlayerParkour(player).clear();
-		Location location = this.chooseRandomStep(baseLocation,1);
-		this.getPlayerParkour(player).setLocations(baseLocation,location);
-	}
+		@EventHandler
+		public void PlayerMoveEvent(PlayerMoveEvent event){
+			Player player = event.getPlayer();
+			if(this.isPlayerInParkour(player)){
+				if(player.getLocation().getBlockY()+1 < this.getPlayerParkour(player).getDestination().getBlockY()){
+					this.cancelPlayerParkour(player);
+				} else {
+					Location location = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation();
+					Location destination = this.getPlayerParkour(player).getDestination();
+					if(location.getBlockX() == destination.getBlockX() && location.getBlockY() == destination.getBlockY() && location.getBlockZ() == destination.getBlockZ()){
+						this.createNextStep(player,destination);
+					}
+				}
+			}
+		}
 
-	public Location chooseRandomStartLocation(){
-		int x = this.getRandomInteger(arenaBounds[0].getBlockX(),arenaBounds[1].getBlockX());
-		int y = this.getRandomInteger(arenaBounds[0].getBlockY(),arenaBounds[1].getBlockY());
-		int z = this.getRandomInteger(arenaBounds[0].getBlockZ(),arenaBounds[1].getBlockZ());
-		Location location = new Location(plateLocation.getWorld(),x,y,z);
-		if(location.getBlock().getType() != Material.AIR
-		|| location.getBlock().getRelative(BlockFace.UP).getType() != Material.AIR
-		|| location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() != Material.AIR) return this.chooseRandomStartLocation();
-		return location;
-	}
+		public void startPlayerParkour(Player player){
+			if(!this.isPlayerInParkour(player)){
+				players.put(player,new ParkourPlayer(player));
+				player.setFlying(false);
+				player.setAllowFlight(false);
+				player.setWalkSpeed(0.3f);
+				Location random = this.chooseRandomStartLocation();
+				this.createNextStep(player,random);
+				Location teleport = random.clone();
+				teleport.setPitch(player.getLocation().getPitch());
+				teleport.setYaw(player.getLocation().getYaw());
+				player.teleport(teleport.add(0.5,1,0.5));
+				player.getWorld().playSound(teleport,Sound.ENTITY_ENDERMAN_TELEPORT,1f,1f);
+			}
+		}
 
-	public Location chooseRandomStep(Location baseLocation,int step){
-		if(step > 100) return baseLocation;
-		int x = this.getRandomInteger(-4,4);
-		int y = (random.nextBoolean() ? this.getRandomInteger(0,1) : this.getRandomInteger(-1,1));
-		int z = this.getRandomInteger(-4,4);
-		Location location = baseLocation.clone().add(x,y,z);
-		if(!location.toVector().isInAABB(arenaBounds[0],arenaBounds[1])) return this.chooseRandomStep(baseLocation,step+1);
-		if(location.distance(baseLocation) > 5 || location.distance(baseLocation) <= 2
-		|| location.getBlock().getType() != Material.AIR
-		|| location.getBlock().getRelative(BlockFace.UP).getType() != Material.AIR
-		|| location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() != Material.AIR) return this.chooseRandomStep(baseLocation,step+1);
-		return location;
-	}
+		public void cancelPlayerParkour(Player player){
+			this.getPlayerParkour(player).clear();
+			this.getPlayerParkour(player).cancel();
+			players.remove(player);
+		}
 
-	public boolean isPlayerInParkour(Player player){
-		return players.containsKey(player);
-	}
+		public void createNextStep(Player player,Location baseLocation){
+			this.getPlayerParkour(player).clear();
+			Location location = this.chooseRandomStep(baseLocation,1);
+			this.getPlayerParkour(player).setLocations(baseLocation,location);
+			if(this.getPlayerParkour(player).getLevel() - 1 == LobbyAutoParkour.levels) {
+				cancelPlayerParkour(player);
+			}
+		}
 
-	public ParkourPlayer getPlayerParkour(Player player){
-		return players.get(player);
+		public Location chooseRandomStartLocation(){
+			int x = this.getRandomInteger(minVec.getBlockX(),maxVec.getBlockX());
+			int y = this.getRandomInteger(minVec.getBlockY(),maxVec.getBlockY());
+			int z = this.getRandomInteger(minVec.getBlockZ(),maxVec.getBlockZ());
+			Location location = new Location(plateLoc.getWorld(),x,y,z);
+			if(location.getBlock().getType() != Material.AIR
+				|| location.getBlock().getRelative(BlockFace.UP).getType() != Material.AIR
+				|| location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() != Material.AIR) return this.chooseRandomStartLocation();
+			return location;
+		}
+
+		public Location chooseRandomStep(Location baseLocation,int step){
+			if(step > 100) return baseLocation;
+			int x = this.getRandomInteger(-4,4);
+			int y = (random.nextBoolean() ? this.getRandomInteger(0,1) : this.getRandomInteger(-1,1));
+			int z = this.getRandomInteger(-4,4);
+			Location location = baseLocation.clone().add(x,y,z);
+			if(!location.toVector().isInAABB(minVec,maxVec)) return this.chooseRandomStep(baseLocation,step+1);
+			if(location.distance(baseLocation) > 5 || location.distance(baseLocation) <= 2
+				|| location.getBlock().getType() != Material.AIR
+				|| location.getBlock().getRelative(BlockFace.UP).getType() != Material.AIR
+				|| location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() != Material.AIR) return this.chooseRandomStep(baseLocation,step+1);
+			return location;
+		}
+
+		public boolean isPlayerInParkour(Player player){
+			return players.containsKey(player);
+		}
+
+		public ParkourPlayer getPlayerParkour(Player player){
+			return players.get(player);
+		}
+
+		public int getRandomInteger(int min,int max){
+			return random.nextInt((max - min) + 1) + min;
+		}
+
+		public double getRandomDouble(double min,double max){
+			return min+Math.random()*(max-min);
+		}
 	}
 
 	private class ParkourPlayer {
@@ -238,7 +264,6 @@ public class LobbyAutoParkour implements Listener, Runnable {
 				Title.showTitle(player,title,0,5.2,0.6);
 				if(this.level <= LobbyAutoParkour.levels) Title.showActionTitle(player,""+ChatColor.YELLOW+(this.jumps)+"/"+LobbyAutoParkour.jumpsPerLevel);
 				player.playSound(destination,Sound.ENTITY_PLAYER_LEVELUP,1f,1f);
-				if(this.level-1 == LobbyAutoParkour.levels) cancelPlayerParkour(player);
 
 				final String finalTitle = title;
 				Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(),new Runnable(){
@@ -266,6 +291,10 @@ public class LobbyAutoParkour implements Listener, Runnable {
 			this.time = time;
 		}
 
+		public int getLevel(){
+			return this.level;
+		}
+
 		public int getJumps(){
 			return this.jumps;
 		}
@@ -291,15 +320,7 @@ public class LobbyAutoParkour implements Listener, Runnable {
 		}
 	}
 
-	public int getRandomInteger(int min,int max){
-		return random.nextInt((max - min) + 1) + min;
-	}
-
-	public double getRandomDouble(double min,double max){
-		return min+Math.random()*(max-min);
-	}
-
-	static private DyeColor colors[] = null;
+	static private DyeColor[] colors = null;
 
 	public static DyeColor getRandomColor(){
 		if(colors == null){

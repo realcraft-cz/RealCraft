@@ -41,10 +41,10 @@ public class MapCrafter {
 	public void savePlayers(){
 		JsonArray array = new JsonArray();
 		for(Player player : plugin.getServer().getOnlinePlayers()){
-			if(player.getWorld().getName().equalsIgnoreCase("world") && player.getGameMode() != GameMode.SPECTATOR){
+			if(player.getGameMode() != GameMode.SPECTATOR){
 				JsonObject playerJSON = new JsonObject();
 				playerJSON.addProperty("username",player.getName());
-				playerJSON.addProperty("world","world_survival");
+				playerJSON.addProperty("world",player.getWorld().getName());
 				playerJSON.addProperty("x",player.getLocation().getBlockX());
 				playerJSON.addProperty("y",player.getLocation().getBlockY());
 				playerJSON.addProperty("z",player.getLocation().getBlockZ());
@@ -73,9 +73,10 @@ public class MapCrafter {
 		JsonArray array = new JsonArray();
 		for(String name : Residence.getInstance().getResidenceManager().getResidenceList()){
 			ClaimedResidence residence = Residence.getInstance().getResidenceManager().getByName(name);
-			if(residence != null && residence.getWorld().equalsIgnoreCase("world")){
+			if(residence != null){
 				JsonObject playerJSON = new JsonObject();
 				playerJSON.addProperty("name",residence.getName());
+				playerJSON.addProperty("world",residence.getPermissions().getWorldName());
 				playerJSON.addProperty("owner",residence.getOwner());
 				CuboidArea area = residence.getArea("main");
 				if(area != null){

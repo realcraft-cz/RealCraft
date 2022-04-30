@@ -6,14 +6,14 @@ import com.google.gson.JsonParser;
 
 public class JsonData {
 
-	private JsonObject objects;
+	private final JsonObject objects;
 
 	public JsonData(){
 		objects = new JsonObject();
 	}
 
 	public JsonData(String data){
-		JsonElement element = new JsonParser().parse(data);
+		JsonElement element = JsonParser.parseString(data);
 		if(element.isJsonObject()) objects = element.getAsJsonObject();
 		else objects = new JsonObject();
 	}

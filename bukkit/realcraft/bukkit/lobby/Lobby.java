@@ -72,7 +72,6 @@ public class Lobby implements Listener {
 	}
 
 	public void onDisable(){
-		if(lobbyautoparkour != null) lobbyautoparkour.onDisable();
 		if(lobbystands != null) lobbystands.onDisable();
 	}
 

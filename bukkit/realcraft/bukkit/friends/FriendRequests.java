@@ -147,7 +147,7 @@ public class FriendRequests implements Listener {
 		}
 
 		public static FriendsRequest fromString(String data){
-			JsonElement element = new JsonParser().parse(data);
+			JsonElement element = JsonParser.parseString(data);
 			if(element.isJsonObject()){
 				JsonObject objects = element.getAsJsonObject();
 				FriendPlayer sender = Friends.getFriendPlayer(objects.get("sender").getAsInt());
