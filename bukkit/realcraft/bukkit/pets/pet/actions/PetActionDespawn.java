@@ -1,0 +1,27 @@
+package realcraft.bukkit.pets.pet.actions;
+
+import realcraft.bukkit.pets.pet.Pet;
+
+public class PetActionDespawn extends PetAction {
+
+    public PetActionDespawn(Pet pet) {
+        super(PetActionType.DESPAWN, pet);
+    }
+
+    @Override
+    public boolean isCancellable() {
+        return false;
+    }
+
+    @Override
+    protected void _start() {
+    }
+
+    @Override
+    protected void _clear() {
+    }
+
+    @Override
+    public void run() {
+    }
+}

@@ -49,4 +49,9 @@ public class JsonDataString extends JsonDataEntry {
 		}
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return this.getValue();
+	}
 }

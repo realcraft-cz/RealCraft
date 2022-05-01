@@ -52,6 +52,7 @@
       <excludeFolder url="file://$MODULE_DIR$/bukkit/realcraft/bukkit/parkour" />
       <excludeFolder url="file://$MODULE_DIR$/bukkit/realcraft/bukkit/quiz" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/bukkit/realcraft/bukkit/cosmetics/pets" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />

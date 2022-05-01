@@ -2,8 +2,8 @@ package realcraft.bukkit.utils.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import realcraft.bukkit.mapmanager.MapManager;
 
 public class JsonDataLocation extends JsonDataEntry {
 
@@ -30,7 +30,7 @@ public class JsonDataLocation extends JsonDataEntry {
 			double z = json.get("z").getAsDouble();
 			float yaw = json.get("yaw").getAsFloat();
 			float pitch = json.get("pitch").getAsFloat();
-			this.location = new Location(MapManager.getWorld(),x,y,z,yaw,pitch);
+			this.location = new Location(Bukkit.getWorld(json.get("world").getAsString()),x,y,z,yaw,pitch);
 		}
 	}
 
@@ -46,6 +46,7 @@ public class JsonDataLocation extends JsonDataEntry {
 	public JsonObject getData(){
 		JsonObject json = new JsonObject();
 		if(location != null){
+			json.addProperty("world",location.getWorld().getName());
 			json.addProperty("x",this.round(location.getX(),1));
 			json.addProperty("y",this.round(location.getY(),1));
 			json.addProperty("z",this.round(location.getZ(),1));
@@ -67,7 +68,8 @@ public class JsonDataLocation extends JsonDataEntry {
 	public boolean equals(Object object){
 		if(object instanceof JsonDataLocation){
 			JsonDataLocation toCompare = (JsonDataLocation) object;
-			return (toCompare.getLocation().getBlockX() == this.getLocation().getBlockX() &&
+			return (toCompare.getLocation().getWorld().getName().equals(this.getLocation().getWorld().getName()) &&
+					toCompare.getLocation().getBlockX() == this.getLocation().getBlockX() &&
 					toCompare.getLocation().getBlockY() == this.getLocation().getBlockY() &&
 					toCompare.getLocation().getBlockZ() == this.getLocation().getBlockZ()
 			);

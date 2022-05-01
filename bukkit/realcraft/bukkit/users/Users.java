@@ -1,14 +1,11 @@
 package realcraft.bukkit.users;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.sockets.SocketData;
@@ -16,6 +13,8 @@ import realcraft.bukkit.sockets.SocketDataEvent;
 import realcraft.bukkit.sockets.SocketManager;
 import realcraft.share.ServerType;
 import realcraft.share.users.User;
+
+import java.util.ArrayList;
 
 public class Users extends realcraft.share.users.Users implements Listener {
 

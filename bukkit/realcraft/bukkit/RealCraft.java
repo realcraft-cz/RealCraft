@@ -46,6 +46,7 @@ import realcraft.bukkit.others.Canvas;
 import realcraft.bukkit.others.MapServerTeleport;
 import realcraft.bukkit.others.VipCommand;
 import realcraft.bukkit.others.WEBlockCompleter;
+import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.report.Report;
 import realcraft.bukkit.restart.Restart;
 import realcraft.bukkit.sitting.Sitting;
@@ -233,7 +234,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 		this.updateWorldRules();
 
 		if (RealCraft.isTestServer()) {
-			//new PetsManager();
+			if (RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL) {
+				new PetsManager();
+			}
 		}
 	}
 

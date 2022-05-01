@@ -22,4 +22,12 @@ public class EntityUtil {
             ((Mob)entity).getPathfinder().moveTo(((Mob)entity).getPathfinder().getCurrentPath(), speed);
         }
     }
+
+    public static Location getTargetLocation(Entity entity) {
+        if (((Mob)entity).getPathfinder().getCurrentPath() == null) {
+            return null;
+        }
+
+        return ((Mob)entity).getPathfinder().getCurrentPath().getFinalPoint();
+    }
 }
