@@ -3,6 +3,7 @@ package realcraft.bukkit.pets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.commands.PetCommands;
@@ -24,7 +25,7 @@ public class PetsManager {
         new PetCommands();
     }
 
-    public static PetPlayer getPetPlayer(User user) {
+    public static @NotNull PetPlayer getPetPlayer(User user) {
         if (!players.containsKey(user)) {
             players.put(user, new PetPlayer(user));
         }
@@ -32,7 +33,7 @@ public class PetsManager {
         return players.get(user);
     }
 
-    public static PetPlayer getPetPlayer(Player player) {
+    public static @NotNull PetPlayer getPetPlayer(Player player) {
         return getPetPlayer(Users.getUser(player));
     }
 

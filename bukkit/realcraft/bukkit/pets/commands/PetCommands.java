@@ -13,12 +13,14 @@ public class PetCommands extends AbstractCommand {
     private final PetCommand[] commands;
 
     public PetCommands() {
-        super("pet", "pets");
+        super("pet");
 
         commands = new PetCommand[]{
             new PetCommandInfo(),
             new PetCommandCreate(),
             new PetCommandDelete(),
+            new PetCommandEffect(),
+            new PetCommandSkin(),
         };
     }
 

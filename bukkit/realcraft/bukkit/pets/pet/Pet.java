@@ -48,6 +48,10 @@ public class Pet {
         return petActions;
     }
 
+    public PetTimers getPetTimers() {
+        return petTimers;
+    }
+
     public void load() {
         Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(), new Runnable() {
             @Override
@@ -59,7 +63,7 @@ public class Pet {
 
                 try {
                     if (rs.next()) {
-                        String data = rs.getString("pet_data");
+                        final String data = rs.getString("pet_data");
                         Bukkit.getScheduler().runTask(RealCraft.getInstance(), new Runnable() {
                             @Override
                             public void run() {
@@ -97,7 +101,7 @@ public class Pet {
 
     public void delete() {
         this.getPetActions().cancel();
-        this.petTimers.cancel();
+        this.getPetTimers().cancel();
         this.getPetEntity().remove();
 
         Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(), new Runnable() {

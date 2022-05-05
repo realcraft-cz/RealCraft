@@ -17,3 +17,8 @@ Akce:
 - SIT (pet si sedne)
 - SIT BESIDE (pet si sedne na schody vedle hráèe)
 - APORT (hráè zahodí pøedmìt a pet ho sebere a pøinese zpìt)
+
+Povely:
+- FOLLOW
+- SIT
+- HOME

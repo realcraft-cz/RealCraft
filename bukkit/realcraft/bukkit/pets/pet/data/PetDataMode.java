@@ -10,15 +10,11 @@ public class PetDataMode extends JsonDataString {
     public PetDataMode(Pet pet) {
         super("mode");
         this.pet = pet;
-        this.setValue(this.getDefaultValue());
+        this.setType(PetDataModeType.FOLLOW);
     }
 
     public Pet getPet() {
         return pet;
-    }
-
-    public String getDefaultValue() {
-        return PetDataModeType.FOLLOW.toString();
     }
 
     public PetDataModeType getType() {
@@ -31,10 +27,20 @@ public class PetDataMode extends JsonDataString {
 
     public enum PetDataModeType {
 
-        FOLLOW,
-        SIT,
-        HOME,
+        HOME    ("Misto"),
+        FOLLOW  ("Ke me"),
+        SIT     ("Sedni"),
         ;
+
+        private final String name;
+
+        private PetDataModeType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
 
         public static PetDataModeType getByName(String name) {
             try {
@@ -43,10 +49,6 @@ public class PetDataMode extends JsonDataString {
             }
 
             return PetDataModeType.FOLLOW;
-        }
-
-        public String toString() {
-            return this.name().toLowerCase();
         }
     }
 }

@@ -16,7 +16,7 @@ import realcraft.bukkit.pets.events.pet.PetActionFinishEvent;
 import realcraft.bukkit.pets.events.pet.PetClickEvent;
 import realcraft.bukkit.pets.events.pet.PetLoadEvent;
 import realcraft.bukkit.pets.pet.Pet;
-import realcraft.bukkit.pets.pet.actions.PetActionSpawn;
+import realcraft.bukkit.pets.pet.actions.PetAction;
 
 public class PetsListeners implements Listener {
 
@@ -34,7 +34,10 @@ public class PetsListeners implements Listener {
     public void PlayerQuitEvent(PlayerQuitEvent event) {
         PetPlayer petPlayer = PetsManager.getPetPlayer(event.getPlayer());
         petPlayer.save();
-        petPlayer.getPet().getPetEntity().remove();
+
+        if (petPlayer.getPet() != null) {
+            petPlayer.getPet().getPetEntity().remove();
+        }
     }
 
     @EventHandler
@@ -75,8 +78,8 @@ public class PetsListeners implements Listener {
     public void PetActionFinishEvent(PetActionFinishEvent event) {
         Pet pet = event.getPet();
 
-        if (pet.getPetActions().getNextAction() != null) {
-            pet.getPetActions().setAction(pet.getPetActions().getNextAction());
+        if (pet.getPetActions().getNextActionType() != null) {
+            pet.getPetActions().setActionType(pet.getPetActions().getNextActionType());
             return;
         }
 
@@ -85,7 +88,7 @@ public class PetsListeners implements Listener {
 
     @EventHandler
     public void PetLoadEvent(PetLoadEvent event) {
-        event.getPet().getPetActions().setAction(new PetActionSpawn(event.getPet()));
+        event.getPet().getPetActions().setActionType(PetAction.PetActionType.SPAWN);
     }
 
     @EventHandler

@@ -19,12 +19,13 @@ public class PetActionSit extends PetAction {
     }
 
     @Override
-    public boolean shouldStart() {
-        if (this.getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.SIT) {
-            return false;
-        }
-
+    public boolean isCancellable() {
         return true;
+    }
+
+    @Override
+    public boolean shouldStart() {
+        return (this.getPet().getPetData().getMode().getType() == PetDataMode.PetDataModeType.SIT);
     }
 
     @Override
@@ -33,10 +34,11 @@ public class PetActionSit extends PetAction {
         this.getEntity().setGravity(false);
         this.getEntity().setVelocity(new Vector(0, 0, 0));
 
+        sitLocation = PetActionSit.this.getEntity().getLocation();
+        sitLocation.setY(sitLocation.getBlockY() - 0.8);
+
         Bukkit.getScheduler().runTask(RealCraft.getInstance(), new Runnable() {
             public void run() {
-                sitLocation = PetActionSit.this.getEntity().getLocation();
-                sitLocation.setY(sitLocation.getBlockY() - 0.8);
                 PetActionSit.this.getEntity().teleport(sitLocation);
             }
         });

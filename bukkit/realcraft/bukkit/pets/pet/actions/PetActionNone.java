@@ -9,6 +9,16 @@ public class PetActionNone extends PetAction {
     }
 
     @Override
+    public boolean isCancellable() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldStart() {
+        return this.getPet().getPetActions().getCurrentAction().getState() != PetAction.PetActionState.RUNNING;
+    }
+
+    @Override
     protected void _start() {
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);

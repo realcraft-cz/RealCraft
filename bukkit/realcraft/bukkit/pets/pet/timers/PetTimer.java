@@ -25,7 +25,7 @@ public abstract class PetTimer {
     }
 
     public boolean shouldRun() {
-        return Bukkit.getCurrentTick() > lastRunTick + this.getType().getPeriod();
+        return Bukkit.getCurrentTick() >= lastRunTick + this.getType().getPeriod();
     }
 
     public void run() {
@@ -37,7 +37,7 @@ public abstract class PetTimer {
 
     public enum PetTimerType {
 
-        FOOD        (60 * 20, PetTimerFood.class),
+        FOOD        (10 * 20, PetTimerFood.class),
         ;
 
         private final int period;

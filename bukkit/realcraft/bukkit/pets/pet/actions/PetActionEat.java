@@ -1,17 +1,13 @@
 package realcraft.bukkit.pets.pet.actions;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.jetbrains.annotations.Nullable;
-import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
-import realcraft.bukkit.pets.pet.entity.PetEntityLabel;
 import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.Particles;
@@ -21,19 +17,14 @@ import java.util.HashMap;
 public class PetActionEat extends PetAction {
 
     private static final HashMap<Material, Food> FOODS = new HashMap<>();
-    private static final double MAX_FOOD_DISTANCE = 4.0;
+    private static final double MAX_FOOD_DISTANCE = 5.0;
     private static final double FOOD_REACH_DISTANCE = 1.2;
 
     private Item foodItem;
-    private State state = State.MOVING;
+    private State state;
 
     public PetActionEat(Pet pet) {
         super(PetActionType.EAT, pet);
-    }
-
-    @Override
-    public boolean isCancellable() {
-        return false;
     }
 
     @Override
@@ -59,6 +50,7 @@ public class PetActionEat extends PetAction {
             this.getPet().getPetData().getMode().setType(PetDataMode.PetDataModeType.FOLLOW);
         }
 
+        this.state = State.MOVING;
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
 
@@ -66,7 +58,6 @@ public class PetActionEat extends PetAction {
             if (entity.getType() == EntityType.DROPPED_ITEM) {
                 if (this.getFood(((Item) entity).getItemStack().getType()) != null) {
                     this.foodItem = (Item) entity;
-                    this.run();
                     return;
                 }
             }
@@ -118,10 +109,10 @@ public class PetActionEat extends PetAction {
             int oldFoodValue = this.getPet().getPetData().getFood().getValue();
             this.getPet().getPetData().getFood().setValue(this.getPet().getPetData().getFood().getValue() + food.nutrition);
 
-            this.getPet().getPetEntity().getEntityLabel().showProgressLabel(new PetEntityLabel.ProgressLabelOptions(
+            /*PetActionEat.this.getPet().getPetEntity().getEntityLabel().showProgressLabel(new PetEntityLabelText.ProgressLabelOptions(
                 oldFoodValue,
-                this.getPet().getPetData().getFood().getMaxValue(),
-                this.getPet().getPetData().getFood().getValue() - oldFoodValue,
+                PetActionEat.this.getPet().getPetData().getFood().getMaxValue(),
+                PetActionEat.this.getPet().getPetData().getFood().getValue() - oldFoodValue,
                 ChatColor.GOLD,
                 ChatColor.GRAY,
                 ChatColor.GREEN
@@ -130,14 +121,14 @@ public class PetActionEat extends PetAction {
             Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    PetActionEat.this.getPet().getPetEntity().getEntityLabel().showProgressLabel(new PetEntityLabel.ProgressLabelOptions(
+                    PetActionEat.this.getPet().getPetEntity().getEntityLabel().showProgressLabel(new PetEntityLabelText.ProgressLabelOptions(
                         PetActionEat.this.getPet().getPetData().getFood().getValue(),
                         PetActionEat.this.getPet().getPetData().getFood().getMaxValue(),
                         ChatColor.GOLD,
                         ChatColor.GRAY
                     ), 20);
                 }
-            }, 10);
+            }, 20);*/
         }
 
         Particles.HEART.display(0f, 0f, 0f, 0f, 1, this.getEntity().getEyeLocation().add(0f, 0.5f, 0f), 64);

@@ -19,6 +19,8 @@ public class PetCommandDelete extends PetCommand {
             petPlayer.sendMessage("§cNemas zadneho mazlika");
             return;
         }
+
+        petPlayer.sendMessage("§dMazlik smazan", true);
     }
 
     @Override

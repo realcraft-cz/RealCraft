@@ -9,11 +9,6 @@ public class PetActionDespawn extends PetAction {
     }
 
     @Override
-    public boolean isCancellable() {
-        return false;
-    }
-
-    @Override
     protected void _start() {
     }
 

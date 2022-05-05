@@ -7,26 +7,33 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabels;
 import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.ItemUtil;
 
 public class PetEntity {
 
     private final Pet pet;
-    private final PetEntityLabel entityLabel;
+    private final PetEntityLabels entityLabels;
+    private final PetEntityEffect entityEffect;
     private Zombie entity;
 
     public PetEntity(Pet pet) {
         this.pet = pet;
-        this.entityLabel = new PetEntityLabel(this);
+        this.entityLabels = new PetEntityLabels(this);
+        this.entityEffect = new PetEntityEffect(this);
     }
 
     public Pet getPet() {
         return pet;
     }
 
-    public PetEntityLabel getEntityLabel() {
-        return entityLabel;
+    public PetEntityLabels getEntityLabels() {
+        return entityLabels;
+    }
+
+    public PetEntityEffect getEntityEffect() {
+        return entityEffect;
     }
 
     public Zombie getEntity() {
@@ -45,10 +52,11 @@ public class PetEntity {
         location.setPitch(0f);
 
         entity = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE, false);
+        entity.setInvisible(true);
         entity.setRemoveWhenFarAway(false);
+        entity.setCustomNameVisible(true);
         entity.setPersistent(false);
         entity.setInvulnerable(false);
-        entity.setInvisible(true);
         entity.setSilent(true);
         entity.setBaby();
         entity.getEquipment().clear();
@@ -59,13 +67,9 @@ public class PetEntity {
         entity.getEquipment().setItemInOffHandDropChance(0);
 
         EntityUtil.clearPathfinders(entity);
-
-        if (PetsManager.isDebug()) {
-            entity.setInvisible(false);
-            entity.setCustomNameVisible(true);
-        }
-
         PetsManager.registerPet(this.getPet());
+
+        this.getEntityEffect().start();
     }
 
     public void remove() {
@@ -76,6 +80,7 @@ public class PetEntity {
             PetsManager.unregisterPet(this.getPet());
         }
 
-        this.getEntityLabel().remove();
+        this.getEntityEffect().cancel();
+        this.getEntityLabels().clear();
     }
 }

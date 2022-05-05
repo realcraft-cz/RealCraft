@@ -22,12 +22,10 @@ public abstract class PetAction implements Listener, Runnable {
 
     private PetActionState state = PetActionState.NONE;
     private BukkitTask task;
-    private Zombie entity;
 
     public PetAction(PetActionType type, Pet pet) {
         this.type = type;
         this.pet = pet;
-        this.entity = this.getPet().getPetEntity().getEntity();
     }
 
     public PetActionType getType() {
@@ -39,7 +37,7 @@ public abstract class PetAction implements Listener, Runnable {
     }
 
     public Zombie getEntity() {
-        return this.entity;
+        return this.getPet().getPetEntity().getEntity();
     }
 
     public PetActionState getState() {
@@ -47,7 +45,7 @@ public abstract class PetAction implements Listener, Runnable {
     }
 
     public boolean isCancellable() {
-        return true;
+        return false;
     }
 
     public boolean shouldStart() {
@@ -63,10 +61,8 @@ public abstract class PetAction implements Listener, Runnable {
             this.state = PetActionState.RUNNING;
             this._start();
 
-            if (this.getType().getPeriod() > 0) {
-                this._stopTask();
-
-                task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, this.getType().getPeriod(), this.getType().getPeriod());
+            if (this.state == PetActionState.RUNNING) {
+                this._startTask();
             }
         }
     }
@@ -87,6 +83,14 @@ public abstract class PetAction implements Listener, Runnable {
         Bukkit.getPluginManager().callEvent(new PetActionFinishEvent(this.getPet(), this));
     }
 
+    protected void _startTask() {
+        if (this.getType().getPeriod() > 0) {
+            this._stopTask();
+
+            task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, 0, this.getType().getPeriod());
+        }
+    }
+
     protected void _stopTask() {
         if (task != null) {
             task.cancel();
@@ -100,6 +104,7 @@ public abstract class PetAction implements Listener, Runnable {
 
         SPAWN       (10, 0, PetActionSpawn.class),
         DESPAWN     (10, 0, PetActionDespawn.class),
+        SKIN_CHANGE (9, 0, PetActionSkinChange.class),
         EAT         (5, 10, PetActionEat.class),
         FOLLOW      (3, 10, PetActionFollow.class),
         SIT         (2, 10, PetActionSit.class),

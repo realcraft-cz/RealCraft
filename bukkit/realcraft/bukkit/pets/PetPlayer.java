@@ -2,6 +2,7 @@ package realcraft.bukkit.pets;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
 import realcraft.bukkit.pets.exceptions.pet.PetAlreadyExistsException;
@@ -37,7 +38,7 @@ public class PetPlayer {
         return player;
     }
 
-    public Pet getPet() {
+    public @Nullable Pet getPet() {
         return pet;
     }
 

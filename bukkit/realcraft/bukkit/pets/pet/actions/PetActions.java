@@ -7,20 +7,33 @@ import org.jetbrains.annotations.Nullable;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.actions.PetAction.PetActionType;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 public class PetActions implements Runnable {
 
     private final Pet pet;
     private final BukkitTask task;
+    private final HashMap<PetActionType, PetAction> petActions = new HashMap<>();
 
-    private PetAction currentAction;
-    private PetAction nextAction;
+    private PetActionType currentActionType;
+    private PetActionType nextActionType;
 
     public PetActions(Pet pet) {
         this.pet = pet;
-        this.currentAction = new PetActionNone(this.getPet());
+
+        for (PetActionType type : PetActionType.getSortedTypes()) {
+            try {
+                PetAction action = (PetAction) type.getClazz().getConstructor(Pet.class).newInstance(this.getPet());
+                petActions.put(type, action);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+
+        this.currentActionType = PetActionType.NONE;
         this.task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, 20, 20);
     }
 
@@ -28,30 +41,38 @@ public class PetActions implements Runnable {
         return pet;
     }
 
-    public @NotNull PetAction getCurrentAction() {
-        return currentAction;
+    public PetAction getAction(PetActionType type) {
+        return petActions.get(type);
     }
 
-    protected void _setCurrentAction(@NotNull PetAction currentAction) {
-        this.currentAction = currentAction;
+    public @NotNull PetAction getCurrentAction() {
+        return this.getAction(this.getCurrentActionType());
+    }
+
+    public @NotNull PetActionType getCurrentActionType() {
+        return currentActionType;
+    }
+
+    protected void _setCurrentActionType(@NotNull PetActionType currentActionType) {
+        this.currentActionType = currentActionType;
 
         if (PetsManager.isDebug()) {
             if (this.getPet().getPetEntity().isLiving()) {
-                this.getPet().getPetEntity().getEntity().setCustomName(this.getCurrentAction().getType().toString());
+                this.getPet().getPetEntity().getEntity().setCustomName(this.getCurrentActionType().toString());
             }
         }
     }
 
-    public @Nullable PetAction getNextAction() {
-        return nextAction;
+    public @Nullable PetActionType getNextActionType() {
+        return nextActionType;
     }
 
-    protected void _setNextAction(@Nullable PetAction nextAction) {
-        this.nextAction = nextAction;
+    protected void _setNextActionType(@Nullable PetActionType nextActionType) {
+        this.nextActionType = nextActionType;
     }
 
-    public void setAction(@Nullable PetAction nextAction) {
-        this._setNextAction(nextAction);
+    public void setActionType(@NotNull PetActionType nextActionType) {
+        this._setNextActionType(nextActionType);
 
         if (this.getCurrentAction().getState() == PetAction.PetActionState.RUNNING) {
             if (!this.getCurrentAction().isCancellable()) {
@@ -61,12 +82,11 @@ public class PetActions implements Runnable {
             this.getCurrentAction().cancel();
         }
 
-        if (this.getNextAction() == null) {
-            this._setNextAction(new PetActionNone(this.getPet()));
+        if (this.getNextActionType() != null) {
+            this._setCurrentActionType(this.getNextActionType());
         }
 
-        this._setCurrentAction(this.getNextAction());
-        this._setNextAction(null);
+        this._setNextActionType(null);
 
         this.getCurrentAction().start();
     }
@@ -77,35 +97,18 @@ public class PetActions implements Runnable {
             return;
         }
 
-        PetAction nextAction = null;
-
-        for (PetAction.PetActionType type : PetAction.PetActionType.getSortedTypes()) {
-            nextAction = this._getNewAction(type);
-
-            if (nextAction == null || !nextAction.shouldStart() || (nextAction.getType() == this.getCurrentAction().getType() && this.getCurrentAction().getState() == PetAction.PetActionState.RUNNING)) {
-                nextAction = null;
+        for (PetActionType type : PetActionType.getSortedTypes()) {
+            PetAction action = this.getAction(type);
+            if (!action.shouldStart() || (action.getType() == this.getCurrentActionType() && this.getCurrentAction().getState() == PetAction.PetActionState.RUNNING)) {
                 continue;
             }
 
-            break;
-        }
-
-        if (nextAction != null || this.getCurrentAction().getState() != PetAction.PetActionState.RUNNING) {
-            this.setAction(nextAction);
+            this.setActionType(action.getType());
+            return;
         }
     }
 
     public void cancel() {
         task.cancel();
-    }
-
-    protected PetAction _getNewAction(PetAction.PetActionType type) {
-        try {
-            return (PetAction) type.getClazz().getConstructor(Pet.class).newInstance(this.getPet());
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }

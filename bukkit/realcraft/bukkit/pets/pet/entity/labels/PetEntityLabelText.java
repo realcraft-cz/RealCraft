@@ -1,22 +1,21 @@
-package realcraft.bukkit.pets.pet.entity;
+package realcraft.bukkit.pets.pet.entity.labels;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftArmorStand;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.scheduler.BukkitTask;
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.holograms.Hologram;
+import realcraft.bukkit.holograms.Holograms;
+import realcraft.bukkit.pets.pet.entity.PetEntity;
 
-public class PetEntityLabel implements Runnable {
+public class PetEntityLabelText implements Runnable {
 
-    private PetEntity petEntity;
-    private ArmorStand standLabel;
+    private final PetEntity petEntity;
     private BukkitTask task;
+    private Hologram hologram;
     private int endTick;
 
-    public PetEntityLabel(PetEntity petEntity) {
+    public PetEntityLabelText(PetEntity petEntity) {
         this.petEntity = petEntity;
     }
 
@@ -24,11 +23,14 @@ public class PetEntityLabel implements Runnable {
         return petEntity;
     }
 
+    public boolean isVisible() {
+        return hologram != null;
+    }
+
     public void showText(String label, int duration) {
         this._spawn();
 
-        standLabel.setCustomNameVisible(true);
-        standLabel.setCustomName(label);
+        hologram.setText(label);
 
         endTick = Bukkit.getCurrentTick() + duration;
 
@@ -48,27 +50,20 @@ public class PetEntityLabel implements Runnable {
     }
 
     private void _spawn() {
-        if (standLabel != null && standLabel.isValid()) {
+        if (hologram != null) {
             return;
         }
 
         this.remove();
 
-        standLabel = (ArmorStand) this.getPetEntity().getEntity().getWorld().spawnEntity(this.getPetEntity().getEntity().getLocation(), EntityType.ARMOR_STAND);
-        standLabel.setInvisible(true);
-        standLabel.setPersistent(false);
-        standLabel.setInvulnerable(true);
-        standLabel.setGravity(false);
-        standLabel.setSmall(true);
-        standLabel.setBasePlate(false);
-        standLabel.setArms(false);
-        standLabel.setCustomNameVisible(false);
+        hologram = Holograms.createHologram();
+        hologram.spawn(this.getPetEntity().getPet().getPetPlayer().getPlayer(), this.getPetEntity().getEntity().getLocation().add(0, 1, 0));
     }
 
     public void remove() {
-        if (standLabel != null && standLabel.isValid()) {
-            standLabel.remove();
-            standLabel = null;
+        if (hologram != null) {
+            hologram.remove();
+            hologram = null;
         }
 
         if (task != null) {
@@ -79,19 +74,12 @@ public class PetEntityLabel implements Runnable {
 
     @Override
     public void run() {
-        if (!standLabel.isValid()) {
-            return;
-        }
-
         if (Bukkit.getCurrentTick() > endTick) {
             this.remove();
             return;
         }
 
-        standLabel.setTicksLived(1);
-
-        Location location = this.getPetEntity().getEntity().getLocation();
-        ((CraftArmorStand)standLabel).getHandle().c(location.getX(), location.getY(), location.getZ());
+        hologram.setLocation(this.getPetEntity().getEntity().getLocation().add(0, 1, 0));
     }
 
     public record ProgressLabelOptions(int fill, int length, int increment, ChatColor fillColor, ChatColor emptyColor, ChatColor incrementColor, String barChar) {

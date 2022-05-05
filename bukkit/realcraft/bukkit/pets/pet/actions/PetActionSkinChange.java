@@ -1,16 +1,17 @@
 package realcraft.bukkit.pets.pet.actions;
 
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.utils.ItemUtil;
 
-public class PetActionSpawn extends PetAction {
+public class PetActionSkinChange extends PetAction {
 
-    public PetActionSpawn(Pet pet) {
-        super(PetActionType.SPAWN, pet);
+    public PetActionSkinChange(Pet pet) {
+        super(PetActionType.SKIN_CHANGE, pet);
     }
 
     @Override
     protected void _start() {
-        this.getPet().getPetEntity().spawn(this.getPet().getPetPlayer().getPlayer().getLocation());
+        this.getEntity().getEquipment().setHelmet(ItemUtil.getHead(this.getPet().getPetData().getSkin().getValue()));
         this.finish();
     }
 

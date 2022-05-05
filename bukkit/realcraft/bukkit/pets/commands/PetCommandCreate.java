@@ -3,7 +3,7 @@ package realcraft.bukkit.pets.commands;
 import realcraft.bukkit.pets.PetPlayer;
 import realcraft.bukkit.pets.exceptions.pet.PetAlreadyExistsException;
 import realcraft.bukkit.pets.exceptions.player.PetPlayerVipException;
-import realcraft.bukkit.pets.pet.actions.PetActionSpawn;
+import realcraft.bukkit.pets.pet.actions.PetAction;
 
 import java.util.List;
 
@@ -25,7 +25,8 @@ public class PetCommandCreate extends PetCommand {
             return;
         }
 
-        petPlayer.getPet().getPetActions().setAction(new PetActionSpawn(petPlayer.getPet()));
+        petPlayer.sendMessage("§dMazlik vytvoren, za chvili se vyklube", true);
+        petPlayer.getPet().getPetActions().setActionType(PetAction.PetActionType.SPAWN);
     }
 
     @Override

@@ -17,6 +17,11 @@ public class PetActionFollow extends PetAction {
     }
 
     @Override
+    public boolean isCancellable() {
+        return true;
+    }
+
+    @Override
     public boolean shouldStart() {
         if (this.getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.FOLLOW) {
             return false;
@@ -40,7 +45,6 @@ public class PetActionFollow extends PetAction {
     protected void _start() {
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
-        this.run();
     }
 
     @Override
