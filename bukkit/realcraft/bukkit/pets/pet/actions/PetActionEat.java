@@ -1,13 +1,17 @@
 package realcraft.bukkit.pets.pet.actions;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.jetbrains.annotations.Nullable;
+import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
+import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabelProgress;
 import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.Particles;
@@ -109,7 +113,7 @@ public class PetActionEat extends PetAction {
             int oldFoodValue = this.getPet().getPetData().getFood().getValue();
             this.getPet().getPetData().getFood().setValue(this.getPet().getPetData().getFood().getValue() + food.nutrition);
 
-            /*PetActionEat.this.getPet().getPetEntity().getEntityLabel().showProgressLabel(new PetEntityLabelText.ProgressLabelOptions(
+            PetActionEat.this.getPet().getPetEntity().getEntityLabels().showProgress(new PetEntityLabelProgress.ProgressOptions(
                 oldFoodValue,
                 PetActionEat.this.getPet().getPetData().getFood().getMaxValue(),
                 PetActionEat.this.getPet().getPetData().getFood().getValue() - oldFoodValue,
@@ -121,14 +125,14 @@ public class PetActionEat extends PetAction {
             Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    PetActionEat.this.getPet().getPetEntity().getEntityLabel().showProgressLabel(new PetEntityLabelText.ProgressLabelOptions(
+                    PetActionEat.this.getPet().getPetEntity().getEntityLabels().showProgress(new PetEntityLabelProgress.ProgressOptions(
                         PetActionEat.this.getPet().getPetData().getFood().getValue(),
                         PetActionEat.this.getPet().getPetData().getFood().getMaxValue(),
                         ChatColor.GOLD,
                         ChatColor.GRAY
                     ), 20);
                 }
-            }, 20);*/
+            }, 10);
         }
 
         Particles.HEART.display(0f, 0f, 0f, 0f, 1, this.getEntity().getEyeLocation().add(0f, 0.5f, 0f), 64);

@@ -1,5 +1,3 @@
-//TODO [PET UPDATE]
-
 Servers:
 - survival
 - creative?

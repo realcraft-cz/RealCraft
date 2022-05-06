@@ -1,6 +1,7 @@
 package realcraft.bukkit.pets.pet.entity;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.scheduler.BukkitTask;
@@ -43,16 +44,23 @@ public class PetEntityEffect implements Runnable {
         AURA,
         SNOWFLAKE,
         PORTAL,
+        MAGIC,
         SOUL,
         FLAME,
+        FLAME_SOUL,
         GLOW,
         SPELL,
+        SPELL_WITCH,
         WAX_OFF,
         SCRAPE,
-        COMPOSTER,
         DOLPHIN,
         ASH,
         ENCHANTMENT,
+        DUST_RED,
+        DUST_BLUE,
+        DUST_GREEN,
+        DUST_AQUA,
+        DUST_ORANGE,
         ;
 
         public void run(PetEntityEffect petEntityEffect) {
@@ -60,7 +68,7 @@ public class PetEntityEffect implements Runnable {
                 return;
             }
 
-            boolean isMoving = petEntityEffect.petEntity.getEntity().getVelocity().getX() != 0 && petEntityEffect.petEntity.getEntity().getVelocity().getZ() != 0;
+            boolean isMoving = Math.abs(petEntityEffect.petEntity.getEntity().getVelocity().getX()) > 0.01 || Math.abs(petEntityEffect.petEntity.getEntity().getVelocity().getZ()) > 0.01 || Math.abs(petEntityEffect.petEntity.getEntity().getVelocity().getY()) > 0.1;
 
             if (this == AURA) {
                 petEntityEffect.previousLocation.add(0, 0.6, 0);
@@ -77,6 +85,11 @@ public class PetEntityEffect implements Runnable {
                 petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.PORTAL, petEntityEffect.previousLocation, isMoving ? 4 : 2, 0.1, 0, 0.1, 0);
             }
 
+            if (this == MAGIC) {
+                petEntityEffect.previousLocation.add(0, 0.6, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.CRIT_MAGIC, petEntityEffect.previousLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
+            }
+
             if (this == SOUL) {
                 petEntityEffect.previousLocation.add(0, 0.6, 0);
                 petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.SOUL, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0);
@@ -84,7 +97,12 @@ public class PetEntityEffect implements Runnable {
 
             if (this == FLAME) {
                 petEntityEffect.previousLocation.add(0, 0.6, 0);
-                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.SMALL_FLAME, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.FLAME, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0);
+            }
+
+            if (this == FLAME_SOUL) {
+                petEntityEffect.previousLocation.add(0, 0.6, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0);
             }
 
             if (this == GLOW) {
@@ -93,8 +111,13 @@ public class PetEntityEffect implements Runnable {
             }
 
             if (this == SPELL) {
-                petEntityEffect.previousLocation.add(0, 1.3, 0);
+                petEntityEffect.previousLocation.add(0, 1.35, 0);
                 petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.SPELL_MOB_AMBIENT, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0, 0.1, 0);
+            }
+
+            if (this == SPELL_WITCH) {
+                petEntityEffect.previousLocation.add(0, 1.35, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.SPELL_WITCH, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0, 0.1, 0);
             }
 
             if (this == WAX_OFF) {
@@ -107,11 +130,6 @@ public class PetEntityEffect implements Runnable {
                 petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.SCRAPE, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0);
             }
 
-            if (this == COMPOSTER) {
-                petEntityEffect.previousLocation.add(0, 0.6, 0);
-                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.COMPOSTER, petEntityEffect.previousLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
-            }
-
             if (this == DOLPHIN) {
                 petEntityEffect.previousLocation.add(0, 0.6, 0);
                 petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.DOLPHIN, petEntityEffect.previousLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
@@ -122,14 +140,34 @@ public class PetEntityEffect implements Runnable {
                 petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.ASH, petEntityEffect.previousLocation, isMoving ? 5 : 3, 0.1, 0.1, 0.1, 0);
             }
 
-            /*if (this == REDSTONE) {
-                petEntityEffect.previousLocation.add(0, 0.6, 0);
-                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.AQUA, 1f));
-            }*/
-
             if (this == ENCHANTMENT) {
                 petEntityEffect.previousLocation.add(0, 0.6, 0);
                 petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, petEntityEffect.previousLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
+            }
+
+            if (this == DUST_RED) {
+                petEntityEffect.previousLocation.add(0, 0.6, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.MAROON, 1f));
+            }
+
+            if (this == DUST_BLUE) {
+                petEntityEffect.previousLocation.add(0, 0.6, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.AQUA, 1f));
+            }
+
+            if (this == DUST_GREEN) {
+                petEntityEffect.previousLocation.add(0, 0.6, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.LIME, 1f));
+            }
+
+            if (this == DUST_AQUA) {
+                petEntityEffect.previousLocation.add(0, 0.6, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.TEAL, 1f));
+            }
+
+            if (this == DUST_ORANGE) {
+                petEntityEffect.previousLocation.add(0, 0.6, 0);
+                petEntityEffect.previousLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.previousLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.ORANGE, 1f));
             }
         }
 

@@ -1,5 +1,6 @@
 package realcraft.bukkit.pets.pet.data;
 
+import org.bukkit.ChatColor;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.utils.json.JsonDataString;
 
@@ -27,19 +28,25 @@ public class PetDataMode extends JsonDataString {
 
     public enum PetDataModeType {
 
-        HOME    ("Misto"),
-        FOLLOW  ("Ke me"),
-        SIT     ("Sedni"),
+        HOME    ("Domu", ChatColor.RED),
+        FOLLOW  ("Ke me", ChatColor.LIGHT_PURPLE),
+        SIT     ("Sedni", ChatColor.YELLOW),
         ;
 
         private final String name;
+        private final ChatColor color;
 
-        private PetDataModeType(String name) {
+        private PetDataModeType(String name, ChatColor color) {
             this.name = name;
+            this.color = color;
         }
 
         public String getName() {
             return name;
+        }
+
+        public ChatColor getColor() {
+            return color;
         }
 
         public static PetDataModeType getByName(String name) {

@@ -180,7 +180,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			lobby = new Lobby(this);
 			new Sitting();
 			new ViewDistanceLimiter();
-			//new Pets(); //TODO [PET UPDATE]: uncomment
+			new PetsManager();
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||
@@ -198,7 +198,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 			new PlotSquaredWorldEdit();
 			lobby = new Lobby(this);
 			new Sitting();
-			//new Pets(); //TODO [PET UPDATE]: uncomment
 		}
 		else if(serverName.equalsIgnoreCase("maps")){
 			cancelgrow = new CancelGrow(this);

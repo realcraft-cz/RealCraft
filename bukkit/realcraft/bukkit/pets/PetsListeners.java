@@ -1,6 +1,7 @@
 package realcraft.bukkit.pets;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +18,8 @@ import realcraft.bukkit.pets.events.pet.PetClickEvent;
 import realcraft.bukkit.pets.events.pet.PetLoadEvent;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.actions.PetAction;
+import realcraft.bukkit.pets.pet.data.PetDataMode;
+import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabelRotable;
 
 public class PetsListeners implements Listener {
 
@@ -93,6 +96,17 @@ public class PetsListeners implements Listener {
 
     @EventHandler
     public void PetClickEvent(PetClickEvent event) {
-        PetsManager.debug(event.getClickType().toString());
+        if (event.getClickType() == PetClickEvent.ClickType.RIGHT) {
+            if (event.getPet().getPetEntity().getEntityLabels().showModes(40)) {
+                event.getPlayer().playSound(event.getPlayer(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+            }
+        }
+
+        if (event.getClickType() == PetClickEvent.ClickType.LEFT) {
+            PetDataMode.PetDataModeType mode = event.getPet().getPetEntity().getEntityLabels().getCurrentMode();
+            event.getPet().getPetEntity().getEntityLabels().showText("§a" + PetEntityLabelRotable.CHAR_ARROW_RIGHT + " " + mode.getColor() + mode.getName() + "§r §a" + PetEntityLabelRotable.CHAR_ARROW_LEFT, 20);
+            event.getPlayer().playSound(event.getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+            event.getPet().getPetData().getMode().setType(mode);
+        }
     }
 }

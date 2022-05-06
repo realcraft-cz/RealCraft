@@ -66,7 +66,6 @@ public class Hologram {
         }
 
         players.clear();
-
-        Holograms._removeHologram(this);
+        //Holograms._removeHologram(this);
     }
 }
