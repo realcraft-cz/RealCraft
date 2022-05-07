@@ -60,7 +60,7 @@ public class PetEntity {
         entity.setSilent(true);
         entity.setBaby();
         entity.getEquipment().clear();
-        entity.getEquipment().setHelmet(ItemUtil.getHead(this.getPet().getPetData().getSkin().getValue()));
+        entity.getEquipment().setHelmet(ItemUtil.getHead(this.getPet().getPetData().getSkin().getSkin().getTexture()));
         entity.getEquipment().setItemInMainHand(new ItemStack(Material.AIR));
         entity.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
         entity.getEquipment().setItemInMainHandDropChance(0);

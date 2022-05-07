@@ -103,10 +103,13 @@ public class PetsListeners implements Listener {
         }
 
         if (event.getClickType() == PetClickEvent.ClickType.LEFT) {
-            PetDataMode.PetDataModeType mode = event.getPet().getPetEntity().getEntityLabels().getCurrentMode();
+            PetDataMode.PetDataModeType mode = event.getPet().getPetEntity().getEntityLabels().getSelectedMode();
             event.getPet().getPetEntity().getEntityLabels().showText("§a" + PetEntityLabelRotable.CHAR_ARROW_RIGHT + " " + mode.getColor() + mode.getName() + "§r §a" + PetEntityLabelRotable.CHAR_ARROW_LEFT, 20);
-            event.getPlayer().playSound(event.getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-            event.getPet().getPetData().getMode().setType(mode);
+
+            if (event.getPet().getPetData().getMode().getType() != mode) {
+                event.getPlayer().playSound(event.getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                event.getPet().getPetData().getMode().setType(mode);
+            }
         }
     }
 }

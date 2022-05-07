@@ -37,6 +37,7 @@ public abstract class PetTimer {
 
     public enum PetTimerType {
 
+        SAVE        (60 * 20, PetTimerSave.class),
         FOOD        (10 * 20, PetTimerFood.class),
         ;
 

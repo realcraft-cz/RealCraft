@@ -104,7 +104,7 @@ public abstract class PetAction implements Listener, Runnable {
 
         SPAWN       (10, 0, PetActionSpawn.class),
         DESPAWN     (10, 0, PetActionDespawn.class),
-        SKIN_CHANGE (9, 0, PetActionSkinChange.class),
+        SKIN_CHANGE (9, 1, PetActionSkinChange.class),
         EAT         (5, 10, PetActionEat.class),
         FOLLOW      (3, 10, PetActionFollow.class),
         SIT         (2, 10, PetActionSit.class),

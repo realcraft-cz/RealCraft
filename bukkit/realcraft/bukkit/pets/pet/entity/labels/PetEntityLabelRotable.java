@@ -10,6 +10,7 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
 
     public static final String CHAR_ARROW_LEFT = "\u140A";
     public static final String CHAR_ARROW_RIGHT = "\u1405";
+    private static final int SELECTED_INDEX = 0;
 
     private final RotableItem[] items;
     private boolean visible;
@@ -29,9 +30,9 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
         return items;
     }
 
-    public RotableItem getCurrentItem() {
+    public RotableItem getSelectedItem() {
         for (RotableItem item : items) {
-            if (item.getIndex() == this.getCurrentIndex()) {
+            if (item.getIndex() == SELECTED_INDEX) {
                 return item;
             }
         }
@@ -41,10 +42,6 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
 
     public boolean isVisible() {
         return visible;
-    }
-
-    public int getCurrentIndex() {
-        return items.length / 2;
     }
 
     @Override
@@ -62,7 +59,7 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
                 item.getHologram().spawn(this.getPetEntity().getPet().getPetPlayer().getPlayer(), this._getItemLocation(item));
             }
 
-            item.getHologram().setText((item.getIndex() == this.getCurrentIndex() ? "§7" + CHAR_ARROW_RIGHT + " " + item.getCurrentText() + "§r §7" + CHAR_ARROW_LEFT : item.getDisabledText()));
+            item.getHologram().setText((item.getIndex() == SELECTED_INDEX ? "§7" + CHAR_ARROW_RIGHT + " " + item.getSelectedText() + "§r §7" + CHAR_ARROW_LEFT : item.getDisabledText()));
         }
 
         visible = true;
@@ -85,23 +82,23 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
     }
 
     private Location _getItemLocation(RotableItem item) {
-        Vector direction = this.getPetEntity().getPet().getPetPlayer().getPlayer().getLocation().getDirection().setY(0).normalize();
         Location location = this.getPetEntity().getEntity().getLocation();
-        location.add(item.getOffsetVector(direction));
+        Vector direction = this.getPetEntity().getEntity().getLocation().subtract(this.getPetEntity().getPet().getPetPlayer().getPlayer().getLocation().toVector().setY(location.getY())).toVector().normalize();
+        location.add(item.getOffsetVector(direction, items.length));
         return location.add(0, 1, 0);
     }
 
     public static class RotableItem {
 
         private final Enum<?> type;
-        private final String currentText;
+        private final String selectedText;
         private final String disabledText;
         private Hologram hologram;
         private int index;
 
         public RotableItem(Enum<?> type, String currentText, String disabledText) {
             this.type = type;
-            this.currentText = currentText;
+            this.selectedText = currentText;
             this.disabledText = disabledText;
         }
 
@@ -109,8 +106,8 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
             return type;
         }
 
-        public String getCurrentText() {
-            return currentText;
+        public String getSelectedText() {
+            return selectedText;
         }
 
         public String getDisabledText() {
@@ -133,15 +130,37 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
             this.index = index;
         }
 
-        public Vector getOffsetVector(Vector direction) {
+        public Vector getOffsetVector(Vector direction, int totalItems) {
             Vector offsetVector = new Vector(0, 0, 0);
 
-            if (this.getIndex() == 2) {
-                offsetVector.add(direction).add(new Vector(0, -0.3, 0));
-                offsetVector.rotateAroundY(1);
-            } else if (this.getIndex() == 0) {
-                offsetVector.add(direction).add(new Vector(0, -0.3, 0));
-                offsetVector.rotateAroundY(-1);
+            if (totalItems == 3) {
+                if (this.getIndex() == 1) {
+                    offsetVector
+                        .add(direction)
+                        .add(new Vector(0, -0.3, 0))
+                        .rotateAroundY(1);
+                } else if (this.getIndex() == 2) {
+                    offsetVector
+                        .add(direction)
+                        .add(new Vector(0, -0.3, 0))
+                        .rotateAroundY(-1);
+                }
+            } else if (totalItems == 4) {
+                if (this.getIndex() == 1) {
+                    offsetVector
+                        .add(direction)
+                        .add(new Vector(0, -0.3, 0))
+                        .rotateAroundY(1);
+                } else if (this.getIndex() == 2) {
+                    offsetVector
+                        .add(direction)
+                        .add(new Vector(0, -0.3, 0));
+                } else if (this.getIndex() == 3) {
+                    offsetVector
+                        .add(direction)
+                        .add(new Vector(0, -0.3, 0))
+                        .rotateAroundY(-1);
+                }
             }
 
             return offsetVector;

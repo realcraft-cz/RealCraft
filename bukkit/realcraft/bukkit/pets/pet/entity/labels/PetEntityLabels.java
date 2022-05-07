@@ -58,8 +58,8 @@ public class PetEntityLabels implements Runnable {
         return isVisible;
     }
 
-    public PetDataMode.PetDataModeType getCurrentMode() {
-        return (PetDataMode.PetDataModeType) labelModes.getCurrentItem().getType();
+    public PetDataMode.PetDataModeType getSelectedMode() {
+        return (PetDataMode.PetDataModeType) labelModes.getSelectedItem().getType();
     }
 
     private void _start(PetEntityLabel label, int duration) {

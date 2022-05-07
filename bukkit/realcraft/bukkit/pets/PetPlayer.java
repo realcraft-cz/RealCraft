@@ -46,7 +46,15 @@ public class PetPlayer {
         this.pet = pet;
     }
 
+    public boolean hasPermissions() {
+        return this.getUser().getRank().isMinimum(UserRank.VIP);
+    }
+
     public void load() {
+        if (!this.hasPermissions()) {
+            return;
+        }
+
         Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(), new Runnable() {
             @Override
             public void run() {
@@ -87,7 +95,7 @@ public class PetPlayer {
             throw new PetAlreadyExistsException(this.getPet());
         }
 
-        if (!this.getUser().getRank().isMinimum(UserRank.VIP)) {
+        if (!this.hasPermissions()) {
             throw new PetPlayerVipException(this);
         }
 

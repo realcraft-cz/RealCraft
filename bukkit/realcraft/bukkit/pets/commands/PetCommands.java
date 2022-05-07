@@ -26,6 +26,11 @@ public class PetCommands extends AbstractCommand {
 
     @Override
     public void perform(Player player, String[] args) {
+        if (!PetsManager.getPetPlayer(player).hasPermissions()) {
+            player.sendMessage("§cPouze VIP clenove muzou mit mazlika");
+            return;
+        }
+
         if (args.length == 0) {
             player.sendMessage("§7§m" + " ".repeat(10) + "§r §d§lPets §7§m" + " ".repeat(47 - "Pets".length()));
             player.sendMessage("§6/pet info §f- Informace o mazlikovi");
