@@ -28,7 +28,7 @@ public class PetDataMode extends JsonDataString {
 
     public enum PetDataModeType {
 
-        HOME    ("Misto", ChatColor.RED),
+        HOME    ("Domu", ChatColor.RED),
         FOLLOW  ("Ke me", ChatColor.LIGHT_PURPLE),
         SIT     ("Sedni", ChatColor.YELLOW),
         ;

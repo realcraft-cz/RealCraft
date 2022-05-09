@@ -46,12 +46,16 @@ public class PetEntityLabels implements Runnable {
         this._start(labelProgress, duration);
     }
 
-    public boolean showModes(int duration) {
+    public boolean showModes(PetDataMode.PetDataModeType defaultType, int duration) {
         if (currentLabel != null && currentLabel.getType() != PetEntityLabel.PetEntityLabelType.MODES) {
             currentLabel.remove();
         }
 
         boolean isVisible = labelModes.isVisible();
+
+        if (!isVisible) {
+            labelModes.setCurrentItemType(defaultType);
+        }
 
         this._start(labelModes, duration);
 

@@ -17,6 +17,6 @@ public class PetActionDespawn extends PetAction {
     }
 
     @Override
-    public void run() {
+    protected void _run() {
     }
 }

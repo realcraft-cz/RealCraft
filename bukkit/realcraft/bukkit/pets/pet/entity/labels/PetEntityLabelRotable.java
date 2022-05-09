@@ -30,6 +30,31 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
         return items;
     }
 
+    public void setCurrentItemType(Enum<?> type) {
+        RotableItem currentItem = null;
+
+        for (RotableItem item : items) {
+            if (item.getType() == type) {
+                currentItem = item;
+                break;
+            }
+        }
+
+        if (currentItem == null) {
+            return;
+        }
+
+        if (currentItem.getIndex() != SELECTED_INDEX) {
+            int currentIndex = currentItem.getIndex();
+            for (int i = 0; i < items.length - SELECTED_INDEX - currentIndex; i++) {
+                for (RotableItem item : items) {
+                    item.setIndex((item.getIndex() + 1) % items.length);
+                }
+            }
+        }
+
+    }
+
     public RotableItem getSelectedItem() {
         for (RotableItem item : items) {
             if (item.getIndex() == SELECTED_INDEX) {
@@ -91,8 +116,8 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
     public static class RotableItem {
 
         private final Enum<?> type;
-        private final String selectedText;
-        private final String disabledText;
+        private String selectedText;
+        private String disabledText;
         private Hologram hologram;
         private int index;
 
@@ -110,8 +135,16 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
             return selectedText;
         }
 
+        public void setSelectedText(String selectedText) {
+            this.selectedText = selectedText;
+        }
+
         public String getDisabledText() {
             return disabledText;
+        }
+
+        public void setDisabledText(String disabledText) {
+            this.disabledText = disabledText;
         }
 
         public Hologram getHologram() {

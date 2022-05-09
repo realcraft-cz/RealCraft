@@ -1,5 +1,6 @@
 package realcraft.bukkit.pets.commands;
 
+import org.bukkit.Sound;
 import realcraft.bukkit.pets.PetPlayer;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.entity.PetEntityEffect;
@@ -32,6 +33,7 @@ public class PetCommandEffect extends PetCommand {
             PetEntityEffect.PetEntityEffectType effect = PetEntityEffect.PetEntityEffectType.valueOf(args[0].toUpperCase());
             pet.getPetData().getEffect().setType(effect);
             petPlayer.sendMessage("§dEfekt mazlika nastaven na §f"+effect);
+            petPlayer.getPlayer().playSound(petPlayer.getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
         } catch (IllegalArgumentException e) {
             petPlayer.sendMessage("§cNeplatny efekt");
             petPlayer.sendMessage("§7Effects: "+String.join(", ", Arrays.toString(PetEntityEffect.PetEntityEffectType.values())).toUpperCase());

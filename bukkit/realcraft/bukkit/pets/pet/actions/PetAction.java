@@ -22,6 +22,7 @@ public abstract class PetAction implements Listener, Runnable {
 
     private PetActionState state = PetActionState.NONE;
     private BukkitTask task;
+    private int ticks;
 
     public PetAction(PetActionType type, Pet pet) {
         this.type = type;
@@ -44,6 +45,14 @@ public abstract class PetAction implements Listener, Runnable {
         return state;
     }
 
+    public int getTicks() {
+        return ticks;
+    }
+
+    public void setTicks(int ticks) {
+        this.ticks = ticks;
+    }
+
     public boolean isCancellable() {
         return false;
     }
@@ -52,13 +61,14 @@ public abstract class PetAction implements Listener, Runnable {
         return false;
     }
 
-    public void start() {
+    public final void start() {
         PetActionStartEvent event = new PetActionStartEvent(this.getPet(), this);
         Bukkit.getPluginManager().callEvent(event);
 
         if (!event.isCancelled()) {
             PetsManager.debug("["+this.getType()+"] start");
             this.state = PetActionState.RUNNING;
+            this.ticks = 0;
             this._start();
 
             if (this.state == PetActionState.RUNNING) {
@@ -67,7 +77,7 @@ public abstract class PetAction implements Listener, Runnable {
         }
     }
 
-    public void cancel() {
+    public final void cancel() {
         PetsManager.debug("["+this.getType()+"] cancel");
         this.state = PetActionState.CANCELLED;
         this._stopTask();
@@ -75,7 +85,7 @@ public abstract class PetAction implements Listener, Runnable {
         Bukkit.getPluginManager().callEvent(new PetActionCancelEvent(this.getPet(), this));
     }
 
-    public void finish() {
+    public final void finish() {
         PetsManager.debug("["+this.getType()+"] finish");
         this.state = PetActionState.FINISHED;
         this._stopTask();
@@ -83,15 +93,21 @@ public abstract class PetAction implements Listener, Runnable {
         Bukkit.getPluginManager().callEvent(new PetActionFinishEvent(this.getPet(), this));
     }
 
-    protected void _startTask() {
+    @Override
+    public final void run() {
+        this.ticks += this.getType().getPeriod();
+        this._run();
+    }
+
+    private void _startTask() {
         if (this.getType().getPeriod() > 0) {
             this._stopTask();
 
-            task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, 0, this.getType().getPeriod());
+            task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, this.getType().getPeriod(), this.getType().getPeriod());
         }
     }
 
-    protected void _stopTask() {
+    private void _stopTask() {
         if (task != null) {
             task.cancel();
         }
@@ -99,16 +115,17 @@ public abstract class PetAction implements Listener, Runnable {
 
     protected abstract void _start();
     protected abstract void _clear();
+    protected abstract void _run();
 
     public enum PetActionType {
 
         SPAWN       (10, 0, PetActionSpawn.class),
         DESPAWN     (10, 0, PetActionDespawn.class),
         SKIN_CHANGE (9, 1, PetActionSkinChange.class),
-        EAT         (5, 10, PetActionEat.class),
+        EAT         (5, 4, PetActionEat.class),
         FOLLOW      (3, 10, PetActionFollow.class),
         SIT         (2, 10, PetActionSit.class),
-        NONE        (0, 0, PetActionNone.class),
+        NONE        (0, 1 /*TODO: 0*/, PetActionNone.class),
         ;
 
         private final int priority;

@@ -29,7 +29,7 @@ public class PetActionNone extends PetAction {
     }
 
     @Override
-    public void run() {
+    protected void _run() {
         //System.out.println("dfg");
 
         //this.getEntity().setRotation(getEntity().getLocation().getYaw()+70, getEntity().getLocation().getPitch()); //fastest

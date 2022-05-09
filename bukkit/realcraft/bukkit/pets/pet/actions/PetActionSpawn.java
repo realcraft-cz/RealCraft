@@ -19,7 +19,7 @@ public class PetActionSpawn extends PetAction {
     }
 
     @Override
-    public void run() {
+    protected void _run() {
         //https://www.spigotmc.org/threads/set-a-players-rotation-without-deleting-his-velocity.535325/
     }
 }

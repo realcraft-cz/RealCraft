@@ -97,13 +97,25 @@ public class PetsListeners implements Listener {
     @EventHandler
     public void PetClickEvent(PetClickEvent event) {
         if (event.getClickType() == PetClickEvent.ClickType.RIGHT) {
-            if (event.getPet().getPetEntity().getEntityLabels().showModes(40)) {
+            if (event.getPet().getPetEntity().getEntityLabels().showModes(event.getPet().getPetData().getMode().getType(), 40)) {
                 event.getPlayer().playSound(event.getPlayer(), Sound.UI_BUTTON_CLICK, 1f, 1f);
             }
         }
 
         if (event.getClickType() == PetClickEvent.ClickType.LEFT) {
             PetDataMode.PetDataModeType mode = event.getPet().getPetEntity().getEntityLabels().getSelectedMode();
+            boolean failed = false;
+
+            if (mode == PetDataMode.PetDataModeType.HOME && event.getPet().getPetData().getHome().getLocation() == null) {
+                failed = true;
+                event.getPet().getPetPlayer().sendMessage("§cMazlik nema domov, nastavis ho prikazem §6/pet home");
+            }
+
+            if (failed) {
+                event.getPet().getPetEntity().getEntityLabels().showText("§c" + PetEntityLabelRotable.CHAR_ARROW_RIGHT + " " + mode.getColor() + mode.getName() + "§r §c" + PetEntityLabelRotable.CHAR_ARROW_LEFT, 20);
+                return;
+            }
+
             event.getPet().getPetEntity().getEntityLabels().showText("§a" + PetEntityLabelRotable.CHAR_ARROW_RIGHT + " " + mode.getColor() + mode.getName() + "§r §a" + PetEntityLabelRotable.CHAR_ARROW_LEFT, 20);
 
             if (event.getPet().getPetData().getMode().getType() != mode) {

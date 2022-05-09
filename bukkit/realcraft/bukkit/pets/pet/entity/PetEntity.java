@@ -2,6 +2,7 @@ package realcraft.bukkit.pets.pet.entity;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
@@ -65,6 +66,8 @@ public class PetEntity {
         entity.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
         entity.getEquipment().setItemInMainHandDropChance(0);
         entity.getEquipment().setItemInOffHandDropChance(0);
+
+        entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(128);
 
         EntityUtil.clearPathfinders(entity);
         PetsManager.registerPet(this.getPet());

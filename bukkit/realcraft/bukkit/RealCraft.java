@@ -298,6 +298,12 @@ public class RealCraft extends JavaPlugin implements Listener {
 		for(World world : Bukkit.getWorlds()){
 			world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
 		}
+
+		if (RealCraft.isTestServer() && RealCraft.getServerType() == ServerType.LOBBY) {
+			for (World world : Bukkit.getWorlds()) {
+				world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+			}
+		}
 	}
 
 	//https://gist.github.com/aadnk/3928137

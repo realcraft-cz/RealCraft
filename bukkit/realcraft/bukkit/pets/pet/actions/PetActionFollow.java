@@ -53,7 +53,7 @@ public class PetActionFollow extends PetAction {
     }
 
     @Override
-    public void run() {
+    protected void _run() {
         Location targetLoc = this.getTargetLocation();
         double distance = this.getEntity().getLocation().distanceSquared(targetLoc);
 

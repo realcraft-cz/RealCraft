@@ -21,6 +21,7 @@ public class PetCommands extends AbstractCommand {
             new PetCommandDelete(),
             new PetCommandEffect(),
             new PetCommandSkin(),
+            new PetCommandHome(),
         };
     }
 

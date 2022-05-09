@@ -25,4 +25,23 @@ public class PetEntityLabelModes extends PetEntityLabelRotable {
             ),
         });
     }
+
+    @Override
+    public void show() {
+        for (RotableItem item : this.getItems()) {
+            if (item.getType() == PetDataMode.PetDataModeType.HOME) {
+                if (this.getPetEntity().getPet().getPetData().getHome().getLocation() != null) {
+                    item.setSelectedText(PetDataMode.PetDataModeType.HOME.getColor() + PetDataMode.PetDataModeType.HOME.getName());
+                    item.setDisabledText(ChatColor.GRAY + PetDataMode.PetDataModeType.HOME.getName());
+                } else {
+                    item.setSelectedText("" + PetDataMode.PetDataModeType.HOME.getColor() + ChatColor.STRIKETHROUGH + PetDataMode.PetDataModeType.HOME.getName());
+                    item.setDisabledText("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + PetDataMode.PetDataModeType.HOME.getName());
+                }
+
+                break;
+            }
+        }
+
+        super.show();
+    }
 }

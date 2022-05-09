@@ -52,7 +52,7 @@ public class PetActionSit extends PetAction {
     }
 
     @Override
-    public void run() {
+    protected void _run() {
         if (this.getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.SIT) {
             this.finish();
             return;
