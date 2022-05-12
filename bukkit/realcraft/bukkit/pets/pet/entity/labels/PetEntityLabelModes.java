@@ -29,16 +29,24 @@ public class PetEntityLabelModes extends PetEntityLabelRotable {
     @Override
     public void show() {
         for (RotableItem item : this.getItems()) {
-            if (item.getType() == PetDataMode.PetDataModeType.HOME) {
-                if (this.getPetEntity().getPet().getPetData().getHome().getLocation() != null) {
-                    item.setSelectedText(PetDataMode.PetDataModeType.HOME.getColor() + PetDataMode.PetDataModeType.HOME.getName());
-                    item.setDisabledText(ChatColor.GRAY + PetDataMode.PetDataModeType.HOME.getName());
-                } else {
-                    item.setSelectedText("" + PetDataMode.PetDataModeType.HOME.getColor() + ChatColor.STRIKETHROUGH + PetDataMode.PetDataModeType.HOME.getName());
-                    item.setDisabledText("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + PetDataMode.PetDataModeType.HOME.getName());
-                }
+            PetDataMode.PetDataModeType type = (PetDataMode.PetDataModeType) item.getType();
 
-                break;
+            if (type == PetDataMode.PetDataModeType.HOME) {
+                if (this.getPetEntity().getPet().getPetData().getHome().getLocation() != null && this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.HOME) {
+                    item.setSelectedText(type.getColor() + type.getName());
+                    item.setDisabledText(ChatColor.GRAY + type.getName());
+                } else {
+                    item.setSelectedText("" + type.getColor() + ChatColor.STRIKETHROUGH + type.getName());
+                    item.setDisabledText("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + type.getName());
+                }
+            } else if (type == PetDataMode.PetDataModeType.SIT) {
+                if (this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.SIT && this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.HOME) {
+                    item.setSelectedText(type.getColor() + type.getName());
+                    item.setDisabledText(ChatColor.GRAY + type.getName());
+                } else {
+                    item.setSelectedText("" + type.getColor() + ChatColor.STRIKETHROUGH + type.getName());
+                    item.setDisabledText("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + type.getName());
+                }
             }
         }
 

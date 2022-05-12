@@ -21,6 +21,7 @@ public class PetCommandHome extends PetCommand {
         }
 
         pet.getPetData().getHome().setLocation(petPlayer.getPlayer().getLocation());
+
         petPlayer.sendMessage("§dDomov mazlika nastaven");
         petPlayer.getPlayer().playSound(petPlayer.getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
     }

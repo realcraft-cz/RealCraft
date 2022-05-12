@@ -2,6 +2,7 @@ package realcraft.bukkit.pets.pet.actions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.RealCraft;
@@ -25,7 +26,7 @@ public class PetActionSit extends PetAction {
 
     @Override
     public boolean shouldStart() {
-        return (this.getPet().getPetData().getMode().getType() == PetDataMode.PetDataModeType.SIT);
+        return (this.getPet().getPetData().getMode().getType() == PetDataMode.PetDataModeType.SIT && this.getEntity().getLocation().getBlock().getRelative(BlockFace.DOWN).isSolid());
     }
 
     @Override
@@ -34,21 +35,16 @@ public class PetActionSit extends PetAction {
         this.getEntity().setGravity(false);
         this.getEntity().setVelocity(new Vector(0, 0, 0));
 
-        sitLocation = PetActionSit.this.getEntity().getLocation();
+        sitLocation = this.getEntity().getLocation();
         sitLocation.setY(sitLocation.getBlockY() - 0.8);
 
         Bukkit.getScheduler().runTask(RealCraft.getInstance(), new Runnable() {
             public void run() {
-                PetActionSit.this.getEntity().teleport(sitLocation);
+                getEntity().teleport(sitLocation);
             }
         });
-    }
 
-    @Override
-    protected void _clear() {
-        this.getEntity().setGravity(true);
-        this.getEntity().teleport(this.getEntity().getLocation().clone().add(0, 1, 0));
-        this.getEntity().setVelocity(new Vector(0, 0, 0));
+        this._startTask(10);
     }
 
     @Override
@@ -80,5 +76,12 @@ public class PetActionSit extends PetAction {
         } else {
             this.getEntity().setRotation(this.getEntity().getLocation().getYaw(), 0);
         }
+    }
+
+    @Override
+    protected void _clear() {
+        this.getEntity().setGravity(true);
+        this.getEntity().teleport(this.getEntity().getLocation().clone().add(0, 1, 0));
+        this.getEntity().setVelocity(new Vector(0, 0, 0));
     }
 }

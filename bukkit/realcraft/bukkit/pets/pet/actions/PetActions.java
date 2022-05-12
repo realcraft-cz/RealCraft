@@ -1,10 +1,7 @@
 package realcraft.bukkit.pets.pet.actions;
 
-import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.actions.PetAction.PetActionType;
@@ -12,10 +9,9 @@ import realcraft.bukkit.pets.pet.actions.PetAction.PetActionType;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-public class PetActions implements Runnable {
+public class PetActions {
 
     private final Pet pet;
-    private final BukkitTask task;
     private final HashMap<PetActionType, PetAction> petActions = new HashMap<>();
 
     private PetActionType currentActionType;
@@ -34,7 +30,6 @@ public class PetActions implements Runnable {
         }
 
         this.currentActionType = PetActionType.NONE;
-        this.task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, 20, 20);
     }
 
     public Pet getPet() {
@@ -91,7 +86,6 @@ public class PetActions implements Runnable {
         this.getCurrentAction().start();
     }
 
-    @Override
     public void run() {
         if (!this.getPet().getPetEntity().isLiving()) {
             return;
@@ -106,9 +100,5 @@ public class PetActions implements Runnable {
             this.setActionType(action.getType());
             return;
         }
-    }
-
-    public void cancel() {
-        task.cancel();
     }
 }

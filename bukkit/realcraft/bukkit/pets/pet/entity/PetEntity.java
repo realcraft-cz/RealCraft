@@ -1,5 +1,6 @@
 package realcraft.bukkit.pets.pet.entity;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -7,6 +8,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import realcraft.bukkit.pets.PetsManager;
+import realcraft.bukkit.pets.events.pet.PetRemoveEvent;
+import realcraft.bukkit.pets.events.pet.PetSpawnEvent;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabels;
 import realcraft.bukkit.utils.EntityUtil;
@@ -45,6 +48,10 @@ public class PetEntity {
         return entity != null && entity.isValid();
     }
 
+    public boolean isTicking() {
+        return this.isLiving() && this.getPet().getPetEntity().getEntity().getTrackedPlayers().size() > 0;
+    }
+
     public void spawn(Location location) {
         if (this.isLiving()) {
             this.remove();
@@ -66,13 +73,14 @@ public class PetEntity {
         entity.getEquipment().setItemInOffHand(new ItemStack(Material.AIR));
         entity.getEquipment().setItemInMainHandDropChance(0);
         entity.getEquipment().setItemInOffHandDropChance(0);
-
-        entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(128);
+        entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(64);
 
         EntityUtil.clearPathfinders(entity);
         PetsManager.registerPet(this.getPet());
 
         this.getEntityEffect().start();
+
+        Bukkit.getPluginManager().callEvent(new PetSpawnEvent(this.getPet()));
     }
 
     public void remove() {
@@ -85,5 +93,7 @@ public class PetEntity {
 
         this.getEntityEffect().cancel();
         this.getEntityLabels().clear();
+
+        Bukkit.getPluginManager().callEvent(new PetRemoveEvent(this.getPet()));
     }
 }

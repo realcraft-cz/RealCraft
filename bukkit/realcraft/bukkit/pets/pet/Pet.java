@@ -100,8 +100,6 @@ public class Pet {
     }
 
     public void delete() {
-        this.getPetActions().cancel();
-        this.getPetTimers().cancel();
         this.getPetEntity().remove();
 
         Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(), new Runnable() {

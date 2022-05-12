@@ -1,5 +1,6 @@
 package realcraft.bukkit.pets.pet.entity.labels;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import realcraft.bukkit.holograms.Hologram;
@@ -72,8 +73,14 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
     @Override
     public void show() {
         if (visible) {
-            for (RotableItem item : items) {
-                item.setIndex((item.getIndex() + 1) % items.length);
+            this.rotate();
+
+            if (this.getSelectedItem().getSelectedText().contains("" + ChatColor.STRIKETHROUGH)) { //TODO: disabled flag
+                this.rotate();
+            }
+
+            if (this.getSelectedItem().getSelectedText().contains("" + ChatColor.STRIKETHROUGH)) { //TODO: disabled flag
+                this.rotate();
             }
         }
 
@@ -103,6 +110,12 @@ public abstract class PetEntityLabelRotable extends PetEntityLabel {
     public void run() {
         for (RotableItem item : items) {
             item.getHologram().setLocation(this._getItemLocation(item));
+        }
+    }
+
+    private void rotate() {
+        for (RotableItem item : items) {
+            item.setIndex((item.getIndex() + 1) % items.length);
         }
     }
 

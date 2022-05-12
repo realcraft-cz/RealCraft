@@ -22,6 +22,7 @@ public abstract class PetAction implements Listener, Runnable {
 
     private PetActionState state = PetActionState.NONE;
     private BukkitTask task;
+    private int period;
     private int ticks;
 
     public PetAction(PetActionType type, Pet pet) {
@@ -70,10 +71,6 @@ public abstract class PetAction implements Listener, Runnable {
             this.state = PetActionState.RUNNING;
             this.ticks = 0;
             this._start();
-
-            if (this.state == PetActionState.RUNNING) {
-                this._startTask();
-            }
         }
     }
 
@@ -95,41 +92,52 @@ public abstract class PetAction implements Listener, Runnable {
 
     @Override
     public final void run() {
-        this.ticks += this.getType().getPeriod();
+        this.ticks += this.period;
+
+        if (this.getEntity() == null) {
+            this.state = PetActionState.CANCELLED;
+            this._stopTask();
+            return;
+        }
+
         this._run();
     }
 
-    private void _startTask() {
-        if (this.getType().getPeriod() > 0) {
-            this._stopTask();
-
-            task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, this.getType().getPeriod(), this.getType().getPeriod());
-        }
+    protected void _startTask(int period) {
+        this._startTask(period, period);
     }
 
-    private void _stopTask() {
+    protected void _startTask(int delay, int period) {
+        this._stopTask();
+        this.ticks = 0;
+        this.period = period;
+        task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, delay, period);
+    }
+
+    protected void _stopTask() {
         if (task != null) {
             task.cancel();
+            task = null;
         }
     }
 
     protected abstract void _start();
-    protected abstract void _clear();
     protected abstract void _run();
+    protected abstract void _clear();
 
     public enum PetActionType {
 
-        SPAWN       (10, 0, PetActionSpawn.class),
-        DESPAWN     (10, 0, PetActionDespawn.class),
-        SKIN_CHANGE (9, 1, PetActionSkinChange.class),
-        EAT         (5, 4, PetActionEat.class),
-        FOLLOW      (3, 10, PetActionFollow.class),
-        SIT         (2, 10, PetActionSit.class),
-        NONE        (0, 1 /*TODO: 0*/, PetActionNone.class),
+        SPAWN       (100, PetActionSpawn.class),
+        SKIN_CHANGE (90, PetActionSkinChange.class),
+        EAT         (40, PetActionEat.class),
+        HOME        (30, PetActionHome.class),
+        FOLLOW      (20, PetActionFollow.class),
+        SIT         (10, PetActionSit.class),
+        NONE        (0, PetActionNone.class),
         ;
 
         private final int priority;
-        private final int period;
+        //private final int period;
         private final Class<?> clazz;
         private static final PetActionType[] sortedTypes;
 
@@ -145,18 +153,13 @@ public abstract class PetAction implements Listener, Runnable {
             sortedTypes = types.toArray(new PetActionType[0]);
         }
 
-        private PetActionType(int priority, int period, Class<?> clazz) {
+        private PetActionType(int priority, Class<?> clazz) {
             this.priority = priority;
-            this.period = period;
             this.clazz = clazz;
         }
 
         public int getPriority() {
             return priority;
-        }
-
-        public int getPeriod() {
-            return period;
         }
 
         public Class<?> getClazz() {

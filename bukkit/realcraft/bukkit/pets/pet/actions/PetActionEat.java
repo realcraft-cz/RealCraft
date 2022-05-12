@@ -20,12 +20,12 @@ public class PetActionEat extends PetAction {
 
     private static final HashMap<Material, Food> FOODS = new HashMap<>();
     private static final double MAX_FOOD_DISTANCE = 5.0;
-    private static final double FOOD_REACH_DISTANCE = 1.2;
+    private static final double FOOD_REACH_DISTANCE = 1.5;
     private static final int SAME_LOCATION_THRESHOLD = 4;
 
+    private State state;
     private Item foodItem;
     private ItemStack foodItemStack;
-    private State state;
 
     private Location entityLastLocation;
     private int sameLocationCounter;
@@ -70,18 +70,13 @@ public class PetActionEat extends PetAction {
             if (entity.getType() == EntityType.DROPPED_ITEM) {
                 if (this.getFood(((Item) entity).getItemStack().getType()) != null) {
                     this.foodItem = (Item) entity;
-                    this._run();
+                    this._startTask(0, 5);
                     return;
                 }
             }
         }
 
         this.cancel();
-    }
-
-    @Override
-    protected void _clear() {
-        EntityUtil.clearPathfinders(this.getEntity());
     }
 
     @Override
@@ -109,15 +104,6 @@ public class PetActionEat extends PetAction {
                 this.foodItemStack = this.foodItem.getItemStack();
                 this.foodItem.remove();
 
-                /*this.getEntity().setAI(false);
-                this.getEntity().setGravity(false);
-
-                Vector direction = targetLoc.clone().subtract(this.getEntity().getLocation().toVector()).toVector().normalize();
-                targetLoc.setY(targetLoc.getBlockY() - 0.4);
-                targetLoc.setDirection(direction);
-                targetLoc.setPitch(45);
-                this.getEntity().teleport(targetLoc);*/
-
                 Food food = this.getFood(this.foodItemStack.getType());
                 if (food != null) {
                     maxFoodSteps = Math.max(1, (int)Math.ceil(((this.getPet().getPetData().getFood().getMaxValue() - this.getPet().getPetData().getFood().getValue()) * 1f) / food.nutrition));
@@ -125,6 +111,7 @@ public class PetActionEat extends PetAction {
                 }
 
                 this.state = State.EATING;
+                this._startTask(4);
                 return;
             }
 
@@ -153,6 +140,11 @@ public class PetActionEat extends PetAction {
         }
 
         this.entityLastLocation = this.getEntity().getLocation();
+    }
+
+    @Override
+    protected void _clear() {
+        EntityUtil.clearPathfinders(this.getEntity());
     }
 
     private void _eatOnePiece() {

@@ -35,7 +35,10 @@ public class PetEntityEffect implements Runnable {
     }
 
     public void cancel() {
-        task.cancel();
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
     }
 
     public enum PetEntityEffectType {

@@ -11,12 +11,12 @@ import java.util.ArrayList;
 public class PetTimers implements Runnable {
 
     private final Pet pet;
-    private final BukkitTask task;
     private final ArrayList<PetTimer> timers = new ArrayList<>();
+
+    private BukkitTask task;
 
     public PetTimers(Pet pet) {
         this.pet = pet;
-        this.task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, 20, 20);
 
         for (PetTimer.PetTimerType type : PetTimer.PetTimerType.values()) {
             timers.add(this._getNewTimer(type));
@@ -36,8 +36,16 @@ public class PetTimers implements Runnable {
         }
     }
 
+    public void start() {
+        this.cancel();
+        task = Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, 20, 20);
+    }
+
     public void cancel() {
-        task.cancel();
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
     }
 
     protected PetTimer _getNewTimer(PetTimer.PetTimerType type) {

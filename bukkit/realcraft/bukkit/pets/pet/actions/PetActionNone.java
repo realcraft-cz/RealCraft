@@ -25,18 +25,10 @@ public class PetActionNone extends PetAction {
     }
 
     @Override
-    protected void _clear() {
+    protected void _run() {
     }
 
     @Override
-    protected void _run() {
-        //System.out.println("dfg");
-
-        //this.getEntity().setRotation(getEntity().getLocation().getYaw()+70, getEntity().getLocation().getPitch()); //fastest
-        //this.getEntity().setRotation(getEntity().getLocation().getYaw()+80, getEntity().getLocation().getPitch());
-        //this.getEntity().setRotation(getEntity().getLocation().getYaw()+90, getEntity().getLocation().getPitch());
-        //this.getEntity().setRotation(getEntity().getLocation().getYaw()+100, getEntity().getLocation().getPitch());
-        //this.getEntity().setRotation(getEntity().getLocation().getYaw()+110, getEntity().getLocation().getPitch());
-        //this.getEntity().setRotation(getEntity().getLocation().getYaw()+120, getEntity().getLocation().getPitch());
+    protected void _clear() {
     }
 }

@@ -37,8 +37,10 @@ public abstract class PetTimer {
 
     public enum PetTimerType {
 
-        SAVE        (60 * 20, PetTimerSave.class),
-        FOOD        (10 * 20, PetTimerFood.class),
+        ACTIONS         (20, PetTimerActions.class),
+        SAVE            (60 * 20, PetTimerSave.class),
+        FOOD            (10 * 20, PetTimerFood.class),
+        FOLLOW_LEVEL    (10 * 20, PetTimerFollowLevel.class),
         ;
 
         private final int period;

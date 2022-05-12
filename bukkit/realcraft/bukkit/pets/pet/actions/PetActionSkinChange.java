@@ -26,11 +26,11 @@ public class PetActionSkinChange extends PetAction {
             this.getPet().getPetData().getMode().setType(PetDataMode.PetDataModeType.FOLLOW);
         }
 
+        this.getEntity().setAI(true);
+        this.getEntity().setGravity(true);
         this.getEntity().setRotation(this.getEntity().getLocation().getYaw(), 0);
-    }
 
-    @Override
-    protected void _clear() {
+        this._startTask(1);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class PetActionSkinChange extends PetAction {
             }
 
             if (this.getTicks() == 10) {
-                this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 1f, 2f);
+                this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.5f, 2f);
             }
 
             if (this.getTicks() % 4 == 0) {
@@ -75,7 +75,7 @@ public class PetActionSkinChange extends PetAction {
             }
 
             if (this.yawIncrement == 5) {
-                this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 1f, 2f);
+                this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.5f, 2f);
                 this.finish();
             }
         } else if (this.state == State.TRANSFORMING) {
@@ -95,6 +95,10 @@ public class PetActionSkinChange extends PetAction {
                 this.state = State.ENDING;
             }
         }
+    }
+
+    @Override
+    protected void _clear() {
     }
 
     private enum State {
