@@ -1,5 +1,24 @@
 package realcraft.bukkit.test;
 
+/*
+world:
+    chunksPerRun: 1 (narocnejsi)
+world_nether:
+    chunksPerRun: 2
+world_the_end:
+    chunksPerRun: 2
+
+fillTask:
+  world: world
+  fillDistance: 208
+  chunksPerRun: 1
+  tickFrequency: 1
+  x: -760
+  z: 760
+  length: 1521
+  total: 2310658
+  forceLoad: false
+*/
 public class WorldBorderTest {
 
     private int x = 0;
@@ -13,7 +32,7 @@ public class WorldBorderTest {
     public static void main(String[] args) {
         //System.out.println(UUID.nameUUIDFromBytes(("OfflinePlayer:"+"FluBoo").getBytes(Charsets.UTF_8)));
 
-        (new WorldBorderTest()).run(10192);
+        (new WorldBorderTest()).run(8000);
     }
 
     public void run(int radius) {

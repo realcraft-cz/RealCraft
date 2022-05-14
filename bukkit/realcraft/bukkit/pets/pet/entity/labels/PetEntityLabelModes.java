@@ -1,6 +1,7 @@
 package realcraft.bukkit.pets.pet.entity.labels;
 
 import org.bukkit.ChatColor;
+import realcraft.bukkit.pets.pet.actions.PetAction;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
 import realcraft.bukkit.pets.pet.entity.PetEntity;
 
@@ -32,7 +33,8 @@ public class PetEntityLabelModes extends PetEntityLabelRotable {
             PetDataMode.PetDataModeType type = (PetDataMode.PetDataModeType) item.getType();
 
             if (type == PetDataMode.PetDataModeType.HOME) {
-                if (this.getPetEntity().getPet().getPetData().getHome().getLocation() != null && this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.HOME) {
+                if (this.getPetEntity().getPet().getPetData().getHome().getLocation() != null
+                    && this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.HOME) {
                     item.setSelectedText(type.getColor() + type.getName());
                     item.setDisabledText(ChatColor.GRAY + type.getName());
                 } else {
@@ -40,7 +42,9 @@ public class PetEntityLabelModes extends PetEntityLabelRotable {
                     item.setDisabledText("" + ChatColor.GRAY + ChatColor.STRIKETHROUGH + type.getName());
                 }
             } else if (type == PetDataMode.PetDataModeType.SIT) {
-                if (this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.SIT && this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.HOME) {
+                if (this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.SIT
+                    && this.getPetEntity().getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.HOME
+                    && this.getPetEntity().getPet().getPetActions().getCurrentAction().getType() != PetAction.PetActionType.SIT_BESIDE) {
                     item.setSelectedText(type.getColor() + type.getName());
                     item.setDisabledText(ChatColor.GRAY + type.getName());
                 } else {

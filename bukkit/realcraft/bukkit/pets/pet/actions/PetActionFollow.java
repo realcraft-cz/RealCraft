@@ -2,6 +2,8 @@ package realcraft.bukkit.pets.pet.actions;
 
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
 import realcraft.bukkit.utils.EntityUtil;
@@ -11,8 +13,9 @@ import realcraft.bukkit.utils.RandomUtil;
 public class PetActionFollow extends PetAction {
 
     private static final int MAX_DISTANCE = 64;
+    private static final int TELEPORT_DISTANCE = 32;
     private static final int MIN_DISTANCE_START = 3;
-    private static final int MIN_DISTANCE_FINISH = 3;
+    private static final int MIN_DISTANCE_FINISH = 2;
 
     private static final int MAX_DISTANCE_LEVEL = 3;
 
@@ -51,12 +54,34 @@ public class PetActionFollow extends PetAction {
         this.minDistanceLevel = 0;
     }
 
-    private int getMinDistance() {
+    public int getMinDistance() {
         return MIN_DISTANCE_START * (minDistanceLevel + 1);
     }
 
     private Location _getTargetLocation() {
-        return this.getPet().getPetPlayer().getPlayer().getLocation();
+        Location location = this.getPet().getPetPlayer().getPlayer().getLocation();
+        location.add(this.getEntity().getLocation().subtract(location).toVector().normalize().setY(0));
+        return location;
+    }
+
+    private Location _getSafeTeleportLocation() {
+        Location location = this._getSafeTeleportLocation(TELEPORT_DISTANCE);
+        if (location != null) {
+            return location;
+        }
+
+        return this._getTargetLocation();
+    }
+
+    private Location _getSafeTeleportLocation(int minDistance) {
+        Location location = this.getPet().getPetPlayer().getPlayer().getLocation();
+        location.add(this.getEntity().getLocation().subtract(location).toVector().normalize().multiply(minDistance));
+
+        if (LocationUtil.isBlockUnsafe(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ())) {
+            return (minDistance > 1 ? this._getSafeTeleportLocation(minDistance - 1) : null);
+        }
+
+        return location;
     }
 
     @Override
@@ -71,10 +96,12 @@ public class PetActionFollow extends PetAction {
         Location targetLoc = this._getTargetLocation();
         double distance = this.getEntity().getLocation().distanceSquared(targetLoc);
 
-        if (distance > MAX_DISTANCE * MAX_DISTANCE) {
-            this.getEntity().teleport(targetLoc);
-            this.finish();
-            return;
+        if (this.getEntity().isInWater()) {
+            this.getEntity().addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 200, 4));
+        }
+
+        if (distance > MAX_DISTANCE * MAX_DISTANCE || !this.getPet().getPetEntity().isTicking()) {
+            this.getEntity().teleport(this._getSafeTeleportLocation());
         }
 
         if (distance < MIN_DISTANCE_FINISH * MIN_DISTANCE_FINISH) {
@@ -87,10 +114,17 @@ public class PetActionFollow extends PetAction {
             return;
         }
 
+        if (distance < (MIN_DISTANCE_FINISH * MIN_DISTANCE_FINISH) * 3) {
+            this.getEntity().setTarget(this.getPet().getPetPlayer().getPlayer());
+            EntityUtil.navigate(this.getEntity(), targetLoc, 0.7);
+            return;
+        }
+
         if (LocationUtil.isSimilar(EntityUtil.getTargetLocation(this.getEntity()), targetLoc)) {
             return;
         }
 
+        this.getEntity().setTarget(this.getPet().getPetPlayer().getPlayer());
         EntityUtil.navigate(this.getEntity(), targetLoc, 1.0);
     }
 

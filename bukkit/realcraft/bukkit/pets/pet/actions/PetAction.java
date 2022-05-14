@@ -132,6 +132,7 @@ public abstract class PetAction implements Listener, Runnable {
         EAT         (40, PetActionEat.class),
         HOME        (30, PetActionHome.class),
         FOLLOW      (20, PetActionFollow.class),
+        SIT_BESIDE  (15, PetActionSitBeside.class),
         SIT         (10, PetActionSit.class),
         NONE        (0, PetActionNone.class),
         ;

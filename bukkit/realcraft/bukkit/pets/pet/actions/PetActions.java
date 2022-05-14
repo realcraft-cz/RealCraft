@@ -93,7 +93,7 @@ public class PetActions {
 
         for (PetActionType type : PetActionType.getSortedTypes()) {
             PetAction action = this.getAction(type);
-            if (!action.shouldStart() || (action.getType() == this.getCurrentActionType() && this.getCurrentAction().getState() == PetAction.PetActionState.RUNNING)) {
+            if ((action.getType() == this.getCurrentActionType() && this.getCurrentAction().getState() == PetAction.PetActionState.RUNNING) || !action.shouldStart()) {
                 continue;
             }
 

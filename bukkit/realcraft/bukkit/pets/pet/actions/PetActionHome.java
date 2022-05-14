@@ -41,6 +41,8 @@ public class PetActionHome extends PetAction {
         this.targetLocation.add(0, -0.8, 0);
         this.targetLocation.setPitch(0);
 
+        this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.5f, 2f);
+
         this._startTask(0, 10);
     }
 

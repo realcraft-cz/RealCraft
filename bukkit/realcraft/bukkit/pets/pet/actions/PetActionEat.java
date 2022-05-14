@@ -98,8 +98,6 @@ public class PetActionEat extends PetAction {
             boolean isMoving = Math.abs(this.getEntity().getVelocity().getX()) > 0.01 || Math.abs(this.getEntity().getVelocity().getZ()) > 0.01 || Math.abs(this.getEntity().getVelocity().getY()) > 0.1;
 
             if (distance < FOOD_REACH_DISTANCE && !isMoving) {
-                this.setTicks(0);
-
                 this.getEntity().playPickupItemAnimation(this.foodItem);
                 this.foodItemStack = this.foodItem.getItemStack();
                 this.foodItem.remove();
@@ -125,7 +123,7 @@ public class PetActionEat extends PetAction {
 
             EntityUtil.navigate(this.getEntity(), targetLoc, 0.7);
         } else if (this.state == State.EATING) {
-            Location particleLocation = this.getEntity().getEyeLocation().add(this.getEntity().getEyeLocation().getDirection().setY(0).normalize().multiply(0.3));
+            Location particleLocation = this.getEntity().getEyeLocation().add(this.getEntity().getEyeLocation().getDirection().setY(0).multiply(0.3));
             this.getEntity().getWorld().spawnParticle(Particle.ITEM_CRACK, particleLocation, 3, 0.1, 0.1, 0.1, 0.05, this.foodItemStack);
             this.getEntity().getWorld().playSound(getEntity().getLocation(), Sound.ENTITY_GENERIC_EAT, 0.7f, 1f);
 

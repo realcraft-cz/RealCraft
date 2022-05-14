@@ -129,6 +129,10 @@ public class PetsListeners implements Listener {
 
     @EventHandler
     public void PetClickEvent(PetClickEvent event) {
+        if (event.getPet().getPetActions().getCurrentAction().getType() == PetAction.PetActionType.NONE) {
+            event.getPet().getPetActions().getCurrentAction().start();
+        }
+
         if (event.getClickType() == PetClickEvent.ClickType.RIGHT) {
             if (event.getPet().getPetEntity().getEntityLabels().showModes(event.getPet().getPetData().getMode().getType().getNextPreferredType(), 40)) {
                 event.getPlayer().playSound(event.getPlayer(), Sound.UI_BUTTON_CLICK, 1f, 1f);
@@ -157,6 +161,10 @@ public class PetsListeners implements Listener {
             }
 
             if (mode == PetDataMode.PetDataModeType.SIT && event.getPet().getPetData().getMode().getType() == PetDataMode.PetDataModeType.HOME) {
+                failed = true;
+            }
+
+            if (mode == PetDataMode.PetDataModeType.SIT && event.getPet().getPetActions().getCurrentAction().getType() == PetAction.PetActionType.SIT_BESIDE) {
                 failed = true;
             }
 

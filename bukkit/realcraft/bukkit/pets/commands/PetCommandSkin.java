@@ -26,7 +26,7 @@ import java.util.List;
 public class PetCommandSkin extends PetCommand implements Listener {
 
     private static final String INV_NAME = "Pet skins";
-    private HashMap<PetPlayer, Integer> petPlayerPage = new HashMap<>();
+    private final HashMap<PetPlayer, Integer> petPlayerPage = new HashMap<>();
 
     public PetCommandSkin() {
         super("skin");

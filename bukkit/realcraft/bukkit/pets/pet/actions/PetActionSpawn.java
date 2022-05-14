@@ -29,27 +29,49 @@ public class PetActionSpawn extends PetAction {
 
     private @Nullable Location _getSpawnLocation() {
         for (int i = 0; i < 4; i++) {
-            Location location = this._getRandomLocation(this.getPet().getPetPlayer().getPlayer().getLocation().add(0, -1 * i, 0), 0);
+            Location location = this._getRandomLocation(this.getPet().getPetPlayer().getPlayer().getLocation().add(0, -1 * i, 0), true, 0);
             if (location != null) {
                 return location;
             }
         }
 
+        Location location = this._getRandomLocation(this.getPet().getPetPlayer().getPlayer().getLocation().add(0, 1, 0), true, 0);
+        if (location != null) {
+            return location;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            location = this._getRandomLocation(this.getPet().getPetPlayer().getPlayer().getLocation().add(0, -1 * i, 0), false, 0);
+            if (location != null) {
+                return location;
+            }
+        }
+
+        location = this._getRandomLocation(this.getPet().getPetPlayer().getPlayer().getLocation().add(0, 1, 0), false, 0);
+        if (location != null) {
+            return location;
+        }
+
         return null;
     }
 
-    private @Nullable Location _getRandomLocation(Location location, int step) {
+    private @Nullable Location _getRandomLocation(Location location, boolean inFront, int step) {
         Location tmpLocation = location.clone();
 
         tmpLocation.setPitch(0f);
-        tmpLocation.add(location.getDirection().setY(0).normalize().rotateAroundY(RandomUtil.getRandomDouble(-0.7, 0.7)).multiply(RandomUtil.getRandomDouble(2, 5)));
+
+        if (inFront) {
+            tmpLocation.add(location.getDirection().setY(0).rotateAroundY(RandomUtil.getRandomDouble(-0.7, 0.7)).multiply(RandomUtil.getRandomDouble(2, 5)));
+        } else {
+            tmpLocation.add(RandomUtil.getRandomInteger(2, 5), 0, RandomUtil.getRandomInteger(2, 5));
+        }
 
         if (this._isSpawnBlockValid(tmpLocation.getBlock())) {
             return tmpLocation;
         }
 
         if (step < MAX_RANDOM_LOCATION_STEPS) {
-            return this._getRandomLocation(location, step + 1);
+            return this._getRandomLocation(location, inFront, step + 1);
         }
 
         return null;
@@ -92,7 +114,7 @@ public class PetActionSpawn extends PetAction {
         if (this.spawnLocation == null) {
             this.spawnLocation = this.getPet().getPetPlayer().getPlayer().getLocation();
             this.spawnLocation.setPitch(0f);
-            this.spawnLocation.add(this.spawnLocation.getDirection().setY(0).normalize().multiply(1.5));
+            this.spawnLocation.add(this.spawnLocation.getDirection().setY(0).multiply(1.5));
 
             this.getPet().getPetEntity().spawn(this.spawnLocation);
             this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_VEX_CHARGE, 1f, 1f);
@@ -173,6 +195,7 @@ public class PetActionSpawn extends PetAction {
         if (this.getTicks() >= 8 + 16 + 12 + 16 + 32 + 8) {
             this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_VEX_CHARGE, 1f, 1f);
             this.getEntity().teleport(this.spawnLocation.clone().add(0, 0.4, 0));
+            this.getEntity().setFreezeTicks(this.getEntity().getMaxFreezeTicks() + 60);
             for (Player player : this.getEntity().getTrackedPlayers()) {
                 BlockUtil.sendBlockDamage(player, blockLocation, 10);
             }

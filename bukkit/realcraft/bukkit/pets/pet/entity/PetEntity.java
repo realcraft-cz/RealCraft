@@ -20,6 +20,7 @@ public class PetEntity {
     private final Pet pet;
     private final PetEntityLabels entityLabels;
     private final PetEntityEffect entityEffect;
+
     private Zombie entity;
 
     public PetEntity(Pet pet) {
@@ -52,6 +53,10 @@ public class PetEntity {
         return this.isLiving() && this.getPet().getPetEntity().getEntity().getTrackedPlayers().size() > 0;
     }
 
+    public void setShaking(boolean shaking) {
+        entity.setFreezeTicks(shaking ? entity.getMaxFreezeTicks() + 6000 : 0);
+    }
+
     public void spawn(Location location) {
         if (this.isLiving()) {
             this.remove();
@@ -59,7 +64,7 @@ public class PetEntity {
 
         location.setPitch(0f);
 
-        entity = (Zombie) location.getWorld().spawnEntity(location, EntityType.ZOMBIE, false);
+        entity = (Zombie) location.getWorld().spawnEntity(location, EntityType.DROWNED, false);
         entity.setInvisible(true);
         entity.setRemoveWhenFarAway(false);
         entity.setCustomNameVisible(true);

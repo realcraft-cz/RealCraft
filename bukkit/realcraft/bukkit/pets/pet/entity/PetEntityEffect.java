@@ -25,6 +25,9 @@ public class PetEntityEffect implements Runnable {
     public void run() {
         if (this.previousLocation != null) {
             this.getPetEntity().getPet().getPetData().getEffect().getType().run(this);
+            if (Bukkit.getCurrentTick() % 10 == 0 && this.getPetEntity().getEntity().isInWater()) {
+                previousLocation.getWorld().spawnParticle(Particle.BUBBLE_COLUMN_UP, previousLocation, 2, 0.2, 0.2, 0.2, 0);
+            }
         }
 
         this.previousLocation = this.getPetEntity().getEntity().getLocation();
