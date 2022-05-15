@@ -20,6 +20,7 @@ import realcraft.bukkit.pets.pet.actions.PetAction;
 import realcraft.bukkit.pets.pet.actions.PetActionFollow;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
 import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabelRotable;
+import realcraft.bukkit.utils.LocationUtil;
 
 public class PetsListeners implements Listener {
 
@@ -61,6 +62,16 @@ public class PetsListeners implements Listener {
         Pet pet = PetsManager.getPet(event.getEntity());
         if (pet != null) {
             event.setCancelled(true);
+            event.getEntity().setFireTicks(0);
+
+            if (event.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+                if (pet.getPetActions().getCurrentAction().getType() == PetAction.PetActionType.SPAWN) {
+                    return;
+                }
+
+                pet.getPetActions().setActionType(PetAction.PetActionType.NONE);
+                event.getEntity().teleport(LocationUtil.getSafeDestination(event.getEntity().getLocation()));
+            }
         }
     }
 
@@ -115,7 +126,10 @@ public class PetsListeners implements Listener {
     public void PetActionFinishEvent(PetActionFinishEvent event) {
         Pet pet = event.getPet();
 
-        if (event.getAction().getType() == PetAction.PetActionType.SPAWN || event.getAction().getType() == PetAction.PetActionType.SKIN_CHANGE) {
+        if (event.getAction().getType() == PetAction.PetActionType.SPAWN
+            || event.getAction().getType() == PetAction.PetActionType.SKIN_CHANGE
+            || event.getAction().getType() == PetAction.PetActionType.SIT
+            || event.getAction().getType() == PetAction.PetActionType.SIT_BESIDE) {
             ((PetActionFollow)event.getPet().getPetActions().getAction(PetAction.PetActionType.FOLLOW)).resetDistanceLevel();
         }
 
@@ -146,11 +160,6 @@ public class PetsListeners implements Listener {
 
             PetDataMode.PetDataModeType mode = (PetDataMode.PetDataModeType) event.getPet().getPetEntity().getEntityLabels().getLabelModes().getSelectedItem().getType();
             boolean failed = false;
-
-            if (mode == PetDataMode.PetDataModeType.HOME && event.getPet().getPetData().getHome().getLocation() == null) {
-                failed = true;
-                event.getPet().getPetPlayer().sendMessage("§cMazlik nema domov, nastavis ho prikazem §6/pet home");
-            }
 
             if (mode == PetDataMode.PetDataModeType.HOME && event.getPet().getPetData().getMode().getType() == PetDataMode.PetDataModeType.HOME) {
                 failed = true;

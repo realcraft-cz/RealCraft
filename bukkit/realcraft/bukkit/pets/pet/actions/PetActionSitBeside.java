@@ -6,6 +6,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Stairs;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import realcraft.bukkit.pets.pet.Pet;
@@ -17,10 +19,11 @@ import realcraft.bukkit.utils.LocationUtil;
 public class PetActionSitBeside extends PetAction {
 
     private static final int MAX_DISTANCE_START = 5;
-    private static final double SIT_REACH_DISTANCE = 1.5;
+    private static final double SIT_REACH_DISTANCE = 1.7;
 
     private State state;
     private Location stairsLocation;
+    private Location sitLocation;
 
     public PetActionSitBeside(Pet pet) {
         super(PetActionType.SIT_BESIDE, pet);
@@ -58,7 +61,7 @@ public class PetActionSitBeside extends PetAction {
         };
 
         for (BlockFace face : faces) {
-            Block besideStairs = this.getRelativeStairs(stairs, face);
+            Block besideStairs = this._getRelativeStairs(stairs, face);
             if (besideStairs != null) {
                 this.stairsLocation = besideStairs.getLocation();
                 return true;
@@ -68,22 +71,40 @@ public class PetActionSitBeside extends PetAction {
         return false;
     }
 
-    private @Nullable Block getRelativeStairs(Block block, BlockFace face) {
+    private @Nullable Block _getRelativeStairs(Block block, BlockFace face) {
         Block relativeBlock = block.getRelative(face);
 
         if (!relativeBlock.getBlockData().matches(block.getBlockData())) {
             return null;
         }
 
-        if (((Stairs) relativeBlock.getBlockData()).getShape() != Stairs.Shape.STRAIGHT || ((Stairs) relativeBlock.getBlockData()).getHalf() != Bisected.Half.BOTTOM) {
-            return null;
-        }
-
-        if (!relativeBlock.getRelative(BlockFace.UP).getType().isAir()) {
+        if (!this._isBlockValid(relativeBlock)) {
             return null;
         }
 
         return relativeBlock;
+    }
+
+    private boolean _isBlockValid(Block block) {
+        if (!(block.getBlockData() instanceof Stairs)) {
+            return false;
+        }
+
+        if (((Stairs) block.getBlockData()).getShape() != Stairs.Shape.STRAIGHT || ((Stairs) block.getBlockData()).getHalf() != Bisected.Half.BOTTOM) {
+            return false;
+        }
+
+        if (!block.getRelative(BlockFace.UP).getType().isAir()) {
+            return false;
+        }
+
+        for (Entity entity : block.getLocation().add(0.5, 0.5, 0.5).getNearbyEntities(0.5, 0.5, 0.5)) {
+            if (entity.getEntityId() != this.getEntity().getEntityId() && (entity.getType() == EntityType.DROWNED || entity.getType() == EntityType.PLAYER)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -113,14 +134,15 @@ public class PetActionSitBeside extends PetAction {
 
                     Stairs stairs = (Stairs) stairsLocation.getBlock().getBlockData();
 
-                    stairsLocation.add(0.5, -0.27, 0.5);
-                    stairsLocation.add(stairs.getFacing().getOppositeFace().getDirection().multiply(0.2));
-                    stairsLocation.setDirection(stairs.getFacing().getOppositeFace().getDirection());
+                    sitLocation = stairsLocation.clone();
+                    sitLocation.add(0.5, -0.27, 0.5);
+                    sitLocation.add(stairs.getFacing().getOppositeFace().getDirection().multiply(0.2));
+                    sitLocation.setDirection(stairs.getFacing().getOppositeFace().getDirection());
 
                     this.getEntity().setAI(false);
                     this.getEntity().setGravity(false);
                     this.getEntity().setVelocity(new Vector(0, 0, 0));
-                    this.getEntity().teleport(stairsLocation);
+                    this.getEntity().teleport(sitLocation);
                     this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.5f, 2f);
 
                     this._startTask(20);
@@ -134,9 +156,7 @@ public class PetActionSitBeside extends PetAction {
 
             EntityUtil.navigate(this.getEntity(), stairsLocation, 0.7);
         } else if (this.state == State.SITTING) {
-            //TODO: ambient look
-
-            if (!LocationUtil.isSimilar(stairsLocation, this.getEntity().getLocation())) {
+            if (!this._isBlockValid(stairsLocation.getBlock()) || !LocationUtil.isSimilar(sitLocation, this.getEntity().getLocation())) {
                 this.finish();
             }
         }
@@ -145,6 +165,7 @@ public class PetActionSitBeside extends PetAction {
     @Override
     protected void _clear() {
         this.getEntity().setGravity(true);
+        this.getEntity().teleport(this.getEntity().getLocation().clone().add(0, 0.5, 0));
         this.getEntity().setVelocity(new Vector(0, 0, 0));
     }
 

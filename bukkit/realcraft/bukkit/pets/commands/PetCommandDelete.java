@@ -1,5 +1,6 @@
 package realcraft.bukkit.pets.commands;
 
+import org.bukkit.Sound;
 import realcraft.bukkit.pets.PetPlayer;
 import realcraft.bukkit.pets.exceptions.player.PetPlayerNoPetException;
 import realcraft.share.utils.RandomUtil;
@@ -24,8 +25,10 @@ public class PetCommandDelete extends PetCommand {
 
         if (args.length == 0) {
             petPlayerCaptcha.put(petPlayer, RandomUtil.getRandomHex(2));
-            petPlayer.sendMessage("Opravdu chces smazat sveho mazlika? Veskery progress a nastaveni bude ztraceno.");
-            petPlayer.sendMessage("Pro potvrzeni napis znovu §6/pet delete " + petPlayerCaptcha.get(petPlayer));
+            petPlayer.sendMessage("");
+            petPlayer.sendMessage("Opravdu chces smazat sveho mazlika?");
+            petPlayer.sendMessage("Veskery postup a nastaveni bude ztraceno.");
+            petPlayer.sendMessage("Pro potvrzeni napis §6/pet delete " + petPlayerCaptcha.get(petPlayer));
             return;
         }
 
@@ -42,6 +45,7 @@ public class PetCommandDelete extends PetCommand {
         }
 
         petPlayer.sendMessage("§dMazlik smazan", true);
+        petPlayer.getPlayer().playSound(petPlayer.getPlayer(), Sound.ENTITY_ZOMBIE_INFECT, 1f, 0.5f);
     }
 
     @Override

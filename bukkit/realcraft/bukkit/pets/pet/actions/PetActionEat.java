@@ -142,7 +142,7 @@ public class PetActionEat extends PetAction {
 
     @Override
     protected void _clear() {
-        EntityUtil.clearPathfinders(this.getEntity());
+        this.getEntity().getPathfinder().stopPathfinding();
     }
 
     private void _eatOnePiece() {

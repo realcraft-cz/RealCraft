@@ -1,5 +1,8 @@
 package realcraft.bukkit.pets.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.PetPlayer;
 import realcraft.bukkit.pets.exceptions.pet.PetAlreadyExistsException;
 import realcraft.bukkit.pets.exceptions.player.PetPlayerVipException;
@@ -25,8 +28,15 @@ public class PetCommandCreate extends PetCommand {
             return;
         }
 
-        petPlayer.sendMessage("§dMazlik vytvoren, za chvili se vyklube", true);
-        petPlayer.getPet().getPetActions().setActionType(PetAction.PetActionType.SPAWN);
+        petPlayer.sendMessage("§dMazlik vytvoren, za chvili vyleze", true);
+        petPlayer.getPlayer().playSound(petPlayer.getPlayer(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+
+        Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                petPlayer.getPet().getPetActions().setActionType(PetAction.PetActionType.SPAWN);
+            }
+        }, 20);
     }
 
     @Override

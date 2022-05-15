@@ -41,11 +41,7 @@ public class PetActions {
     }
 
     public @NotNull PetAction getCurrentAction() {
-        return this.getAction(this.getCurrentActionType());
-    }
-
-    public @NotNull PetActionType getCurrentActionType() {
-        return currentActionType;
+        return this.getAction(currentActionType);
     }
 
     protected void _setCurrentActionType(@NotNull PetActionType currentActionType) {
@@ -53,7 +49,7 @@ public class PetActions {
 
         if (PetsManager.isDebug()) {
             if (this.getPet().getPetEntity().isLiving()) {
-                this.getPet().getPetEntity().getEntity().setCustomName(this.getCurrentActionType().toString());
+                this.getPet().getPetEntity().getEntity().setCustomName(this.currentActionType.toString());
             }
         }
     }
@@ -93,7 +89,7 @@ public class PetActions {
 
         for (PetActionType type : PetActionType.getSortedTypes()) {
             PetAction action = this.getAction(type);
-            if ((action.getType() == this.getCurrentActionType() && this.getCurrentAction().getState() == PetAction.PetActionState.RUNNING) || !action.shouldStart()) {
+            if ((action.getType() == this.currentActionType && this.getCurrentAction().getState() == PetAction.PetActionState.RUNNING) || !action.shouldStart()) {
                 continue;
             }
 

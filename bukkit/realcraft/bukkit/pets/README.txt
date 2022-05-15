@@ -9,12 +9,12 @@ Vlastnosti:
 - home location
 
 Akce:
-- NONE (pet stojí na msítì a nic nedìlá)
+- NONE (pet stojí na místì a nic nedìlá)
 - EAT (hráè hodí na zem jídlo a pet si ho sám najde a sní)
 - FOLLOW (pet sleduje hráèe, s èasem vzrùstá min vzdálenost od hráèe od které se aktivuje)
 - SIT (pet si sedne)
 - SIT BESIDE (pet si sedne na schody vedle hráèe)
-- APORT (hráè zahodí pøedmìt a pet ho sebere a pøinese zpìt)
+? APORT (hráè zahodí pøedmìt a pet ho sebere a pøinese zpìt)
 
 Povely:
 - FOLLOW

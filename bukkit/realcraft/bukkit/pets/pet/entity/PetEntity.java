@@ -4,15 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Drowned;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.ItemStack;
 import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.pets.events.pet.PetRemoveEvent;
 import realcraft.bukkit.pets.events.pet.PetSpawnEvent;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabels;
-import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.ItemUtil;
 
 public class PetEntity {
@@ -21,7 +20,7 @@ public class PetEntity {
     private final PetEntityLabels entityLabels;
     private final PetEntityEffect entityEffect;
 
-    private Zombie entity;
+    private Drowned entity;
 
     public PetEntity(Pet pet) {
         this.pet = pet;
@@ -41,7 +40,7 @@ public class PetEntity {
         return entityEffect;
     }
 
-    public Zombie getEntity() {
+    public Drowned getEntity() {
         return entity;
     }
 
@@ -64,7 +63,7 @@ public class PetEntity {
 
         location.setPitch(0f);
 
-        entity = (Zombie) location.getWorld().spawnEntity(location, EntityType.DROWNED, false);
+        entity = (Drowned) location.getWorld().spawnEntity(location, EntityType.DROWNED, false);
         entity.setInvisible(true);
         entity.setRemoveWhenFarAway(false);
         entity.setCustomNameVisible(true);
@@ -80,7 +79,9 @@ public class PetEntity {
         entity.getEquipment().setItemInOffHandDropChance(0);
         entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(64);
 
-        EntityUtil.clearPathfinders(entity);
+        entity.getPathfinder().stopPathfinding();
+        Bukkit.getMobGoals().removeAllGoals(entity);
+
         PetsManager.registerPet(this.getPet());
 
         this.getEntityEffect().start();

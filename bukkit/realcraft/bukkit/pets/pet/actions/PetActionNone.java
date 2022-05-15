@@ -9,8 +9,6 @@ public class PetActionNone extends PetAction {
 
     private static final int NONE_STATE_DELAY = 8 * 20;
 
-    private State state;
-
     public PetActionNone(Pet pet) {
         super(PetActionType.NONE, pet);
     }
@@ -41,11 +39,9 @@ public class PetActionNone extends PetAction {
 
     @Override
     protected void _start() {
-        this.state = State.NONE;
-
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
-        EntityUtil.clearPathfinders(this.getEntity());
+        this.getEntity().getPathfinder().stopPathfinding();
 
         this._startTask(NONE_STATE_DELAY, 20);
     }
@@ -61,11 +57,8 @@ public class PetActionNone extends PetAction {
 
     @Override
     protected void _clear() {
-        EntityUtil.clearPathfinders(this.getEntity());
-    }
-
-    private enum State {
-
-        NONE, WALKING
+        if (this.getEntity() != null) {
+            this.getEntity().getPathfinder().stopPathfinding();
+        }
     }
 }

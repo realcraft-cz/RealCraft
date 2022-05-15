@@ -203,7 +203,6 @@ public class PetActionSpawn extends PetAction {
         if (this.getTicks() >= 8 + 16 + 12 + 16 + 32 + 8) {
             this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_VEX_CHARGE, 1f, 1f);
             this.getEntity().teleport(this.spawnLocation.clone().add(0, 0.4, 0));
-            this.getEntity().setFreezeTicks(this.getEntity().getMaxFreezeTicks() + 60);
             for (Player player : this.getEntity().getTrackedPlayers()) {
                 BlockUtil.sendBlockDamage(player, blockLocation, 10);
             }

@@ -139,6 +139,6 @@ public class PetActionFollow extends PetAction {
     @Override
     protected void _clear() {
         this.resetDistanceLevel();
-        EntityUtil.clearPathfinders(this.getEntity());
+        this.getEntity().getPathfinder().stopPathfinding();
     }
 }
