@@ -2,7 +2,6 @@ package realcraft.bukkit.pets.pet.actions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Zombie;
-import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.PetsManager;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public abstract class PetAction implements Listener, Runnable {
+public abstract class PetAction implements Runnable {
 
     private final PetActionType type;
     private final Pet pet;

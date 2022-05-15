@@ -16,7 +16,6 @@ public class PetActionFollow extends PetAction {
     private static final int TELEPORT_DISTANCE = 32;
     private static final int MIN_DISTANCE_START = 3;
     private static final int MIN_DISTANCE_FINISH = 2;
-
     private static final int MAX_DISTANCE_LEVEL = 3;
 
     private int minDistanceLevel;
@@ -88,6 +87,7 @@ public class PetActionFollow extends PetAction {
     protected void _start() {
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
+        this.getEntity().setTarget(this.getPet().getPetPlayer().getPlayer());
         this._startTask(0, 10);
     }
 
@@ -114,9 +114,18 @@ public class PetActionFollow extends PetAction {
             return;
         }
 
-        if (distance < (MIN_DISTANCE_FINISH * MIN_DISTANCE_FINISH) * 3) {
-            this.getEntity().setTarget(this.getPet().getPetPlayer().getPlayer());
+        if (distance < (MIN_DISTANCE_FINISH * MIN_DISTANCE_FINISH) * 6) {
+            EntityUtil.navigate(this.getEntity(), targetLoc, 0.6);
+            return;
+        }
+
+        if (distance < (MIN_DISTANCE_FINISH * MIN_DISTANCE_FINISH) * 8) {
             EntityUtil.navigate(this.getEntity(), targetLoc, 0.7);
+            return;
+        }
+
+        if (distance < (MIN_DISTANCE_FINISH * MIN_DISTANCE_FINISH) * 10) {
+            EntityUtil.navigate(this.getEntity(), targetLoc, 0.8);
             return;
         }
 
@@ -124,7 +133,6 @@ public class PetActionFollow extends PetAction {
             return;
         }
 
-        this.getEntity().setTarget(this.getPet().getPetPlayer().getPlayer());
         EntityUtil.navigate(this.getEntity(), targetLoc, 1.0);
     }
 

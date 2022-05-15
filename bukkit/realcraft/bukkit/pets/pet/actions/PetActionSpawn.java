@@ -61,7 +61,7 @@ public class PetActionSpawn extends PetAction {
         tmpLocation.setPitch(0f);
 
         if (inFront) {
-            tmpLocation.add(location.getDirection().setY(0).rotateAroundY(RandomUtil.getRandomDouble(-0.7, 0.7)).multiply(RandomUtil.getRandomDouble(2, 5)));
+            tmpLocation.add(location.getDirection().setY(0).rotateAroundY(RandomUtil.getRandomDouble(-0.8, 0.8)).multiply(RandomUtil.getRandomDouble(2, 5)));
         } else {
             tmpLocation.add(RandomUtil.getRandomInteger(2, 5), 0, RandomUtil.getRandomInteger(2, 5));
         }
@@ -93,6 +93,14 @@ public class PetActionSpawn extends PetAction {
         }
 
         if (belowBlock.getType().isAir()) {
+            return false;
+        }
+
+        if (belowBlock.getType().isInteractable()) {
+            return false;
+        }
+
+        if (!belowBlock.getType().isOccluding()) {
             return false;
         }
 
