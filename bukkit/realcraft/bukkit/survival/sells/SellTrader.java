@@ -60,8 +60,8 @@ public class SellTrader implements Listener {
 	public void remove(){
 		if(entity != null && !entity.isDead()){
 			entity.remove();
-			entity = null;
 		}
+		entity = null;
 	}
 
 	public void click(Player player){

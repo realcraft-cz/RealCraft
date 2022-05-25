@@ -21,14 +21,17 @@ public class WorldLoader extends AbstractCommand {
 
         if (args.length == 0) {
             player.sendMessage("Load world");
-            player.sendMessage("/wload <name>");
+            player.sendMessage("/wload <name> [void=false]");
             return;
         }
 
         WorldCreator creator = new WorldCreator(args[0]);
-        creator.type(WorldType.FLAT);
         creator.environment(World.Environment.NORMAL);
-        creator.generator("VoidGenerator");
+
+        if (args.length == 2 && Boolean.parseBoolean(args[1])) {
+            creator.type(WorldType.FLAT);
+            creator.generator("VoidGenerator");
+        }
 
         World world = Bukkit.getServer().createWorld(creator);
         if (world == null) {
