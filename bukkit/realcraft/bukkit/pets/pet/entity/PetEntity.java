@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.pets.events.pet.PetRemoveEvent;
 import realcraft.bukkit.pets.events.pet.PetSpawnEvent;
+import realcraft.bukkit.pets.events.pet.PetTeleportEvent;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabels;
 import realcraft.bukkit.utils.ItemUtil;
@@ -42,6 +43,10 @@ public class PetEntity {
 
     public Drowned getEntity() {
         return entity;
+    }
+
+    public boolean isSpawned() {
+        return entity != null;
     }
 
     public boolean isLiving() {
@@ -92,14 +97,25 @@ public class PetEntity {
     public void remove() {
         if (this.isLiving()) {
             entity.remove();
-            entity = null;
 
             PetsManager.unregisterPet(this.getPet());
         }
+
+        entity = null;
 
         this.getEntityEffect().cancel();
         this.getEntityLabels().clear();
 
         Bukkit.getPluginManager().callEvent(new PetRemoveEvent(this.getPet()));
+    }
+
+    public void teleport(Location location) {
+        if (!this.isSpawned()) {
+            return;
+        }
+
+        Location from = entity.getLocation();
+        entity.teleport(location);
+        Bukkit.getPluginManager().callEvent(new PetTeleportEvent(this.getPet(), from, location));
     }
 }

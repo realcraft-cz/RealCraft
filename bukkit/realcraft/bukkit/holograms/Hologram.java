@@ -54,9 +54,11 @@ public class Hologram {
     }
 
     public void spawn(Player player, Location location) {
-        players.add(player);
         this.location = location;
-        this.getPackets().getSpawnPacket().send(player);
+        if (!players.contains(player)) {
+            players.add(player);
+            this.getPackets().getSpawnPacket().send(player);
+        }
         this.getPackets().getPostSpawnPacket().send(player);
     }
 

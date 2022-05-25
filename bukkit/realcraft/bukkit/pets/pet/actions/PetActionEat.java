@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.data.PetDataFood;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
 import realcraft.bukkit.pets.pet.entity.labels.PetEntityLabelProgress;
 import realcraft.bukkit.utils.EntityUtil;
@@ -21,14 +22,13 @@ public class PetActionEat extends PetAction {
     private static final HashMap<Material, Food> FOODS = new HashMap<>();
     private static final double MAX_FOOD_DISTANCE = 5.0;
     private static final double FOOD_REACH_DISTANCE = 1.5;
-    private static final int SAME_LOCATION_THRESHOLD = 4;
+    private static final int NOT_MOVING_THRESHOLD = 4;
 
     private State state;
     private Item foodItem;
     private ItemStack foodItemStack;
 
-    private Location entityLastLocation;
-    private int sameLocationCounter;
+    private int notMovingCounter;
     private int maxFoodSteps;
 
     public PetActionEat(Pet pet) {
@@ -41,9 +41,13 @@ public class PetActionEat extends PetAction {
             return false;
         }
 
+        if (!this.getPet().getPetEntity().isLiving()) {
+            return false;
+        }
+
         for (Entity entity : this.getEntity().getLocation().getNearbyEntities(MAX_FOOD_DISTANCE, 2.2, MAX_FOOD_DISTANCE)) {
             if (entity.getType() == EntityType.DROPPED_ITEM && entity.isOnGround()) {
-                if (this.getFood(((Item) entity).getItemStack().getType()) != null) {
+                if (this.getFood(((Item) entity).getItemStack().getType()) != null && this.getEntity().hasLineOfSight(entity)) {
                     return true;
                 }
             }
@@ -59,8 +63,7 @@ public class PetActionEat extends PetAction {
         }
 
         this.state = State.MOVING;
-        this.entityLastLocation = this.getEntity().getLocation();
-        this.sameLocationCounter = 0;
+        this.notMovingCounter = 0;
         this.maxFoodSteps = 1;
 
         this.getEntity().setAI(true);
@@ -81,6 +84,10 @@ public class PetActionEat extends PetAction {
 
     @Override
     protected void _run() {
+        if (!this.getPet().getPetEntity().isLiving()) {
+            return;
+        }
+
         if (this.state == State.MOVING) {
             if (!this.foodItem.isValid()) {
                 this.cancel();
@@ -90,12 +97,23 @@ public class PetActionEat extends PetAction {
             Location targetLoc = this.foodItem.getLocation();
             double distance = this.getEntity().getLocation().distance(targetLoc);
 
-            if (distance > MAX_FOOD_DISTANCE + 2 || sameLocationCounter >= SAME_LOCATION_THRESHOLD) {
+            if (distance > MAX_FOOD_DISTANCE + 2) {
                 this.cancel();
                 return;
             }
 
             boolean isMoving = Math.abs(this.getEntity().getVelocity().getX()) > 0.01 || Math.abs(this.getEntity().getVelocity().getZ()) > 0.01 || Math.abs(this.getEntity().getVelocity().getY()) > 0.1;
+
+            if (!isMoving) {
+                notMovingCounter ++;
+
+                if (notMovingCounter >= NOT_MOVING_THRESHOLD) {
+                    this.cancel();
+                    return;
+                }
+            } else {
+                notMovingCounter = 0;
+            }
 
             if (distance < FOOD_REACH_DISTANCE && !isMoving) {
                 this.getEntity().playPickupItemAnimation(this.foodItem);
@@ -111,10 +129,6 @@ public class PetActionEat extends PetAction {
                 this.state = State.EATING;
                 this._startTask(4);
                 return;
-            }
-
-            if (this.getEntity().getLocation().equals(entityLastLocation)) {
-                sameLocationCounter ++;
             }
 
             if (LocationUtil.isSimilar(EntityUtil.getTargetLocation(this.getEntity()), targetLoc)) {
@@ -136,8 +150,6 @@ public class PetActionEat extends PetAction {
                 this._finish();
             }
         }
-
-        this.entityLastLocation = this.getEntity().getLocation();
     }
 
     @Override
@@ -155,9 +167,10 @@ public class PetActionEat extends PetAction {
                 oldFoodValue,
                 PetActionEat.this.getPet().getPetData().getFood().getMaxValue(),
                 PetActionEat.this.getPet().getPetData().getFood().getValue() - oldFoodValue,
-                ChatColor.GOLD,
+                PetDataFood.COLOR,
                 ChatColor.GRAY,
-                ChatColor.GREEN
+                ChatColor.GREEN,
+                PetDataFood.CHAR
             ), 20);
         }
     }
@@ -169,11 +182,14 @@ public class PetActionEat extends PetAction {
                 PetActionEat.this.getPet().getPetEntity().getEntityLabels().showProgress(new PetEntityLabelProgress.ProgressOptions(
                     PetActionEat.this.getPet().getPetData().getFood().getValue(),
                     PetActionEat.this.getPet().getPetData().getFood().getMaxValue(),
-                    ChatColor.GOLD,
-                    ChatColor.GRAY
+                    0,
+                    PetDataFood.COLOR,
+                    ChatColor.GRAY,
+                    ChatColor.WHITE,
+                    PetDataFood.CHAR
                 ), 20);
             }
-        }, 6);
+        }, 12);
 
         if (this.getPet().getPetData().getFood().getValue() == this.getPet().getPetData().getFood().getMaxValue()) {
             this.getEntity().getWorld().playSound(getEntity().getLocation(), Sound.ENTITY_PLAYER_BURP, 0.7f, 1f);

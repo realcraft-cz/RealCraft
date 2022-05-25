@@ -12,9 +12,11 @@ import realcraft.bukkit.utils.LocationUtil;
 public class PetActionHome extends PetAction {
 
     private static final double HOME_REACH_DISTANCE = 1.5;
+    private static final int NOT_MOVING_THRESHOLD = 4;
 
     private State state;
     private Location targetLocation;
+    private int notMovingCounter;
 
     public PetActionHome(Pet pet) {
         super(PetActionType.HOME, pet);
@@ -27,12 +29,21 @@ public class PetActionHome extends PetAction {
 
     @Override
     public boolean shouldStart() {
-        return (this.getPet().getPetData().getMode().getType() == PetDataMode.PetDataModeType.HOME && this.getPet().getPetData().getHome().getLocation() != null);
+        if (this.getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.HOME) {
+            return false;
+        }
+
+        if (this.getPet().getPetData().getHome().getLocation() == null) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
     protected void _start() {
         this.state = State.MOVING;
+        this.notMovingCounter = 0;
 
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
@@ -56,7 +67,7 @@ public class PetActionHome extends PetAction {
         if (this.state != State.SITTING && !this.getPet().getPetEntity().isTicking()) {
             this.getEntity().setAI(false);
             this.getEntity().setGravity(false);
-            this.getEntity().teleport(targetLocation);
+            this.getPetEntity().teleport(targetLocation);
             this.state = State.SITTING;
             this._startTask(40);
             return;
@@ -65,6 +76,14 @@ public class PetActionHome extends PetAction {
         if (this.state == State.MOVING) {
             boolean isMoving = Math.abs(this.getEntity().getVelocity().getX()) > 0.01 || Math.abs(this.getEntity().getVelocity().getZ()) > 0.01 || Math.abs(this.getEntity().getVelocity().getY()) > 0.1;
             if (!isMoving) {
+                notMovingCounter ++;
+
+                if (notMovingCounter >= NOT_MOVING_THRESHOLD) {
+                    this.getPet().getPetData().getMode().setType(PetDataMode.PetDataModeType.FOLLOW);
+                    this.cancel();
+                    return;
+                }
+
                 double distance = this.getEntity().getLocation().distance(this.targetLocation);
 
                 if (distance < HOME_REACH_DISTANCE) {
@@ -74,13 +93,15 @@ public class PetActionHome extends PetAction {
                     location.setYaw(this.getEntity().getLocation().getYaw());
 
                     this.getEntity().setAI(false);
-                    this.getEntity().teleport(location);
+                    this.getPetEntity().teleport(location);
                     this.getEntity().setRotation(location.getYaw(), 50);
                     this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.5f, 2f);
 
                     this._startTask(1, 10);
                     return;
                 }
+            } else {
+                notMovingCounter = 0;
             }
 
             if (LocationUtil.isSimilar(EntityUtil.getTargetLocation(this.getEntity()), this.targetLocation)) {
@@ -104,7 +125,7 @@ public class PetActionHome extends PetAction {
                             return;
                         }
 
-                        getEntity().teleport(getEntity().getLocation().add(0, -0.08, 0));
+                        getPetEntity().teleport(getEntity().getLocation().add(0, -0.08, 0));
                         getEntity().setRotation(getEntity().getLocation().getYaw() + ((targetLocation.getYaw() - getEntity().getLocation().getYaw()) / 10), getEntity().getLocation().getPitch() - 5);
                     }
                 }, i * 2);
@@ -117,23 +138,19 @@ public class PetActionHome extends PetAction {
                         return;
                     }
 
-                    getEntity().teleport(targetLocation);
+                    getPetEntity().teleport(targetLocation);
                     state = State.SITTING;
                     _startTask(40);
                 }
             }, (9 * 2) + 2);
-        } else if (this.state == State.SITTING) {
-            if (!LocationUtil.isSimilar(this.targetLocation, this.getEntity().getLocation())) {
-                this.getPet().getPetData().getMode().setType(PetDataMode.PetDataModeType.FOLLOW);
-                this.finish();
-            }
         }
     }
 
     @Override
     protected void _clear() {
         if (this.state == State.SITTING || this.state == State.DROPPING) {
-            this.getEntity().teleport(this.getEntity().getLocation().clone().add(0, 1, 0));
+            this.getEntity().setGravity(true);
+            this.getEntity().setJumping(true);
             this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.5f, 2f);
         }
     }

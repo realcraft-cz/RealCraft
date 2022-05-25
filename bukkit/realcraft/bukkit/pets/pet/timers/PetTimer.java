@@ -24,11 +24,11 @@ public abstract class PetTimer {
         return pet;
     }
 
-    public boolean shouldRun() {
+    public final boolean shouldRun() {
         return Bukkit.getCurrentTick() >= lastRunTick + this.getType().getPeriod();
     }
 
-    public void run() {
+    public final void run() {
         lastRunTick = Bukkit.getCurrentTick();
         this._run();
     }
@@ -40,8 +40,11 @@ public abstract class PetTimer {
         LIVE            (20, PetTimerLive.class),
         ACTIONS         (20, PetTimerActions.class),
         SAVE            (60 * 20, PetTimerSave.class),
+        HEALTH          (12 * 20, PetTimerHealth.class),
         FOOD            (10 * 20, PetTimerFood.class),
+        HEAT            (5 * 20, PetTimerHeat.class),
         FOLLOW_LEVEL    (10 * 20, PetTimerFollowLevel.class),
+        STAT_DISTANCE   (2 * 20, PetTimerStatDistance.class),
         ;
 
         private final int period;

@@ -28,7 +28,9 @@ public class PetCommandCreate extends PetCommand {
             return;
         }
 
-        petPlayer.sendMessage("§dMazlik vytvoren, za chvili vyleze", true);
+        petPlayer.sendMessage("");
+        petPlayer.sendMessage("§dMazlik vytvoren, za chvili vyleze");
+        petPlayer.sendMessage("§7Vlastnosti mazlika muzes nastavit prikazem §6/pet");
         petPlayer.getPlayer().playSound(petPlayer.getPlayer(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
 
         Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {

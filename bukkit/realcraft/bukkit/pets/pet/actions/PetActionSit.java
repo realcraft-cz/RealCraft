@@ -9,6 +9,7 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
 import realcraft.bukkit.utils.LocationUtil;
+import realcraft.bukkit.wrappers.SafeLocation;
 
 public class PetActionSit extends PetAction {
 
@@ -26,7 +27,19 @@ public class PetActionSit extends PetAction {
 
     @Override
     public boolean shouldStart() {
-        return (this.getPet().getPetData().getMode().getType() == PetDataMode.PetDataModeType.SIT && this.getEntity().getLocation().getBlock().getRelative(BlockFace.DOWN).isSolid());
+        if (this.getPet().getPetData().getMode().getType() != PetDataMode.PetDataModeType.SIT) {
+            return false;
+        }
+
+        if (!this.getEntity().getLocation().getBlock().getRelative(BlockFace.DOWN).isSolid()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public Location getSitLocation() {
+        return sitLocation;
     }
 
     @Override
@@ -61,7 +74,7 @@ public class PetActionSit extends PetAction {
         }
 
         Player player = this.getPet().getPetPlayer().getPlayer();
-        Location lookLocation = player.getLocation();
+        Location lookLocation = new SafeLocation(player.getLocation());
 
         if (lookLocation.distanceSquared(this.getEntity().getLocation()) <= MAX_LOOK_DISTANCE * MAX_LOOK_DISTANCE) {
             lookLocation = this.getEntity().getLocation().setDirection(player.getLocation().subtract(this.getEntity().getLocation()).toVector());
@@ -81,7 +94,6 @@ public class PetActionSit extends PetAction {
     @Override
     protected void _clear() {
         this.getEntity().setGravity(true);
-        this.getEntity().teleport(this.getEntity().getLocation().clone().add(0, 1, 0));
-        this.getEntity().setVelocity(new Vector(0, 0, 0));
+        this.getEntity().setJumping(true);
     }
 }

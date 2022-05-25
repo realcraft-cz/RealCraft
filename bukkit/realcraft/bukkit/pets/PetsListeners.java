@@ -70,7 +70,7 @@ public class PetsListeners implements Listener {
                 }
 
                 pet.getPetActions().setActionType(PetAction.PetActionType.NONE);
-                event.getEntity().teleport(LocationUtil.getSafeDestination(event.getEntity().getLocation()));
+                pet.getPetEntity().teleport(LocationUtil.getSafeDestination(event.getEntity().getLocation()));
             }
         }
     }
@@ -123,6 +123,13 @@ public class PetsListeners implements Listener {
     }
 
     @EventHandler
+    public void PetTeleportEvent(PetTeleportEvent event) {
+        if (!event.getFrom().getWorld().getName().equals(event.getTo().getWorld().getName())) {
+            event.getPet().getPetEntity().spawn(event.getTo());
+        }
+    }
+
+    @EventHandler
     public void PetActionFinishEvent(PetActionFinishEvent event) {
         Pet pet = event.getPet();
 
@@ -143,6 +150,8 @@ public class PetsListeners implements Listener {
 
     @EventHandler
     public void PetClickEvent(PetClickEvent event) {
+        ((PetActionFollow)event.getPet().getPetActions().getAction(PetAction.PetActionType.FOLLOW)).resetDistanceLevel();
+
         if (event.getPet().getPetActions().getCurrentAction().getType() == PetAction.PetActionType.NONE) {
             event.getPet().getPetActions().getCurrentAction().start();
         }

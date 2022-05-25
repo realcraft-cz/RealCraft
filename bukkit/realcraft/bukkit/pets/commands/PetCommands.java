@@ -2,6 +2,7 @@ package realcraft.bukkit.pets.commands;
 
 import org.bukkit.entity.Player;
 import realcraft.bukkit.others.AbstractCommand;
+import realcraft.bukkit.pets.PetPlayer;
 import realcraft.bukkit.pets.PetsManager;
 
 import java.util.ArrayList;
@@ -16,25 +17,42 @@ public class PetCommands extends AbstractCommand {
         super("pet");
 
         commands = new PetCommand[]{
+            new PetCommandHelp(),
             new PetCommandInfo(),
             new PetCommandCreate(),
             new PetCommandDelete(),
             new PetCommandEffect(),
             new PetCommandSkin(),
             new PetCommandHome(),
+            new PetCommandTp(),
         };
     }
 
     @Override
     public void perform(Player player, String[] args) {
-        if (!PetsManager.getPetPlayer(player).hasPermissions()) {
+        PetPlayer petPlayer = PetsManager.getPetPlayer(player);
+
+        if (!petPlayer.hasPermissions()) {
             player.sendMessage("§cPouze VIP clenove muzou mit mazlika");
             return;
         }
 
         if (args.length == 0) {
-            player.sendMessage("§7§m" + " ".repeat(10) + "§r §d§lPets §7§m" + " ".repeat(47 - "Pets".length()));
-            player.sendMessage("§6/pet info §f- Informace o mazlikovi");
+            petPlayer.sendMessage("§7§m" + " ".repeat(10) + "§r §d§lMazlik §7§m" + " ".repeat(47 - "Mazlik".length()));
+            if (!petPlayer.hasPet()) {
+                petPlayer.sendMessage("§6/pet help §f- Podrobna napoveda");
+                petPlayer.sendMessage("§6/pet create §f- Vytvoreni mazlika");
+                petPlayer.sendMessage("§7Dalsi prikazy se zobrazi po vytvoreni mazlika");
+                return;
+            }
+
+            petPlayer.sendMessage("§6/pet help §f- Podrobna napoveda");
+            petPlayer.sendMessage("§6/pet info §f- Informace o mazlikovi");
+            petPlayer.sendMessage("§6/pet tp §f- Teleport k mazlikovi");
+            petPlayer.sendMessage("§6/pet skin §f- Nastaveni skinu mazlika");
+            petPlayer.sendMessage("§6/pet effect §f- Nastaveni efektu mazlika");
+            petPlayer.sendMessage("§6/pet home §f- Nastaveni domova mazlika");
+            petPlayer.sendMessage("§6/pet delete §f- Smazani mazlika");
             return;
         }
 
@@ -43,9 +61,12 @@ public class PetCommands extends AbstractCommand {
 
         for (PetCommand command : commands) {
             if (command.match(subcommand)) {
-                command.perform(PetsManager.getPetPlayer(player), args);
+                command.perform(petPlayer, args);
+                return;
             }
         }
+
+        this.perform(player, new String[]{});
     }
 
     @Override

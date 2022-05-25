@@ -3,13 +3,13 @@ package realcraft.bukkit.pets.pet.data;
 import org.bukkit.ChatColor;
 import realcraft.bukkit.pets.pet.Pet;
 
-public class PetDataFood extends PetDataIntegerRange {
+public class PetDataHealth extends PetDataIntegerRange {
 
-    public static final String CHAR = "\u2726";
-    public static final ChatColor COLOR = ChatColor.GOLD;
+    public static final String CHAR = "\u2764";
+    public static final ChatColor COLOR = ChatColor.RED;
 
-    public PetDataFood(Pet pet) {
-        super("food", pet);
+    public PetDataHealth(Pet pet) {
+        super("health", pet);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class PetDataFood extends PetDataIntegerRange {
 
     @Override
     public int getMinValue() {
-        return 0;
+        return 1;
     }
 
     @Override

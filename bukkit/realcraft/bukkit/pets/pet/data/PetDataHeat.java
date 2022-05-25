@@ -1,15 +1,11 @@
 package realcraft.bukkit.pets.pet.data;
 
-import org.bukkit.ChatColor;
 import realcraft.bukkit.pets.pet.Pet;
 
-public class PetDataFood extends PetDataIntegerRange {
+public class PetDataHeat extends PetDataIntegerRange {
 
-    public static final String CHAR = "\u2726";
-    public static final ChatColor COLOR = ChatColor.GOLD;
-
-    public PetDataFood(Pet pet) {
-        super("food", pet);
+    public PetDataHeat(Pet pet) {
+        super("heat", pet);
     }
 
     @Override
@@ -28,6 +24,6 @@ public class PetDataFood extends PetDataIntegerRange {
 
     @Override
     public int getMaxValue() {
-        return 5;
+        return 10;
     }
 }

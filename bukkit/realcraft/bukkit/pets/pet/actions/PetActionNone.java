@@ -1,9 +1,11 @@
 package realcraft.bukkit.pets.pet.actions;
 
-import org.bukkit.Location;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.timers.PetTimer;
+import realcraft.bukkit.pets.pet.timers.PetTimerHeat;
 import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.RandomUtil;
+import realcraft.bukkit.wrappers.SafeLocation;
 
 public class PetActionNone extends PetAction {
 
@@ -23,15 +25,21 @@ public class PetActionNone extends PetAction {
         return this.getPet().getPetActions().getCurrentAction().getState() != PetAction.PetActionState.RUNNING;
     }
 
-    private Location _getRandomLocation() {
-        Location location = this.getEntity().getLocation().add(RandomUtil.getRandomInteger(-4, 4), 0, RandomUtil.getRandomInteger(-4, 4));
+    private SafeLocation _getRandomLocation() {
+        SafeLocation location = new SafeLocation(this.getEntity().getLocation().add(RandomUtil.getRandomInteger(-4, 4), 0, RandomUtil.getRandomInteger(-4, 4)));
         double distance = location.distanceSquared(this.getPet().getPetPlayer().getPlayer().getLocation());
 
         int minDistance = ((PetActionFollow) this.getPet().getPetActions().getAction(PetActionType.FOLLOW)).getMinDistance();
         if (distance >= minDistance * minDistance) {
-            location = this.getEntity().getLocation();
-            location.add(this.getPet().getPetPlayer().getPlayer().getLocation().subtract(location).toVector().normalize().multiply(2));
+            location = new SafeLocation(this.getEntity().getLocation());
+            location.add(new SafeLocation(this.getPet().getPetPlayer().getPlayer().getLocation()).subtract(location).toVector().normalize().multiply(2));
             location.add(RandomUtil.getRandomInteger(-1, 1), 0, RandomUtil.getRandomInteger(-1, 1));
+        }
+
+        PetTimerHeat heatTimer = ((PetTimerHeat)this.getPet().getPetTimers().getTimer(PetTimer.PetTimerType.HEAT));
+        if (heatTimer.isFreezing() && heatTimer.getClosestHeatSource() != null) {
+            location = heatTimer.getClosestHeatSource().clone();
+            location.add(RandomUtil.getRandomInteger(-3, 3), 0, RandomUtil.getRandomInteger(-3, 3));
         }
 
         return location;
@@ -49,6 +57,10 @@ public class PetActionNone extends PetAction {
     @Override
     protected void _run() {
         if (this.getTicks() % 80 != 0) {
+            return;
+        }
+
+        if (!this.getPet().getPetEntity().isLiving()) {
             return;
         }
 

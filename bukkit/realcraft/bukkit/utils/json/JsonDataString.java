@@ -37,7 +37,7 @@ public class JsonDataString extends JsonDataEntry {
 	public void loadData(JsonData data){
 		if(data.containsKey(this.getName())){
 			JsonDataString tmp = new JsonDataString(data.getElement(this.getName()));
-			value = tmp.getValue();
+			this.setValue(tmp.getValue());
 		}
 	}
 

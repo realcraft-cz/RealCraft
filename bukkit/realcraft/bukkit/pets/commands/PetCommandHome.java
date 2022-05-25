@@ -20,6 +20,11 @@ public class PetCommandHome extends PetCommand {
             return;
         }
 
+        if (args.length == 1 && args[0].equals("teleport") && pet.getPetData().getHome().getLocation() != null) {
+            petPlayer.getPlayer().teleportAsync(pet.getPetData().getHome().getLocation());
+            return;
+        }
+
         pet.getPetData().getHome().setLocation(petPlayer.getPlayer().getLocation());
 
         petPlayer.sendMessage("§dDomov mazlika nastaven");

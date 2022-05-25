@@ -9,6 +9,7 @@ import realcraft.bukkit.pets.events.pet.PetActionCancelEvent;
 import realcraft.bukkit.pets.events.pet.PetActionFinishEvent;
 import realcraft.bukkit.pets.events.pet.PetActionStartEvent;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.entity.PetEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,10 @@ public abstract class PetAction implements Runnable {
 
     public Pet getPet() {
         return pet;
+    }
+
+    public PetEntity getPetEntity() {
+        return this.getPet().getPetEntity();
     }
 
     public Zombie getEntity() {
@@ -93,7 +98,7 @@ public abstract class PetAction implements Runnable {
     public final void run() {
         this.ticks += this.period;
 
-        if (this.getEntity() == null) {
+        if (!this.getPet().getPetEntity().isSpawned()) {
             this.state = PetActionState.CANCELLED;
             this._stopTask();
             return;
@@ -137,7 +142,6 @@ public abstract class PetAction implements Runnable {
         ;
 
         private final int priority;
-        //private final int period;
         private final Class<?> clazz;
         private static final PetActionType[] sortedTypes;
 

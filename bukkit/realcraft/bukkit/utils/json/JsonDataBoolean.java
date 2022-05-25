@@ -41,7 +41,7 @@ public class JsonDataBoolean extends JsonDataEntry {
 	public void loadData(JsonData data){
 		if(data.containsKey(this.getName())){
 			JsonDataBoolean tmp = new JsonDataBoolean(data.getElement(this.getName()));
-			value = tmp.getValue();
+			this.setValue(tmp.getValue());
 		}
 	}
 

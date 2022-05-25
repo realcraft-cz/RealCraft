@@ -15,6 +15,7 @@ import realcraft.bukkit.pets.pet.data.PetDataMode;
 import realcraft.bukkit.sitting.Sitting;
 import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.LocationUtil;
+import realcraft.bukkit.wrappers.SafeLocation;
 
 public class PetActionSitBeside extends PetAction {
 
@@ -40,11 +41,15 @@ public class PetActionSitBeside extends PetAction {
             return false;
         }
 
+        if (!this.getPet().getPetEntity().isLiving()) {
+            return false;
+        }
+
         if (!Sitting.isPlayerSitting(this.getPet().getPetPlayer().getPlayer())) {
             return false;
         }
 
-        if (this.getEntity().getLocation().distanceSquared(this.getPet().getPetPlayer().getPlayer().getLocation()) > MAX_DISTANCE_START * MAX_DISTANCE_START) {
+        if (new SafeLocation(this.getEntity().getLocation()).distanceSquared(this.getPet().getPetPlayer().getPlayer().getLocation()) > MAX_DISTANCE_START * MAX_DISTANCE_START) {
             return false;
         }
 
@@ -124,6 +129,10 @@ public class PetActionSitBeside extends PetAction {
             return;
         }
 
+        if (!this.getPet().getPetEntity().isLiving()) {
+            return;
+        }
+
         if (this.state == State.MOVING) {
             boolean isMoving = Math.abs(this.getEntity().getVelocity().getX()) > 0.01 || Math.abs(this.getEntity().getVelocity().getZ()) > 0.01 || Math.abs(this.getEntity().getVelocity().getY()) > 0.1;
             if (!isMoving) {
@@ -165,8 +174,7 @@ public class PetActionSitBeside extends PetAction {
     @Override
     protected void _clear() {
         this.getEntity().setGravity(true);
-        this.getEntity().teleport(this.getEntity().getLocation().clone().add(0, 0.5, 0));
-        this.getEntity().setVelocity(new Vector(0, 0, 0));
+        this.getEntity().setJumping(true);
     }
 
     private enum State {

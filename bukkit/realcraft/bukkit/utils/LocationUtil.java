@@ -379,4 +379,22 @@ public class LocationUtil {
 			return head.getRelative(BlockFace.NORTH);
 		}
 	}
+
+	public static List<Block> getNearbyBlocks(Location location, int radius) {
+		if (radius < 0) {
+			return new ArrayList<>(0);
+		}
+
+		int iterations = (radius * 2) + 1;
+		List<Block> blocks = new ArrayList<>(iterations * iterations * iterations);
+		for (int x = -radius; x <= radius; x++) {
+			for (int y = -radius; y <= radius; y++) {
+				for (int z = -radius; z <= radius; z++) {
+					blocks.add(location.getBlock().getRelative(x, y, z));
+				}
+			}
+		}
+
+		return blocks;
+	}
 }

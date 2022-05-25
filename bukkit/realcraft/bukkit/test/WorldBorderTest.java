@@ -32,7 +32,7 @@ public class WorldBorderTest {
     public static void main(String[] args) {
         //System.out.println(UUID.nameUUIDFromBytes(("OfflinePlayer:"+"FluBoo").getBytes(Charsets.UTF_8)));
 
-        (new WorldBorderTest()).run(8000);
+        (new WorldBorderTest()).run(5000);
     }
 
     public void run(int radius) {

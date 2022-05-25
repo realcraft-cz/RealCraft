@@ -21,6 +21,7 @@ public class Test {
 			new EntityTest();
 			new CombatTest();
 			new AdvancementTest();
+			new SwimTest();
 		}
 	}
 }

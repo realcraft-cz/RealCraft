@@ -7,30 +7,30 @@ public class PetData {
 
     private final Pet pet;
 
-    private final PetDataName name;
     private final PetDataSkin skin;
     private final PetDataEffect effect;
+    private final PetDataHealth health;
+    private final PetDataHeat heat;
     private final PetDataFood food;
     private final PetDataMode mode;
     private final PetDataHome home;
+    private final PetDataStatDistance statDistance;
 
     public PetData(Pet pet) {
         this.pet = pet;
 
-        this.name = new PetDataName(this.getPet());
         this.skin = new PetDataSkin(this.getPet());
         this.effect = new PetDataEffect(this.getPet());
+        this.health = new PetDataHealth(this.getPet());
+        this.heat = new PetDataHeat(this.getPet());
         this.food = new PetDataFood(this.getPet());
         this.mode = new PetDataMode(this.getPet());
         this.home = new PetDataHome(this.getPet());
+        this.statDistance = new PetDataStatDistance(this.getPet());
     }
 
     public Pet getPet() {
         return pet;
-    }
-
-    public PetDataName getName() {
-        return name;
     }
 
     public PetDataSkin getSkin() {
@@ -39,6 +39,14 @@ public class PetData {
 
     public PetDataEffect getEffect() {
         return effect;
+    }
+
+    public PetDataHealth getHealth() {
+        return health;
+    }
+
+    public PetDataHeat getHeat() {
+        return heat;
     }
 
     public PetDataFood getFood() {
@@ -53,25 +61,33 @@ public class PetData {
         return home;
     }
 
+    public PetDataStatDistance getStatDistance() {
+        return statDistance;
+    }
+
     public JsonData getJsonData() {
         JsonData data = new JsonData();
 
-        data.addProperty(name);
         data.addProperty(skin);
         data.addProperty(effect);
+        data.addProperty(health);
+        data.addProperty(heat);
         data.addProperty(food);
         data.addProperty(mode);
         data.addProperty(home);
+        data.addProperty(statDistance);
 
         return data;
     }
 
     public void loadData(JsonData data) {
-        name.loadData(data);
         skin.loadData(data);
         effect.loadData(data);
+        health.loadData(data);
+        heat.loadData(data);
         food.loadData(data);
         mode.loadData(data);
         home.loadData(data);
+        statDistance.loadData(data);
     }
 }

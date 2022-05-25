@@ -41,7 +41,7 @@ public class JsonDataInteger extends JsonDataEntry {
 	public void loadData(JsonData data){
 		if(data.containsKey(this.getName())){
 			JsonDataInteger tmp = new JsonDataInteger(data.getElement(this.getName()));
-			value = tmp.getValue();
+			this.setValue(tmp.getValue());
 		}
 	}
 

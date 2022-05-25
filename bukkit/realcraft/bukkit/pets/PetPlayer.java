@@ -38,6 +38,10 @@ public class PetPlayer {
         return player;
     }
 
+    public boolean hasPet() {
+        return this.getPet() != null;
+    }
+
     public @Nullable Pet getPet() {
         return pet;
     }

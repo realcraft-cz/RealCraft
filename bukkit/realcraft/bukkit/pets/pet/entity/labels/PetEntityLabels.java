@@ -28,6 +28,10 @@ public class PetEntityLabels implements Runnable {
         return petEntity;
     }
 
+    public PetEntityLabelText getLabelText() {
+        return labelText;
+    }
+
     public void showText(String text, int duration) {
         if (currentLabel != null && currentLabel.getType() != PetEntityLabel.PetEntityLabelType.TEXT) {
             currentLabel.remove();
@@ -37,13 +41,26 @@ public class PetEntityLabels implements Runnable {
         this._start(labelText, duration);
     }
 
+    public PetEntityLabelProgress getLabelProgress() {
+        return labelProgress;
+    }
+
     public void showProgress(PetEntityLabelProgress.ProgressOptions options, int duration) {
+        this.showProgress(null, options, duration);
+    }
+
+    public void showProgress(String name, PetEntityLabelProgress.ProgressOptions options, int duration) {
         if (currentLabel != null && currentLabel.getType() != PetEntityLabel.PetEntityLabelType.PROGRESS) {
             currentLabel.remove();
         }
 
+        labelProgress.setName(name);
         labelProgress.setOptions(options);
         this._start(labelProgress, duration);
+    }
+
+    public PetEntityLabelModes getLabelModes() {
+        return labelModes;
     }
 
     public boolean showModes(PetDataMode.PetDataModeType defaultType, int duration) {
@@ -60,10 +77,6 @@ public class PetEntityLabels implements Runnable {
         this._start(labelModes, duration);
 
         return isVisible;
-    }
-
-    public PetEntityLabelModes getLabelModes() {
-        return labelModes;
     }
 
     private void _start(PetEntityLabel label, int duration) {

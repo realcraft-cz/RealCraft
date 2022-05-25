@@ -44,7 +44,7 @@ public class PetCommandDelete extends PetCommand {
             return;
         }
 
-        petPlayer.sendMessage("§dMazlik smazan", true);
+        petPlayer.sendMessage("§dMazlik smazan");
         petPlayer.getPlayer().playSound(petPlayer.getPlayer(), Sound.ENTITY_ZOMBIE_INFECT, 1f, 0.5f);
     }
 

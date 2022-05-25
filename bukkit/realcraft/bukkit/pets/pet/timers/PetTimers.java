@@ -4,22 +4,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.timers.PetTimer.PetTimerType;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PetTimers implements Runnable {
 
     private final Pet pet;
-    private final ArrayList<PetTimer> timers = new ArrayList<>();
+    private final HashMap<PetTimerType, PetTimer> timers = new HashMap<>();
 
     private BukkitTask task;
 
     public PetTimers(Pet pet) {
         this.pet = pet;
 
-        for (PetTimer.PetTimerType type : PetTimer.PetTimerType.values()) {
-            timers.add(this._getNewTimer(type));
+        for (PetTimerType type : PetTimerType.values()) {
+            try {
+                PetTimer timer = (PetTimer) type.getClazz().getConstructor(Pet.class).newInstance(this.getPet());
+                timers.put(type, timer);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -27,9 +33,13 @@ public class PetTimers implements Runnable {
         return pet;
     }
 
+    public PetTimer getTimer(PetTimerType type) {
+        return timers.get(type);
+    }
+
     @Override
     public void run() {
-        for (PetTimer timer : timers) {
+        for (PetTimer timer : timers.values()) {
             if (timer.shouldRun()) {
                 timer.run();
             }
@@ -46,15 +56,5 @@ public class PetTimers implements Runnable {
             task.cancel();
             task = null;
         }
-    }
-
-    protected PetTimer _getNewTimer(PetTimer.PetTimerType type) {
-        try {
-            return (PetTimer) type.getClazz().getConstructor(Pet.class).newInstance(this.getPet());
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 }
