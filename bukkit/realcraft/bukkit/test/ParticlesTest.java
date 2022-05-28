@@ -54,7 +54,7 @@ public class ParticlesTest extends AbstractCommand {
             } else {
                 String search = args[0].toUpperCase();
                 for (Particle particle : Particle.values()) {
-                    if (particle.toString().startsWith(search)) {
+                    if (particle.toString().contains(search)) {
                         completions.add(particle.toString());
                     }
                 }

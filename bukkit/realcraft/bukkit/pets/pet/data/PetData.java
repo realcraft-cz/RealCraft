@@ -15,6 +15,7 @@ public class PetData {
     private final PetDataMode mode;
     private final PetDataHome home;
     private final PetDataStatDistance statDistance;
+    private final PetDataStatKills statKills;
 
     public PetData(Pet pet) {
         this.pet = pet;
@@ -27,6 +28,7 @@ public class PetData {
         this.mode = new PetDataMode(this.getPet());
         this.home = new PetDataHome(this.getPet());
         this.statDistance = new PetDataStatDistance(this.getPet());
+        this.statKills = new PetDataStatKills(this.getPet());
     }
 
     public Pet getPet() {
@@ -65,6 +67,10 @@ public class PetData {
         return statDistance;
     }
 
+    public PetDataStatKills getStatKills() {
+        return statKills;
+    }
+
     public JsonData getJsonData() {
         JsonData data = new JsonData();
 
@@ -76,6 +82,7 @@ public class PetData {
         data.addProperty(mode);
         data.addProperty(home);
         data.addProperty(statDistance);
+        data.addProperty(statKills);
 
         return data;
     }
@@ -89,5 +96,6 @@ public class PetData {
         mode.loadData(data);
         home.loadData(data);
         statDistance.loadData(data);
+        statKills.loadData(data);
     }
 }

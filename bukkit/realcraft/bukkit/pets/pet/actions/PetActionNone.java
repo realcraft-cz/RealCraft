@@ -1,9 +1,11 @@
 package realcraft.bukkit.pets.pet.actions;
 
+import org.bukkit.Location;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.timers.PetTimer;
 import realcraft.bukkit.pets.pet.timers.PetTimerHeat;
 import realcraft.bukkit.utils.EntityUtil;
+import realcraft.bukkit.utils.LocationUtil;
 import realcraft.bukkit.utils.RandomUtil;
 import realcraft.bukkit.wrappers.SafeLocation;
 
@@ -36,6 +38,21 @@ public class PetActionNone extends PetAction {
             location.add(RandomUtil.getRandomInteger(-1, 1), 0, RandomUtil.getRandomInteger(-1, 1));
         }
 
+        if (location.getWorld().hasStorm()) {
+             if (LocationUtil.isLocationInRain(location) || LocationUtil.isBlockUnsafe(location)) {
+                 location = new SafeLocation(this.getEntity().getLocation());
+             }
+        }
+
+        if (this.getEntity().isInRain()) {
+            Location noRainLocation = LocationUtil.getClosestNoRainLocation(this.getPet().getPetPlayer().getPlayer().getLocation(), minDistance);
+            if (noRainLocation != null) {
+                location = new SafeLocation(noRainLocation.toCenterLocation());
+                location.add(new SafeLocation(this.getEntity().getLocation()).subtract(location).toVector().normalize().multiply(-1));
+                return location;
+            }
+        }
+
         PetTimerHeat heatTimer = ((PetTimerHeat)this.getPet().getPetTimers().getTimer(PetTimer.PetTimerType.HEAT));
         if (heatTimer.isFreezing() && heatTimer.getClosestHeatSource() != null) {
             location = heatTimer.getClosestHeatSource().clone();
@@ -45,13 +62,17 @@ public class PetActionNone extends PetAction {
         return location;
     }
 
+    private boolean _isCriticalState() {
+        return this.getEntity().isInRain() || ((PetTimerHeat)this.getPet().getPetTimers().getTimer(PetTimer.PetTimerType.HEAT)).isFreezing();
+    }
+
     @Override
     protected void _start() {
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
         this.getEntity().getPathfinder().stopPathfinding();
 
-        this._startTask(NONE_STATE_DELAY, 20);
+        this._startTask(this._isCriticalState() ? NONE_STATE_DELAY / 2 : NONE_STATE_DELAY, 20);
     }
 
     @Override

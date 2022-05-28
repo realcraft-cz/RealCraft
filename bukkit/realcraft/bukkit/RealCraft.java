@@ -219,7 +219,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new TabList();
 		new PacketListener();
 		new Test();
-		new CosmeticHeads(this);
+		new CosmeticHeads();
 		new LocationsSaver();
 		new WorldTeleporter();
 		new WorldLoader();

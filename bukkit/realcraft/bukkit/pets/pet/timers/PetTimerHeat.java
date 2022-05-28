@@ -25,23 +25,23 @@ public class PetTimerHeat extends PetTimer {
     }
 
     public boolean isFreezing() {
-        if (this.getPet().getPetEntity().getEntity().isInPowderedSnow()) {
+        if (this.getEntity().isInPowderedSnow()) {
             return true;
         }
 
-        if (this.getPet().getPetEntity().getEntity().isInRain()) {
+        if (this.getEntity().isInRain()) {
             return true;
         }
 
-        if (this.getPet().getPetEntity().getEntity().getLocation().getBlock().getTemperature() < 0) {
+        if (this.getEntity().getLocation().getBlock().getTemperature() < 0) {
             return true;
         }
 
-        if (this.getPet().getPetEntity().getEntity().getLocation().getBlock().getTemperature() >= 0.5) {
+        if (this.getEntity().getLocation().getBlock().getTemperature() >= 0.5) {
             return false;
         }
 
-        if (closestHeatSource == null || closestHeatSource.distance(this.getPet().getPetEntity().getEntity().getLocation()) > MAX_HEAT_SOURCE_DISTANCE) {
+        if (closestHeatSource == null || closestHeatSource.distance(this.getEntity().getLocation()) > MAX_HEAT_SOURCE_DISTANCE) {
             return true;
         }
 
@@ -50,21 +50,21 @@ public class PetTimerHeat extends PetTimer {
 
     @Override
     protected void _run() {
-        if (!this.getPet().getPetEntity().isLiving()) {
+        if (!this.getPetEntity().isLiving()) {
             return;
         }
 
-        if (this.getPet().getPetEntity().getEntity().isInPowderedSnow()) {
+        if (this.getEntity().isInPowderedSnow()) {
             this._addHeat(-3);
             return;
         }
 
-        if (this.getPet().getPetEntity().getEntity().isInRain()) {
+        if (this.getEntity().isInRain()) {
             this._addHeat(-1);
             return;
         }
 
-        Location location = this.getPet().getPetEntity().getEntity().getLocation();
+        Location location = this.getEntity().getLocation();
         double temperature = location.getBlock().getTemperature();
 
         if (temperature >= 0.5) {
@@ -88,21 +88,21 @@ public class PetTimerHeat extends PetTimer {
         this.getPet().getPetData().getHeat().setValue(this.getPet().getPetData().getHeat().getValue() + value);
 
         if (this.getPet().getPetData().getHeat().getValue() <= this.getPet().getPetData().getHeat().getCriticalValue()) {
-            this.getPet().getPetEntity().setShaking(true);
+            this.getPetEntity().setShaking(true);
             for (int i = 0; i < 5; i++) {
                 Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
                     @Override
                     public void run() {
-                        if (!getPet().getPetEntity().isSpawned()) {
+                        if (!getPetEntity().isSpawned()) {
                             return;
                         }
 
-                        getPet().getPetEntity().getEntity().getWorld().spawnParticle(Particle.SNOWFLAKE, getPet().getPetEntity().getEntity().getLocation().add(0, 1, 0), 1, 0.3, 0.2, 0.3, 0);
+                        getPetEntity().getEntity().getWorld().spawnParticle(Particle.SNOWFLAKE, getPetEntity().getEntity().getLocation().add(0, 1, 0), 1, 0.3, 0.2, 0.3, 0);
                     }
                 }, i * 20);
             }
         } else {
-            this.getPet().getPetEntity().setShaking(false);
+            this.getPetEntity().setShaking(false);
         }
 
         if (this.getPet().getPetData().getHeat().getValue() == oldValue) {
@@ -114,11 +114,11 @@ public class PetTimerHeat extends PetTimer {
                 Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
                     @Override
                     public void run() {
-                        if (!getPet().getPetEntity().isSpawned()) {
+                        if (!getPetEntity().isSpawned()) {
                             return;
                         }
 
-                        getPet().getPetEntity().getEntity().getWorld().spawnParticle(Particle.WAX_ON, getPet().getPetEntity().getEntity().getLocation().add(0, 1, 0), 1, 0.3, 0.3, 0.3, 0);
+                        getPetEntity().getEntity().getWorld().spawnParticle(Particle.WAX_ON, getPetEntity().getEntity().getLocation().add(0, 1, 0), 1, 0.3, 0.3, 0.3, 0);
                     }
                 }, i * 10);
             }
@@ -127,7 +127,7 @@ public class PetTimerHeat extends PetTimer {
 
     protected @Nullable SafeLocation _getClosestHeatSource(Location location, int radius) {
         Location source = null;
-        int minDistance = -1;
+        int minDistance = Integer.MAX_VALUE;
         int dist;
         Block block;
 
@@ -137,7 +137,7 @@ public class PetTimerHeat extends PetTimer {
                     block = location.getBlock().getRelative(x, y, z);
                     if (block.getType() == Material.CAMPFIRE || block.getType() == Material.SOUL_CAMPFIRE || block.getType() == Material.LAVA) {
                         dist = (int) location.distanceSquared(block.getLocation());
-                        if (dist < minDistance || minDistance == -1) {
+                        if (dist < minDistance) {
                             minDistance = dist;
                             source = block.getLocation();
                         }

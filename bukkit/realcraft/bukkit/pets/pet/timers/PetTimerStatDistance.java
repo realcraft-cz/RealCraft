@@ -15,7 +15,7 @@ public class PetTimerStatDistance extends PetTimer {
 
     @Override
     protected void _run() {
-        SafeLocation location = new SafeLocation(this.getPet().getPetEntity().getEntity().getLocation());
+        SafeLocation location = new SafeLocation(this.getEntity().getLocation());
 
         if (lastLocation != null) {
             if (location.equals(lastLocation)) {

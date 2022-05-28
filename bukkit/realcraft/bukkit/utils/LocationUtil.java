@@ -10,6 +10,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -348,6 +349,9 @@ public class LocationUtil {
     	}
     	return isBlockAboveAir(world, x, y, z);
     }
+	public static boolean isBlockUnsafe(Location location) {
+		return isBlockUnsafe(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+	}
     static boolean isBlockAboveAir(final World world, final int x, final int y, final int z) {
     	if (y > world.getMaxHeight()) {
     		return true;
@@ -396,5 +400,46 @@ public class LocationUtil {
 		}
 
 		return blocks;
+	}
+
+	public static @Nullable Location getClosestNoRainLocation(Location location, int radius) {
+		if (radius < 0) {
+			return null;
+		}
+
+		Location target = null;
+		int minDistance = Integer.MAX_VALUE;
+		int dist;
+		Location tmpLocation;
+
+		for (int x = -radius; x <= radius; x++) {
+			for (int z = -radius; z <= radius; z++) {
+				for (int y = -radius; y <= radius; y++) {
+					tmpLocation = location.getBlock().getRelative(x, y, z).getLocation();
+
+					dist = (int) location.distanceSquared(tmpLocation);
+					if (dist >= minDistance) {
+						continue;
+					}
+
+					if (isBlockUnsafe(location.getWorld(), tmpLocation.getBlockX(), tmpLocation.getBlockY(), tmpLocation.getBlockZ())) {
+						continue;
+					}
+
+					if (isLocationInRain(tmpLocation)) {
+						continue;
+					}
+
+					minDistance = dist;
+					target = tmpLocation;
+				}
+			}
+		}
+
+		return target;
+	}
+
+	public static boolean isLocationInRain(Location location) {
+		return (location.getWorld().getHighestBlockYAt(location) <= location.getBlockY()) && HOLLOW_MATERIALS.contains(location.getBlock().getType());
 	}
 }

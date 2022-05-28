@@ -56,7 +56,7 @@ public class PetCommandInfo extends PetCommand {
         ClickEvent homeClick = null;
 
         if (pet.getPetData().getHome().getLocation() != null) {
-            home = Component.text("" + ChatColor.BLUE + pet.getPetData().getHome().getLocation().getBlockX() + " / " + pet.getPetData().getHome().getLocation().getBlockY() + " / " + pet.getPetData().getHome().getLocation().getBlockZ());
+            home = Component.text("" + ChatColor.DARK_RED + pet.getPetData().getHome().getLocation().getBlockX() + " / " + pet.getPetData().getHome().getLocation().getBlockY() + " / " + pet.getPetData().getHome().getLocation().getBlockZ());
             homeHover = Component.text("§7Klikni pro teleport").font(Key.key("uniform"));
             homeClick = ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/pet home teleport");
         }
@@ -112,13 +112,22 @@ public class PetCommandInfo extends PetCommand {
     }
 
     private Component _buildStatsPage(Pet pet) {
-        int distance = pet.getPetData().getStatDistance().getValue();
+        int dist = pet.getPetData().getStatDistance().getValue();
+
+        String distance = "" + ChatColor.BLUE + (dist < 1000 ? dist : MathUtil.round(dist / 1000f, 1)) + " " + (dist < 1000 ? "m" : "km");
+        String kills = "" + ChatColor.BLUE + pet.getPetData().getStatKills().getValue();
 
         Component[] lines = new Component[]{
             Component.text("           §d§l§nMazlik"),
             Component.text(""),
-            Component.text(" §8Nachozeno:"),
-            Component.text(" ").append(Component.text("" + ChatColor.BLUE + (distance < 1000 ? distance : MathUtil.round(distance / 1000f, 1)) + " " + (distance < 1000 ? "m" : "km"))),
+            Component.text(" ")
+                .append(Component.text("§8Nachozeno:"))
+                .append(Component.text(" ".repeat(3)))
+                .append(Component.text("§8Zabito monster:")),
+            Component.text(" ")
+                .append(Component.text(distance))
+                .append(Component.text(" ".repeat(15 - distance.length())))
+                .append(Component.text(kills))
         };
 
         TextComponent.Builder builder = Component.text();

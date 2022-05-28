@@ -48,7 +48,7 @@ public class SoundsTest extends AbstractCommand {
             } else {
                 String search = args[0].toUpperCase();
                 for (Sound sound : Sound.values()) {
-                    if (sound.toString().startsWith(search)) {
+                    if (sound.toString().contains(search)) {
                         completions.add(sound.toString());
                     }
                 }

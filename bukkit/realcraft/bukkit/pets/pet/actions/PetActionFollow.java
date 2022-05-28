@@ -112,7 +112,7 @@ public class PetActionFollow extends PetAction {
         }
 
         if (distance > MAX_DISTANCE * MAX_DISTANCE || !this.getPetEntity().isTicking()) {
-            if (((Entity)this.getPet().getPetPlayer().getPlayer()).isOnGround()) {
+            if (((Entity)this.getPet().getPetPlayer().getPlayer()).isOnGround() || this.getPet().getPetPlayer().getPlayer().isInWater()) {
                 this.getPetEntity().teleport(this._getSafeTeleportLocation());
             }
         }
@@ -152,6 +152,8 @@ public class PetActionFollow extends PetAction {
     @Override
     protected void _clear() {
         this.resetDistanceLevel();
-        this.getEntity().getPathfinder().stopPathfinding();
+        if (this.getEntity() != null) {
+            this.getEntity().getPathfinder().stopPathfinding();
+        }
     }
 }

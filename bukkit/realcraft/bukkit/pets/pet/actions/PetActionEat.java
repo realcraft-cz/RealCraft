@@ -84,7 +84,8 @@ public class PetActionEat extends PetAction {
 
     @Override
     protected void _run() {
-        if (!this.getPet().getPetEntity().isLiving()) {
+        if (!this.getPet().getPetEntity().isTicking()) {
+            this.cancel();
             return;
         }
 
@@ -154,7 +155,9 @@ public class PetActionEat extends PetAction {
 
     @Override
     protected void _clear() {
-        this.getEntity().getPathfinder().stopPathfinding();
+        if (this.getEntity() != null) {
+            this.getEntity().getPathfinder().stopPathfinding();
+        }
     }
 
     private void _eatOnePiece() {
@@ -238,7 +241,7 @@ public class PetActionEat extends PetAction {
             new Food(Material.GLOW_BERRIES, 1),
             new Food(Material.GOLDEN_CARROT, 3),
             new Food(Material.MELON_SLICE, 1),
-            new Food(Material.POISONOUS_POTATO, 1, true),
+            //new Food(Material.POISONOUS_POTATO, 1, true),
             new Food(Material.POTATO, 1),
             new Food(Material.BEEF, 1),
             new Food(Material.CHICKEN, 1),
@@ -247,8 +250,8 @@ public class PetActionEat extends PetAction {
             new Food(Material.PORKCHOP, 1),
             new Food(Material.RABBIT, 1),
             new Food(Material.SALMON, 1),
-            new Food(Material.ROTTEN_FLESH, 2, true),
-            new Food(Material.SPIDER_EYE, 1, true),
+            //new Food(Material.ROTTEN_FLESH, 2, true),
+            //new Food(Material.SPIDER_EYE, 1, true),
             new Food(Material.SWEET_BERRIES, 1),
             new Food(Material.TROPICAL_FISH, 1),
         };

@@ -1,7 +1,9 @@
 package realcraft.bukkit.pets.pet.timers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Zombie;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.entity.PetEntity;
 
 public abstract class PetTimer {
 
@@ -22,6 +24,14 @@ public abstract class PetTimer {
 
     public Pet getPet() {
         return pet;
+    }
+
+    public PetEntity getPetEntity() {
+        return this.getPet().getPetEntity();
+    }
+
+    public Zombie getEntity() {
+        return this.getPet().getPetEntity().getEntity();
     }
 
     public final boolean shouldRun() {

@@ -8,6 +8,7 @@ import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
 import realcraft.bukkit.utils.EntityUtil;
 import realcraft.bukkit.utils.LocationUtil;
+import realcraft.bukkit.wrappers.SafeLocation;
 
 public class PetActionHome extends PetAction {
 
@@ -15,7 +16,7 @@ public class PetActionHome extends PetAction {
     private static final int NOT_MOVING_THRESHOLD = 4;
 
     private State state;
-    private Location targetLocation;
+    private SafeLocation targetLocation;
     private int notMovingCounter;
 
     public PetActionHome(Pet pet) {
@@ -48,7 +49,7 @@ public class PetActionHome extends PetAction {
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
 
-        this.targetLocation = this.getPet().getPetData().getHome().getLocation().clone();
+        this.targetLocation = new SafeLocation(this.getPet().getPetData().getHome().getLocation().clone());
         this.targetLocation.add(0, -0.8, 0);
         this.targetLocation.setPitch(0);
 

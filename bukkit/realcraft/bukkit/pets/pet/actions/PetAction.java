@@ -133,6 +133,7 @@ public abstract class PetAction implements Runnable {
 
         SPAWN       (100, PetActionSpawn.class),
         SKIN_CHANGE (90, PetActionSkinChange.class),
+        DEFEND      (50, PetActionDefend.class),
         EAT         (40, PetActionEat.class),
         HOME        (30, PetActionHome.class),
         FOLLOW      (20, PetActionFollow.class),

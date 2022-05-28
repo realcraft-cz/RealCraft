@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -76,6 +77,16 @@ public class PetsListeners implements Listener {
     }
 
     @EventHandler
+    public void EntityDeathEvent(EntityDeathEvent event) {
+        if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent damageEvent) {
+            Pet pet = PetsManager.getPet(damageEvent.getDamager());
+            if (pet != null) {
+                pet.getPetData().getStatKills().setValue(pet.getPetData().getStatKills().getValue() + 1);
+            }
+        }
+    }
+
+    @EventHandler
     public void PlayerInteractEntityEvent(PlayerInteractEntityEvent event) {
         if (!event.getHand().equals(EquipmentSlot.HAND)) {
             return;
@@ -135,6 +146,7 @@ public class PetsListeners implements Listener {
 
         if (event.getAction().getType() == PetAction.PetActionType.SPAWN
             || event.getAction().getType() == PetAction.PetActionType.SKIN_CHANGE
+            || event.getAction().getType() == PetAction.PetActionType.DEFEND
             || event.getAction().getType() == PetAction.PetActionType.SIT
             || event.getAction().getType() == PetAction.PetActionType.SIT_BESIDE) {
             ((PetActionFollow)event.getPet().getPetActions().getAction(PetAction.PetActionType.FOLLOW)).resetDistanceLevel();
