@@ -17,7 +17,6 @@ public class PetCommands extends AbstractCommand {
         super("pet");
 
         commands = new PetCommand[]{
-            new PetCommandHelp(),
             new PetCommandInfo(),
             new PetCommandCreate(),
             new PetCommandDelete(),
@@ -40,19 +39,17 @@ public class PetCommands extends AbstractCommand {
         if (args.length == 0) {
             petPlayer.sendMessage("§7§m" + " ".repeat(10) + "§r §d§lMazlik §7§m" + " ".repeat(47 - "Mazlik".length()));
             if (!petPlayer.hasPet()) {
-                petPlayer.sendMessage("§6/pet help §f- Podrobna napoveda");
-                petPlayer.sendMessage("§6/pet create §f- Vytvoreni mazlika");
+                petPlayer.sendMessage("§7/pet §6create §f- Vytvoreni mazlika");
                 petPlayer.sendMessage("§7Dalsi prikazy se zobrazi po vytvoreni mazlika");
                 return;
             }
 
-            petPlayer.sendMessage("§6/pet help §f- Podrobna napoveda");
-            petPlayer.sendMessage("§6/pet info §f- Informace o mazlikovi");
-            petPlayer.sendMessage("§6/pet tp §f- Teleport k mazlikovi");
-            petPlayer.sendMessage("§6/pet skin §f- Nastaveni skinu mazlika");
-            petPlayer.sendMessage("§6/pet effect §f- Nastaveni efektu mazlika");
-            petPlayer.sendMessage("§6/pet home §f- Nastaveni domova mazlika");
-            petPlayer.sendMessage("§6/pet delete §f- Smazani mazlika");
+            petPlayer.sendMessage("§7/pet §6info §f- Informace o mazlikovi");
+            petPlayer.sendMessage("§7/pet §6tp §f- Teleport k mazlikovi");
+            petPlayer.sendMessage("§7/pet §6skin §f- Nastaveni skinu mazlika");
+            petPlayer.sendMessage("§7/pet §6effect §f- Nastaveni efektu mazlika");
+            petPlayer.sendMessage("§7/pet §6home §f- Nastaveni domova mazlika");
+            petPlayer.sendMessage("§7/pet §6delete §f- Smazani mazlika");
             return;
         }
 

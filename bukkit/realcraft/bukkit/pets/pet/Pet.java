@@ -52,6 +52,13 @@ public class Pet {
         return petTimers;
     }
 
+    public PetPermission getPermission(PetPlayer petPlayer) {
+        if (petPlayer.equals(this.getPetPlayer())) {
+            return PetPermission.OWNER;
+        }
+        return PetPermission.NONE;
+    }
+
     public void load() {
         Bukkit.getScheduler().runTaskAsynchronously(RealCraft.getInstance(), new Runnable() {
             @Override

@@ -17,6 +17,7 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.events.pet.*;
 import realcraft.bukkit.pets.pet.Pet;
+import realcraft.bukkit.pets.pet.PetPermission;
 import realcraft.bukkit.pets.pet.actions.PetAction;
 import realcraft.bukkit.pets.pet.actions.PetActionFollow;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
@@ -54,7 +55,7 @@ public class PetsListeners implements Listener {
         Pet pet = PetsManager.getPet(event.getEntity());
         if (pet != null) {
             event.setCancelled(true);
-            Bukkit.getPluginManager().callEvent(new PetClickEvent(pet, (Player) event.getDamager(), PetClickEvent.ClickType.LEFT));
+            Bukkit.getPluginManager().callEvent(new PetClickEvent(pet, PetsManager.getPetPlayer((Player) event.getDamager()), PetClickEvent.ClickType.LEFT));
         }
     }
 
@@ -95,7 +96,7 @@ public class PetsListeners implements Listener {
         Pet pet = PetsManager.getPet(event.getRightClicked());
         if (pet != null) {
             event.setCancelled(true);
-            Bukkit.getPluginManager().callEvent(new PetClickEvent(pet, event.getPlayer(), PetClickEvent.ClickType.RIGHT));
+            Bukkit.getPluginManager().callEvent(new PetClickEvent(pet, PetsManager.getPetPlayer(event.getPlayer()), PetClickEvent.ClickType.RIGHT));
         }
     }
 
@@ -162,6 +163,10 @@ public class PetsListeners implements Listener {
 
     @EventHandler
     public void PetClickEvent(PetClickEvent event) {
+        if (!event.getPet().getPermission(event.getPetPlayer()).isMinimum(PetPermission.OWNER)) {
+            return;
+        }
+
         ((PetActionFollow)event.getPet().getPetActions().getAction(PetAction.PetActionType.FOLLOW)).resetDistanceLevel();
 
         if (event.getPet().getPetActions().getCurrentAction().getType() == PetAction.PetActionType.NONE) {
@@ -170,7 +175,7 @@ public class PetsListeners implements Listener {
 
         if (event.getClickType() == PetClickEvent.ClickType.RIGHT) {
             if (event.getPet().getPetEntity().getEntityLabels().showModes(event.getPet().getPetData().getMode().getType().getNextPreferredType(), 40)) {
-                event.getPlayer().playSound(event.getPlayer(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                event.getPetPlayer().getPlayer().playSound(event.getPetPlayer().getPlayer(), Sound.UI_BUTTON_CLICK, 1f, 1f);
             }
         }
 
@@ -206,7 +211,7 @@ public class PetsListeners implements Listener {
             event.getPet().getPetEntity().getEntityLabels().showText("§a" + PetEntityLabelRotable.CHAR_ARROW_RIGHT + " " + mode.getColor() + mode.getName() + "§r §a" + PetEntityLabelRotable.CHAR_ARROW_LEFT, 20);
 
             if (event.getPet().getPetData().getMode().getType() != mode) {
-                event.getPlayer().playSound(event.getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                event.getPetPlayer().getPlayer().playSound(event.getPetPlayer().getPlayer(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
             }
 
             event.getPet().getPetData().getMode().setType(mode);

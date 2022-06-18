@@ -49,6 +49,6 @@ public class SafeLocation extends Location {
     }
 
     public @NotNull SafeLocation clone() {
-        return (SafeLocation)super.clone();
+        return (SafeLocation) super.clone();
     }
 }

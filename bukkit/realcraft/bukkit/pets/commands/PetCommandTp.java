@@ -19,7 +19,7 @@ public class PetCommandTp extends PetCommand {
             return;
         }
 
-        if (!pet.getPetEntity().isLiving()) {
+        if (!pet.getPetEntity().isSpawned()) {
             petPlayer.sendMessage("§cMazlik neni zivy");
             return;
         }

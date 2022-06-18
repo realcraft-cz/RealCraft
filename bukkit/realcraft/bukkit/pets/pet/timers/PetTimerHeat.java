@@ -67,7 +67,7 @@ public class PetTimerHeat extends PetTimer {
         Location location = this.getEntity().getLocation();
         double temperature = location.getBlock().getTemperature();
 
-        if (temperature >= 0.5) {
+        if (temperature > 0) {
             this._addHeat(1);
         } else {
             closestHeatSource = this._getClosestHeatSource(location, MAX_HEAT_SOURCE_DISTANCE);
@@ -76,9 +76,7 @@ public class PetTimerHeat extends PetTimer {
                 return;
             }
 
-            if (temperature < 0) {
-                this._addHeat(-1);
-            }
+            this._addHeat(-1);
         }
     }
 

@@ -1,21 +1,21 @@
 package realcraft.bukkit.pets.events.pet;
 
-import org.bukkit.entity.Player;
+import realcraft.bukkit.pets.PetPlayer;
 import realcraft.bukkit.pets.pet.Pet;
 
 public class PetClickEvent extends PetEvent {
 
-    private final Player player;
+    private final PetPlayer petPlayer;
     private final ClickType clickType;
 
-    public PetClickEvent(Pet pet, Player player, ClickType clickType) {
+    public PetClickEvent(Pet pet, PetPlayer petPlayer, ClickType clickType) {
         super(pet);
-        this.player = player;
+        this.petPlayer = petPlayer;
         this.clickType = clickType;
     }
 
-    public Player getPlayer() {
-        return player;
+    public PetPlayer getPetPlayer() {
+        return petPlayer;
     }
 
     public ClickType getClickType() {

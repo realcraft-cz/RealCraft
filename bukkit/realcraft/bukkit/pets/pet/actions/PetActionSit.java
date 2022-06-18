@@ -49,7 +49,7 @@ public class PetActionSit extends PetAction {
         this.getEntity().setVelocity(new Vector(0, 0, 0));
 
         sitLocation = this.getEntity().getLocation();
-        sitLocation.setY(sitLocation.getBlockY() - 0.8);
+        sitLocation.setY(sitLocation.getBlockY() - 0.8 + sitLocation.getBlock().getBoundingBox().getHeight());
 
         Bukkit.getScheduler().runTask(RealCraft.getInstance(), new Runnable() {
             public void run() {

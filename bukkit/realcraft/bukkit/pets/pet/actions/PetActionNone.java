@@ -85,7 +85,7 @@ public class PetActionNone extends PetAction {
             return;
         }
 
-        EntityUtil.navigate(this.getEntity(), this._getRandomLocation(), 0.5);
+        EntityUtil.navigate(this.getEntity(), this._getRandomLocation(), this._isCriticalState() ? 0.7 : 0.5);
     }
 
     @Override

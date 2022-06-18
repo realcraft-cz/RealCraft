@@ -79,9 +79,9 @@ public class PetActionFollow extends PetAction {
 
     private SafeLocation _getSafeTeleportLocation(int minDistance) {
         SafeLocation location = new SafeLocation(this.getPet().getPetPlayer().getPlayer().getLocation());
-        location.add(new SafeLocation(location.subtract(this.getEntity().getLocation())).toVector().normalize().multiply(minDistance));
+        location.add(new SafeLocation(this.getEntity().getLocation()).subtract(location).toVector().normalize().multiply(minDistance));
 
-        if (LocationUtil.isBlockUnsafe(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ())) {
+        if (LocationUtil.isBlockUnsafe(location)) {
             return (minDistance > 1 ? this._getSafeTeleportLocation(minDistance - 1) : null);
         }
 
@@ -98,10 +98,6 @@ public class PetActionFollow extends PetAction {
 
     @Override
     protected void _run() {
-        if (!this.getPet().getPetEntity().isLiving()) {
-            return;
-        }
-
         SafeLocation targetLoc = this._getTargetLocation();
         double distance = targetLoc.distanceSquared(this.getEntity().getLocation());
 
@@ -113,7 +109,11 @@ public class PetActionFollow extends PetAction {
 
         if (distance > MAX_DISTANCE * MAX_DISTANCE || !this.getPetEntity().isTicking()) {
             if (((Entity)this.getPet().getPetPlayer().getPlayer()).isOnGround() || this.getPet().getPetPlayer().getPlayer().isInWater()) {
-                this.getPetEntity().teleport(this._getSafeTeleportLocation());
+                if (!this.getPetEntity().isLiving()) {
+                    this.getPetEntity().spawn(this._getSafeTeleportLocation());
+                } else {
+                    this.getPetEntity().teleport(this._getSafeTeleportLocation());
+                }
             }
         }
 

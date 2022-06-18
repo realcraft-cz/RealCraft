@@ -1,8 +1,6 @@
 package realcraft.bukkit.pets.pet.actions;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.pets.pet.Pet;
 import realcraft.bukkit.pets.pet.data.PetDataMode;
@@ -49,8 +47,8 @@ public class PetActionHome extends PetAction {
         this.getEntity().setAI(true);
         this.getEntity().setGravity(true);
 
-        this.targetLocation = new SafeLocation(this.getPet().getPetData().getHome().getLocation().clone());
-        this.targetLocation.add(0, -0.8, 0);
+        this.targetLocation = new SafeLocation(this.getPet().getPetData().getHome().getLocation());
+        this.targetLocation.setY(this.targetLocation.getBlockY() - 0.8 + this.targetLocation.getBlock().getBoundingBox().getHeight());
         this.targetLocation.setPitch(0);
 
         this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.5f, 2f);
@@ -141,9 +139,11 @@ public class PetActionHome extends PetAction {
 
                     getPetEntity().teleport(targetLocation);
                     state = State.SITTING;
-                    _startTask(40);
+                    _startTask(15);
                 }
             }, (9 * 2) + 2);
+        } else if (this.state == State.SITTING) {
+            this.getPetEntity().getEntity().getWorld().spawnParticle(Particle.WAX_OFF, this.getPetEntity().getEntity().getLocation().add(0, 1.2, 0), 1, 0.3, 0.2, 0.3, 0);
         }
     }
 
