@@ -126,8 +126,7 @@ public class Auth implements Listener {
 				Bukkit.getServer().getPluginManager().callEvent(callevent);
 				movePlayerToSpawn(player,true);
 				if(RealCraft.getServerType() == ServerType.LOBBY){
-					Title.showTitle(player,"",0,0,0);
-					Title.showSubTitle(player,"",0,0,0);
+					player.resetTitle();
 				}
 			}
 		}
