@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Drowned;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Consumer;
 import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.pets.events.pet.PetRemoveEvent;
 import realcraft.bukkit.pets.events.pet.PetSpawnEvent;
@@ -68,7 +68,13 @@ public class PetEntity {
 
         location.setPitch(0f);
 
-        entity = (Drowned) location.getWorld().spawnEntity(location, EntityType.DROWNED, false);
+        entity = location.getWorld().spawn(location, Drowned.class, new Consumer<>() {
+            @Override
+            public void accept(Drowned entity) {
+                entity.setCustomName("__PET");
+            }
+        });
+
         entity.setInvisible(true);
         entity.setRemoveWhenFarAway(false);
         entity.setCustomNameVisible(true);

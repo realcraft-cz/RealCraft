@@ -63,7 +63,7 @@ public class PetActionHome extends PetAction {
             return;
         }
 
-        if (this.state != State.SITTING && !this.getPet().getPetEntity().isTicking()) {
+        if (this.state != State.SITTING && (!this.getPet().getPetEntity().isTicking() || !this.getEntity().getWorld().equals(targetLocation.getWorld()))) {
             this.getEntity().setAI(false);
             this.getEntity().setGravity(false);
             this.getPetEntity().teleport(targetLocation);
@@ -83,7 +83,7 @@ public class PetActionHome extends PetAction {
                     return;
                 }
 
-                double distance = this.getEntity().getLocation().distance(this.targetLocation);
+                double distance = this.targetLocation.distance(this.getEntity().getLocation());
 
                 if (distance < HOME_REACH_DISTANCE) {
                     this.state = State.DROPPING;

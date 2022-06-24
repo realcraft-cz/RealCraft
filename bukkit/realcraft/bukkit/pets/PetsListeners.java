@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -97,6 +98,16 @@ public class PetsListeners implements Listener {
         if (pet != null) {
             event.setCancelled(true);
             Bukkit.getPluginManager().callEvent(new PetClickEvent(pet, PetsManager.getPetPlayer(event.getPlayer()), PetClickEvent.ClickType.RIGHT));
+        }
+    }
+
+    @EventHandler
+    public void CreatureSpawnEvent(CreatureSpawnEvent event) {
+        if (event.isCancelled()) {
+            if (event.getEntity().getCustomName() != null && event.getEntity().getCustomName().equals("__PET")) {
+                event.setCancelled(false);
+                event.getEntity().setCustomName(null);
+            }
         }
     }
 
