@@ -1,7 +1,7 @@
 package realcraft.bukkit.test;
 
-import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.beta.hologram.Hologram;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
