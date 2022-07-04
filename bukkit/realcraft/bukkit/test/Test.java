@@ -12,6 +12,7 @@ public class Test {
 		new TitleTest();
 		new ViewTest();
 		if(RealCraft.isTestServer()){
+			new ParticlesDemoTest();
 			new BlockTest();
 			new BoatTest();
 			new AsyncTest();
@@ -20,6 +21,7 @@ public class Test {
 			new EntityTest();
 			new CombatTest();
 			new AdvancementTest();
+			new SwimTest();
 		}
 	}
 }

@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import realcraft.bukkit.cosmetics.effects.*;
 import realcraft.bukkit.cosmetics.gadgets.*;
 import realcraft.bukkit.cosmetics.hats.Hat;
-import realcraft.bukkit.cosmetics.pets.Pet;
 
 public enum CosmeticType {
 
@@ -106,7 +105,7 @@ public enum CosmeticType {
 	HAT_ENDERDRAGON         (55, CosmeticCategory.HAT, Hat.class, "§bEnder Dragon",        Material.PLAYER_HEAD),
 	HAT_YVELTAL             (56, CosmeticCategory.HAT, Hat.class, "§bYveltal",             Material.PLAYER_HEAD),
 
-	PET_CHICKEN             (1,  CosmeticCategory.PET, Pet.class, "§bChicken",             Material.PLAYER_HEAD),
+	/*PET_CHICKEN             (1,  CosmeticCategory.PET, Pet.class, "§bChicken",             Material.PLAYER_HEAD),
 	PET_PIG                 (2,  CosmeticCategory.PET, Pet.class, "§bPig",                 Material.PLAYER_HEAD),
 	PET_SHEEP               (3,  CosmeticCategory.PET, Pet.class, "§bSheep",               Material.PLAYER_HEAD),
 	PET_COW                 (4,  CosmeticCategory.PET, Pet.class, "§bCow",                 Material.PLAYER_HEAD),
@@ -139,7 +138,7 @@ public enum CosmeticType {
 	PET_SLIME               (31, CosmeticCategory.PET, Pet.class, "§bSlime",               Material.PLAYER_HEAD),
 	PET_GUARDIAN            (32, CosmeticCategory.PET, Pet.class, "§bGuardian",            Material.PLAYER_HEAD),
 	PET_WITHERBOSS          (33, CosmeticCategory.PET, Pet.class, "§bWitherboss",          Material.PLAYER_HEAD),
-	PET_ENDERDRAGON         (34, CosmeticCategory.PET, Pet.class, "§bEnderdragon",         Material.PLAYER_HEAD),
+	PET_ENDERDRAGON         (34, CosmeticCategory.PET, Pet.class, "§bEnderdragon",         Material.PLAYER_HEAD),*/
 	;
 
 	private int id;

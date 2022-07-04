@@ -46,6 +46,7 @@ public class JsonDataLocationSpawn extends JsonDataLocation {
 	public JsonObject getData(){
 		JsonObject json = new JsonObject();
 		if(this.getLocation() != null){
+			json.addProperty("world",this.getLocation().getWorld().getName());
 			json.addProperty("x",this.roundToHalf(this.getLocation().getX()));
 			json.addProperty("y",this.roundToHalf(this.getLocation().getY()));
 			json.addProperty("z",this.roundToHalf(this.getLocation().getZ()));

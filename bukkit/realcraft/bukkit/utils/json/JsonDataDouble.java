@@ -41,7 +41,7 @@ public class JsonDataDouble extends JsonDataEntry {
 	public void loadData(JsonData data){
 		if(data.containsKey(this.getName())){
 			JsonDataDouble tmp = new JsonDataDouble(data.getElement(this.getName()));
-			value = tmp.getValue();
+			this.setValue(tmp.getValue());
 		}
 	}
 
@@ -52,5 +52,10 @@ public class JsonDataDouble extends JsonDataEntry {
 			return (toCompare.getValue() == this.getValue());
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(this.getValue());
 	}
 }

@@ -1,9 +1,9 @@
 package realcraft.bukkit.wrappers;
 
-import me.filoghost.holographicdisplays.api.beta.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.beta.hologram.VisibilitySettings;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.ItemHologramLine;
-import me.filoghost.holographicdisplays.api.beta.hologram.line.TextHologramLine;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.VisibilitySettings;
+import me.filoghost.holographicdisplays.api.hologram.line.ItemHologramLine;
+import me.filoghost.holographicdisplays.api.hologram.line.TextHologramLine;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 import realcraft.bukkit.RealCraft;
@@ -31,7 +31,7 @@ public class HologramsApi {
 
     public static class Hologram {
 
-        private me.filoghost.holographicdisplays.api.beta.hologram.Hologram hologram;
+        private me.filoghost.holographicdisplays.api.hologram.Hologram hologram;
 
         public Hologram(Location location) {
             hologram = HolographicDisplaysAPI.get(RealCraft.getInstance()).createHologram(location);

@@ -1,68 +1,62 @@
 package realcraft.bukkit.test;
 
-import java.util.ArrayList;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
+import realcraft.bukkit.others.AbstractCommand;
 
-import realcraft.bukkit.RealCraft;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SoundsTest implements CommandExecutor {
+public class SoundsTest extends AbstractCommand {
 
-	ArrayList<Sound> sounds = new ArrayList<Sound>();
-	BukkitTask task = null;
-	int currentId;
-	float pitch = 1f;
+    public SoundsTest() {
+        super("sound");
+    }
 
-	public SoundsTest(){
-		RealCraft.getInstance().getCommand("sound").setExecutor(this);
-		for(Sound sound : Sound.values()){
-			sounds.add(sound);
-		}
-	}
+    @Override
+    public void perform(Player player, String[] args) {
+        if (!player.hasPermission("group.Manazer")) {
+            return;
+        }
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args){
-		Player player = (Player) sender;
-		if(command.getName().equalsIgnoreCase("sound") && player.hasPermission("group.Manazer")){
-			if(task != null){
-				task.cancel();
-				task = null;
-			}
-			if(args.length == 0){
-				player.sendMessage("/sound <id|all> [pitch] [speed] [fromid]");
-				return true;
-			}
-			if(args.length > 0){
-				pitch = 1f;
-				if(args.length > 1) pitch = Float.valueOf(args[1]);
-				if(args[0].equalsIgnoreCase("all")){
-					currentId = 0;
-					int speed = 10;
-					if(args.length > 2) speed = Integer.valueOf(args[2]);
-					if(args.length > 3) currentId = Integer.valueOf(args[3]);
-					task = Bukkit.getScheduler().runTaskTimerAsynchronously(RealCraft.getInstance(),new Runnable(){
-						@Override
-						public void run(){
-							player.playSound(player.getLocation(),sounds.get(currentId),1f,pitch);
-							player.sendMessage("Playing sound: "+sounds.get(currentId).toString()+" ["+currentId+"]");
-							currentId ++;
-						}
-					},speed,speed);
-				} else {
-					int id = Integer.valueOf(args[0]);
-					if(sounds.size() > id){
-						player.playSound(player.getLocation(),sounds.get(id),1f,pitch);
-						player.sendMessage("Playing sound: "+sounds.get(id).toString()+" ["+id+"]");
-					}
-				}
-			}
-		}
-		return true;
-	}
+        if (args.length == 0) {
+            player.sendMessage("/sound <sound> [pitch]");
+            return;
+        }
+
+        try {
+            Sound sound = Sound.valueOf(args[0].toUpperCase());
+
+            float pitch = 1f;
+            if (args.length > 1) pitch = Float.valueOf(args[1]);
+            player.playSound(player.getLocation(), sound, 1f, pitch);
+            player.sendMessage("§7Sound:§r " + sound.toString());
+        } catch (IllegalArgumentException ignored) {
+            player.sendMessage("§c" + ignored.getMessage());
+        }
+    }
+
+    @Override
+    public List<String> tabCompleter(Player player, String[] args) {
+        if (args.length <= 1) {
+            ArrayList<String> completions = new ArrayList<>();
+
+            if (args.length == 0) {
+                for (Sound sound : Sound.values()) {
+                    completions.add(sound.toString());
+                }
+            } else {
+                String search = args[0].toUpperCase();
+                for (Sound sound : Sound.values()) {
+                    if (sound.toString().contains(search)) {
+                        completions.add(sound.toString());
+                    }
+                }
+            }
+
+            return completions;
+        }
+
+        return null;
+    }
 }

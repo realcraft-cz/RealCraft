@@ -36,11 +36,11 @@ public class WEBlockCompleter implements Listener {
 		String keyword = keywords[keywords.length-1].toUpperCase();
 		for(String command : COMMANDS){
 			if(event.getBuffer().startsWith("/"+command+" ") || event.getBuffer().startsWith("//"+command+" ")){
-				if(event.getCompletions().isEmpty()){
+				if(!event.getCompletions().isEmpty()){
 					event.getCompletions().clear();
 					ArrayList<String> types = new ArrayList<>();
 					for(Material type : Material.values()){
-						if(type.toString().contains(keyword)){
+						if(type.toString().toUpperCase().contains(keyword)){
 							types.add(type.toString());
 						}
 					}

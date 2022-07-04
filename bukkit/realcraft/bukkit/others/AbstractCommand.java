@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import realcraft.bukkit.RealCraft;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public abstract class AbstractCommand extends Command implements CommandExecutor
 
 	private void register(){
 		if(Bukkit.getPluginCommand(this.getName()) == null){
-			Bukkit.getServer().getCommandMap().register(this.getName(),this);
+			Bukkit.getServer().getCommandMap().register("",this);
 		} else {
 			if(RealCraft.getInstance().getCommand(this.getName()) != null){
 				RealCraft.getInstance().getCommand(this.getName()).setExecutor(this);
@@ -41,21 +42,21 @@ public abstract class AbstractCommand extends Command implements CommandExecutor
 	}
 
 	@Override
-	public boolean execute(CommandSender sender,String s,String[] args){
+	public final boolean execute(CommandSender sender,String s,String[] args){
 		if(!(sender instanceof Player)) return false;
 		this.perform((Player)sender,args);
 		return true;
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender,Command command,String s,String[] args){
+	public final boolean onCommand(CommandSender sender,Command command,String s,String[] args){
 		if(!(sender instanceof Player)) return false;
 		this.perform((Player)sender,args);
 		return true;
 	}
 
 	@Override
-	public List<String> tabComplete(CommandSender sender, String alias, String[] args){
+	public final @NotNull List<String> tabComplete(CommandSender sender, String alias, String[] args){
 		if(!(sender instanceof Player)) return null;
 		List<String> list = this.tabCompleter((Player)sender,args);
 		if(list == null) list = new ArrayList<>();
@@ -63,14 +64,14 @@ public abstract class AbstractCommand extends Command implements CommandExecutor
 	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender,Command command,String s,String[] args){
+	public final List<String> onTabComplete(CommandSender sender,Command command,String s,String[] args){
 		if(!(sender instanceof Player)) return null;
 		List<String> list = this.tabCompleter((Player)sender,args);
 		if(list == null) list = new ArrayList<>();
 		return list;
 	}
 
-	public List<String> getPlayersCompletions(){
+	public final List<String> getPlayersCompletions(){
 		List<String> completions = new ArrayList<>();
 		for(Player target : Bukkit.getOnlinePlayers()) completions.add(target.getName());
 		return completions;

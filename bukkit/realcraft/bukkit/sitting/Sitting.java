@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class Sitting implements Listener {
 
-	private HashMap<Player,ArmorStand> stands = new HashMap<>();
+	private static final HashMap<Player,ArmorStand> stands = new HashMap<>();
 
 	public Sitting(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
@@ -42,6 +42,7 @@ public class Sitting implements Listener {
 			stand.setInvisible(true);
 			stand.setGravity(false);
 			stand.setInvulnerable(true);
+			stand.setPersistent(false);
 			stand.setMarker(true);
 			stands.put(player,stand);
 			stand.addPassenger(player);
@@ -64,11 +65,15 @@ public class Sitting implements Listener {
 		}
 	}
 
+	public static boolean isPlayerSitting(Player player) {
+		return stands.containsKey(player);
+	}
+
 	@EventHandler
 	public void PlayerInteractEvent(PlayerInteractEvent event){
 		if(event.getClickedBlock() == null || !(event.getClickedBlock().getBlockData() instanceof Stairs)) return;
 		if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND || event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR) return;
-		if(event.getClickedBlock().getRelative(BlockFace.UP).getType() != Material.AIR) return;
+		if(!event.getClickedBlock().getRelative(BlockFace.UP).getType().isAir()) return;
 		if(event.getPlayer().isInsideVehicle()) return;
 		Stairs stairs = (Stairs) event.getClickedBlock().getBlockData();
 		if(stairs.getShape() != Stairs.Shape.STRAIGHT || stairs.getHalf() != Bisected.Half.BOTTOM) return;

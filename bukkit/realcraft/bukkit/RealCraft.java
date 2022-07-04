@@ -45,6 +45,7 @@ import realcraft.bukkit.mute.Mute;
 import realcraft.bukkit.others.Canvas;
 import realcraft.bukkit.others.MapServerTeleport;
 import realcraft.bukkit.others.WEBlockCompleter;
+import realcraft.bukkit.pets.PetsManager;
 import realcraft.bukkit.report.Report;
 import realcraft.bukkit.restart.Restart;
 import realcraft.bukkit.sitting.Sitting;
@@ -179,7 +180,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			lobby = new Lobby(this);
 			new Sitting();
 			new ViewDistanceLimiter();
-			//new Pets(); //TODO [PET UPDATE]: uncomment
+			new PetsManager();
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||
@@ -197,7 +198,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 			new PlotSquaredWorldEdit();
 			lobby = new Lobby(this);
 			new Sitting();
-			//new Pets(); //TODO [PET UPDATE]: uncomment
 		}
 		else if(serverName.equalsIgnoreCase("maps")){
 			cancelgrow = new CancelGrow(this);
@@ -219,7 +219,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 		new TabList();
 		new PacketListener();
 		new Test();
-		new CosmeticHeads(this);
+		new CosmeticHeads();
 		new LocationsSaver();
 		new WorldTeleporter();
 		new WorldLoader();
@@ -233,7 +233,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 		this.updateWorldRules();
 
 		if (RealCraft.isTestServer()) {
-			//new PetsManager();
+			if (RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL) {
+				new PetsManager();
+			}
 		}
 	}
 
@@ -295,6 +297,12 @@ public class RealCraft extends JavaPlugin implements Listener {
 	private void updateWorldRules(){
 		for(World world : Bukkit.getWorlds()){
 			world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
+		}
+
+		if (RealCraft.isTestServer() && RealCraft.getServerType() == ServerType.LOBBY) {
+			for (World world : Bukkit.getWorlds()) {
+				world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+			}
 		}
 	}
 

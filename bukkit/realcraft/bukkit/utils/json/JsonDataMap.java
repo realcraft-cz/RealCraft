@@ -2,12 +2,11 @@ package realcraft.bukkit.utils.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import realcraft.bukkit.mapmanager.map.data.MapDataEntry;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-public class JsonDataMap<E extends MapDataEntry> extends JsonDataEntry {
+public class JsonDataMap<E extends JsonDataEntry> extends JsonDataEntry {
 
 	private Class<E> clazz;
 	private HashMap<String,E> values = new HashMap<>();

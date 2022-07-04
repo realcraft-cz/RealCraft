@@ -1,15 +1,13 @@
 package realcraft.bukkit.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -21,9 +19,13 @@ public class LocationUtil {
 
 	static {
 		HOLLOW_MATERIALS.add(Material.AIR);
+		HOLLOW_MATERIALS.add(Material.CAVE_AIR);
+		HOLLOW_MATERIALS.add(Material.VOID_AIR);
 		HOLLOW_MATERIALS.add(Material.OAK_SAPLING);
 		HOLLOW_MATERIALS.add(Material.POWERED_RAIL);
 		HOLLOW_MATERIALS.add(Material.DETECTOR_RAIL);
+		HOLLOW_MATERIALS.add(Material.GRASS);
+		HOLLOW_MATERIALS.add(Material.TALL_GRASS);
 		HOLLOW_MATERIALS.add(Material.LEGACY_LONG_GRASS);
 		HOLLOW_MATERIALS.add(Material.DEAD_BUSH);
 		HOLLOW_MATERIALS.add(Material.LEGACY_YELLOW_FLOWER);
@@ -202,7 +204,20 @@ public class LocationUtil {
 	}
 
 	public static boolean isSimilar(Location location1,Location location2){
+		if (location1 == null || location2 == null) {
+			return false;
+		}
+
 		return (location1.getWorld() == location2.getWorld() && location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY() && location1.getBlockZ() == location2.getBlockZ());
+	}
+
+	public static void renderLocation(Player player, Location location) {
+		for (int y = 0; y <= 1; y++) {
+			player.spawnParticle(Particle.REDSTONE, location.clone().add(0, y, 0), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
+			player.spawnParticle(Particle.REDSTONE, location.clone().add(0, y, 1), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
+			player.spawnParticle(Particle.REDSTONE, location.clone().add(1, y, 0), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
+			player.spawnParticle(Particle.REDSTONE, location.clone().add(1, y, 1), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
+		}
 	}
 
 	public static BlockFace yawToFace (float yaw) {
@@ -340,6 +355,9 @@ public class LocationUtil {
     	}
     	return isBlockAboveAir(world, x, y, z);
     }
+	public static boolean isBlockUnsafe(Location location) {
+		return isBlockUnsafe(location.getWorld(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+	}
     static boolean isBlockAboveAir(final World world, final int x, final int y, final int z) {
     	if (y > world.getMaxHeight()) {
     		return true;
@@ -370,5 +388,64 @@ public class LocationUtil {
 		} else {
 			return head.getRelative(BlockFace.NORTH);
 		}
+	}
+
+	public static List<Block> getNearbyBlocks(Location location, int radius) {
+		if (radius < 0) {
+			return new ArrayList<>(0);
+		}
+
+		int iterations = (radius * 2) + 1;
+		List<Block> blocks = new ArrayList<>(iterations * iterations * iterations);
+		for (int x = -radius; x <= radius; x++) {
+			for (int y = -radius; y <= radius; y++) {
+				for (int z = -radius; z <= radius; z++) {
+					blocks.add(location.getBlock().getRelative(x, y, z));
+				}
+			}
+		}
+
+		return blocks;
+	}
+
+	public static @Nullable Location getClosestNoRainLocation(Location location, int radius) {
+		if (radius < 0) {
+			return null;
+		}
+
+		Location target = null;
+		int minDistance = Integer.MAX_VALUE;
+		int dist;
+		Location tmpLocation;
+
+		for (int x = -radius; x <= radius; x++) {
+			for (int z = -radius; z <= radius; z++) {
+				for (int y = -radius; y <= radius; y++) {
+					tmpLocation = location.getBlock().getRelative(x, y, z).getLocation();
+
+					dist = (int) location.distanceSquared(tmpLocation);
+					if (dist >= minDistance) {
+						continue;
+					}
+
+					if (isBlockUnsafe(location.getWorld(), tmpLocation.getBlockX(), tmpLocation.getBlockY(), tmpLocation.getBlockZ())) {
+						continue;
+					}
+
+					if (isLocationInRain(tmpLocation)) {
+						continue;
+					}
+
+					minDistance = dist;
+					target = tmpLocation;
+				}
+			}
+		}
+
+		return target;
+	}
+
+	public static boolean isLocationInRain(Location location) {
+		return (location.getWorld().getHighestBlockYAt(location) <= location.getBlockY()) && HOLLOW_MATERIALS.contains(location.getBlock().getType());
 	}
 }

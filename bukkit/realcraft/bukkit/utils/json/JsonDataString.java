@@ -37,7 +37,7 @@ public class JsonDataString extends JsonDataEntry {
 	public void loadData(JsonData data){
 		if(data.containsKey(this.getName())){
 			JsonDataString tmp = new JsonDataString(data.getElement(this.getName()));
-			value = tmp.getValue();
+			this.setValue(tmp.getValue());
 		}
 	}
 
@@ -48,5 +48,10 @@ public class JsonDataString extends JsonDataEntry {
 			return (toCompare.getValue().equals(this.getValue()));
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return this.getValue();
 	}
 }

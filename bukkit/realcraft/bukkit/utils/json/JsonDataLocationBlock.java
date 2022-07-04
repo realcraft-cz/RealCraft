@@ -31,6 +31,7 @@ public class JsonDataLocationBlock extends JsonDataLocation {
 	public JsonObject getData(){
 		JsonObject json = new JsonObject();
 		if(this.getLocation() != null){
+			json.addProperty("world",this.getLocation().getWorld().getName());
 			json.addProperty("x",this.round(this.getLocation().getX(),0));
 			json.addProperty("y",this.round(this.getLocation().getY(),0));
 			json.addProperty("z",this.round(this.getLocation().getZ(),0));

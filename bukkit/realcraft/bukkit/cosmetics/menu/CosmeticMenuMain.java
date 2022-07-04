@@ -26,7 +26,7 @@ public class CosmeticMenuMain implements Listener {
 
 	public CosmeticMenuMain(){
 		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
-		items.put(getIndex(1,2),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.PET));
+		//items.put(getIndex(1,2),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.PET));
 		items.put(getIndex(1,4),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.GADGET));
 		items.put(getIndex(1,6),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.EFFECT));
 		items.put(getIndex(3,2),new CosmeticMenuItem(CosmeticMenuItem.CosmeticMenuItemType.CATEGORY,CosmeticCategory.HAT));

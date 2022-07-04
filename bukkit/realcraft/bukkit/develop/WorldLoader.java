@@ -7,6 +7,11 @@ import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.others.AbstractCommand;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class WorldLoader extends AbstractCommand {
 
     public WorldLoader() {
@@ -39,5 +44,47 @@ public class WorldLoader extends AbstractCommand {
         }
 
 		player.sendMessage("§dWorld "+world.getName()+" loaded");
+    }
+
+    @Override
+    public List<String> tabCompleter(Player player, String[] args) {
+        if (args.length <= 1) {
+            ArrayList<String> completions = new ArrayList<>();
+
+            if (args.length == 0) {
+                for (String world : this._getUnloadedWorldNames()) {
+                    completions.add(world);
+                }
+            } else {
+                String search = args[0];
+                for (String world : this._getUnloadedWorldNames()) {
+                    if (world.contains(search)) {
+                        completions.add(world);
+                    }
+                }
+            }
+
+            return completions;
+        }
+
+        return null;
+    }
+
+    private ArrayList<String> _getUnloadedWorldNames() {
+        ArrayList<String> list = new ArrayList<>();
+
+        File[] folders = Bukkit.getWorldContainer().listFiles();
+        if (folders != null) {
+            for (File file : folders) {
+                if (file.isDirectory() && Bukkit.getWorld(file.getName()) == null) {
+                    String[] files = file.list();
+                    if (files != null && Arrays.asList(files).contains("level.dat")) {
+                        list.add(file.getName());
+                    }
+                }
+            }
+        }
+
+        return list;
     }
 }

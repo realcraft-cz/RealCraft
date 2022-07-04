@@ -2,7 +2,7 @@ package realcraft.bukkit.test;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftArmorStand;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
