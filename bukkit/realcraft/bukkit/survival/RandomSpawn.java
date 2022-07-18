@@ -16,7 +16,7 @@ import java.util.List;
 public class RandomSpawn extends AbstractCommand {
 
 	private static final int RANDOM_LIMIT = 60*1000;
-	private static final int RANDOM_SIZE = 6000;
+	private static final int RANDOM_SIZE = 12000;
 	private HashMap<Player,Long> lastRandomSpawn = new HashMap<Player,Long>();
 
 	public RandomSpawn(){

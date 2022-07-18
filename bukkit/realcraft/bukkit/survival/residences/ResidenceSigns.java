@@ -53,7 +53,7 @@ public class ResidenceSigns implements Listener {
 				player.sendMessage("§cNeplatna residence!");
 				return;
 			}
-			if(residence.getOwner() != player.getName() && !player.hasPermission("group.Admin") && !player.hasPermission("group.Moderator")){
+			if(!residence.getOwner().equalsIgnoreCase(player.getName()) && !player.hasPermission("group.Admin") && !player.hasPermission("group.Moderator")){
 				event.setCancelled(true);
 				player.sendMessage("§cNejsi vlastnik teto residence!");
 				return;

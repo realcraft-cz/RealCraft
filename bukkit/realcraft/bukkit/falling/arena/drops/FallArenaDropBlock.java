@@ -8,7 +8,8 @@ import java.util.Random;
 
 public class FallArenaDropBlock extends FallArenaDrop {
 
-	public static final double TICKS_MULTIPLIER = 2.0;
+	private static final double TICKS_MULTIPLIER = 2.0;
+	private static final Random random = new Random();
 
 	private FallArenaDropBlockType type;
 
@@ -22,7 +23,7 @@ public class FallArenaDropBlock extends FallArenaDrop {
 	}
 
 	public Material getRandomType(){
-		return type.getTypes()[new Random().nextInt(type.getTypes().length)];
+		return type.getTypes()[random.nextInt(type.getTypes().length)];
 	}
 
 	@Override

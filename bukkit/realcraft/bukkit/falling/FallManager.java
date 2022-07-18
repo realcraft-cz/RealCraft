@@ -1,9 +1,6 @@
 package realcraft.bukkit.falling;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.database.DB;
@@ -29,9 +26,7 @@ public class FallManager implements Runnable {
 	private static HashMap<Integer,FallArena> arenas = new HashMap<>();
 
 	public FallManager(){
-		world = Bukkit.getWorld("world_falling");
-		world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
-		world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+		FallManager._createWorld();
 		new LobbyAutoParkour(RealCraft.getInstance());
 		new FallListeners();
 		new FallCommands();
@@ -67,6 +62,29 @@ public class FallManager implements Runnable {
 				}
 			}
 		},20,20);
+	}
+
+	protected static void _createWorld() {
+		WorldCreator creator = new WorldCreator("world_falling");
+		creator.type(WorldType.FLAT);
+		creator.environment(World.Environment.NORMAL);
+		creator.generator("VoidGenerator");
+
+		world = Bukkit.getServer().createWorld(creator);
+		if (world == null) {
+			throw new RuntimeException("World world_falling failed to create");
+		}
+
+		world.setKeepSpawnInMemory(false);
+		world.setDifficulty(Difficulty.NORMAL);
+		world.setPVP(true);
+		world.setAutoSave(true);
+		world.setFullTime(1000);
+		world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,true);
+		world.setGameRule(GameRule.KEEP_INVENTORY,false);
+		world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
+		world.setGameRule(GameRule.DO_MOB_SPAWNING,false);
+		world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS,false);
 	}
 
 	public static World getWorld(){

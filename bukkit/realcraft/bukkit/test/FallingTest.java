@@ -6,48 +6,44 @@ import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.others.AbstractCommand;
-import realcraft.share.utils.RandomUtil;
-
-import java.util.Random;
 
 public class FallingTest extends AbstractCommand implements Listener {
 
-	private static final Material[] TYPES = new Material[]{
-			Material.STONE,
-			Material.DIRT,
-			Material.GRASS_BLOCK,
-			Material.COBBLESTONE,
-			Material.BIRCH_LOG
-	};
-
 	public FallingTest() {
 		super("falling");
-		Bukkit.getPluginManager().registerEvents(this,RealCraft.getInstance());
 	}
 
 	@Override
 	public void perform(Player player,String[] args){
-		Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(),new Runnable() {
-			@Override
-			public void run(){
-				Location location = player.getLocation().add(RandomUtil.getRandomInteger(-15,15),32,RandomUtil.getRandomInteger(-15,15));
-				location.setX(location.getBlockX()+0.5);
-				location.setZ(location.getBlockZ()+0.5);
-				Material type = null;
-				while(type == null || !type.isBlock()){
-					type = FallingTest.this.getRandom(TYPES);
-				}
+		Material[] blocks = new Material[]{
+			Material.MANGROVE_LEAVES,
+			Material.MANGROVE_ROOTS,
+			Material.AZALEA_LEAVES,
+			Material.FLOWERING_AZALEA_LEAVES,
 
-				FallingBlock fallblock = location.getWorld().spawnFallingBlock(location,type,(byte)0);
+			Material.MUD,
+			Material.MANGROVE_LOG,
+
+			Material.AMETHYST_BLOCK,
+			Material.CALCITE,
+			Material.COPPER_ORE,
+			Material.DRIPSTONE_BLOCK,
+			Material.POINTED_DRIPSTONE,
+			Material.POWDER_SNOW,
+			Material.TUFF,
+			Material.BEE_NEST,
+		};
+		Location location = player.getLocation();
+		location.add(2, 2, 2);
+
+		for (Material block : blocks) {
+			try {
+				FallingBlock fallblock = location.getWorld().spawnFallingBlock(location, Bukkit.createBlockData(block));
 				fallblock.setDropItem(false);
+			} catch (Exception e) {
+				player.sendMessage("§cError: §f" + block);
 			}
-		},1,1);
-	}
-
-	public Material getRandom(Material[] array) {
-		int rnd = new Random().nextInt(array.length);
-		return array[rnd];
+		}
 	}
 }

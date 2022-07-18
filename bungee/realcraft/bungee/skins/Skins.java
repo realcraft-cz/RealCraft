@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.connection.InitialHandler;
 import net.md_5.bungee.connection.LoginResult;
-import net.md_5.bungee.connection.LoginResult.Property;
+import net.md_5.bungee.protocol.Property;
 import realcraft.bungee.RealCraftBungee;
 import realcraft.bungee.skins.exceptions.SkinsLimitException;
 import realcraft.bungee.skins.exceptions.SkinsNotFoundException;

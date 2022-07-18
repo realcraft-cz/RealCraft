@@ -16,6 +16,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Intallation of mapcrafter:
+ *
+ *   git clone https://github.com/miclav/mapcrafter
+ *
+ *   cmake .
+ *   make
+ *
+ */
+
 public class MapCrafter {
 	RealCraft plugin;
 

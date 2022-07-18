@@ -22,6 +22,7 @@ public class Test {
 			new CombatTest();
 			new AdvancementTest();
 			new SwimTest();
+			new FallingTest();
 		}
 	}
 }

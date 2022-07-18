@@ -34,7 +34,7 @@ public class FallCommands extends AbstractCommand {
 			player.sendMessage("§6/ff home §f- Teleport na vlastni ostrov");
 			player.sendMessage("§6/ff info §f- Informace o ostrove");
 			player.sendMessage("§6/ff list §f- Seznam tvych ostrovu");
-			player.sendMessage("§6/ff join §e<player> §f- Teleport na hracuv ostrov");
+			player.sendMessage("§6/ff join|tp §e<player> §f- Teleport na hracuv ostrov");
 			player.sendMessage("§6/ff (un)trust §e<player> §f- (Odebrat) Pridat spoluhrace");
 			player.sendMessage("§6/ff (un)lock §f- (Odemknout) Zamknout ostrov");
 			player.sendMessage("§6/ff regen §f- Pregenerovat ostrov (smaze inventar)");

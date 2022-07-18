@@ -70,6 +70,7 @@ public class LobbyStands implements Listener, Runnable {
 						double z = Double.valueOf(stand.get("z").toString());
 						float yaw = Float.valueOf(stand.get("yaw").toString());
 						float pitch = Float.valueOf(stand.get("pitch").toString());
+						boolean effect = stand.get("effect") != null ? Boolean.valueOf(stand.get("effect").toString()) : false;
 						World world = Bukkit.getServer().getWorld(stand.get("world").toString());
 						Location location = new Location(world,x,y,z,yaw,pitch);
 						ServerType serverType = ServerType.LOBBY;
@@ -77,7 +78,7 @@ public class LobbyStands implements Listener, Runnable {
 							serverType = ServerType.getByName(server);
 						} catch (IllegalArgumentException e){
 						}
-						stands.add(new LobbyStand(serverType,location));
+						stands.add(new LobbyStand(serverType,location,effect));
 					}
 				}
 			} catch (Exception e){
@@ -134,14 +135,16 @@ public class LobbyStands implements Listener, Runnable {
 
 		private ServerType server;
 		private Location location;
+		private boolean effect;
 		private ArmorStand stand;
 		private Hologram hologramName;
 		private Hologram hologramPlayers;
 		private int players = 0;
 
-		public LobbyStand(ServerType server,Location location){
+		public LobbyStand(ServerType server,Location location,boolean effect){
 			this.server = server;
 			this.location = location;
+			this.effect = effect;
 			this.spawn();
 			if(server != ServerType.LOBBY) this.init();
 		}
@@ -203,6 +206,10 @@ public class LobbyStands implements Listener, Runnable {
 						players = tmpPlayers;
 						hologramPlayers.getTextLine(0).setText(players + " " + StringUtil.inflect(players, new String[]{"hrac", "hraci", "hracu"}));
 					}
+
+					if (effect) {
+						this.runEffect();
+					}
 				} else {
 					players = -1;
 					hologramName.getTextLine(0).setText(ChatColor.GRAY + "" + ChatColor.BOLD + server.getName());
@@ -210,6 +217,19 @@ public class LobbyStands implements Listener, Runnable {
 				}
 			}
 			if(stand == null || stand.isDead() || !stand.isValid()) this.spawn();
+		}
+
+		private void runEffect() {
+			//location.getWorld().spawnParticle(Particle.WATER_WAKE, location.clone().add(0, 2.5, 0), 8, 0.2, 0.2, 0.2, 0.04);
+			location.getWorld().spawnParticle(Particle.SCRAPE, location.clone().add(0, 1.5, 0), 4, 0.4, 0.4, 0.4, 1);
+
+			Bukkit.getScheduler().runTaskLater(RealCraft.getInstance(), new Runnable() {
+				@Override
+				public void run() {
+					//location.getWorld().spawnParticle(Particle.WATER_WAKE, location.clone().add(0, 2.5, 0), 8, 0.2, 0.2, 0.2, 0.04);
+					location.getWorld().spawnParticle(Particle.WAX_ON, location.clone().add(0, 1.5, 0), 4, 0.4, 0.4, 0.4, 1);
+				}
+			}, 10);
 		}
 
 		public void click(Player player){

@@ -8,6 +8,8 @@ import java.util.Random;
 
 public class FallArenaDropEntity extends FallArenaDrop {
 
+	private static final Random random = new Random();
+
 	private FallArenaDropEntityType type;
 
 	public FallArenaDropEntity(FallArenaDropEntityType type){
@@ -20,7 +22,7 @@ public class FallArenaDropEntity extends FallArenaDrop {
 	}
 
 	public EntityType getRandomType(){
-		return type.getTypes()[new Random().nextInt(type.getTypes().length)];
+		return type.getTypes()[random.nextInt(type.getTypes().length)];
 	}
 
 	@Override
