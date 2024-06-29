@@ -205,7 +205,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 
 	@EventHandler
 	public void PlayerInteractEntityEvent(PlayerInteractEntityEvent event){
-		if(event.getRightClicked().getType() == EntityType.ENDER_CRYSTAL){
+		if(event.getRightClicked().getType() == EntityType.END_CRYSTAL){
 			for(CosmeticCrystal crystal : crystals){
 				if(crystal.getName().equals(event.getRightClicked().getCustomName())){
 					event.setCancelled(true);
@@ -218,7 +218,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 
 	@EventHandler
 	public void EntityDamageByEntityEvent(EntityDamageByEntityEvent event){
-		if(event.getEntity().getType() == EntityType.ENDER_CRYSTAL){
+		if(event.getEntity().getType() == EntityType.END_CRYSTAL){
 			event.setCancelled(true);
 		}
 	}
@@ -341,7 +341,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 			hologramReward.clearLines();
 			hologramName.clearLines();
 			hologramName.insertTextLine(0,"§a§lLucky Crystal");
-			crystal = (EnderCrystal)location.getWorld().spawnEntity(location,EntityType.ENDER_CRYSTAL);
+			crystal = (EnderCrystal)location.getWorld().spawnEntity(location,EntityType.END_CRYSTAL);
 			crystal.setCustomName(this.getName());
 			crystal.setCustomNameVisible(false);
 			crystal.setInvulnerable(true);
@@ -360,7 +360,7 @@ public class CosmeticCrystals implements Listener, Runnable {
 			stand.setPersistent(false);
 			stand.getEquipment().setHelmet(ItemUtil.getHead(CRYSTAL_LUCKY_TEXTURE));
 			for(Entity entity : crystal.getNearbyEntities(3.0,3.0,3.0)){
-				if(entity.getType() == EntityType.ENDER_CRYSTAL && crystal.getCustomName().equalsIgnoreCase(entity.getCustomName())){
+				if(entity.getType() == EntityType.END_CRYSTAL && crystal.getCustomName().equalsIgnoreCase(entity.getCustomName())){
 					entity.remove();
 				}
 			}

@@ -3,6 +3,7 @@ package realcraft.bukkit.mapmanager.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.mapmanager.MapManager;
 import realcraft.bukkit.mapmanager.MapPlayer;
 import realcraft.bukkit.mapmanager.map.Map;
+import realcraft.bukkit.mapmanager.map.MapState;
 import realcraft.bukkit.mapmanager.map.MapType;
 import realcraft.bukkit.mapmanager.map.data.MapDataInteger;
 import realcraft.bukkit.users.Users;
@@ -109,6 +111,10 @@ public class MapCommandList extends MapCommand implements Listener {
 					lores.add("§7Klikni pro pripojeni");
 					meta.setLore(lores);
 					meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+					if (map.getState() == MapState.READY) {
+						meta.addEnchant(Enchantment.LURE,1,true);
+						meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+					}
 					item.setItemMeta(meta);
 					menu.setItem(i,item);
 				}

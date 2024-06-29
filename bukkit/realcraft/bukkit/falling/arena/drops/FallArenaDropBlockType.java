@@ -21,7 +21,7 @@ public enum FallArenaDropBlockType {
 	FERN(160,				Material.FERN),
 	GOLD_ORE(800,			Material.GOLD_ORE),
 	GRANITE(60,				Material.GRANITE),
-	GRASS(80,				Material.GRASS),
+	GRASS(80,				Material.SHORT_GRASS),
 	GRASS_BLOCK(40,			Material.GRASS_BLOCK),
 	GRAVEL(40,				Material.GRAVEL),
 	ICE(1200,				Material.ICE),

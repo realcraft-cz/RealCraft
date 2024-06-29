@@ -50,7 +50,7 @@ public class CancelGrow implements Listener {
 
 	@EventHandler
 	public void BlockGrowEvent(BlockGrowEvent event){
-		if(event.getNewState().getType() == Material.GRASS || event.getNewState().getType() == Material.TALL_GRASS || event.getNewState().getType() == Material.POPPY || event.getNewState().getType() == Material.DANDELION) return;
+		if(event.getNewState().getType() == Material.SHORT_GRASS || event.getNewState().getType() == Material.TALL_GRASS || event.getNewState().getType() == Material.POPPY || event.getNewState().getType() == Material.DANDELION) return;
 		if(!bonemealInteractions.containsKey(event.getBlock()) || bonemealInteractions.get(event.getBlock())+1000 < System.currentTimeMillis()){
 			event.setCancelled(true);
 		}
@@ -78,7 +78,7 @@ public class CancelGrow implements Listener {
 			int removed = 0;
 			for(Entity entity : event.getChunk().getEntities()){
 				count ++;
-				if(entity.getType() == EntityType.MINECART || entity.getType() == EntityType.MINECART_CHEST || entity.getType() == EntityType.MINECART_FURNACE || entity.getType() == EntityType.MINECART_HOPPER || entity.getType() == EntityType.MINECART_TNT){
+				if(entity.getType() == EntityType.MINECART || entity.getType() == EntityType.CHEST_MINECART || entity.getType() == EntityType.FURNACE_MINECART || entity.getType() == EntityType.HOPPER_MINECART || entity.getType() == EntityType.TNT_MINECART){
 					removed ++;
 					entity.remove();
 				}

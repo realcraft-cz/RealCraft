@@ -1,17 +1,13 @@
 package realcraft.bungee.geoip;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import net.md_5.bungee.api.ProxyServer;
+import realcraft.bungee.RealCraftBungee;
+
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
-
-import net.md_5.bungee.BungeeCord;
-import realcraft.bungee.RealCraftBungee;
 
 public class GeoLiteAPI {
 
@@ -38,7 +34,7 @@ public class GeoLiteAPI {
             }
         }
         // Ok, let's try to download the data file!
-        BungeeCord.getInstance().getScheduler().runAsync(plugin,new Runnable(){
+        ProxyServer.getInstance().getScheduler().runAsync(plugin,new Runnable(){
             @Override
             public void run() {
                 try {

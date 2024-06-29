@@ -233,7 +233,7 @@ public class MapListeners implements Listener {
 
 	@EventHandler
 	public void EntityExplodeEvent(EntityExplodeEvent event){
-		if(event.getEntityType() == EntityType.PRIMED_TNT){
+		if(event.getEntityType() == EntityType.TNT){
 			event.setCancelled(true);
 			event.blockList().clear();
 		}
@@ -241,7 +241,7 @@ public class MapListeners implements Listener {
 
 	@EventHandler
 	public void ExplosionPrimeEvent(ExplosionPrimeEvent event){
-		if(event.getEntityType() == EntityType.PRIMED_TNT){
+		if(event.getEntityType() == EntityType.TNT){
 			event.setCancelled(true);
 		}
 	}

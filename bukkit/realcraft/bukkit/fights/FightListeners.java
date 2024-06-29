@@ -204,7 +204,7 @@ public class FightListeners implements Listener {
 
 	@EventHandler(priority=EventPriority.LOW)
 	public void EntityExplodeEvent(EntityExplodeEvent event){
-		if(event.getEntityType() == EntityType.PRIMED_TNT) event.blockList().clear();
+		if(event.getEntityType() == EntityType.TNT) event.blockList().clear();
 	}
 
 	@EventHandler(priority=EventPriority.LOW)

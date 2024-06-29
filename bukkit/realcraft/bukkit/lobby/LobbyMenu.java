@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +28,6 @@ import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.auth.AuthLoginEvent;
 import realcraft.bukkit.users.Users;
 import realcraft.bukkit.utils.BungeeMessages;
-import realcraft.bukkit.utils.Glow;
 import realcraft.share.ServerType;
 
 import java.util.ArrayList;
@@ -246,8 +246,9 @@ public class LobbyMenu implements Listener,PluginMessageListener,Runnable {
 				meta.setDisplayName(ChatColor.GRAY + ChatColor.stripColor(this.name) + ChatColor.RED + ChatColor.BOLD + " OFFLINE");
 			}
 			meta.setLore(lore);
-			if(this.players > 0) meta.addEnchant(Glow.getGlow(),1,true);
-			else meta.removeEnchant(Glow.getGlow());
+			if(this.players > 0) meta.addEnchant(Enchantment.LURE,1,true);
+			else meta.removeEnchant(Enchantment.LURE);
+			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			itemstack.setItemMeta(meta);
 		}
 

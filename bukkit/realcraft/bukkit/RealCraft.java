@@ -62,6 +62,7 @@ import realcraft.bukkit.survival.residences.CheckResidences;
 import realcraft.bukkit.survival.residences.ResidenceSigns;
 import realcraft.bukkit.survival.sells.Sells;
 import realcraft.bukkit.survival.shops.ShopManager;
+import realcraft.bukkit.survival.traders.Traders;
 import realcraft.bukkit.survival.trading.Trading;
 import realcraft.bukkit.teleport.TeleportRequests;
 import realcraft.bukkit.test.Test;
@@ -154,7 +155,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 		skins = new Skins();
 		gamesreminder = new GamesReminder(this);
 		new SchematicBrush();
-		//new NickManager();
 		new Coins();
 		new Friends();
 		new ServerSpawn();
@@ -167,7 +167,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 			new Sitting();
 		}
 		else if(serverName.equalsIgnoreCase("survival")){
-			//1.18.2 seed: -4021838568611269878
 			checkresidences = new CheckResidences(this);
 			residencesigns = new ResidenceSigns(this);
 			trading = new Trading(this);
@@ -181,6 +180,7 @@ public class RealCraft extends JavaPlugin implements Listener {
 			new Sitting();
 			new ViewDistanceLimiter();
 			new PetsManager();
+			new Traders();
 		}
 		else if(serverName.equalsIgnoreCase("bedwars") ||
 				serverName.equalsIgnoreCase("hidenseek") ||
@@ -233,8 +233,9 @@ public class RealCraft extends JavaPlugin implements Listener {
 		this.updateWorldRules();
 
 		if (RealCraft.isTestServer()) {
-			if (RealCraft.getServerType() == ServerType.LOBBY || RealCraft.getServerType() == ServerType.SURVIVAL) {
+			if (RealCraft.getServerType() == ServerType.LOBBY) {
 				new PetsManager();
+				new Traders();
 			}
 		}
 	}
@@ -333,9 +334,10 @@ public class RealCraft extends JavaPlugin implements Listener {
 
 	public class PacketListener {
 		public PacketListener(){
-			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Server.ADVANCEMENTS,PacketType.Play.Server.RECIPES){
+			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Client.ADVANCEMENTS,PacketType.Play.Server.ADVANCEMENTS,PacketType.Play.Server.RECIPES){
 				@Override
 				public void onPacketSending(PacketEvent event){
+					System.out.println("canceled");
 					if(RealCraft.getServerType() != ServerType.SURVIVAL && RealCraft.getServerType() != ServerType.FALLING){
 						event.setCancelled(true);
 					}

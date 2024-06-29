@@ -203,7 +203,7 @@ public class Utils {
 		return (player.getGameMode() == GameMode.CREATIVE ||
 				player.getGameMode() == GameMode.SPECTATOR ||
 				player.hasPotionEffect(PotionEffectType.LEVITATION) ||
-				player.hasPotionEffect(PotionEffectType.JUMP) ||
+				player.hasPotionEffect(PotionEffectType.JUMP_BOOST) ||
 				player.isFlying() ||
 				player.isInsideVehicle() ||
 				player.isSwimming() ||
@@ -348,7 +348,7 @@ public class Utils {
 
     public static boolean hasNoFallBoots(Player player){
     	ItemStack item = player.getInventory().getBoots();
-    	if(item != null && item.containsEnchantment(Enchantment.PROTECTION_FALL)) return true;
+    	if(item != null && item.containsEnchantment(Enchantment.FEATHER_FALLING)) return true;
     	return false;
     }
 

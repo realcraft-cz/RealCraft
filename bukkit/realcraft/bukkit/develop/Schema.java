@@ -237,7 +237,7 @@ public class Schema extends AbstractCommand implements Listener {
 		shouldPlaceLast.add(Material.RED_BED);
 		shouldPlaceLast.add(Material.WHITE_BED);
 		shouldPlaceLast.add(Material.YELLOW_BED);
-		shouldPlaceLast.add(Material.GRASS);
+		shouldPlaceLast.add(Material.SHORT_GRASS);
 		shouldPlaceLast.add(Material.TALL_GRASS);
 		shouldPlaceLast.add(Material.DEAD_BUSH);
 		shouldPlaceLast.add(Material.SUNFLOWER);

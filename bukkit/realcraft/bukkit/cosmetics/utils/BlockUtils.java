@@ -174,7 +174,7 @@ public class BlockUtils {
 						&& BLOCK.getType() != Material.SPRUCE_PRESSURE_PLATE
 						&& BLOCK.getType() != Material.STONE_PRESSURE_PLATE
 						&& BLOCK.getType() != Material.WHEAT
-						&& BLOCK.getType() != Material.GRASS
+						&& BLOCK.getType() != Material.SHORT_GRASS
 						&& BLOCK.getType() != Material.TALL_GRASS
 						&& BLOCK.getType() != Material.DEAD_BUSH
 						&& BLOCK.getType() != Material.POPPY

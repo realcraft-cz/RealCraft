@@ -46,7 +46,7 @@ public class PetActionEat extends PetAction {
         }
 
         for (Entity entity : this.getEntity().getLocation().getNearbyEntities(MAX_FOOD_DISTANCE, 2.2, MAX_FOOD_DISTANCE)) {
-            if (entity.getType() == EntityType.DROPPED_ITEM && entity.isOnGround()) {
+            if (entity.getType() == EntityType.ITEM && entity.isOnGround()) {
                 if (this.getFood(((Item) entity).getItemStack().getType()) != null && this.getEntity().hasLineOfSight(entity)) {
                     return true;
                 }
@@ -70,7 +70,7 @@ public class PetActionEat extends PetAction {
         this.getEntity().setGravity(true);
 
         for (Entity entity : this.getEntity().getLocation().getNearbyEntities(MAX_FOOD_DISTANCE, 2.2, MAX_FOOD_DISTANCE)) {
-            if (entity.getType() == EntityType.DROPPED_ITEM) {
+            if (entity.getType() == EntityType.ITEM) {
                 if (this.getFood(((Item) entity).getItemStack().getType()) != null) {
                     this.foodItem = (Item) entity;
                     this._startTask(0, 5);
@@ -139,7 +139,7 @@ public class PetActionEat extends PetAction {
             EntityUtil.navigate(this.getEntity(), targetLoc, 0.7);
         } else if (this.state == State.EATING) {
             Location particleLocation = this.getEntity().getEyeLocation().add(this.getEntity().getEyeLocation().getDirection().setY(0).multiply(0.3));
-            this.getEntity().getWorld().spawnParticle(Particle.ITEM_CRACK, particleLocation, 3, 0.1, 0.1, 0.1, 0.05, this.foodItemStack);
+            this.getEntity().getWorld().spawnParticle(Particle.ITEM, particleLocation, 3, 0.1, 0.1, 0.1, 0.05, this.foodItemStack);
             this.getEntity().getWorld().playSound(getEntity().getLocation(), Sound.ENTITY_GENERIC_EAT, 0.7f, 1f);
 
             if (this.getTicks() % 12 == 0) {

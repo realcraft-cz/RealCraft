@@ -155,7 +155,7 @@ public class PetActionSpawn extends PetAction {
 
         if (this.getTicks() <= 8) {
             if (this.getTicks() % 2 == 0) {
-                this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, spawnLocation, 4, 0.1, 0.0, 0.1, 0, blockData);
+                this.getEntity().getWorld().spawnParticle(Particle.BLOCK, spawnLocation, 4, 0.1, 0.0, 0.1, 0, blockData);
             }
 
             if (this.getTicks() % 4 == 0) {
@@ -168,7 +168,7 @@ public class PetActionSpawn extends PetAction {
 
         if (this.getTicks() > 8 + 16 && this.getTicks() <= 8 + 16 + 12) {
             if (this.getTicks() % 2 == 0) {
-                this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, spawnLocation, 4, 0.2, 0.1, 0.2, 0, blockData);
+                this.getEntity().getWorld().spawnParticle(Particle.BLOCK, spawnLocation, 4, 0.2, 0.1, 0.2, 0, blockData);
             }
 
             if (this.getTicks() % 4 == 0) {
@@ -181,7 +181,7 @@ public class PetActionSpawn extends PetAction {
 
         if (this.getTicks() > 8 + 16 + 12 + 16 && this.getTicks() <= 8 + 16 + 12 + 16 + 32) {
             if (this.getTicks() % 2 == 0) {
-                this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, spawnLocation, 4, 0.2, 0.1, 0.2, 0, blockData);
+                this.getEntity().getWorld().spawnParticle(Particle.BLOCK, spawnLocation, 4, 0.2, 0.1, 0.2, 0, blockData);
             }
 
             if (this.getTicks() % 3 == 0) {

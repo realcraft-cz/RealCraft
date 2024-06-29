@@ -12,7 +12,7 @@ import realcraft.bukkit.utils.DateUtil;
 public class VipCommand extends AbstractCommand {
 
     public VipCommand() {
-        super("vip", "premium", "store");
+        super("vip", "store");
     }
 
     @Override

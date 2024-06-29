@@ -35,7 +35,7 @@ public class GadgetPartyPopper extends Gadget {
 			Vector rand = new Vector(0,0,0);
 			Particles.ITEM_CRACK.display(new ItemStack(DYES[RandomUtil.getRandomInteger(0,DYES.length-1)]), player.getEyeLocation().getDirection().add(rand.multiply(0.4)).multiply(1.2),0.6f, player.getEyeLocation(), 128);
 			//Vector offset = player.getEyeLocation().getDirection().add(rand.multiply(0.4)).multiply(1.2);
-			//player.getWorld().spawnParticle(Particle.ITEM_CRACK,player.getEyeLocation(),1,offset.getX(),offset.getY(),offset.getZ());
+			//player.getWorld().spawnParticle(Particle.ITEM,player.getEyeLocation(),1,offset.getX(),offset.getY(),offset.getZ());
 		}
 		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_CHICKEN_EGG, 1.0f, 1.0f);
 	}

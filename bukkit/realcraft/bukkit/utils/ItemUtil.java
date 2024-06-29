@@ -23,7 +23,7 @@ public class ItemUtil {
 	public static ItemStack getHead(String name,String url){
 		ItemStack head = new ItemStack(Material.PLAYER_HEAD);
 		SkullMeta headMeta = (SkullMeta) head.getItemMeta();
-		GameProfile profile = new GameProfile(UUID.randomUUID(),null);
+		GameProfile profile = new GameProfile(UUID.randomUUID(),"");
 		profile.getProperties().put("textures",new Property("textures",url));
 		Field profileField;
 		try {

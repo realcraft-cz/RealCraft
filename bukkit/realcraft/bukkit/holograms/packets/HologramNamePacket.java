@@ -24,6 +24,6 @@ public class HologramNamePacket extends HologramPacket {
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(2, WrappedDataWatcher.Registry.getChatComponentSerializer(true)), opt);
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(3, WrappedDataWatcher.Registry.get(Boolean.class)), this.getHologram().getText() == null ? false : true);
 
-        this.getPacket().getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+        this.getPacket().getDataValueCollectionModifier().write(0, dataWatcher.toDataValueCollection());
     }
 }

@@ -1,20 +1,24 @@
 package realcraft.bungee.users.auth;
 
 import com.google.common.base.Charsets;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 import realcraft.bungee.RealCraftBungee;
 import realcraft.bungee.sockets.SocketData;
 import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.Users;
 import realcraft.share.users.User;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +29,32 @@ public class UsersAuthentication implements Listener {
 	private static final Pattern NICKNAME_PATTERN = Pattern.compile("[a-zA-Z0-9_]*");
 
 	public UsersAuthentication(){
-		BungeeCord.getInstance().getPluginManager().registerListener(RealCraftBungee.getInstance(),this);
+		ProxyServer.getInstance().getPluginManager().registerListener(RealCraftBungee.getInstance(),this);
+	}
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void LoginEvent(LoginEvent event){
+		try {
+			UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:"+event.getConnection().getName()).getBytes(Charsets.UTF_8));
+			PendingConnection pendingConnection = event.getConnection();
+			Class<?> initialHandlerClass = pendingConnection.getClass();
+			Field uniqueIdField = initialHandlerClass.getDeclaredField("uniqueId");
+			uniqueIdField.setAccessible(true);
+			uniqueIdField.set(pendingConnection, offlineUUID);
+
+			Field rewriteIdField = initialHandlerClass.getDeclaredField("rewriteId");
+			rewriteIdField.setAccessible(true);
+			rewriteIdField.set(pendingConnection, offlineUUID);
+
+			Field offlineIdField = initialHandlerClass.getDeclaredField("offlineId");
+			offlineIdField.setAccessible(true);
+			offlineIdField.set(pendingConnection, offlineUUID);
+
+			User user = Users.getUser(event.getConnection().getUniqueId());
+			Users.connectUser(user);
+		} catch (IllegalArgumentException | NoSuchFieldException | IllegalAccessException e){
+			e.printStackTrace();
+		}
 	}
 
 	@EventHandler
@@ -62,12 +91,8 @@ public class UsersAuthentication implements Listener {
 			}
 			user.reload();
 			user.setAddress(event.getConnection().getAddress().getAddress().getHostAddress().replace("/",""));
-			if(user.isPremium()) event.getConnection().setOnlineMode(true);
-			else {
-				/*if(!user.isCountryException() && GeoLiteAPI.isCountryBlocked(event.getConnection().getAddress())){
-					event.setCancelReason(TextComponent.fromLegacyText("§cZeme, ze ktere se pripojujes, je zablokovana!"));
-					event.setCancelled(true);
-				}*/
+			if(user.isPremium() || user.hasPremiumAttempt()) {
+				event.getConnection().setOnlineMode(true);
 			}
 		}
 	}
@@ -77,6 +102,10 @@ public class UsersAuthentication implements Listener {
 		ProxiedPlayer player = event.getPlayer();
 		User user = Users.getUser(player);
 		if(user.isRegistered()){
+			if (player.getPendingConnection().isOnlineMode() && user.hasPremiumAttempt()) {
+				user.setPremium(true);
+			}
+
 			if(!user.isPremium()) this.showPlayerLoginMessage(player);
 			else {
 				this.loginUser(user);
@@ -107,7 +136,7 @@ public class UsersAuthentication implements Listener {
 				return;
 			}
 			if(user.getLoginAttempts().hasTooManyAttempts()){
-				player.sendMessage(TextComponent.fromLegacyText("§cPrilis mnoho pokusu! Opakovat muzes za "+user.getLoginAttempts().getRemainingSeconds()+" s."));
+				player.sendMessage(TextComponent.fromLegacyText("§cPrilis mnoho pokusu! Zkus to znovu za "+user.getLoginAttempts().getRemainingSeconds()+" s."));
 				return;
 			}
 			if(args.length == 0){
@@ -207,7 +236,7 @@ public class UsersAuthentication implements Listener {
 			attempts ++;
 			if(attempts >= 3){
 				attempts = 0;
-				expireTime = System.currentTimeMillis()+(20*1000);
+				expireTime = System.currentTimeMillis()+(10*1000);
 			}
 		}
 	}

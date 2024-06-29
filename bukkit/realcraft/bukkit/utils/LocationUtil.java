@@ -24,7 +24,7 @@ public class LocationUtil {
 		HOLLOW_MATERIALS.add(Material.OAK_SAPLING);
 		HOLLOW_MATERIALS.add(Material.POWERED_RAIL);
 		HOLLOW_MATERIALS.add(Material.DETECTOR_RAIL);
-		HOLLOW_MATERIALS.add(Material.GRASS);
+		HOLLOW_MATERIALS.add(Material.SHORT_GRASS);
 		HOLLOW_MATERIALS.add(Material.TALL_GRASS);
 		HOLLOW_MATERIALS.add(Material.LEGACY_LONG_GRASS);
 		HOLLOW_MATERIALS.add(Material.DEAD_BUSH);
@@ -209,15 +209,6 @@ public class LocationUtil {
 		}
 
 		return (location1.getWorld() == location2.getWorld() && location1.getBlockX() == location2.getBlockX() && location1.getBlockY() == location2.getBlockY() && location1.getBlockZ() == location2.getBlockZ());
-	}
-
-	public static void renderLocation(Player player, Location location) {
-		for (int y = 0; y <= 1; y++) {
-			player.spawnParticle(Particle.REDSTONE, location.clone().add(0, y, 0), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
-			player.spawnParticle(Particle.REDSTONE, location.clone().add(0, y, 1), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
-			player.spawnParticle(Particle.REDSTONE, location.clone().add(1, y, 0), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
-			player.spawnParticle(Particle.REDSTONE, location.clone().add(1, y, 1), 1, 0f, 0f, 0f, 0f, new Particle.DustOptions(Color.YELLOW, 0.8f));
-		}
 	}
 
 	public static BlockFace yawToFace (float yaw) {

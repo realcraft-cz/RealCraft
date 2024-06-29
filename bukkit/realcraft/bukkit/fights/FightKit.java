@@ -1,7 +1,5 @@
 package realcraft.bukkit.fights;
 
-import java.util.ArrayList;
-
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -9,6 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.ArrayList;
 
 public enum FightKit {
 	ARCHER, NINJA, KNIGHT, VIKING, TANK;
@@ -38,36 +38,36 @@ public enum FightKit {
 				items.add(new FightKitItem(0,new ItemStack(Material.WOODEN_SWORD)));
 				items.add(new FightKitItem(1,new ItemStack(Material.BOW)));
 				items.add(new FightKitItem(2,new ItemStack(Material.ARROW,20)));
-				items.add(new FightKitItemHelmet(new ItemStack(Material.GOLDEN_HELMET),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,2)));
-				items.add(new FightKitItemChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,3)));
-				items.add(new FightKitItemLeggings(new ItemStack(Material.GOLDEN_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,2)));
-				items.add(new FightKitItemBoots(new ItemStack(Material.GOLDEN_BOOTS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,2)));
+				items.add(new FightKitItemHelmet(new ItemStack(Material.GOLDEN_HELMET),new FightKitEnchant(Enchantment.PROTECTION,2)));
+				items.add(new FightKitItemChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION,3)));
+				items.add(new FightKitItemLeggings(new ItemStack(Material.GOLDEN_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION,2)));
+				items.add(new FightKitItemBoots(new ItemStack(Material.GOLDEN_BOOTS),new FightKitEnchant(Enchantment.PROTECTION,2)));
 			}
 			else if(this == NINJA){
 				items.add(new FightKitItem(0,new ItemStack(Material.IRON_SWORD)));
-				items.add(new FightKitItemChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,3)));
-				items.add(new FightKitItemBoots(new ItemStack(Material.CHAINMAIL_BOOTS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,2)));
+				items.add(new FightKitItemChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION,3)));
+				items.add(new FightKitItemBoots(new ItemStack(Material.CHAINMAIL_BOOTS),new FightKitEnchant(Enchantment.PROTECTION,2)));
 			}
 			else if(this == KNIGHT){
 				items.add(new FightKitItem(0,new ItemStack(Material.IRON_SWORD)));
-				items.add(new FightKitItemHelmet(new ItemStack(Material.CHAINMAIL_HELMET),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemChestplate(new ItemStack(Material.IRON_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,2)));
-				items.add(new FightKitItemBoots(new ItemStack(Material.CHAINMAIL_BOOTS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
+				items.add(new FightKitItemHelmet(new ItemStack(Material.CHAINMAIL_HELMET),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemChestplate(new ItemStack(Material.IRON_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemLeggings(new ItemStack(Material.CHAINMAIL_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION,2)));
+				items.add(new FightKitItemBoots(new ItemStack(Material.CHAINMAIL_BOOTS),new FightKitEnchant(Enchantment.PROTECTION,1)));
 			}
 			else if(this == VIKING){
-				items.add(new FightKitItem(0,new ItemStack(Material.GOLDEN_AXE),new FightKitEnchant(Enchantment.DURABILITY,5)));
-				items.add(new FightKitItemHelmet(new ItemStack(Material.IRON_HELMET),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemLeggings(new ItemStack(Material.LEATHER_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemBoots(new ItemStack(Material.LEATHER_BOOTS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
+				items.add(new FightKitItem(0,new ItemStack(Material.GOLDEN_AXE),new FightKitEnchant(Enchantment.UNBREAKING,5)));
+				items.add(new FightKitItemHelmet(new ItemStack(Material.IRON_HELMET),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemLeggings(new ItemStack(Material.LEATHER_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemBoots(new ItemStack(Material.LEATHER_BOOTS),new FightKitEnchant(Enchantment.PROTECTION,1)));
 			}
 			else if(this == TANK){
 				items.add(new FightKitItem(0,new ItemStack(Material.STONE_SWORD)));
-				items.add(new FightKitItemHelmet(new ItemStack(Material.IRON_HELMET),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemLeggings(new ItemStack(Material.IRON_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
-				items.add(new FightKitItemBoots(new ItemStack(Material.IRON_BOOTS),new FightKitEnchant(Enchantment.PROTECTION_ENVIRONMENTAL,1)));
+				items.add(new FightKitItemHelmet(new ItemStack(Material.IRON_HELMET),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemLeggings(new ItemStack(Material.IRON_LEGGINGS),new FightKitEnchant(Enchantment.PROTECTION,1)));
+				items.add(new FightKitItemBoots(new ItemStack(Material.IRON_BOOTS),new FightKitEnchant(Enchantment.PROTECTION,1)));
 			}
 			items.add(new FightKitItem(7,new ItemStack(Material.COOKED_BEEF,4)));
 			items.add(new FightKitItem(8,new ItemStack(Material.GOLDEN_APPLE)));

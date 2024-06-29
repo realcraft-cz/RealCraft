@@ -33,7 +33,7 @@ public class TeleportRequests implements Listener {
 			Player recipient = plugin.getServer().getPlayer(args[1]);
 			if(recipient != null){
 				long timeout = essentials.getSettings().getTpaAcceptCancellation();
-				if(essentials.getUser(recipient).getTeleportRequest() == essentials.getUser(player).getBase().getUniqueId() && (System.currentTimeMillis()-essentials.getUser(recipient).getTeleportRequestTime())/1000 <= timeout){
+				if(essentials.getUser(recipient).getNextTpaRequest(false, false, false).getRequesterUuid() == essentials.getUser(player).getBase().getUniqueId() && (System.currentTimeMillis()-essentials.getUser(recipient).getTeleportRequestTime())/1000 <= timeout){
 					player.sendMessage(RealCraft.parseColors("&cZadost o teleportaci je jiz odeslana."));
 					event.setCancelled(true);
 					event.setMessage("/");

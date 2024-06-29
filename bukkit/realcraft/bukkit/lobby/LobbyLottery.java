@@ -2,6 +2,7 @@ package realcraft.bukkit.lobby;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import realcraft.bukkit.RealCraft;
@@ -163,7 +165,8 @@ public class LobbyLottery implements Listener {
 				else item = new ItemStack(MaterialUtil.getStainedGlassPane(DyeColor.GRAY),i+1);
 				meta = item.getItemMeta();
 				lore = new ArrayList<String>();
-				if(numbers[i]) meta.addEnchant(Glow.getGlow(),1,true);
+				if(numbers[i]) meta.addEnchant(Enchantment.LURE,1,true);
+				meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 				meta.setDisplayName("§f§lCislo "+(i+1));
 				lore.add("§7Klikni pro oznaceni pole");
 				meta.setLore(lore);
