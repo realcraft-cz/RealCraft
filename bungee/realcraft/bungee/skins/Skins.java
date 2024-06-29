@@ -4,10 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.connection.InitialHandler;
+import net.md_5.bungee.connection.LoginResult;
 import net.md_5.bungee.protocol.Property;
 import realcraft.bungee.RealCraftBungee;
 import realcraft.bungee.skins.exceptions.SkinsLimitException;
 import realcraft.bungee.skins.exceptions.SkinsNotFoundException;
+import realcraft.bungee.skins.utils.ReflectionUtil;
 import realcraft.bungee.sockets.SocketData;
 import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.Users;
@@ -43,7 +46,7 @@ public class Skins {
 	public static void setSkin(ProxiedPlayer player,Skin skin){
 		try {
 			Property textures = new Property("textures",skin.getValue(),skin.getSignature());
-			/*InitialHandler handler = (InitialHandler) player.getPendingConnection();
+			InitialHandler handler = (InitialHandler) player.getPendingConnection();
 			LoginResult profile = new LoginResult(player.getUniqueId().toString(),player.getName(),new Property[]{textures});
 			Property[] present = profile.getProperties();
 			Property[] newprops = new Property[present.length+1];
@@ -52,7 +55,7 @@ public class Skins {
 			profile.getProperties()[0].setName(newprops[0].getName());
 			profile.getProperties()[0].setValue(newprops[0].getValue());
 			profile.getProperties()[0].setSignature(newprops[0].getSignature());
-			ReflectionUtil.setObject(InitialHandler.class,handler,"loginProfile",profile);*/
+			ReflectionUtil.setObject(InitialHandler.class,handler,"loginProfile",profile);
 		} catch (Exception e){
 			e.printStackTrace();
 		}

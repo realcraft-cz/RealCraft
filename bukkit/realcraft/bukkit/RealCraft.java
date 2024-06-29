@@ -337,7 +337,6 @@ public class RealCraft extends JavaPlugin implements Listener {
 			ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(RealCraft.getInstance(),ListenerPriority.HIGH,PacketType.Play.Client.ADVANCEMENTS,PacketType.Play.Server.ADVANCEMENTS,PacketType.Play.Server.RECIPES){
 				@Override
 				public void onPacketSending(PacketEvent event){
-					System.out.println("canceled");
 					if(RealCraft.getServerType() != ServerType.SURVIVAL && RealCraft.getServerType() != ServerType.FALLING){
 						event.setCancelled(true);
 					}

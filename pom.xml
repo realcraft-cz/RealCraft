@@ -57,13 +57,13 @@
             <type>javadoc</type>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>com.earth2me.essentials</groupId>
-            <artifactId>essentials</artifactId>
-            <version>1.0</version>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord</artifactId>
+            <version>1</version>
             <scope>system</scope>
-            <systemPath>D:/Backups/realcraft_server/source/EssentialsX-2.19.4.jar</systemPath>
-        </dependency>-->
+            <systemPath>${project.basedir}/../bungeecord.jar</systemPath>
+        </dependency>
         <dependency>
             <groupId>net.essentialsx</groupId>
             <artifactId>EssentialsX</artifactId>
@@ -81,7 +81,7 @@
             <artifactId>residence</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>D:/Backups/realcraft_server/source/Residence.jar</systemPath>
+            <systemPath>${project.basedir}/../Residence.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>

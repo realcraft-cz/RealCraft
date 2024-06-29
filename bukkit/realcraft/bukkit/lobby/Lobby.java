@@ -69,6 +69,7 @@ public class Lobby implements Listener {
 		if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
 			plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		}
+		new LobbyTeleport();
 	}
 
 	public void onDisable(){
