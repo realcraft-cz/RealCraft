@@ -60,11 +60,11 @@ public class LobbyLottery implements Listener {
 	@EventHandler
 	public void PlayerInteractEvent(PlayerInteractEvent event){
 		Player player = event.getPlayer();
-		if((event.getAction() == Action.LEFT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_BLOCK) && player.getWorld().getName().equalsIgnoreCase("world")){
+		if(player.getWorld().getName().equalsIgnoreCase("world")){
 			Block block = event.getClickedBlock();
 			if(block != null && block.getType() == Material.ENCHANTING_TABLE && LocationUtil.isSimilar(block.getLocation(),location) && Users.getUser(player).isLogged()){
 				event.setCancelled(true);
-				this.openMenu(player);
+				if (event.getAction() == Action.LEFT_CLICK_BLOCK) this.openMenu(player);
 			}
 		}
 	}
