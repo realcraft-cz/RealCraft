@@ -30,7 +30,7 @@ import java.util.HashMap;
 
 public class LobbyLightsOff implements Listener {
 
-	private static final int PLAY_TIMEOUT = 600*1000;
+	private static final int PLAY_TIMEOUT = 60*1000;
 	private static final int REWARD = 100;
 	private static final int SIZE_X = 5;
 	private static final int SIZE_Y = 4;

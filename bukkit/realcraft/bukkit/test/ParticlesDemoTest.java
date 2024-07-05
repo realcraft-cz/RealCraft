@@ -56,7 +56,7 @@ public class ParticlesDemoTest extends AbstractCommand implements Runnable {
         Location tmpLocation = location.clone();
 
         for (Particle particle : Particle.values()) {
-            if (particle == Particle.MOB_APPEARANCE || particle == Particle. EXPLOSION_HUGE) {
+            if (particle == Particle.ELDER_GUARDIAN || particle == Particle.EXPLOSION_EMITTER) {
                 continue;
             }
 

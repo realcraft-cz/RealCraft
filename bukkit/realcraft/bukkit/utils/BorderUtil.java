@@ -6,8 +6,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class BorderUtil {
 
     public static void setBorder(Player player, Location center, double size) {
@@ -21,7 +19,7 @@ public class BorderUtil {
 		try {
 			ProtocolLibrary.getProtocolManager().sendServerPacket(player, packetCenter);
 			ProtocolLibrary.getProtocolManager().sendServerPacket(player, packetSize);
-		} catch (InvocationTargetException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

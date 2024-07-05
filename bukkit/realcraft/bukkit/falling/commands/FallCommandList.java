@@ -2,6 +2,7 @@ package realcraft.bukkit.falling.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,7 +21,6 @@ import realcraft.bukkit.falling.FallPlayer;
 import realcraft.bukkit.falling.arena.FallArena;
 import realcraft.bukkit.falling.exceptions.FallArenaLockedException;
 import realcraft.bukkit.utils.DateUtil;
-import realcraft.bukkit.utils.Glow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,8 +79,9 @@ public class FallCommandList extends FallCommand implements Listener {
 			lores.add("§7Klikni pro pripojeni");
 			meta.setLore(lores);
 			meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			if(arena.getOwner().equals(fPlayer.getUser())){
-				meta.addEnchant(Glow.getGlow(),1,true);
+				meta.addEnchant(Enchantment.LURE,1,true);
 			}
 			item.setItemMeta(meta);
 			menu.setItem(10+idx+((idx/7)*6),item);

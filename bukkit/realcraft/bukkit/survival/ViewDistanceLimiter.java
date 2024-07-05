@@ -9,8 +9,8 @@ import java.util.LinkedList;
 
 public class ViewDistanceLimiter implements Runnable {
 
-    private static final int DEFAULT_VIEW_DISTANCE = 8;
-    private static final int DEFAULT_SIMULATION_DISTANCE = 6;
+    private static final int DEFAULT_VIEW_DISTANCE = 12;
+    private static final int DEFAULT_SIMULATION_DISTANCE = 8;
     private static final int DISTANCE_APPLY_TIMEOUT = 180 * 1000;
 
     private long lastDistanceLimitsApplied = 0;
@@ -19,9 +19,12 @@ public class ViewDistanceLimiter implements Runnable {
 
     public ViewDistanceLimiter() {
         thresholdLimits.add(new DistanceLimits(0,  DEFAULT_VIEW_DISTANCE, DEFAULT_SIMULATION_DISTANCE));
-        thresholdLimits.add(new DistanceLimits(18, DEFAULT_VIEW_DISTANCE - 1, DEFAULT_SIMULATION_DISTANCE - 1));
-        thresholdLimits.add(new DistanceLimits(22, DEFAULT_VIEW_DISTANCE - 2, DEFAULT_SIMULATION_DISTANCE - 2));
-        thresholdLimits.add(new DistanceLimits(26, DEFAULT_VIEW_DISTANCE - 3, DEFAULT_SIMULATION_DISTANCE - 3));
+        thresholdLimits.add(new DistanceLimits(14, DEFAULT_VIEW_DISTANCE - 1, DEFAULT_SIMULATION_DISTANCE - 1));
+        thresholdLimits.add(new DistanceLimits(18, DEFAULT_VIEW_DISTANCE - 2, DEFAULT_SIMULATION_DISTANCE - 2));
+        thresholdLimits.add(new DistanceLimits(22, DEFAULT_VIEW_DISTANCE - 3, DEFAULT_SIMULATION_DISTANCE - 3));
+        thresholdLimits.add(new DistanceLimits(26, DEFAULT_VIEW_DISTANCE - 4, DEFAULT_SIMULATION_DISTANCE - 4));
+
+        thresholdLimits.get(0).apply();
 
         Bukkit.getScheduler().runTaskTimer(RealCraft.getInstance(), this, 10 * 20, 10 * 20);
     }

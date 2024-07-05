@@ -16,7 +16,6 @@ import java.util.List;
 public class RandomSpawn extends AbstractCommand {
 
 	private static final int RANDOM_LIMIT = 60*1000;
-	private static final int RANDOM_SIZE = 12000;
 	private HashMap<Player,Long> lastRandomSpawn = new HashMap<Player,Long>();
 
 	public RandomSpawn(){
@@ -39,7 +38,8 @@ public class RandomSpawn extends AbstractCommand {
 	}
 
 	public Location getRandomLocation(World world){
-		Location location = LocationUtil.getSafeDestination(new Location(world,RandomUtil.getRandomInteger(-RANDOM_SIZE,RANDOM_SIZE),world.getMaxHeight(),RandomUtil.getRandomInteger(-RANDOM_SIZE,RANDOM_SIZE)));
+		int size = 15000 - 2000;
+		Location location = LocationUtil.getSafeDestination(new Location(world,RandomUtil.getRandomInteger(-size,size),world.getMaxHeight(),RandomUtil.getRandomInteger(-size,size)));
 		if(this.isLocationInOcean(location)) location = this.getRandomLocation(world);
 		return location;
 	}

@@ -69,6 +69,7 @@ public class Lobby implements Listener {
 		if(!plugin.serverName.equalsIgnoreCase("survival") && !plugin.serverName.equalsIgnoreCase("creative") && !plugin.serverName.equalsIgnoreCase("parkour")){
 			plugin.getServer().getPluginManager().registerEvents(this,plugin);
 		}
+		new LobbyTeleport();
 	}
 
 	public void onDisable(){
@@ -237,7 +238,7 @@ public class Lobby implements Listener {
 
 	@EventHandler
 	public void EntityExplodeEvent(EntityExplodeEvent event){
-		if(event.getEntityType() == EntityType.PRIMED_TNT && event.getEntity().getWorld().getName().equalsIgnoreCase("world")) event.blockList().clear();
+		if(event.getEntityType() == EntityType.TNT && event.getEntity().getWorld().getName().equalsIgnoreCase("world")) event.blockList().clear();
 	}
 
 	@EventHandler

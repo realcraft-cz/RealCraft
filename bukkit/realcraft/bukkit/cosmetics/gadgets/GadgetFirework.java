@@ -18,7 +18,7 @@ public class GadgetFirework extends Gadget {
 	@Override
 	public void trigger(Player player){
 		this.setGadgetRunning(player,false);
-		Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+		Firework fw = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET);
 		FireworkMeta fwm = fw.getFireworkMeta();
 
 		int rt = RandomUtil.getRandomInteger(0,4);

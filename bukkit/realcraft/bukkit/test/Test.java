@@ -14,15 +14,15 @@ public class Test {
 		if(RealCraft.isTestServer()){
 			new ParticlesDemoTest();
 			new BlockTest();
-			new BoatTest();
 			new AsyncTest();
-			new HolographTest();
 			new HideTest();
 			new EntityTest();
 			new CombatTest();
 			new AdvancementTest();
 			new SwimTest();
 			new FallingTest();
+			new Firecracker();
+			new HologramTest();
 		}
 	}
 }

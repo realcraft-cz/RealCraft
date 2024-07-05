@@ -21,6 +21,7 @@ public class User {
 
 	private UserRank rank;
 	private boolean premium;
+	private long premiumAttempt;
 	private boolean countryException;
 
 	private String skinName;
@@ -72,6 +73,19 @@ public class User {
 
 	public boolean isPremium(){
 		return premium;
+	}
+
+	public void setPremium(boolean premium) {
+		this.premium = premium;
+		DB.update("UPDATE " + Users.USERS + " SET user_premium = '" + (premium ? 1 : 0) + "' WHERE user_id = '" + this.getId() + "'");
+	}
+
+	public boolean hasPremiumAttempt() {
+		return (premiumAttempt > (System.currentTimeMillis() / 1000));
+	}
+
+	public void setPremiumAttempt(long premiumAttempt) {
+		this.premiumAttempt = premiumAttempt;
 	}
 
 	public boolean isCountryException(){

@@ -3,19 +3,20 @@ package realcraft.bukkit.survival.sells;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import realcraft.bukkit.RealCraft;
+import realcraft.bukkit.others.AbstractCommand;
 import realcraft.bukkit.survival.economy.Economy;
 import realcraft.bukkit.survival.sells.SellBasket.BasketItem;
-import realcraft.bukkit.others.AbstractCommand;
-import realcraft.bukkit.utils.Glow;
 import realcraft.bukkit.utils.ItemUtil;
 
 import java.util.HashMap;
@@ -59,12 +60,13 @@ public class SellMenu implements Listener {
 		for(Map.Entry<Integer,SellItem> entry : Sells.getItems().entrySet()){
 			item = new ItemStack(entry.getValue().getType(),entry.getValue().getAmount());
 			meta = item.getItemMeta();
-			if(basket.hasNextEnough(item.getType(),1)) meta.addEnchant(Glow.getGlow(),1,true);
+			if(basket.hasNextEnough(item.getType(),1)) meta.addEnchant(Enchantment.LURE,1,true);
 			meta.setLore(ItemUtil.getLores(
 					"§fCena: §a"+Economy.format(entry.getValue().getPrice())+" §7("+entry.getValue().getAmount()+" ks)",
 					"§fCena za kus: §a"+Economy.format(entry.getValue().getPrice()/(entry.getValue().getAmount()*1.0)),
 					"§7Klikni pro pridani"
 			));
+			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			item.setItemMeta(meta);
 			menu.setItem(entry.getKey(),item);
 		}

@@ -12,6 +12,8 @@ public class HologramPostSpawnPacket extends HologramPacket {
         this.getPacket().getModifier().writeDefaults();
         this.getPacket().getIntegers().write(0, hologram.getId());
 
+        // https://github.com/dmulloy2/ProtocolLib/issues/2355
+
         WrappedDataWatcher dataWatcher = new WrappedDataWatcher();
 
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)), (byte) 0x20); //invisible
@@ -19,6 +21,6 @@ public class HologramPostSpawnPacket extends HologramPacket {
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(5, WrappedDataWatcher.Registry.get(Boolean.class)), true); //no gravity
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(15, WrappedDataWatcher.Registry.get(Byte.class)), (byte) (0x01 | 0x08 | 0x10));
 
-        this.getPacket().getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+        this.getPacket().getDataValueCollectionModifier().write(0, dataWatcher.toDataValueCollection());
     }
 }

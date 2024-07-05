@@ -52,8 +52,8 @@ public class PetActionSkinChange extends PetAction {
             }
 
             if (this.getTicks() % 5 == 0) {
-                this.getEntity().getLocation().getWorld().spawnParticle(Particle.SPELL, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
-                this.getEntity().getLocation().getWorld().spawnParticle(Particle.SPELL_MOB_AMBIENT, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
+                this.getEntity().getLocation().getWorld().spawnParticle(Particle.EFFECT, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
+                this.getEntity().getLocation().getWorld().spawnParticle(Particle.INSTANT_EFFECT, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
             }
 
             if (this.yawIncrement == 75) {
@@ -70,8 +70,8 @@ public class PetActionSkinChange extends PetAction {
             }
 
             if (this.getTicks() % 5 == 0) {
-                this.getEntity().getLocation().getWorld().spawnParticle(Particle.SPELL, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
-                this.getEntity().getLocation().getWorld().spawnParticle(Particle.SPELL_MOB_AMBIENT, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
+                this.getEntity().getLocation().getWorld().spawnParticle(Particle.EFFECT, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
+                this.getEntity().getLocation().getWorld().spawnParticle(Particle.INSTANT_EFFECT, this.getEntity().getLocation().add(0, 0.5, 0), this.level, 0.2, 0.2, 0.2, 0);
             }
 
             if (this.yawIncrement == 5) {
@@ -81,9 +81,9 @@ public class PetActionSkinChange extends PetAction {
         } else if (this.state == State.TRANSFORMING) {
             this.getEntity().setRotation(this.getEntity().getLocation().getYaw() + this.yawIncrement, this.getEntity().getLocation().getPitch());
 
-            this.getEntity().getLocation().getWorld().spawnParticle(Particle.SPELL, this.getEntity().getLocation().add(0, 0.5, 0), 8, 0.2, 0.2, 0.2, 0);
-            this.getEntity().getLocation().getWorld().spawnParticle(Particle.SPELL_MOB_AMBIENT, this.getEntity().getLocation().add(0, 0.5, 0), 8, 0.2, 0.2, 0.2, 0);
-            this.getEntity().getLocation().getWorld().spawnParticle(Particle.SMOKE_NORMAL, this.getEntity().getLocation().add(0, 0.7, 0), 6, 0.3, 0.3, 0.3, 0);
+            this.getEntity().getLocation().getWorld().spawnParticle(Particle.EFFECT, this.getEntity().getLocation().add(0, 0.5, 0), 8, 0.2, 0.2, 0.2, 0);
+            this.getEntity().getLocation().getWorld().spawnParticle(Particle.INSTANT_EFFECT, this.getEntity().getLocation().add(0, 0.5, 0), 8, 0.2, 0.2, 0.2, 0);
+            this.getEntity().getLocation().getWorld().spawnParticle(Particle.SMOKE, this.getEntity().getLocation().add(0, 0.7, 0), 6, 0.3, 0.3, 0.3, 0);
 
             if (this.getTicks() % 4 == 0) {
                 this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_PHANTOM_FLAP, 0.7f, 2f);

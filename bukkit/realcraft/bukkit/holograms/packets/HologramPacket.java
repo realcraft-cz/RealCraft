@@ -6,8 +6,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.entity.Player;
 import realcraft.bukkit.holograms.Hologram;
 
-import java.lang.reflect.InvocationTargetException;
-
 public abstract class HologramPacket {
 
     private final Hologram hologram;
@@ -29,11 +27,7 @@ public abstract class HologramPacket {
     public final void send(Player player) {
         this._beforeSend();
 
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, this.getPacket());
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, this.getPacket());
     }
 
     protected void _beforeSend() {

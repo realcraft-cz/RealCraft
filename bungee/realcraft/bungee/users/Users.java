@@ -1,15 +1,11 @@
 package realcraft.bungee.users;
 
-import com.google.common.base.Charsets;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.connection.InitialHandler;
 import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
 import realcraft.bungee.RealCraftBungee;
 import realcraft.bungee.sockets.SocketData;
 import realcraft.bungee.sockets.SocketDataEvent;
@@ -18,39 +14,17 @@ import realcraft.bungee.users.auth.UsersAuthentication;
 import realcraft.share.ServerType;
 import realcraft.share.users.User;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Users extends realcraft.share.users.Users implements Listener {
 
 	public Users(){
-		BungeeCord.getInstance().getPluginManager().registerListener(RealCraftBungee.getInstance(),this);
+		ProxyServer.getInstance().getPluginManager().registerListener(RealCraftBungee.getInstance(),this);
 		new UsersAuthentication();
 	}
 
 	public static User getUser(ProxiedPlayer player){
 		return Users.getUser(player.getUniqueId());
-	}
-
-	@EventHandler(priority = EventPriority.LOW)
-	public void LoginEvent(LoginEvent event){
-		try {
-			UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:"+event.getConnection().getName()).getBytes(Charsets.UTF_8));
-			Field idField = InitialHandler.class.getDeclaredField("uniqueId");
-	        idField.setAccessible(true);
-			idField.set(event.getConnection(),offlineUUID);
-			User user = Users.getUser(event.getConnection().getUniqueId());
-			Users.connectUser(user);
-		} catch (IllegalArgumentException e){
-			e.printStackTrace();
-		} catch (IllegalAccessException e){
-			e.printStackTrace();
-		} catch (NoSuchFieldException e){
-			e.printStackTrace();
-		} catch (SecurityException e){
-			e.printStackTrace();
-		}
 	}
 
 	@EventHandler
@@ -84,7 +58,7 @@ public class Users extends realcraft.share.users.Users implements Listener {
 		}
 	}
 
-	private static void connectUser(User user){
+	public static void connectUser(User user){
 		user.connect();
 		SocketData data = new SocketData(CHANNEL_BUNGEE_CONNECT);
         data.setInt("id",user.getId());

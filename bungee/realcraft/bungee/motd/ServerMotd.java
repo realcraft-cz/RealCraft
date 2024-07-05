@@ -52,7 +52,7 @@ public class ServerMotd implements Listener, Runnable {
 						e.printStackTrace();
 					}
 					if(plugin.testServer){
-						title = RealCraftBungee.parseColors("&7&lRealCraft.cz&r &7&l|&r &7verze &l1.13");
+						title = RealCraftBungee.parseColors("&7&lRealCraft.cz&r");
 						description = RealCraftBungee.parseColors("&cTestovaci server");
 					}
 				}

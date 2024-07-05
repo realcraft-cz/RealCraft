@@ -12,8 +12,6 @@ import org.bukkit.event.entity.EntityToggleSwimEvent;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.others.AbstractCommand;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class SwimTest extends AbstractCommand implements Listener {
 
     public SwimTest() {
@@ -34,13 +32,9 @@ public class SwimTest extends AbstractCommand implements Listener {
 
         WrappedDataWatcher dataWatcher = new WrappedDataWatcher();
         dataWatcher.setObject(new WrappedDataWatcher.WrappedDataWatcherObject(18, WrappedDataWatcher.Registry.get(Integer.class)), 7);
-        packet.getWatchableCollectionModifier().write(0, dataWatcher.getWatchableObjects());
+        packet.getDataValueCollectionModifier().write(0, dataWatcher.toDataValueCollection());
 
-        try {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
     }
 
     @EventHandler

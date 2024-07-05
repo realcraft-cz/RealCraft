@@ -83,7 +83,7 @@ public class PetEntityEffect implements Runnable {
 
             if (this == AURA) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.TOWN_AURA, petEntityEffect.lastLocation, isMoving ? 5 : 3, 0.1, 0.1, 0.1, 0);
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.MYCELIUM, petEntityEffect.lastLocation, isMoving ? 5 : 3, 0.1, 0.1, 0.1, 0);
             }
 
             if (this == PORTAL) {
@@ -93,7 +93,7 @@ public class PetEntityEffect implements Runnable {
 
             if (this == MAGIC) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.CRIT_MAGIC, petEntityEffect.lastLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.ENCHANTED_HIT, petEntityEffect.lastLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
             }
 
             if (this == SOUL) {
@@ -118,12 +118,12 @@ public class PetEntityEffect implements Runnable {
 
             if (this == SPELL) {
                 petEntityEffect.lastLocation.add(0, 1.35, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.SPELL_MOB_AMBIENT, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0, 0.1, 0);
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.INSTANT_EFFECT, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0, 0.1, 0);
             }
 
             if (this == SPELL_WITCH) {
                 petEntityEffect.lastLocation.add(0, 1.35, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.SPELL_WITCH, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0, 0.1, 0);
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.WITCH, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0, 0.1, 0);
             }
 
             if (this == WAX_OFF) {
@@ -148,32 +148,32 @@ public class PetEntityEffect implements Runnable {
 
             if (this == ENCHANTMENT) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, petEntityEffect.lastLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.ENCHANT, petEntityEffect.lastLocation, isMoving ? 4 : 2, 0.1, 0.1, 0.1, 0);
             }
 
             if (this == DUST_RED) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.MAROON, 1f));
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.DUST, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.MAROON, 1f));
             }
 
             if (this == DUST_BLUE) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.AQUA, 1f));
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.DUST, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.AQUA, 1f));
             }
 
             if (this == DUST_GREEN) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.LIME, 1f));
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.DUST, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.LIME, 1f));
             }
 
             if (this == DUST_AQUA) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.TEAL, 1f));
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.DUST, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.TEAL, 1f));
             }
 
             if (this == DUST_ORANGE) {
                 petEntityEffect.lastLocation.add(0, 0.6, 0);
-                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.REDSTONE, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.ORANGE, 1f));
+                petEntityEffect.lastLocation.getWorld().spawnParticle(Particle.DUST, petEntityEffect.lastLocation, isMoving ? 2 : 1, 0.1, 0.1, 0.1, 0, new Particle.DustOptions(Color.ORANGE, 1f));
             }
         }
 

@@ -9,6 +9,7 @@ import realcraft.bungee.motd.ServerMotd;
 import realcraft.bungee.skins.Skins;
 import realcraft.bungee.sockets.SocketManager;
 import realcraft.bungee.users.Users;
+import realcraft.bungee.users.premium.UserPremiumManager;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +32,7 @@ public class RealCraftBungee extends Plugin implements Runnable {
 		socketmanager = new SocketManager();
 		//new PlayerManazer(this);
 		new Users();
+		new UserPremiumManager();
 		new Skins(this);
 		getProxy().getPluginManager().registerCommand(this,new ListCommand(this));
 		getProxy().getScheduler().schedule(this,this,3600,60,TimeUnit.SECONDS);

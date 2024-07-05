@@ -51,17 +51,17 @@ public class MapRenderer implements Runnable {
 							tmpLocation.setY(tmpLocation.getBlockY());
 							tmpLocation.setZ(tmpLocation.getBlockZ());
 							for(int y=0;y<=1;y++){
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(0,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(0,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(1,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(1,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(0,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(0,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(1,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(1,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.YELLOW,0.8f));
 							}
 							if(((MapRendererLocation)entry).getLocation() instanceof MapDataLocationSpawn){
 								tmpLocation = location.getLocation().getLocation().clone();
 								tmpLocation.setY(tmpLocation.getBlockY()+0.5);
-								player.spawnParticle(Particle.REDSTONE,tmpLocation,1,0f,0f,0f,0f,new Particle.DustOptions(Color.BLUE,0.6f));
+								player.spawnParticle(Particle.DUST,tmpLocation,1,0f,0f,0f,0f,new Particle.DustOptions(Color.BLUE,0.6f));
 								for(int i=0;i<10;i++){
-									player.spawnParticle(Particle.REDSTONE,tmpLocation.add(tmpLocation.getDirection().normalize().multiply(0.1)),1,0f,0f,0f,0f,new Particle.DustOptions(Color.BLUE,0.6f));
+									player.spawnParticle(Particle.DUST,tmpLocation.add(tmpLocation.getDirection().normalize().multiply(0.1)),1,0f,0f,0f,0f,new Particle.DustOptions(Color.BLUE,0.6f));
 								}
 							}
 						}
@@ -85,7 +85,7 @@ public class MapRenderer implements Runnable {
 										if((z == locMin.getBlockZ() || z == locMax.getBlockZ()+1) && (y == locMin.getBlockY() || y == locMax.getBlockY()+1)) edge = true;
 										if((x == locMin.getBlockX() || x == locMax.getBlockX()+1) && (z == locMin.getBlockZ() || z == locMax.getBlockZ()+1)) edge = true;
 										if(edge){
-											player.spawnParticle(Particle.REDSTONE,new Location(locMin.getWorld(),x,y,z),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+											player.spawnParticle(Particle.DUST,new Location(locMin.getWorld(),x,y,z),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
 										}
 									}
 								}
@@ -95,20 +95,20 @@ public class MapRenderer implements Runnable {
 							tmpLocation.setY(tmpLocation.getBlockY());
 							tmpLocation.setZ(tmpLocation.getBlockZ());
 							for(int y=0;y<=1;y++){
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(0,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(0,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(1,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(1,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(0,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(0,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(1,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(1,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
 							}
 							tmpLocation = area.getArea().getMaxLocation().getLocation().clone();
 							tmpLocation.setX(tmpLocation.getBlockX());
 							tmpLocation.setY(tmpLocation.getBlockY());
 							tmpLocation.setZ(tmpLocation.getBlockZ());
 							for(int y=0;y<=1;y++){
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(0,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(0,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(1,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
-								player.spawnParticle(Particle.REDSTONE,tmpLocation.clone().add(1,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(0,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(0,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(1,y,0),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
+								player.spawnParticle(Particle.DUST,tmpLocation.clone().add(1,y,1),1,0f,0f,0f,0f,new Particle.DustOptions(Color.RED,0.8f));
 							}*/
 						}
 					}
