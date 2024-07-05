@@ -38,7 +38,7 @@ public class RandomSpawn extends AbstractCommand {
 	}
 
 	public Location getRandomLocation(World world){
-		int size = ((int)world.getWorldBorder().getSize()/2) - 3000;
+		int size = 15000 - 2000;
 		Location location = LocationUtil.getSafeDestination(new Location(world,RandomUtil.getRandomInteger(-size,size),world.getMaxHeight(),RandomUtil.getRandomInteger(-size,size)));
 		if(this.isLocationInOcean(location)) location = this.getRandomLocation(world);
 		return location;
