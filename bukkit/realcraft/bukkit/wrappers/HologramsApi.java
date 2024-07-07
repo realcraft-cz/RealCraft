@@ -79,6 +79,14 @@ public class HologramsApi {
             hologram.setLocation(location);
         }
 
+        public void enable() {
+            hologram.enable();
+        }
+
+        public void disable() {
+            hologram.disable();
+        }
+
         public void delete() {
             instance.delete(this);
             hologram.delete();

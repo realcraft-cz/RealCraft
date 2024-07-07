@@ -1,7 +1,5 @@
 package realcraft.bukkit.test;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import io.papermc.paper.entity.TeleportFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -11,13 +9,8 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.material.MaterialData;
-import org.bukkit.profile.PlayerTextures;
 import realcraft.bukkit.RealCraft;
 import realcraft.bukkit.others.AbstractCommand;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class HideTest extends AbstractCommand implements Listener {
 
@@ -40,18 +33,6 @@ public class HideTest extends AbstractCommand implements Listener {
         stand.setGravity(false);
         stand.setPersistent(false);
         stand.setSmall(true);
-
-        try {
-            PlayerProfile profile = player.getPlayerProfile();
-            PlayerTextures textures =profile.getTextures();
-            textures.setSkin(new URI("http://textures.minecraft.net/texture/b3fbd454b599df593f57101bfca34e67d292a8861213d2202bb575da7fd091ac").toURL());
-            profile.setTextures(textures);
-            player.setPlayerProfile(profile);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
 
         FallingBlock block = player.getWorld().spawnFallingBlock(player.getLocation().add(2, 2, 0), new MaterialData(Material.ANVIL));
         block.setGravity(false);
